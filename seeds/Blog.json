@@ -1,0 +1,22 @@
+[
+    {
+        "title": "Post 1",
+        "content": "This is the content for post 1",
+        "published": true
+    },
+    {
+        "title": "Post 2",
+        "content": "Here is some content for post 2",
+        "published": false
+    },
+    {
+        "title": "Post 3",
+        "content": "Content for post 3 is right here.",
+        "published": true
+    },
+    {
+        "title": "Post 4",
+        "content": "This is another content for post 4.",
+        "published": false
+    }
+]

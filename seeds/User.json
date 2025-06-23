@@ -1,0 +1,20 @@
+[
+  {
+    "username": "harry",
+    "password": "11111",
+    "email": "test@gmail.com",
+    "emailValidated": true
+  },
+  {
+    "username": "ginny",
+    "password": "22222",
+    "email": "ginny@test.com",
+    "emailValidated": true
+  },
+  {
+    "username": "mione",
+    "password": "33333",
+    "email": "mione@test.com",
+    "emailValidated": true
+  }
+]

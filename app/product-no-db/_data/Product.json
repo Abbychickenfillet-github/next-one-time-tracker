@@ -1,0 +1,3002 @@
+[
+  {
+    "sn": "6e96141a-8663-43fe-a749-34063383b850",
+    "name": "Awesome Steel Cheese - adidas 長袖上衣",
+    "photos": "t1.jpg,t3.jpg,t5.jpg",
+    "stock": 80,
+    "price": 5300,
+    "info": "Savor the tangy essence in our Gloves, designed for supportive culinary adventures",
+    "brandId": 2,
+    "categoryId": 6
+  },
+  {
+    "sn": "82b9b0b2-4965-416d-b184-6303dc683b43",
+    "name": "Gorgeous Soft Shirt - Nike 慢跑鞋",
+    "photos": "t1.jpg,t3.jpg,t5.jpg",
+    "stock": 80,
+    "price": 8700,
+    "info": "Savor the savory essence in our Cheese, designed for aggravating culinary adventures",
+    "brandId": 1,
+    "categoryId": 9
+  },
+  {
+    "sn": "6f5ff4bc-6ec5-4d67-b069-6fa2f972ea1d",
+    "name": "Incredible Rubber Chair - PUMA 短袖上衣",
+    "photos": "t5.jpg,t3.jpg,t2.jpg",
+    "stock": 40,
+    "price": 5200,
+    "info": "Discover the gorilla-like agility of our Towels, perfect for ambitious users",
+    "brandId": 3,
+    "categoryId": 4
+  },
+  {
+    "sn": "be42ba40-2ad5-43b6-8795-8187f4522eaf",
+    "name": "Incredible Metal Ball - Nike 帽類",
+    "photos": "t3.jpg,t5.jpg,t4.jpg",
+    "stock": 20,
+    "price": 3400,
+    "info": "Savor the sweet essence in our Tuna, designed for next culinary adventures",
+    "brandId": 1,
+    "categoryId": 12
+  },
+  {
+    "sn": "bc33944c-93e6-4dc8-aae0-776094550652",
+    "name": "Licensed Frozen Chair - adidas 帽類",
+    "photos": "t4.jpg,t2.jpg,t5.jpg",
+    "stock": 80,
+    "price": 8100,
+    "info": "Discover the eminent new Table with an exciting mix of Concrete ingredients",
+    "brandId": 2,
+    "categoryId": 12
+  },
+  {
+    "sn": "5ccc2438-f61b-48b0-aec9-a3d2d96b6a4b",
+    "name": "Practical Steel Keyboard - Nike 長袖上衣",
+    "photos": "t2.jpg,t4.jpg,t1.jpg",
+    "stock": 100,
+    "price": 9300,
+    "info": "Our penguin-friendly Salad ensures improbable comfort for your pets",
+    "brandId": 1,
+    "categoryId": 6
+  },
+  {
+    "sn": "31238b5b-7043-467c-9e48-e3b0f010a0d3",
+    "name": "Bespoke Fresh Soap - adidas 慢跑鞋",
+    "photos": "t3.jpg,t1.jpg,t4.jpg",
+    "stock": 60,
+    "price": 10700,
+    "info": "Introducing the Northern Mariana Islands-inspired Computer, blending indolent style with local craftsmanship",
+    "brandId": 2,
+    "categoryId": 9
+  },
+  {
+    "sn": "d841a14a-9e7b-4557-9f4d-1fd36c8b7f13",
+    "name": "Rustic Granite Computer - adidas 帽類",
+    "photos": "t4.jpg,t3.jpg,t5.jpg",
+    "stock": 90,
+    "price": 7400,
+    "info": "馬 and Sons's most advanced Hat technology increases cute capabilities",
+    "brandId": 2,
+    "categoryId": 12
+  },
+  {
+    "sn": "05cdee5b-4e77-439f-8a86-0ecce2719b0c",
+    "name": "Luxurious Wooden Car - PUMA 籃球鞋",
+    "photos": "t5.jpg,t4.jpg,t2.jpg",
+    "stock": 80,
+    "price": 14800,
+    "info": "The 黑色 Chicken combines Jordan aesthetics with Lithium-based durability",
+    "brandId": 3,
+    "categoryId": 10
+  },
+  {
+    "sn": "7dc7af31-3497-4d21-bc38-ebc2f9755a48",
+    "name": "Intelligent Soft Gloves - New Balance 包款",
+    "photos": "t5.jpg,t3.jpg,t1.jpg",
+    "stock": 70,
+    "price": 8900,
+    "info": "Our rich-inspired Computer brings a taste of luxury to your uneven lifestyle",
+    "brandId": 4,
+    "categoryId": 11
+  },
+  {
+    "sn": "da6133ca-dd72-46eb-9bdc-e688a5050abf",
+    "name": "Tasty Metal Chair - PUMA 帽類",
+    "photos": "t4.jpg,t3.jpg,t1.jpg",
+    "stock": 80,
+    "price": 12100,
+    "info": "New 青綠色 Salad with ergonomic design for meaty comfort",
+    "brandId": 3,
+    "categoryId": 12
+  },
+  {
+    "sn": "5301c325-282b-4b5d-8602-b828eb780d3c",
+    "name": "Electronic Fresh Ball - New Balance 包款",
+    "photos": "t4.jpg,t1.jpg,t2.jpg",
+    "stock": 100,
+    "price": 8100,
+    "info": "Our golden-inspired Hat brings a taste of luxury to your needy lifestyle",
+    "brandId": 4,
+    "categoryId": 11
+  },
+  {
+    "sn": "8f7768ae-49a1-4483-9776-a618678ebfb1",
+    "name": "Awesome Steel Keyboard - adidas 慢跑鞋",
+    "photos": "t1.jpg,t3.jpg,t2.jpg",
+    "stock": 90,
+    "price": 4800,
+    "info": "Our golden-inspired Bacon brings a taste of luxury to your ambitious lifestyle",
+    "brandId": 2,
+    "categoryId": 9
+  },
+  {
+    "sn": "d86f2e24-5231-4471-8d10-675185e98735",
+    "name": "Electronic Concrete Bike - adidas 外套",
+    "photos": "t4.jpg,t2.jpg,t1.jpg",
+    "stock": 10,
+    "price": 1600,
+    "info": "Discover the superficial new Pizza with an exciting mix of Concrete ingredients",
+    "brandId": 2,
+    "categoryId": 8
+  },
+  {
+    "sn": "cb29b547-4f79-4166-8ae1-d472c60848fa",
+    "name": "Handcrafted Soft Table - Nike 短褲",
+    "photos": "t3.jpg,t2.jpg,t5.jpg",
+    "stock": 10,
+    "price": 4500,
+    "info": "Discover the butterfly-like agility of our Shoes, perfect for indelible users",
+    "brandId": 1,
+    "categoryId": 5
+  },
+  {
+    "sn": "9a3ad71a-1a9e-4cb1-a40c-fdcab2ebf105",
+    "name": "Fantastic Fresh Soap - PUMA 長褲",
+    "photos": "t5.jpg,t3.jpg,t4.jpg",
+    "stock": 70,
+    "price": 12700,
+    "info": "The 黎昕 Chicken is the latest in a series of reckless products from 賀, 郭 and 馬",
+    "brandId": 3,
+    "categoryId": 7
+  },
+  {
+    "sn": "094d6348-1d92-46fe-b124-674256d7aefc",
+    "name": "Refined Steel Cheese - PUMA 長褲",
+    "photos": "t3.jpg,t2.jpg,t5.jpg",
+    "stock": 90,
+    "price": 14500,
+    "info": "Savor the sweet essence in our Pants, designed for lone culinary adventures",
+    "brandId": 3,
+    "categoryId": 7
+  },
+  {
+    "sn": "b321364b-2142-4a2a-a8bb-4423f2324cb8",
+    "name": "Practical Plastic Bike - New Balance 長袖上衣",
+    "photos": "t4.jpg,t1.jpg,t3.jpg",
+    "stock": 20,
+    "price": 7200,
+    "info": "The sleek and average Sausages comes with 紅褐色 LED lighting for smart functionality",
+    "brandId": 4,
+    "categoryId": 6
+  },
+  {
+    "sn": "6b9b5028-d798-4a26-8935-3bb3a01f60dc",
+    "name": "Rustic Fresh Pants - Nike 外套",
+    "photos": "t2.jpg,t4.jpg,t5.jpg",
+    "stock": 10,
+    "price": 3800,
+    "info": "New Shirt model with 27 GB RAM, 549 GB storage, and hateful features",
+    "brandId": 1,
+    "categoryId": 8
+  },
+  {
+    "sn": "36f1f1cd-f6ae-43a5-8f7e-6433d51b14f2",
+    "name": "Handmade Plastic Salad - adidas 慢跑鞋",
+    "photos": "t5.jpg,t3.jpg,t4.jpg",
+    "stock": 70,
+    "price": 6600,
+    "info": "The 橙色 Chicken combines Cook Islands aesthetics with Caesium-based durability",
+    "brandId": 2,
+    "categoryId": 9
+  },
+  {
+    "sn": "9fd39f08-d2f9-4cb9-9d9e-0d427325a3f8",
+    "name": "Ergonomic Granite Keyboard - adidas 慢跑鞋",
+    "photos": "t1.jpg,t2.jpg,t3.jpg",
+    "stock": 70,
+    "price": 12400,
+    "info": "Introducing the Nepal-inspired Salad, blending superior style with local craftsmanship",
+    "brandId": 2,
+    "categoryId": 9
+  },
+  {
+    "sn": "9b2a59c0-4e0d-44ab-b872-a9774cbda3a6",
+    "name": "Sleek Rubber Keyboard - Nike 包款",
+    "photos": "t1.jpg,t4.jpg,t3.jpg",
+    "stock": 40,
+    "price": 14400,
+    "info": "Introducing the Comoros-inspired Chips, blending profitable style with local craftsmanship",
+    "brandId": 1,
+    "categoryId": 11
+  },
+  {
+    "sn": "26a4632a-2c24-4c43-bbee-1ced0019520d",
+    "name": "Oriental Frozen Chips - adidas 短袖上衣",
+    "photos": "t3.jpg,t5.jpg,t2.jpg",
+    "stock": 10,
+    "price": 2000,
+    "info": "New Pants model with 50 GB RAM, 649 GB storage, and trusty features",
+    "brandId": 2,
+    "categoryId": 4
+  },
+  {
+    "sn": "7a1d5921-4632-4bd9-8bab-74e00efb3a81",
+    "name": "Luxurious Plastic Towels - adidas 籃球鞋",
+    "photos": "t5.jpg,t3.jpg,t2.jpg",
+    "stock": 30,
+    "price": 6200,
+    "info": "Luxurious Car designed with Frozen for left performance",
+    "brandId": 2,
+    "categoryId": 10
+  },
+  {
+    "sn": "0b92b7ad-a248-4570-802b-4d8b43ecbb91",
+    "name": "Bespoke Concrete Chicken - adidas 帽類",
+    "photos": "t3.jpg,t1.jpg,t2.jpg",
+    "stock": 50,
+    "price": 13600,
+    "info": "Oriental Chair designed with Cotton for fortunate performance",
+    "brandId": 2,
+    "categoryId": 12
+  },
+  {
+    "sn": "befbb0b3-7446-4b66-af01-c42d656e8b1e",
+    "name": "Refined Bronze Shirt - New Balance 短褲",
+    "photos": "t2.jpg,t1.jpg,t5.jpg",
+    "stock": 30,
+    "price": 3600,
+    "info": "Our fresh-inspired Keyboard brings a taste of luxury to your present lifestyle",
+    "brandId": 4,
+    "categoryId": 5
+  },
+  {
+    "sn": "e73d08a9-9aef-4552-81fc-052a3a4b82ce",
+    "name": "Luxurious Metal Bacon - New Balance 包款",
+    "photos": "t5.jpg,t4.jpg,t3.jpg",
+    "stock": 90,
+    "price": 5600,
+    "info": "Innovative Table featuring excellent technology and Wooden construction",
+    "brandId": 4,
+    "categoryId": 11
+  },
+  {
+    "sn": "12dff91e-e0a5-4d45-b469-3e3e78d6644a",
+    "name": "Handcrafted Steel Keyboard - New Balance 短褲",
+    "photos": "t4.jpg,t3.jpg,t5.jpg",
+    "stock": 80,
+    "price": 14400,
+    "info": "Innovative Chips featuring closed technology and Rubber construction",
+    "brandId": 4,
+    "categoryId": 5
+  },
+  {
+    "sn": "1a3e2325-45c5-4580-9ef4-fe83e57f1561",
+    "name": "Handcrafted Wooden Bike - Nike 包款",
+    "photos": "t3.jpg,t2.jpg,t4.jpg",
+    "stock": 30,
+    "price": 10000,
+    "info": "Experience the 藍綠色 brilliance of our Pants, perfect for glaring environments",
+    "brandId": 1,
+    "categoryId": 11
+  },
+  {
+    "sn": "fb96840a-8578-4793-8893-2b8114dcd440",
+    "name": "Small Wooden Towels - New Balance 長袖上衣",
+    "photos": "t5.jpg,t3.jpg,t2.jpg",
+    "stock": 100,
+    "price": 7200,
+    "info": "Our squirrel-friendly Bacon ensures wide comfort for your pets",
+    "brandId": 4,
+    "categoryId": 6
+  },
+  {
+    "sn": "0ef688ee-3832-4fb0-8430-1571ec078165",
+    "name": "Recycled Steel Towels - Nike 外套",
+    "photos": "t4.jpg,t2.jpg,t5.jpg",
+    "stock": 70,
+    "price": 3100,
+    "info": "Discover the fox-like agility of our Chips, perfect for quick users",
+    "brandId": 1,
+    "categoryId": 8
+  },
+  {
+    "sn": "146a2563-195b-4834-801f-a0a2bef19b1b",
+    "name": "Refined Frozen Hat - adidas 短褲",
+    "photos": "t2.jpg,t3.jpg,t5.jpg",
+    "stock": 80,
+    "price": 13200,
+    "info": "The 思源 Hat is the latest in a series of aggressive products from 張, 陳 and 梁",
+    "brandId": 2,
+    "categoryId": 5
+  },
+  {
+    "sn": "6e59d276-9fc4-413d-a9fc-c4e0b5b4ab6e",
+    "name": "Fantastic Bronze Pizza - Nike 短褲",
+    "photos": "t3.jpg,t2.jpg,t4.jpg",
+    "stock": 100,
+    "price": 2400,
+    "info": "Professional-grade Bike perfect for quick training and recreational use",
+    "brandId": 1,
+    "categoryId": 5
+  },
+  {
+    "sn": "05f2790a-f52e-4fcb-8403-0c2aa69fbd38",
+    "name": "Licensed Concrete Tuna - adidas 慢跑鞋",
+    "photos": "t2.jpg,t4.jpg,t3.jpg",
+    "stock": 10,
+    "price": 13300,
+    "info": "Handcrafted Soap designed with Soft for ruddy performance",
+    "brandId": 2,
+    "categoryId": 9
+  },
+  {
+    "sn": "384e11b7-b829-4e49-b01e-fbe05e5dfb85",
+    "name": "Ergonomic Wooden Chicken - New Balance 外套",
+    "photos": "t1.jpg,t2.jpg,t5.jpg",
+    "stock": 90,
+    "price": 6700,
+    "info": "Ergonomic Towels made with Frozen for all-day incomparable support",
+    "brandId": 4,
+    "categoryId": 8
+  },
+  {
+    "sn": "838c7e9b-78eb-426c-a353-e2e0dd430adc",
+    "name": "Refined Wooden Soap - adidas 帽類",
+    "photos": "t3.jpg,t1.jpg,t4.jpg",
+    "stock": 10,
+    "price": 8200,
+    "info": "Featuring Gold-enhanced technology, our Cheese offers unparalleled lost performance",
+    "brandId": 2,
+    "categoryId": 12
+  },
+  {
+    "sn": "9f65a108-17bc-4124-a97d-1cffc15c87c3",
+    "name": "Tasty Plastic Bacon - PUMA 短褲",
+    "photos": "t3.jpg,t5.jpg,t1.jpg",
+    "stock": 60,
+    "price": 13000,
+    "info": "Savor the zesty essence in our Mouse, designed for cuddly culinary adventures",
+    "brandId": 3,
+    "categoryId": 5
+  },
+  {
+    "sn": "670dfad7-10ad-4adf-9c52-91fef5a1e5d0",
+    "name": "Recycled Wooden Pants - New Balance 包款",
+    "photos": "t1.jpg,t4.jpg,t2.jpg",
+    "stock": 20,
+    "price": 5600,
+    "info": "Savor the tender essence in our Salad, designed for lumbering culinary adventures",
+    "brandId": 4,
+    "categoryId": 11
+  },
+  {
+    "sn": "ff4f8e92-dbcc-475b-bca5-adefbcdaffcb",
+    "name": "Luxurious Concrete Hat - Nike 籃球鞋",
+    "photos": "t2.jpg,t1.jpg,t5.jpg",
+    "stock": 70,
+    "price": 10800,
+    "info": "New Bacon model with 83 GB RAM, 941 GB storage, and alarmed features",
+    "brandId": 1,
+    "categoryId": 10
+  },
+  {
+    "sn": "24dc9619-a2a3-4c33-8a53-d21c37f82f65",
+    "name": "Unbranded Steel Salad - PUMA 外套",
+    "photos": "t1.jpg,t5.jpg,t2.jpg",
+    "stock": 100,
+    "price": 8100,
+    "info": "The sleek and powerless Computer comes with 紫色 LED lighting for smart functionality",
+    "brandId": 3,
+    "categoryId": 8
+  },
+  {
+    "sn": "f226cd49-0b06-4359-b074-769e832a5aeb",
+    "name": "Oriental Soft Hat - New Balance 短褲",
+    "photos": "t1.jpg,t2.jpg,t5.jpg",
+    "stock": 90,
+    "price": 13700,
+    "info": "New 紫色 Bike with ergonomic design for nice comfort",
+    "brandId": 4,
+    "categoryId": 5
+  },
+  {
+    "sn": "06df0883-14f9-4c48-b772-be91c614d115",
+    "name": "Recycled Concrete Pants - PUMA 外套",
+    "photos": "t3.jpg,t4.jpg,t5.jpg",
+    "stock": 100,
+    "price": 3800,
+    "info": "New 紫紅色 Pizza with ergonomic design for finished comfort",
+    "brandId": 3,
+    "categoryId": 8
+  },
+  {
+    "sn": "bde6abba-609e-4b54-9e1e-0030e8cf3be1",
+    "name": "Small Soft Chicken - PUMA 長袖上衣",
+    "photos": "t5.jpg,t4.jpg,t3.jpg",
+    "stock": 10,
+    "price": 10700,
+    "info": "The User-friendly next generation functionalities Computer offers reliable performance and gentle design",
+    "brandId": 3,
+    "categoryId": 6
+  },
+  {
+    "sn": "9976631e-0695-4487-9cf2-80d132d697bb",
+    "name": "Handmade Wooden Towels - adidas 帽類",
+    "photos": "t3.jpg,t4.jpg,t2.jpg",
+    "stock": 30,
+    "price": 5000,
+    "info": "Experience the 紫色 brilliance of our Computer, perfect for first environments",
+    "brandId": 2,
+    "categoryId": 12
+  },
+  {
+    "sn": "f5445b2d-66cc-422f-a5f3-1567f15d8b53",
+    "name": "Licensed Fresh Hat - Nike 短袖上衣",
+    "photos": "t5.jpg,t4.jpg,t1.jpg",
+    "stock": 80,
+    "price": 12300,
+    "info": "Savor the golden essence in our Tuna, designed for pricey culinary adventures",
+    "brandId": 1,
+    "categoryId": 4
+  },
+  {
+    "sn": "73e87a27-11a4-4917-a033-5be3dd0cf278",
+    "name": "Recycled Rubber Bike - adidas 帽類",
+    "photos": "t2.jpg,t3.jpg,t1.jpg",
+    "stock": 80,
+    "price": 14500,
+    "info": "盧 LLC's most advanced Pizza technology increases competent capabilities",
+    "brandId": 2,
+    "categoryId": 12
+  },
+  {
+    "sn": "d12e72ed-e171-40f7-83ed-f8958b1e9d60",
+    "name": "Handmade Plastic Soap - PUMA 帽類",
+    "photos": "t3.jpg,t2.jpg,t4.jpg",
+    "stock": 80,
+    "price": 6200,
+    "info": "Featuring Protactinium-enhanced technology, our Chair offers unparalleled quarrelsome performance",
+    "brandId": 3,
+    "categoryId": 12
+  },
+  {
+    "sn": "1964fa5e-82b5-465c-ad36-4376e2434798",
+    "name": "Incredible Concrete Ball - adidas 慢跑鞋",
+    "photos": "t3.jpg,t1.jpg,t5.jpg",
+    "stock": 60,
+    "price": 14000,
+    "info": "Introducing the Democratic People's Republic of Korea-inspired Bacon, blending blushing style with local craftsmanship",
+    "brandId": 2,
+    "categoryId": 9
+  },
+  {
+    "sn": "4fe2d7a4-9fc9-452f-9daf-f699d9378d49",
+    "name": "Bespoke Soft Towels - PUMA 長褲",
+    "photos": "t5.jpg,t1.jpg,t3.jpg",
+    "stock": 20,
+    "price": 5800,
+    "info": "The sleek and regal Shirt comes with 黃色 LED lighting for smart functionality",
+    "brandId": 3,
+    "categoryId": 7
+  },
+  {
+    "sn": "afde2f39-0100-4143-aa18-2ebd4f0a4683",
+    "name": "Fantastic Cotton Chips - PUMA 短袖上衣",
+    "photos": "t2.jpg,t5.jpg,t1.jpg",
+    "stock": 70,
+    "price": 10800,
+    "info": "New Keyboard model with 83 GB RAM, 648 GB storage, and authorized features",
+    "brandId": 3,
+    "categoryId": 4
+  },
+  {
+    "sn": "bad0c2b8-ed0a-4522-8fe3-9f519caabded",
+    "name": "Handcrafted Rubber Car - New Balance 帽類",
+    "photos": "t1.jpg,t3.jpg,t4.jpg",
+    "stock": 80,
+    "price": 13000,
+    "info": "New Chair model with 8 GB RAM, 866 GB storage, and flustered features",
+    "brandId": 4,
+    "categoryId": 12
+  },
+  {
+    "sn": "03dae9dc-5144-4ec3-98df-e4a1724b30bd",
+    "name": "Small Bronze Keyboard - New Balance 包款",
+    "photos": "t2.jpg,t3.jpg,t4.jpg",
+    "stock": 60,
+    "price": 7400,
+    "info": "顧, 林 and 段's most advanced Hat technology increases warm capabilities",
+    "brandId": 4,
+    "categoryId": 11
+  },
+  {
+    "sn": "e830e5ce-a765-42b7-be51-5790861caa1b",
+    "name": "Rustic Wooden Soap - Nike 短袖上衣",
+    "photos": "t2.jpg,t1.jpg,t5.jpg",
+    "stock": 60,
+    "price": 5800,
+    "info": "The 雨澤 Keyboard is the latest in a series of infatuated products from 汪, 高 and 史",
+    "brandId": 1,
+    "categoryId": 4
+  },
+  {
+    "sn": "18f053a4-40ce-445e-86de-0bad09e2a3d2",
+    "name": "Luxurious Fresh Salad - New Balance 籃球鞋",
+    "photos": "t2.jpg,t3.jpg,t1.jpg",
+    "stock": 60,
+    "price": 11600,
+    "info": "The sleek and minty Pants comes with 紫色 LED lighting for smart functionality",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "a3bc4535-dc0b-4c35-a98d-08e2b9382d23",
+    "name": "Awesome Bronze Pants - PUMA 包款",
+    "photos": "t3.jpg,t4.jpg,t2.jpg",
+    "stock": 40,
+    "price": 8300,
+    "info": "Featuring Praseodymium-enhanced technology, our Hat offers unparalleled filthy performance",
+    "brandId": 3,
+    "categoryId": 11
+  },
+  {
+    "sn": "4480ae61-41ed-4af5-9a76-f8594f6013f2",
+    "name": "Electronic Metal Chips - PUMA 包款",
+    "photos": "t3.jpg,t2.jpg,t5.jpg",
+    "stock": 100,
+    "price": 5000,
+    "info": "Handmade Mouse designed with Concrete for shoddy performance",
+    "brandId": 3,
+    "categoryId": 11
+  },
+  {
+    "sn": "6874661d-7032-4705-9d4c-19b84ac2a244",
+    "name": "Ergonomic Fresh Gloves - Nike 外套",
+    "photos": "t2.jpg,t1.jpg,t3.jpg",
+    "stock": 10,
+    "price": 9500,
+    "info": "Our fresh-inspired Chair brings a taste of luxury to your gruesome lifestyle",
+    "brandId": 1,
+    "categoryId": 8
+  },
+  {
+    "sn": "dc1a5163-31d4-4bfb-bba7-e7694a3b07af",
+    "name": "Small Wooden Shoes - PUMA 短袖上衣",
+    "photos": "t4.jpg,t5.jpg,t2.jpg",
+    "stock": 30,
+    "price": 12600,
+    "info": "Our spicy-inspired Car brings a taste of luxury to your concerned lifestyle",
+    "brandId": 3,
+    "categoryId": 4
+  },
+  {
+    "sn": "5b217f65-6bb4-4913-8baf-5ed716f5f5ac",
+    "name": "Licensed Metal Keyboard - PUMA 籃球鞋",
+    "photos": "t5.jpg,t3.jpg,t2.jpg",
+    "stock": 30,
+    "price": 12600,
+    "info": "The sleek and alienated Table comes with 乳白色 LED lighting for smart functionality",
+    "brandId": 3,
+    "categoryId": 10
+  },
+  {
+    "sn": "7fbd19ce-4f47-416c-8975-f80138df5104",
+    "name": "Tasty Rubber Hat - PUMA 帽類",
+    "photos": "t2.jpg,t3.jpg,t1.jpg",
+    "stock": 90,
+    "price": 9300,
+    "info": "Unbranded Car designed with Metal for memorable performance",
+    "brandId": 3,
+    "categoryId": 12
+  },
+  {
+    "sn": "fa4df84b-2454-4f53-9bda-511317340542",
+    "name": "Unbranded Plastic Bacon - adidas 短袖上衣",
+    "photos": "t1.jpg,t3.jpg,t4.jpg",
+    "stock": 90,
+    "price": 6300,
+    "info": "Ergonomic Cheese made with Frozen for all-day torn support",
+    "brandId": 2,
+    "categoryId": 4
+  },
+  {
+    "sn": "bf737668-77d5-43cc-b4a5-fe4b1a7076cc",
+    "name": "Handmade Cotton Towels - New Balance 短袖上衣",
+    "photos": "t3.jpg,t2.jpg,t4.jpg",
+    "stock": 30,
+    "price": 13200,
+    "info": "Featuring Manganese-enhanced technology, our Shoes offers unparalleled amused performance",
+    "brandId": 4,
+    "categoryId": 4
+  },
+  {
+    "sn": "c6f6b651-4445-4997-b862-bf9949e21736",
+    "name": "Fantastic Plastic Computer - Nike 慢跑鞋",
+    "photos": "t5.jpg,t3.jpg,t4.jpg",
+    "stock": 10,
+    "price": 8200,
+    "info": "The sleek and personal Salad comes with 綠色 LED lighting for smart functionality",
+    "brandId": 1,
+    "categoryId": 9
+  },
+  {
+    "sn": "0e0fd995-3b6f-4e43-87d7-fe8f6c031cf9",
+    "name": "Incredible Rubber Cheese - Nike 包款",
+    "photos": "t5.jpg,t2.jpg,t3.jpg",
+    "stock": 70,
+    "price": 9200,
+    "info": "Introducing the Saint Kitts and Nevis-inspired Bike, blending grim style with local craftsmanship",
+    "brandId": 1,
+    "categoryId": 11
+  },
+  {
+    "sn": "01860cca-eca8-49da-8f52-a71834c50da7",
+    "name": "Handmade Granite Cheese - adidas 長褲",
+    "photos": "t5.jpg,t2.jpg,t1.jpg",
+    "stock": 60,
+    "price": 10400,
+    "info": "Ergonomic Cheese made with Steel for all-day willing support",
+    "brandId": 2,
+    "categoryId": 7
+  },
+  {
+    "sn": "f2b55831-9610-4178-9364-12d80351cb51",
+    "name": "Licensed Rubber Computer - adidas 短褲",
+    "photos": "t5.jpg,t1.jpg,t3.jpg",
+    "stock": 50,
+    "price": 4600,
+    "info": "Introducing the Marshall Islands-inspired Hat, blending bogus style with local craftsmanship",
+    "brandId": 2,
+    "categoryId": 5
+  },
+  {
+    "sn": "5f14d215-c7e4-4f99-b35c-89c3c5fe334c",
+    "name": "Rustic Plastic Hat - New Balance 帽類",
+    "photos": "t4.jpg,t3.jpg,t2.jpg",
+    "stock": 90,
+    "price": 2100,
+    "info": "Our creamy-inspired Gloves brings a taste of luxury to your jagged lifestyle",
+    "brandId": 4,
+    "categoryId": 12
+  },
+  {
+    "sn": "c442127b-b9d6-465a-8e83-3da81466c107",
+    "name": "Unbranded Bronze Cheese - Nike 外套",
+    "photos": "t5.jpg,t3.jpg,t4.jpg",
+    "stock": 50,
+    "price": 4000,
+    "info": "Discover the old-fashioned new Chips with an exciting mix of Steel ingredients",
+    "brandId": 1,
+    "categoryId": 8
+  },
+  {
+    "sn": "aa2d76de-1f49-4b4d-b636-a42d26e4e429",
+    "name": "Awesome Bronze Ball - adidas 長袖上衣",
+    "photos": "t3.jpg,t2.jpg,t4.jpg",
+    "stock": 100,
+    "price": 11200,
+    "info": "Professional-grade Chicken perfect for strident training and recreational use",
+    "brandId": 2,
+    "categoryId": 6
+  },
+  {
+    "sn": "cb4ec408-09de-4f45-bf29-cacb5b4e2295",
+    "name": "Rustic Wooden Chips - Nike 帽類",
+    "photos": "t2.jpg,t4.jpg,t1.jpg",
+    "stock": 80,
+    "price": 2500,
+    "info": "Professional-grade Towels perfect for sparse training and recreational use",
+    "brandId": 1,
+    "categoryId": 12
+  },
+  {
+    "sn": "9aa859ae-f637-461b-a20e-13c0219e9c45",
+    "name": "Ergonomic Rubber Keyboard - New Balance 籃球鞋",
+    "photos": "t5.jpg,t2.jpg,t4.jpg",
+    "stock": 20,
+    "price": 9800,
+    "info": "Discover the avaricious new Pizza with an exciting mix of Plastic ingredients",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "d546ca85-d4f0-43dc-b79e-69aec42e8688",
+    "name": "Awesome Rubber Keyboard - adidas 慢跑鞋",
+    "photos": "t5.jpg,t4.jpg,t3.jpg",
+    "stock": 40,
+    "price": 14500,
+    "info": "The Optional national focus group Fish offers reliable performance and scientific design",
+    "brandId": 2,
+    "categoryId": 9
+  },
+  {
+    "sn": "58f2d305-4980-4f70-b087-64c381ec7a72",
+    "name": "Electronic Cotton Pants - New Balance 短袖上衣",
+    "photos": "t5.jpg,t3.jpg,t1.jpg",
+    "stock": 30,
+    "price": 3100,
+    "info": "Introducing the Tokelau-inspired Pizza, blending authorized style with local craftsmanship",
+    "brandId": 4,
+    "categoryId": 4
+  },
+  {
+    "sn": "a6c2dbcc-ad5f-4a0c-8d41-a0841287b8d9",
+    "name": "Bespoke Frozen Cheese - PUMA 包款",
+    "photos": "t2.jpg,t4.jpg,t1.jpg",
+    "stock": 70,
+    "price": 11400,
+    "info": "Ergonomic Pizza made with Cotton for all-day bossy support",
+    "brandId": 3,
+    "categoryId": 11
+  },
+  {
+    "sn": "e6b027d1-777c-4195-836b-8f4b40c8ad3b",
+    "name": "Unbranded Fresh Salad - adidas 籃球鞋",
+    "photos": "t4.jpg,t1.jpg,t2.jpg",
+    "stock": 70,
+    "price": 14500,
+    "info": "Discover the shark-like agility of our Keyboard, perfect for good users",
+    "brandId": 2,
+    "categoryId": 10
+  },
+  {
+    "sn": "c59f2b7c-76dc-46ef-9495-a15fa0da9fb5",
+    "name": "Small Wooden Fish - New Balance 籃球鞋",
+    "photos": "t1.jpg,t2.jpg,t5.jpg",
+    "stock": 10,
+    "price": 12500,
+    "info": "Discover the wolf-like agility of our Pants, perfect for boring users",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "6754f0ca-30cb-4920-9fdf-ab9641736e94",
+    "name": "Modern Bronze Cheese - Nike 長袖上衣",
+    "photos": "t3.jpg,t5.jpg,t1.jpg",
+    "stock": 20,
+    "price": 10000,
+    "info": "Discover the responsible new Mouse with an exciting mix of Metal ingredients",
+    "brandId": 1,
+    "categoryId": 6
+  },
+  {
+    "sn": "4431457f-284a-43f0-9164-678c091b41ed",
+    "name": "Small Soft Pants - Nike 慢跑鞋",
+    "photos": "t3.jpg,t5.jpg,t1.jpg",
+    "stock": 10,
+    "price": 3300,
+    "info": "New Car model with 46 GB RAM, 712 GB storage, and coarse features",
+    "brandId": 1,
+    "categoryId": 9
+  },
+  {
+    "sn": "2d28de74-c54d-4b3a-9a22-d010f754cb43",
+    "name": "Refined Frozen Salad - New Balance 帽類",
+    "photos": "t2.jpg,t4.jpg,t1.jpg",
+    "stock": 70,
+    "price": 3100,
+    "info": "Our cat-friendly Chips ensures shameless comfort for your pets",
+    "brandId": 4,
+    "categoryId": 12
+  },
+  {
+    "sn": "d91887e2-74f7-4792-b2f4-75dd88801229",
+    "name": "Rustic Granite Car - adidas 包款",
+    "photos": "t4.jpg,t1.jpg,t5.jpg",
+    "stock": 60,
+    "price": 14900,
+    "info": "Elegant Chair designed with Metal for respectful performance",
+    "brandId": 2,
+    "categoryId": 11
+  },
+  {
+    "sn": "3fc4f843-bf5a-40f9-9a9d-1faae50e7ca4",
+    "name": "Oriental Bronze Towels - New Balance 長褲",
+    "photos": "t5.jpg,t2.jpg,t4.jpg",
+    "stock": 30,
+    "price": 9100,
+    "info": "Featuring Nihonium-enhanced technology, our Ball offers unparalleled shadowy performance",
+    "brandId": 4,
+    "categoryId": 7
+  },
+  {
+    "sn": "ab939d6d-36ea-482a-abba-c3c0b8743544",
+    "name": "Oriental Rubber Gloves - PUMA 短褲",
+    "photos": "t1.jpg,t2.jpg,t3.jpg",
+    "stock": 60,
+    "price": 14400,
+    "info": "The 藍色 Chair combines Venezuela aesthetics with Gadolinium-based durability",
+    "brandId": 3,
+    "categoryId": 5
+  },
+  {
+    "sn": "5a684375-98dd-45b2-91b7-5f61c0378d1a",
+    "name": "Handcrafted Plastic Pizza - Nike 長袖上衣",
+    "photos": "t5.jpg,t2.jpg,t3.jpg",
+    "stock": 30,
+    "price": 6400,
+    "info": "Discover the squirrel-like agility of our Shoes, perfect for humiliating users",
+    "brandId": 1,
+    "categoryId": 6
+  },
+  {
+    "sn": "881cd2bc-8222-4ae5-bac0-c2ad7deda43d",
+    "name": "Small Bronze Shirt - New Balance 籃球鞋",
+    "photos": "t4.jpg,t5.jpg,t3.jpg",
+    "stock": 70,
+    "price": 11100,
+    "info": "羅, 高 and 徐's most advanced Chair technology increases shameless capabilities",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "902c4e23-4c65-4518-8304-4ec6ea28aadb",
+    "name": "Elegant Granite Soap - PUMA 慢跑鞋",
+    "photos": "t5.jpg,t1.jpg,t2.jpg",
+    "stock": 40,
+    "price": 8500,
+    "info": "New 紅色 Table with ergonomic design for vibrant comfort",
+    "brandId": 3,
+    "categoryId": 9
+  },
+  {
+    "sn": "61b86eb0-b062-47ea-b628-3b09ad24d9a2",
+    "name": "Small Granite Soap - adidas 慢跑鞋",
+    "photos": "t2.jpg,t4.jpg,t3.jpg",
+    "stock": 60,
+    "price": 13900,
+    "info": "Rustic Cheese designed with Granite for sorrowful performance",
+    "brandId": 2,
+    "categoryId": 9
+  },
+  {
+    "sn": "d9049b13-7f5f-486c-83a2-dc75d097d3b6",
+    "name": "Sleek Metal Car - Nike 短褲",
+    "photos": "t3.jpg,t1.jpg,t4.jpg",
+    "stock": 70,
+    "price": 2600,
+    "info": "梁 - 譚's most advanced Car technology increases firm capabilities",
+    "brandId": 1,
+    "categoryId": 5
+  },
+  {
+    "sn": "bb5f63e1-c8f1-416c-abba-02f7743d2e5e",
+    "name": "Recycled Steel Fish - Nike 長褲",
+    "photos": "t3.jpg,t4.jpg,t2.jpg",
+    "stock": 20,
+    "price": 14500,
+    "info": "The 青檸色 Shoes combines Syrian Arab Republic aesthetics with Neon-based durability",
+    "brandId": 1,
+    "categoryId": 7
+  },
+  {
+    "sn": "734380e2-4fb8-450a-b415-9377f890aaed",
+    "name": "Incredible Metal Computer - New Balance 帽類",
+    "photos": "t4.jpg,t1.jpg,t5.jpg",
+    "stock": 30,
+    "price": 13300,
+    "info": "Innovative Chicken featuring jumbo technology and Granite construction",
+    "brandId": 4,
+    "categoryId": 12
+  },
+  {
+    "sn": "c3b601a6-e32b-4056-91a6-7bd88130e83b",
+    "name": "Recycled Fresh Computer - Nike 慢跑鞋",
+    "photos": "t1.jpg,t5.jpg,t4.jpg",
+    "stock": 100,
+    "price": 10900,
+    "info": "New Bike model with 70 GB RAM, 805 GB storage, and afraid features",
+    "brandId": 1,
+    "categoryId": 9
+  },
+  {
+    "sn": "3dcb4235-c587-490a-8ee6-f23bd9097e68",
+    "name": "Elegant Metal Pizza - New Balance 長褲",
+    "photos": "t1.jpg,t4.jpg,t3.jpg",
+    "stock": 50,
+    "price": 13500,
+    "info": "Savor the crispy essence in our Table, designed for muted culinary adventures",
+    "brandId": 4,
+    "categoryId": 7
+  },
+  {
+    "sn": "ce5a86df-d14b-4401-97e6-c315f1000a93",
+    "name": "Electronic Wooden Bacon - PUMA 慢跑鞋",
+    "photos": "t3.jpg,t5.jpg,t2.jpg",
+    "stock": 50,
+    "price": 3700,
+    "info": "Featuring Platinum-enhanced technology, our Keyboard offers unparalleled common performance",
+    "brandId": 3,
+    "categoryId": 9
+  },
+  {
+    "sn": "f1a15e77-8a7b-4052-bca8-a4bf59323dcd",
+    "name": "Gorgeous Concrete Chicken - PUMA 外套",
+    "photos": "t4.jpg,t2.jpg,t5.jpg",
+    "stock": 60,
+    "price": 1500,
+    "info": "Elegant Shirt designed with Rubber for mild performance",
+    "brandId": 3,
+    "categoryId": 8
+  },
+  {
+    "sn": "b36dfbc4-d39b-43ab-87d0-53cd1ec9baff",
+    "name": "Licensed Bronze Sausages - PUMA 短袖上衣",
+    "photos": "t1.jpg,t3.jpg,t5.jpg",
+    "stock": 10,
+    "price": 14700,
+    "info": "The sleek and internal Shirt comes with 紫色 LED lighting for smart functionality",
+    "brandId": 3,
+    "categoryId": 4
+  },
+  {
+    "sn": "71358fe2-c90a-4064-9f0c-167cba8b4327",
+    "name": "Unbranded Bronze Chips - Nike 長褲",
+    "photos": "t3.jpg,t2.jpg,t5.jpg",
+    "stock": 60,
+    "price": 4600,
+    "info": "Discover the timely new Chair with an exciting mix of Wooden ingredients",
+    "brandId": 1,
+    "categoryId": 7
+  },
+  {
+    "sn": "a80ad91a-6ae7-4705-933f-e876a1bdbc5f",
+    "name": "Ergonomic Steel Bike - New Balance 包款",
+    "photos": "t2.jpg,t1.jpg,t5.jpg",
+    "stock": 10,
+    "price": 5200,
+    "info": "New Bike model with 61 GB RAM, 450 GB storage, and shady features",
+    "brandId": 4,
+    "categoryId": 11
+  },
+  {
+    "sn": "17439ccc-eb64-4455-af9e-ceb9a6493aff",
+    "name": "Elegant Concrete Ball - adidas 長褲",
+    "photos": "t5.jpg,t2.jpg,t4.jpg",
+    "stock": 80,
+    "price": 5200,
+    "info": "蔣 - 葉's most advanced Soap technology increases complicated capabilities",
+    "brandId": 2,
+    "categoryId": 7
+  },
+  {
+    "sn": "27e49e34-9fa7-4645-a5a3-779c48fd4d08",
+    "name": "Intelligent Concrete Car - adidas 外套",
+    "photos": "t3.jpg,t5.jpg,t4.jpg",
+    "stock": 40,
+    "price": 1600,
+    "info": "The 煜城 Pizza is the latest in a series of confused products from 賴 Inc",
+    "brandId": 2,
+    "categoryId": 8
+  },
+  {
+    "sn": "0f262b05-b3eb-4969-9ae1-3dd60a01bcce",
+    "name": "Incredible Fresh Car - Nike 包款",
+    "photos": "t3.jpg,t4.jpg,t5.jpg",
+    "stock": 90,
+    "price": 10500,
+    "info": "Our tiger-friendly Ball ensures elegant comfort for your pets",
+    "brandId": 1,
+    "categoryId": 11
+  },
+  {
+    "sn": "43b76a11-f628-438c-a39e-ab184ae211b4",
+    "name": "Small Concrete Shirt - New Balance 外套",
+    "photos": "t3.jpg,t4.jpg,t1.jpg",
+    "stock": 10,
+    "price": 8200,
+    "info": "Innovative Bacon featuring untimely technology and Soft construction",
+    "brandId": 4,
+    "categoryId": 8
+  },
+  {
+    "sn": "ca56752f-0115-4fce-b5c2-b13b390e3b5f",
+    "name": "Sleek Steel Shirt - adidas 短袖上衣",
+    "photos": "t4.jpg,t1.jpg,t5.jpg",
+    "stock": 80,
+    "price": 9800,
+    "info": "New 淺橙色 Pants with ergonomic design for celebrated comfort",
+    "brandId": 2,
+    "categoryId": 4
+  },
+  {
+    "sn": "932bc6ad-b883-4745-aef3-da0d7f3dc02a",
+    "name": "Practical Frozen Tuna - PUMA 慢跑鞋",
+    "photos": "t4.jpg,t5.jpg,t2.jpg",
+    "stock": 50,
+    "price": 11100,
+    "info": "黃 Group's most advanced Towels technology increases glum capabilities",
+    "brandId": 3,
+    "categoryId": 9
+  },
+  {
+    "sn": "95e644c2-05d1-4666-8d1e-27e08e0f1cdd",
+    "name": "Ergonomic Bronze Towels - Nike 短褲",
+    "photos": "t3.jpg,t5.jpg,t4.jpg",
+    "stock": 90,
+    "price": 8400,
+    "info": "The 鴻煊 Shoes is the latest in a series of moist products from 熊 LLC",
+    "brandId": 1,
+    "categoryId": 5
+  },
+  {
+    "sn": "b360d36e-ec1b-4de9-b44b-203b1f129ad6",
+    "name": "Awesome Metal Chair - New Balance 長褲",
+    "photos": "t4.jpg,t5.jpg,t2.jpg",
+    "stock": 70,
+    "price": 3400,
+    "info": "The 青檸色 Shirt combines Norway aesthetics with Uranium-based durability",
+    "brandId": 4,
+    "categoryId": 7
+  },
+  {
+    "sn": "61e4f9dc-a30f-48b8-938a-98d928b2667e",
+    "name": "Practical Bronze Chicken - New Balance 長袖上衣",
+    "photos": "t2.jpg,t3.jpg,t5.jpg",
+    "stock": 20,
+    "price": 7800,
+    "info": "New 紅色 Chair with ergonomic design for short-term comfort",
+    "brandId": 4,
+    "categoryId": 6
+  },
+  {
+    "sn": "07886b4f-d27b-4fd4-8b68-ebd5e032d6f7",
+    "name": "Rustic Steel Bike - New Balance 籃球鞋",
+    "photos": "t1.jpg,t3.jpg,t4.jpg",
+    "stock": 70,
+    "price": 3800,
+    "info": "Our crispy-inspired Computer brings a taste of luxury to your different lifestyle",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "1a860c71-6d54-4e9f-9748-bb569b33dbe6",
+    "name": "Generic Metal Bike - New Balance 短褲",
+    "photos": "t3.jpg,t2.jpg,t5.jpg",
+    "stock": 60,
+    "price": 5200,
+    "info": "The 棕褐色 Shirt combines Venezuela aesthetics with Ruthenium-based durability",
+    "brandId": 4,
+    "categoryId": 5
+  },
+  {
+    "sn": "ad287234-270f-4805-aab9-b23113807478",
+    "name": "Incredible Bronze Sausages - adidas 帽類",
+    "photos": "t5.jpg,t4.jpg,t1.jpg",
+    "stock": 60,
+    "price": 1800,
+    "info": "The Open-architected zero defect system engine Table offers reliable performance and stale design",
+    "brandId": 2,
+    "categoryId": 12
+  },
+  {
+    "sn": "9d48d15d-35b3-4f0d-b270-07baf17f75bc",
+    "name": "Modern Granite Tuna - New Balance 外套",
+    "photos": "t5.jpg,t2.jpg,t4.jpg",
+    "stock": 90,
+    "price": 14800,
+    "info": "Professional-grade Cheese perfect for measly training and recreational use",
+    "brandId": 4,
+    "categoryId": 8
+  },
+  {
+    "sn": "40b1b538-86b7-4993-a51a-0402b447a8bd",
+    "name": "Fantastic Bronze Cheese - PUMA 慢跑鞋",
+    "photos": "t4.jpg,t5.jpg,t3.jpg",
+    "stock": 70,
+    "price": 12500,
+    "info": "Professional-grade Pants perfect for ripe training and recreational use",
+    "brandId": 3,
+    "categoryId": 9
+  },
+  {
+    "sn": "e7f3eb26-3f7d-42d2-9d7a-a1ba7c637164",
+    "name": "Bespoke Granite Hat - Nike 長袖上衣",
+    "photos": "t2.jpg,t1.jpg,t4.jpg",
+    "stock": 100,
+    "price": 3800,
+    "info": "Luxurious Mouse designed with Plastic for shocked performance",
+    "brandId": 1,
+    "categoryId": 6
+  },
+  {
+    "sn": "d9fb1f3c-748f-44be-bba2-690f878d2e3f",
+    "name": "Fantastic Plastic Pizza - adidas 外套",
+    "photos": "t2.jpg,t5.jpg,t3.jpg",
+    "stock": 100,
+    "price": 8300,
+    "info": "Tasty Car designed with Frozen for zesty performance",
+    "brandId": 2,
+    "categoryId": 8
+  },
+  {
+    "sn": "2c53c35e-6127-46ff-b5b5-28a6b5724a61",
+    "name": "Elegant Fresh Keyboard - Nike 慢跑鞋",
+    "photos": "t4.jpg,t1.jpg,t3.jpg",
+    "stock": 30,
+    "price": 2700,
+    "info": "Discover the squirrel-like agility of our Pants, perfect for lined users",
+    "brandId": 1,
+    "categoryId": 9
+  },
+  {
+    "sn": "11b6bf20-7561-4c93-b1c0-201ca5c0008d",
+    "name": "Generic Soft Salad - PUMA 慢跑鞋",
+    "photos": "t2.jpg,t1.jpg,t5.jpg",
+    "stock": 50,
+    "price": 11600,
+    "info": "Discover the bee-like agility of our Soap, perfect for grumpy users",
+    "brandId": 3,
+    "categoryId": 9
+  },
+  {
+    "sn": "0c253375-8c02-48b7-aa53-069036739541",
+    "name": "Ergonomic Soft Pants - adidas 短褲",
+    "photos": "t1.jpg,t5.jpg,t2.jpg",
+    "stock": 50,
+    "price": 10000,
+    "info": "Discover the dolphin-like agility of our Bike, perfect for corrupt users",
+    "brandId": 2,
+    "categoryId": 5
+  },
+  {
+    "sn": "02f8bebe-367d-447a-8e47-77688bc89a61",
+    "name": "Generic Wooden Tuna - New Balance 短褲",
+    "photos": "t3.jpg,t2.jpg,t1.jpg",
+    "stock": 90,
+    "price": 8600,
+    "info": "汪, 董 and 鄒's most advanced Salad technology increases delicious capabilities",
+    "brandId": 4,
+    "categoryId": 5
+  },
+  {
+    "sn": "c216b981-acac-4532-86b8-8d1fcf19bf8b",
+    "name": "Oriental Soft Table - PUMA 長袖上衣",
+    "photos": "t3.jpg,t5.jpg,t4.jpg",
+    "stock": 50,
+    "price": 3800,
+    "info": "Experience the 橙色 brilliance of our Chicken, perfect for well-lit environments",
+    "brandId": 3,
+    "categoryId": 6
+  },
+  {
+    "sn": "955ca41d-92cd-4bd9-a9b9-c2e5d1d24cab",
+    "name": "Handmade Metal Hat - Nike 慢跑鞋",
+    "photos": "t2.jpg,t1.jpg,t5.jpg",
+    "stock": 90,
+    "price": 9200,
+    "info": "Introducing the Cape Verde-inspired Tuna, blending crooked style with local craftsmanship",
+    "brandId": 1,
+    "categoryId": 9
+  },
+  {
+    "sn": "5192ef82-0174-4ae4-9a6d-75bd8ee8e291",
+    "name": "Oriental Plastic Chicken - adidas 籃球鞋",
+    "photos": "t5.jpg,t1.jpg,t4.jpg",
+    "stock": 20,
+    "price": 11400,
+    "info": "The 俊馳 Pants is the latest in a series of every products from 汪 - 許",
+    "brandId": 2,
+    "categoryId": 10
+  },
+  {
+    "sn": "11c3c2f1-4703-47a8-b1d1-18ec751d0e7f",
+    "name": "Licensed Steel Towels - adidas 短袖上衣",
+    "photos": "t5.jpg,t1.jpg,t4.jpg",
+    "stock": 80,
+    "price": 11900,
+    "info": "Ergonomic Sausages made with Bronze for all-day astonishing support",
+    "brandId": 2,
+    "categoryId": 4
+  },
+  {
+    "sn": "8c42fc4c-127e-49cf-91d6-8bcc142dd506",
+    "name": "Oriental Plastic Chair - New Balance 外套",
+    "photos": "t1.jpg,t4.jpg,t2.jpg",
+    "stock": 90,
+    "price": 11000,
+    "info": "New Salad model with 53 GB RAM, 130 GB storage, and bony features",
+    "brandId": 4,
+    "categoryId": 8
+  },
+  {
+    "sn": "84cad79a-8d7b-48c5-ad2a-d34879990e17",
+    "name": "Incredible Cotton Bacon - PUMA 短袖上衣",
+    "photos": "t3.jpg,t2.jpg,t4.jpg",
+    "stock": 60,
+    "price": 12500,
+    "info": "New Bacon model with 21 GB RAM, 283 GB storage, and warmhearted features",
+    "brandId": 3,
+    "categoryId": 4
+  },
+  {
+    "sn": "0fdcd4e8-82ff-4781-b596-7ff2f1549f03",
+    "name": "Luxurious Steel Tuna - Nike 短褲",
+    "photos": "t3.jpg,t5.jpg,t1.jpg",
+    "stock": 20,
+    "price": 7200,
+    "info": "Discover the lawful new Pants with an exciting mix of Rubber ingredients",
+    "brandId": 1,
+    "categoryId": 5
+  },
+  {
+    "sn": "0e11ad8e-c260-4491-b707-bf6bc8a3435c",
+    "name": "Ergonomic Cotton Towels - Nike 帽類",
+    "photos": "t3.jpg,t4.jpg,t5.jpg",
+    "stock": 90,
+    "price": 11500,
+    "info": "Innovative Salad featuring narrow technology and Rubber construction",
+    "brandId": 1,
+    "categoryId": 12
+  },
+  {
+    "sn": "a3a161f6-cae1-480a-9e7b-bb4befc7e20c",
+    "name": "Bespoke Concrete Tuna - PUMA 帽類",
+    "photos": "t1.jpg,t4.jpg,t2.jpg",
+    "stock": 90,
+    "price": 5800,
+    "info": "The sleek and greedy Gloves comes with 橙色 LED lighting for smart functionality",
+    "brandId": 3,
+    "categoryId": 12
+  },
+  {
+    "sn": "91649b65-167e-401c-aae4-920c4a095042",
+    "name": "Ergonomic Bronze Hat - PUMA 外套",
+    "photos": "t1.jpg,t5.jpg,t2.jpg",
+    "stock": 90,
+    "price": 7500,
+    "info": "Discover the fish-like agility of our Computer, perfect for splendid users",
+    "brandId": 3,
+    "categoryId": 8
+  },
+  {
+    "sn": "a189cc21-c7ac-42f9-96bb-ffb8bb14702f",
+    "name": "Handcrafted Fresh Bacon - PUMA 短袖上衣",
+    "photos": "t2.jpg,t1.jpg,t5.jpg",
+    "stock": 20,
+    "price": 7200,
+    "info": "Introducing the Greenland-inspired Sausages, blending polished style with local craftsmanship",
+    "brandId": 3,
+    "categoryId": 4
+  },
+  {
+    "sn": "44c43bde-fbdf-47aa-9930-a48aa45440fc",
+    "name": "Refined Fresh Hat - Nike 長袖上衣",
+    "photos": "t3.jpg,t5.jpg,t4.jpg",
+    "stock": 10,
+    "price": 7300,
+    "info": "The sleek and exalted Hat comes with 乳白色 LED lighting for smart functionality",
+    "brandId": 1,
+    "categoryId": 6
+  },
+  {
+    "sn": "e6ab3a55-8a58-4d25-9a8c-a8cfcae8d498",
+    "name": "Ergonomic Plastic Table - adidas 籃球鞋",
+    "photos": "t4.jpg,t1.jpg,t5.jpg",
+    "stock": 100,
+    "price": 2500,
+    "info": "Discover the zebra-like agility of our Hat, perfect for round users",
+    "brandId": 2,
+    "categoryId": 10
+  },
+  {
+    "sn": "15cd22a3-8ac7-4d31-a148-1ebe47f2e065",
+    "name": "Generic Steel Chips - adidas 包款",
+    "photos": "t1.jpg,t4.jpg,t3.jpg",
+    "stock": 40,
+    "price": 9700,
+    "info": "Stylish Mouse designed to make you stand out with pale looks",
+    "brandId": 2,
+    "categoryId": 11
+  },
+  {
+    "sn": "8f81483f-78c9-4066-a3a4-f953a10ff550",
+    "name": "Oriental Steel Computer - adidas 包款",
+    "photos": "t1.jpg,t2.jpg,t3.jpg",
+    "stock": 80,
+    "price": 14300,
+    "info": "Introducing the El Salvador-inspired Ball, blending fragrant style with local craftsmanship",
+    "brandId": 2,
+    "categoryId": 11
+  },
+  {
+    "sn": "40f184a6-b35b-42f1-8820-f907d51a18bf",
+    "name": "Handcrafted Fresh Salad - New Balance 長褲",
+    "photos": "t3.jpg,t4.jpg,t5.jpg",
+    "stock": 50,
+    "price": 9600,
+    "info": "The 博超 Towels is the latest in a series of gruesome products from 郭, 閻 and 田",
+    "brandId": 4,
+    "categoryId": 7
+  },
+  {
+    "sn": "df73f2b6-1bf5-48be-9622-771ca691b590",
+    "name": "Oriental Plastic Bacon - New Balance 帽類",
+    "photos": "t5.jpg,t2.jpg,t1.jpg",
+    "stock": 80,
+    "price": 12000,
+    "info": "New 藍紫色 Car with ergonomic design for splendid comfort",
+    "brandId": 4,
+    "categoryId": 12
+  },
+  {
+    "sn": "ae82d3f3-5dbc-478f-b0d9-80b71fa5b3cc",
+    "name": "Unbranded Bronze Tuna - adidas 外套",
+    "photos": "t5.jpg,t1.jpg,t4.jpg",
+    "stock": 20,
+    "price": 10600,
+    "info": "Discover the elephant-like agility of our Hat, perfect for sick users",
+    "brandId": 2,
+    "categoryId": 8
+  },
+  {
+    "sn": "f6b7000c-d713-4433-b5b0-92cf18893a3a",
+    "name": "Handmade Rubber Pants - PUMA 外套",
+    "photos": "t4.jpg,t5.jpg,t3.jpg",
+    "stock": 40,
+    "price": 4500,
+    "info": "Savor the sweet essence in our Ball, designed for favorite culinary adventures",
+    "brandId": 3,
+    "categoryId": 8
+  },
+  {
+    "sn": "7898f2ff-43fd-4634-aea7-2b2c1435e919",
+    "name": "Rustic Soft Sausages - Nike 慢跑鞋",
+    "photos": "t3.jpg,t1.jpg,t4.jpg",
+    "stock": 30,
+    "price": 9100,
+    "info": "Savor the tangy essence in our Chicken, designed for amazing culinary adventures",
+    "brandId": 1,
+    "categoryId": 9
+  },
+  {
+    "sn": "276b7901-117c-4ca1-a33a-d517996c27b9",
+    "name": "Sleek Frozen Chicken - adidas 帽類",
+    "photos": "t3.jpg,t4.jpg,t1.jpg",
+    "stock": 10,
+    "price": 5700,
+    "info": "Introducing the Yemen-inspired Tuna, blending short-term style with local craftsmanship",
+    "brandId": 2,
+    "categoryId": 12
+  },
+  {
+    "sn": "c5892715-4891-4975-b1f3-91492d33c99f",
+    "name": "Elegant Frozen Computer - adidas 長袖上衣",
+    "photos": "t3.jpg,t4.jpg,t2.jpg",
+    "stock": 20,
+    "price": 8100,
+    "info": "胡, 孟 and 董's most advanced Bacon technology increases corny capabilities",
+    "brandId": 2,
+    "categoryId": 6
+  },
+  {
+    "sn": "fe4663e9-6739-4a98-b651-22bbb2640191",
+    "name": "Oriental Plastic Table - Nike 短褲",
+    "photos": "t2.jpg,t4.jpg,t5.jpg",
+    "stock": 70,
+    "price": 14800,
+    "info": "New 藍色 Table with ergonomic design for lawful comfort",
+    "brandId": 1,
+    "categoryId": 5
+  },
+  {
+    "sn": "67a45d3d-8937-4793-be12-84dfbfda0d58",
+    "name": "Incredible Concrete Shirt - Nike 帽類",
+    "photos": "t1.jpg,t4.jpg,t3.jpg",
+    "stock": 20,
+    "price": 5100,
+    "info": "顧, 薛 and 覃's most advanced Chips technology increases second capabilities",
+    "brandId": 1,
+    "categoryId": 12
+  },
+  {
+    "sn": "a5995fd7-a0fb-43fb-a7e2-c9754cfc5a77",
+    "name": "Small Bronze Shoes - Nike 短褲",
+    "photos": "t2.jpg,t4.jpg,t5.jpg",
+    "stock": 50,
+    "price": 14300,
+    "info": "Our crunchy-inspired Car brings a taste of luxury to your graceful lifestyle",
+    "brandId": 1,
+    "categoryId": 5
+  },
+  {
+    "sn": "fa3c051d-aa9a-4386-9a19-62cc613be295",
+    "name": "Electronic Soft Tuna - New Balance 短袖上衣",
+    "photos": "t1.jpg,t5.jpg,t3.jpg",
+    "stock": 50,
+    "price": 3700,
+    "info": "宋 LLC's most advanced Car technology increases carefree capabilities",
+    "brandId": 4,
+    "categoryId": 4
+  },
+  {
+    "sn": "01a6a052-a7d7-4f30-9098-74fb8392818a",
+    "name": "Bespoke Concrete Mouse - Nike 包款",
+    "photos": "t2.jpg,t4.jpg,t5.jpg",
+    "stock": 50,
+    "price": 5100,
+    "info": "The 白色 Mouse combines Taiwan aesthetics with Uranium-based durability",
+    "brandId": 1,
+    "categoryId": 11
+  },
+  {
+    "sn": "4001a1fc-cde4-4de6-ac81-428c776d5e67",
+    "name": "Sleek Granite Tuna - adidas 長褲",
+    "photos": "t5.jpg,t1.jpg,t2.jpg",
+    "stock": 100,
+    "price": 2000,
+    "info": "Featuring Platinum-enhanced technology, our Shoes offers unparalleled quarrelsome performance",
+    "brandId": 2,
+    "categoryId": 7
+  },
+  {
+    "sn": "90d9b132-a326-4c86-97f9-2455dd6c3545",
+    "name": "Generic Granite Soap - adidas 帽類",
+    "photos": "t3.jpg,t4.jpg,t5.jpg",
+    "stock": 40,
+    "price": 11900,
+    "info": "New 金色 Pizza with ergonomic design for spirited comfort",
+    "brandId": 2,
+    "categoryId": 12
+  },
+  {
+    "sn": "cba719b1-914f-4fbd-9878-1fd8a1acdc95",
+    "name": "Gorgeous Plastic Pizza - adidas 長褲",
+    "photos": "t4.jpg,t2.jpg,t5.jpg",
+    "stock": 100,
+    "price": 7200,
+    "info": "Our gecko-friendly Chips ensures crafty comfort for your pets",
+    "brandId": 2,
+    "categoryId": 7
+  },
+  {
+    "sn": "a72ab719-8606-4017-aafc-4ad4abdbd194",
+    "name": "Recycled Bronze Mouse - adidas 長袖上衣",
+    "photos": "t4.jpg,t1.jpg,t3.jpg",
+    "stock": 30,
+    "price": 4000,
+    "info": "Bespoke Fish designed with Plastic for that performance",
+    "brandId": 2,
+    "categoryId": 6
+  },
+  {
+    "sn": "e905bad0-1726-4b60-a4b9-9de3f8744abc",
+    "name": "Ergonomic Bronze Shoes - adidas 慢跑鞋",
+    "photos": "t4.jpg,t5.jpg,t1.jpg",
+    "stock": 40,
+    "price": 15000,
+    "info": "The 紅色 Table combines Switzerland aesthetics with Platinum-based durability",
+    "brandId": 2,
+    "categoryId": 9
+  },
+  {
+    "sn": "a0657fc7-50db-47d5-883a-6a548463c8a6",
+    "name": "Sleek Steel Cheese - New Balance 長袖上衣",
+    "photos": "t5.jpg,t4.jpg,t1.jpg",
+    "stock": 70,
+    "price": 12600,
+    "info": "Innovative Bacon featuring practical technology and Granite construction",
+    "brandId": 4,
+    "categoryId": 6
+  },
+  {
+    "sn": "ea70fea4-8818-466e-8d62-282c5f74dbf7",
+    "name": "Bespoke Wooden Hat - adidas 帽類",
+    "photos": "t3.jpg,t1.jpg,t5.jpg",
+    "stock": 70,
+    "price": 9200,
+    "info": "Innovative Chips featuring secret technology and Fresh construction",
+    "brandId": 2,
+    "categoryId": 12
+  },
+  {
+    "sn": "a028503c-db6e-4edf-88df-d94e04717237",
+    "name": "Handmade Metal Gloves - PUMA 包款",
+    "photos": "t4.jpg,t1.jpg,t5.jpg",
+    "stock": 40,
+    "price": 1900,
+    "info": "The 藍綠色 Sausages combines Japan aesthetics with Polonium-based durability",
+    "brandId": 3,
+    "categoryId": 11
+  },
+  {
+    "sn": "a087c8a8-4e56-4b40-ab01-01611c6491e1",
+    "name": "Gorgeous Bronze Shoes - PUMA 外套",
+    "photos": "t1.jpg,t2.jpg,t5.jpg",
+    "stock": 80,
+    "price": 11300,
+    "info": "Our rich-inspired Table brings a taste of luxury to your unusual lifestyle",
+    "brandId": 3,
+    "categoryId": 8
+  },
+  {
+    "sn": "b398a12c-b9eb-4794-88e1-b081d2750128",
+    "name": "Fantastic Metal Salad - PUMA 慢跑鞋",
+    "photos": "t3.jpg,t5.jpg,t4.jpg",
+    "stock": 30,
+    "price": 5900,
+    "info": "Rustic Pants designed with Concrete for sad performance",
+    "brandId": 3,
+    "categoryId": 9
+  },
+  {
+    "sn": "413cf8d2-df50-4541-a27d-62dd8e28c3b2",
+    "name": "Generic Plastic Chair - adidas 外套",
+    "photos": "t5.jpg,t1.jpg,t3.jpg",
+    "stock": 100,
+    "price": 14400,
+    "info": "Ergonomic Table made with Frozen for all-day expert support",
+    "brandId": 2,
+    "categoryId": 8
+  },
+  {
+    "sn": "c5f1549f-132f-4adf-a803-b8c90a5c54a9",
+    "name": "Ergonomic Cotton Keyboard - PUMA 籃球鞋",
+    "photos": "t2.jpg,t3.jpg,t1.jpg",
+    "stock": 30,
+    "price": 5700,
+    "info": "The Customer-focused holistic policy Cheese offers reliable performance and ultimate design",
+    "brandId": 3,
+    "categoryId": 10
+  },
+  {
+    "sn": "b731f6fa-fd56-4091-aa3c-ffd44b3b3200",
+    "name": "Ergonomic Metal Soap - New Balance 外套",
+    "photos": "t4.jpg,t1.jpg,t2.jpg",
+    "stock": 50,
+    "price": 3600,
+    "info": "The User-centric context-sensitive help-desk Computer offers reliable performance and enchanting design",
+    "brandId": 4,
+    "categoryId": 8
+  },
+  {
+    "sn": "b8b31ed3-a123-4bf5-a618-6f3434f614df",
+    "name": "Tasty Plastic Gloves - adidas 外套",
+    "photos": "t1.jpg,t2.jpg,t3.jpg",
+    "stock": 30,
+    "price": 5700,
+    "info": "Innovative Gloves featuring miserly technology and Steel construction",
+    "brandId": 2,
+    "categoryId": 8
+  },
+  {
+    "sn": "363be497-38b7-482a-b9b0-08d2800da5f7",
+    "name": "Handcrafted Plastic Shoes - PUMA 包款",
+    "photos": "t3.jpg,t1.jpg,t2.jpg",
+    "stock": 60,
+    "price": 4300,
+    "info": "The 振家 Computer is the latest in a series of firm products from 林 LLC",
+    "brandId": 3,
+    "categoryId": 11
+  },
+  {
+    "sn": "87ac3d76-c9c0-4643-9dca-6dbf1af05b62",
+    "name": "Oriental Soft Shirt - Nike 帽類",
+    "photos": "t1.jpg,t5.jpg,t3.jpg",
+    "stock": 100,
+    "price": 9800,
+    "info": "黃 - 許's most advanced Fish technology increases enchanted capabilities",
+    "brandId": 1,
+    "categoryId": 12
+  },
+  {
+    "sn": "ab58b927-246f-49aa-b30a-211dda796415",
+    "name": "Incredible Soft Pizza - PUMA 帽類",
+    "photos": "t3.jpg,t5.jpg,t2.jpg",
+    "stock": 70,
+    "price": 14100,
+    "info": "Small Pants designed with Bronze for noted performance",
+    "brandId": 3,
+    "categoryId": 12
+  },
+  {
+    "sn": "55e3cf2f-de51-4306-9e68-6d70292baaf2",
+    "name": "Elegant Fresh Table - adidas 短袖上衣",
+    "photos": "t5.jpg,t3.jpg,t4.jpg",
+    "stock": 80,
+    "price": 4700,
+    "info": "Ergonomic Computer made with Bronze for all-day golden support",
+    "brandId": 2,
+    "categoryId": 4
+  },
+  {
+    "sn": "64a05926-7f35-47ad-a288-0e7d4d4ea381",
+    "name": "Awesome Wooden Soap - New Balance 籃球鞋",
+    "photos": "t1.jpg,t4.jpg,t5.jpg",
+    "stock": 10,
+    "price": 3700,
+    "info": "The sleek and sad Pants comes with 藍色 LED lighting for smart functionality",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "ece77475-1ada-4ada-a333-d9bdcfa2f1a4",
+    "name": "Modern Plastic Fish - New Balance 籃球鞋",
+    "photos": "t3.jpg,t5.jpg,t4.jpg",
+    "stock": 60,
+    "price": 14500,
+    "info": "Our bear-friendly Soap ensures nippy comfort for your pets",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "95695dee-f032-4658-9c8f-a40caabf20ba",
+    "name": "Tasty Soft Hat - PUMA 籃球鞋",
+    "photos": "t5.jpg,t3.jpg,t4.jpg",
+    "stock": 30,
+    "price": 2400,
+    "info": "Featuring Krypton-enhanced technology, our Chips offers unparalleled flashy performance",
+    "brandId": 3,
+    "categoryId": 10
+  },
+  {
+    "sn": "1a45e511-97d4-444a-9987-e50c3c96c2f5",
+    "name": "Licensed Soft Towels - Nike 籃球鞋",
+    "photos": "t4.jpg,t5.jpg,t3.jpg",
+    "stock": 90,
+    "price": 11100,
+    "info": "The sleek and unripe Table comes with 天藍色 LED lighting for smart functionality",
+    "brandId": 1,
+    "categoryId": 10
+  },
+  {
+    "sn": "1f351493-c915-424b-abba-a8d2dc96b0d8",
+    "name": "Recycled Granite Chips - adidas 長褲",
+    "photos": "t5.jpg,t3.jpg,t2.jpg",
+    "stock": 60,
+    "price": 6600,
+    "info": "Innovative Shoes featuring inexperienced technology and Bronze construction",
+    "brandId": 2,
+    "categoryId": 7
+  },
+  {
+    "sn": "0bd8587d-dbb8-44fb-8df8-4e9d0a993235",
+    "name": "Electronic Bronze Chicken - adidas 短褲",
+    "photos": "t3.jpg,t5.jpg,t2.jpg",
+    "stock": 60,
+    "price": 7100,
+    "info": "Savor the sour essence in our Chicken, designed for multicolored culinary adventures",
+    "brandId": 2,
+    "categoryId": 5
+  },
+  {
+    "sn": "8a8ce7ef-dc7b-43e8-b7b6-ce342c223de6",
+    "name": "Bespoke Rubber Sausages - Nike 慢跑鞋",
+    "photos": "t3.jpg,t5.jpg,t4.jpg",
+    "stock": 60,
+    "price": 4400,
+    "info": "Our sea lion-friendly Car ensures grounded comfort for your pets",
+    "brandId": 1,
+    "categoryId": 9
+  },
+  {
+    "sn": "aeaf0992-75dc-4867-8ca9-858e8f874a9d",
+    "name": "Luxurious Frozen Bacon - adidas 短褲",
+    "photos": "t5.jpg,t2.jpg,t3.jpg",
+    "stock": 80,
+    "price": 3400,
+    "info": "The sleek and inexperienced Pants comes with 薄荷綠色 LED lighting for smart functionality",
+    "brandId": 2,
+    "categoryId": 5
+  },
+  {
+    "sn": "42d8a35d-1ffb-4f7a-84c6-9e6a91399df7",
+    "name": "Generic Concrete Pizza - Nike 短袖上衣",
+    "photos": "t1.jpg,t4.jpg,t5.jpg",
+    "stock": 40,
+    "price": 7200,
+    "info": "New 藍綠色 Salad with ergonomic design for blank comfort",
+    "brandId": 1,
+    "categoryId": 4
+  },
+  {
+    "sn": "403e84ab-d2b2-49ab-93b7-32898d328102",
+    "name": "Modern Plastic Chicken - adidas 長褲",
+    "photos": "t5.jpg,t1.jpg,t3.jpg",
+    "stock": 10,
+    "price": 10200,
+    "info": "Experience the 黃色 brilliance of our Shirt, perfect for narrow environments",
+    "brandId": 2,
+    "categoryId": 7
+  },
+  {
+    "sn": "ee503470-9606-45ff-a194-5821588aae64",
+    "name": "Electronic Steel Chair - adidas 籃球鞋",
+    "photos": "t4.jpg,t3.jpg,t5.jpg",
+    "stock": 60,
+    "price": 10700,
+    "info": "Featuring Lawrencium-enhanced technology, our Pants offers unparalleled sophisticated performance",
+    "brandId": 2,
+    "categoryId": 10
+  },
+  {
+    "sn": "7faf292d-e521-47fc-a95c-9dfc0dcc0c78",
+    "name": "Handmade Plastic Soap - Nike 短褲",
+    "photos": "t4.jpg,t3.jpg,t1.jpg",
+    "stock": 20,
+    "price": 8100,
+    "info": "Our rabbit-friendly Chair ensures favorable comfort for your pets",
+    "brandId": 1,
+    "categoryId": 5
+  },
+  {
+    "sn": "117fc98f-254b-447f-a02c-54b83014d6d4",
+    "name": "Modern Soft Chair - adidas 長褲",
+    "photos": "t3.jpg,t4.jpg,t5.jpg",
+    "stock": 90,
+    "price": 3100,
+    "info": "Introducing the Belgium-inspired Tuna, blending silky style with local craftsmanship",
+    "brandId": 2,
+    "categoryId": 7
+  },
+  {
+    "sn": "a240a776-055c-448f-9f68-fba6d7b07e4d",
+    "name": "Incredible Bronze Chicken - New Balance 籃球鞋",
+    "photos": "t3.jpg,t2.jpg,t4.jpg",
+    "stock": 10,
+    "price": 7000,
+    "info": "The sleek and measly Chicken comes with 薄荷綠色 LED lighting for smart functionality",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "a0f9f336-acaf-4a4e-bef5-f9188d4f6f18",
+    "name": "Tasty Wooden Chips - adidas 短袖上衣",
+    "photos": "t2.jpg,t1.jpg,t5.jpg",
+    "stock": 90,
+    "price": 7800,
+    "info": "The sleek and dependent Pizza comes with 薄荷綠色 LED lighting for smart functionality",
+    "brandId": 2,
+    "categoryId": 4
+  },
+  {
+    "sn": "cc9b7ccd-2443-404b-8b38-c48bfad05e1b",
+    "name": "Generic Steel Mouse - PUMA 包款",
+    "photos": "t5.jpg,t4.jpg,t1.jpg",
+    "stock": 60,
+    "price": 2500,
+    "info": "Ergonomic Salad made with Cotton for all-day compassionate support",
+    "brandId": 3,
+    "categoryId": 11
+  },
+  {
+    "sn": "59be8d5c-63f4-4dc3-a7d9-30f49a159560",
+    "name": "Small Granite Shirt - New Balance 長褲",
+    "photos": "t4.jpg,t5.jpg,t1.jpg",
+    "stock": 40,
+    "price": 14900,
+    "info": "Featuring Darmstadtium-enhanced technology, our Cheese offers unparalleled punctual performance",
+    "brandId": 4,
+    "categoryId": 7
+  },
+  {
+    "sn": "c99218c9-a309-4e26-a34b-aa859b386aaa",
+    "name": "Modern Frozen Shirt - adidas 短褲",
+    "photos": "t3.jpg,t4.jpg,t2.jpg",
+    "stock": 10,
+    "price": 14200,
+    "info": "馮 - 雷's most advanced Bacon technology increases thick capabilities",
+    "brandId": 2,
+    "categoryId": 5
+  },
+  {
+    "sn": "f84b196f-8e2d-4667-9107-fc4a48d4fb2a",
+    "name": "Unbranded Frozen Cheese - New Balance 籃球鞋",
+    "photos": "t3.jpg,t2.jpg,t1.jpg",
+    "stock": 10,
+    "price": 6300,
+    "info": "The Persistent discrete function Salad offers reliable performance and mixed design",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "a30418de-ba35-4074-bfcd-8cfe6354fdc6",
+    "name": "Ergonomic Steel Chicken - adidas 帽類",
+    "photos": "t4.jpg,t3.jpg,t5.jpg",
+    "stock": 40,
+    "price": 10100,
+    "info": "Discover the international new Chicken with an exciting mix of Wooden ingredients",
+    "brandId": 2,
+    "categoryId": 12
+  },
+  {
+    "sn": "f4c4b2b9-c582-4122-bcb6-7010a095829d",
+    "name": "Bespoke Metal Chicken - adidas 外套",
+    "photos": "t2.jpg,t5.jpg,t3.jpg",
+    "stock": 80,
+    "price": 7700,
+    "info": "Stylish Pants designed to make you stand out with educated looks",
+    "brandId": 2,
+    "categoryId": 8
+  },
+  {
+    "sn": "757d9797-9261-491b-9597-e846188228d3",
+    "name": "Generic Metal Chips - PUMA 籃球鞋",
+    "photos": "t3.jpg,t4.jpg,t5.jpg",
+    "stock": 60,
+    "price": 14700,
+    "info": "The sleek and unknown Computer comes with 紫色 LED lighting for smart functionality",
+    "brandId": 3,
+    "categoryId": 10
+  },
+  {
+    "sn": "280d38dd-8068-43a9-beac-7db59599d137",
+    "name": "Awesome Soft Chair - PUMA 包款",
+    "photos": "t1.jpg,t3.jpg,t4.jpg",
+    "stock": 30,
+    "price": 14100,
+    "info": "New Hat model with 19 GB RAM, 747 GB storage, and stunning features",
+    "brandId": 3,
+    "categoryId": 11
+  },
+  {
+    "sn": "602a7992-db98-4694-8196-dd8156e95c87",
+    "name": "Gorgeous Plastic Hat - New Balance 包款",
+    "photos": "t5.jpg,t1.jpg,t3.jpg",
+    "stock": 90,
+    "price": 6400,
+    "info": "Ergonomic Chair made with Cotton for all-day watery support",
+    "brandId": 4,
+    "categoryId": 11
+  },
+  {
+    "sn": "16874bac-712f-481a-b8f9-694ca9bab8c2",
+    "name": "Intelligent Cotton Pizza - PUMA 外套",
+    "photos": "t1.jpg,t2.jpg,t3.jpg",
+    "stock": 30,
+    "price": 14900,
+    "info": "The 睿淵 Chicken is the latest in a series of unlined products from 姜 and Sons",
+    "brandId": 3,
+    "categoryId": 8
+  },
+  {
+    "sn": "8ac46396-e8ff-4676-bad3-1894f6cdc4cf",
+    "name": "Fantastic Metal Bacon - Nike 籃球鞋",
+    "photos": "t5.jpg,t4.jpg,t2.jpg",
+    "stock": 20,
+    "price": 1800,
+    "info": "Our bee-friendly Hat ensures inconsequential comfort for your pets",
+    "brandId": 1,
+    "categoryId": 10
+  },
+  {
+    "sn": "f0ec6322-b2d4-4a38-b793-3846ba5ab06b",
+    "name": "Handmade Concrete Car - New Balance 籃球鞋",
+    "photos": "t4.jpg,t1.jpg,t5.jpg",
+    "stock": 30,
+    "price": 13800,
+    "info": "Savor the fluffy essence in our Table, designed for total culinary adventures",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "1795d0d3-1efe-4dfc-bf8e-fba831e36736",
+    "name": "Intelligent Concrete Chicken - Nike 帽類",
+    "photos": "t1.jpg,t2.jpg,t3.jpg",
+    "stock": 10,
+    "price": 3300,
+    "info": "莫 Group's most advanced Gloves technology increases lavish capabilities",
+    "brandId": 1,
+    "categoryId": 12
+  },
+  {
+    "sn": "f9c3fdf6-e982-480f-809b-a8f1ae65831c",
+    "name": "Small Rubber Computer - New Balance 慢跑鞋",
+    "photos": "t5.jpg,t2.jpg,t4.jpg",
+    "stock": 70,
+    "price": 13400,
+    "info": "Stylish Gloves designed to make you stand out with favorable looks",
+    "brandId": 4,
+    "categoryId": 9
+  },
+  {
+    "sn": "2fba99cf-d496-44f5-924f-4123b39d9121",
+    "name": "Modern Fresh Sausages - Nike 短袖上衣",
+    "photos": "t2.jpg,t1.jpg,t3.jpg",
+    "stock": 70,
+    "price": 11800,
+    "info": "The sleek and well-groomed Table comes with 銀色 LED lighting for smart functionality",
+    "brandId": 1,
+    "categoryId": 4
+  },
+  {
+    "sn": "2472503f-3573-47ee-8d9b-8ec4a59a04a3",
+    "name": "Oriental Steel Ball - PUMA 包款",
+    "photos": "t2.jpg,t5.jpg,t3.jpg",
+    "stock": 60,
+    "price": 7700,
+    "info": "The sleek and expert Table comes with 淺橙色 LED lighting for smart functionality",
+    "brandId": 3,
+    "categoryId": 11
+  },
+  {
+    "sn": "80942527-1505-4559-a756-5f490af20ac1",
+    "name": "Electronic Plastic Gloves - Nike 慢跑鞋",
+    "photos": "t5.jpg,t3.jpg,t4.jpg",
+    "stock": 20,
+    "price": 12700,
+    "info": "Ergonomic Computer made with Bronze for all-day untimely support",
+    "brandId": 1,
+    "categoryId": 9
+  },
+  {
+    "sn": "bb0770a9-0776-4062-a4d5-2e6f46b4c001",
+    "name": "Refined Metal Sausages - New Balance 帽類",
+    "photos": "t1.jpg,t5.jpg,t3.jpg",
+    "stock": 100,
+    "price": 11200,
+    "info": "Ergonomic Car made with Bronze for all-day different support",
+    "brandId": 4,
+    "categoryId": 12
+  },
+  {
+    "sn": "3b9f87f1-880b-4540-b84b-b54c996147a7",
+    "name": "Intelligent Cotton Cheese - New Balance 帽類",
+    "photos": "t5.jpg,t4.jpg,t2.jpg",
+    "stock": 30,
+    "price": 8400,
+    "info": "Introducing the Qatar-inspired Keyboard, blending delectable style with local craftsmanship",
+    "brandId": 4,
+    "categoryId": 12
+  },
+  {
+    "sn": "2e92b935-3a69-4eda-88c4-b3001aafeb52",
+    "name": "Bespoke Soft Bacon - Nike 短袖上衣",
+    "photos": "t3.jpg,t5.jpg,t1.jpg",
+    "stock": 10,
+    "price": 12500,
+    "info": "Experience the 紫色 brilliance of our Ball, perfect for squiggly environments",
+    "brandId": 1,
+    "categoryId": 4
+  },
+  {
+    "sn": "7137bc06-f1da-41a1-923d-548acc31d21d",
+    "name": "Electronic Bronze Tuna - New Balance 長褲",
+    "photos": "t2.jpg,t4.jpg,t5.jpg",
+    "stock": 90,
+    "price": 9000,
+    "info": "Savor the rich essence in our Keyboard, designed for dapper culinary adventures",
+    "brandId": 4,
+    "categoryId": 7
+  },
+  {
+    "sn": "76c88a74-b6b5-4203-ac49-da14bc069566",
+    "name": "Gorgeous Rubber Pants - PUMA 籃球鞋",
+    "photos": "t5.jpg,t4.jpg,t1.jpg",
+    "stock": 30,
+    "price": 5300,
+    "info": "Experience the 青檸色 brilliance of our Chair, perfect for scornful environments",
+    "brandId": 3,
+    "categoryId": 10
+  },
+  {
+    "sn": "794c6a24-35d9-4128-89be-86670601732b",
+    "name": "Oriental Metal Towels - adidas 長褲",
+    "photos": "t2.jpg,t3.jpg,t4.jpg",
+    "stock": 90,
+    "price": 9700,
+    "info": "New 紫紅色 Tuna with ergonomic design for massive comfort",
+    "brandId": 2,
+    "categoryId": 7
+  },
+  {
+    "sn": "7e2250c8-82a3-4ac9-9f32-0bdca745689a",
+    "name": "Handcrafted Bronze Ball - Nike 長褲",
+    "photos": "t2.jpg,t5.jpg,t1.jpg",
+    "stock": 90,
+    "price": 14700,
+    "info": "Professional-grade Soap perfect for arid training and recreational use",
+    "brandId": 1,
+    "categoryId": 7
+  },
+  {
+    "sn": "33612516-2c21-4bdb-b52e-cab572d91a49",
+    "name": "Rustic Concrete Hat - adidas 外套",
+    "photos": "t1.jpg,t5.jpg,t4.jpg",
+    "stock": 10,
+    "price": 11500,
+    "info": "Ergonomic Bike made with Rubber for all-day regal support",
+    "brandId": 2,
+    "categoryId": 8
+  },
+  {
+    "sn": "a10d35e8-3e18-47a9-a709-4f6f12e6e4ee",
+    "name": "Elegant Frozen Computer - New Balance 包款",
+    "photos": "t1.jpg,t3.jpg,t5.jpg",
+    "stock": 30,
+    "price": 3800,
+    "info": "Professional-grade Sausages perfect for timely training and recreational use",
+    "brandId": 4,
+    "categoryId": 11
+  },
+  {
+    "sn": "948c163b-9416-4269-8bee-e9a21a33344a",
+    "name": "Bespoke Granite Salad - New Balance 包款",
+    "photos": "t5.jpg,t1.jpg,t4.jpg",
+    "stock": 50,
+    "price": 4100,
+    "info": "Discover the sea lion-like agility of our Shoes, perfect for extra-large users",
+    "brandId": 4,
+    "categoryId": 11
+  },
+  {
+    "sn": "a9f5c720-1186-4eef-ac28-420e3f6448ea",
+    "name": "Rustic Rubber Car - Nike 長袖上衣",
+    "photos": "t5.jpg,t4.jpg,t2.jpg",
+    "stock": 50,
+    "price": 14600,
+    "info": "The 藍紫色 Bacon combines Japan aesthetics with Ruthenium-based durability",
+    "brandId": 1,
+    "categoryId": 6
+  },
+  {
+    "sn": "46ac1ce1-94b0-4ca4-8712-ad3008e15a96",
+    "name": "Bespoke Granite Chicken - Nike 籃球鞋",
+    "photos": "t5.jpg,t3.jpg,t4.jpg",
+    "stock": 60,
+    "price": 12200,
+    "info": "Savor the golden essence in our Chicken, designed for ashamed culinary adventures",
+    "brandId": 1,
+    "categoryId": 10
+  },
+  {
+    "sn": "13af5f2e-6ece-4a3d-8c74-3ca6182559b7",
+    "name": "Awesome Frozen Car - Nike 長褲",
+    "photos": "t5.jpg,t3.jpg,t2.jpg",
+    "stock": 30,
+    "price": 6900,
+    "info": "The sleek and favorite Shirt comes with 紅色 LED lighting for smart functionality",
+    "brandId": 1,
+    "categoryId": 7
+  },
+  {
+    "sn": "cfb72db6-78e4-458c-b196-2c32fc5cb04b",
+    "name": "Tasty Bronze Bike - PUMA 長袖上衣",
+    "photos": "t1.jpg,t2.jpg,t4.jpg",
+    "stock": 100,
+    "price": 9200,
+    "info": "Our zesty-inspired Ball brings a taste of luxury to your sunny lifestyle",
+    "brandId": 3,
+    "categoryId": 6
+  },
+  {
+    "sn": "1d383cc5-e1de-4b41-87fd-1948788823be",
+    "name": "Handcrafted Wooden Towels - PUMA 帽類",
+    "photos": "t4.jpg,t1.jpg,t5.jpg",
+    "stock": 70,
+    "price": 9300,
+    "info": "New 淺橙色 Keyboard with ergonomic design for oddball comfort",
+    "brandId": 3,
+    "categoryId": 12
+  },
+  {
+    "sn": "8390a729-bdbd-4d0e-82f3-3ac54cfb102e",
+    "name": "Intelligent Bronze Chair - adidas 籃球鞋",
+    "photos": "t4.jpg,t1.jpg,t3.jpg",
+    "stock": 30,
+    "price": 14100,
+    "info": "董, 劉 and 崔's most advanced Cheese technology increases unique capabilities",
+    "brandId": 2,
+    "categoryId": 10
+  },
+  {
+    "sn": "8ca73601-bff9-4ed2-8c1e-e47082e85813",
+    "name": "Electronic Fresh Keyboard - PUMA 包款",
+    "photos": "t1.jpg,t4.jpg,t5.jpg",
+    "stock": 10,
+    "price": 4100,
+    "info": "Generic Pants designed with Frozen for wobbly performance",
+    "brandId": 3,
+    "categoryId": 11
+  },
+  {
+    "sn": "49730bea-9dba-431e-9053-4375c06d5566",
+    "name": "Small Granite Keyboard - Nike 外套",
+    "photos": "t3.jpg,t1.jpg,t2.jpg",
+    "stock": 80,
+    "price": 4400,
+    "info": "Innovative Bacon featuring back technology and Plastic construction",
+    "brandId": 1,
+    "categoryId": 8
+  },
+  {
+    "sn": "7b80a003-afb7-47a0-87bb-b91f40671f11",
+    "name": "Bespoke Cotton Keyboard - New Balance 長袖上衣",
+    "photos": "t2.jpg,t1.jpg,t3.jpg",
+    "stock": 50,
+    "price": 3900,
+    "info": "Discover the gorilla-like agility of our Cheese, perfect for last users",
+    "brandId": 4,
+    "categoryId": 6
+  },
+  {
+    "sn": "88a2e537-323b-4bd5-9432-fe13ae9cc2cd",
+    "name": "Modern Cotton Chicken - Nike 長袖上衣",
+    "photos": "t4.jpg,t5.jpg,t2.jpg",
+    "stock": 90,
+    "price": 5500,
+    "info": "The sleek and grizzled Hat comes with 天藍色 LED lighting for smart functionality",
+    "brandId": 1,
+    "categoryId": 6
+  },
+  {
+    "sn": "fe72dd22-0e5b-4046-8fcc-3f71a01677aa",
+    "name": "Unbranded Rubber Shirt - New Balance 包款",
+    "photos": "t2.jpg,t1.jpg,t4.jpg",
+    "stock": 50,
+    "price": 8100,
+    "info": "Discover the hippopotamus-like agility of our Shirt, perfect for fine users",
+    "brandId": 4,
+    "categoryId": 11
+  },
+  {
+    "sn": "d27833da-b5e4-475c-844e-a5a47a3d7fc9",
+    "name": "Rustic Wooden Car - New Balance 帽類",
+    "photos": "t4.jpg,t5.jpg,t3.jpg",
+    "stock": 80,
+    "price": 6400,
+    "info": "Discover the snake-like agility of our Chair, perfect for bustling users",
+    "brandId": 4,
+    "categoryId": 12
+  },
+  {
+    "sn": "909a3b60-dbcc-4aee-b1d5-0390419cc8ec",
+    "name": "Handmade Fresh Pants - PUMA 慢跑鞋",
+    "photos": "t5.jpg,t1.jpg,t4.jpg",
+    "stock": 80,
+    "price": 2500,
+    "info": "Ergonomic Gloves made with Metal for all-day each support",
+    "brandId": 3,
+    "categoryId": 9
+  },
+  {
+    "sn": "520a37ab-5a7b-4625-b721-b2d4a0249f54",
+    "name": "Sleek Soft Bike - PUMA 慢跑鞋",
+    "photos": "t2.jpg,t5.jpg,t1.jpg",
+    "stock": 50,
+    "price": 4100,
+    "info": "The Quality-focused composite orchestration Chips offers reliable performance and spirited design",
+    "brandId": 3,
+    "categoryId": 9
+  },
+  {
+    "sn": "ec7c5244-746d-4ce8-b080-7dddf2c50782",
+    "name": "Unbranded Concrete Salad - PUMA 慢跑鞋",
+    "photos": "t4.jpg,t5.jpg,t2.jpg",
+    "stock": 30,
+    "price": 2700,
+    "info": "Discover the tiger-like agility of our Chair, perfect for blushing users",
+    "brandId": 3,
+    "categoryId": 9
+  },
+  {
+    "sn": "6d4f13b3-ebeb-45bb-8f40-de40b6bc0878",
+    "name": "Small Cotton Chips - Nike 長袖上衣",
+    "photos": "t1.jpg,t2.jpg,t5.jpg",
+    "stock": 40,
+    "price": 11600,
+    "info": "Featuring Bismuth-enhanced technology, our Keyboard offers unparalleled extroverted performance",
+    "brandId": 1,
+    "categoryId": 6
+  },
+  {
+    "sn": "92583672-2182-4987-9cc7-ce1acd36674c",
+    "name": "Handcrafted Rubber Mouse - New Balance 短褲",
+    "photos": "t2.jpg,t3.jpg,t5.jpg",
+    "stock": 50,
+    "price": 3200,
+    "info": "Featuring Copper-enhanced technology, our Chips offers unparalleled understated performance",
+    "brandId": 4,
+    "categoryId": 5
+  },
+  {
+    "sn": "933d906f-4c0f-4fde-ad4d-7b1a26ad03a4",
+    "name": "Practical Metal Keyboard - adidas 長袖上衣",
+    "photos": "t5.jpg,t3.jpg,t4.jpg",
+    "stock": 30,
+    "price": 2400,
+    "info": "The 紫色 Gloves combines Guinea-Bissau aesthetics with Tellurium-based durability",
+    "brandId": 2,
+    "categoryId": 6
+  },
+  {
+    "sn": "236c763b-2c89-40b1-b474-43f8a39e8310",
+    "name": "Incredible Plastic Shirt - Nike 長袖上衣",
+    "photos": "t5.jpg,t3.jpg,t1.jpg",
+    "stock": 70,
+    "price": 9300,
+    "info": "Introducing the Haiti-inspired Salad, blending devoted style with local craftsmanship",
+    "brandId": 1,
+    "categoryId": 6
+  },
+  {
+    "sn": "65e9a925-7a4b-4070-9b0d-3dac8f89d112",
+    "name": "Bespoke Rubber Car - adidas 包款",
+    "photos": "t5.jpg,t2.jpg,t4.jpg",
+    "stock": 90,
+    "price": 10900,
+    "info": "Professional-grade Soap perfect for physical training and recreational use",
+    "brandId": 2,
+    "categoryId": 11
+  },
+  {
+    "sn": "3e34e6bc-cf8b-4eae-9ea5-b5b7eb8afdad",
+    "name": "Unbranded Soft Salad - Nike 長袖上衣",
+    "photos": "t3.jpg,t1.jpg,t5.jpg",
+    "stock": 10,
+    "price": 9300,
+    "info": "Featuring Carbon-enhanced technology, our Shoes offers unparalleled bare performance",
+    "brandId": 1,
+    "categoryId": 6
+  },
+  {
+    "sn": "ed62553e-7801-4373-bff8-b6848ca5c8dc",
+    "name": "Bespoke Wooden Gloves - Nike 短褲",
+    "photos": "t1.jpg,t5.jpg,t3.jpg",
+    "stock": 60,
+    "price": 12700,
+    "info": "The sleek and ragged Bike comes with 靛藍色 LED lighting for smart functionality",
+    "brandId": 1,
+    "categoryId": 5
+  },
+  {
+    "sn": "319f0bef-333a-45dc-b254-dc3a61c5e7aa",
+    "name": "Fantastic Metal Soap - New Balance 籃球鞋",
+    "photos": "t4.jpg,t3.jpg,t1.jpg",
+    "stock": 80,
+    "price": 9900,
+    "info": "The 峻熙 Computer is the latest in a series of wrong products from 莫 Group",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "b1052e78-96a9-4c7e-979c-90deb4b5734a",
+    "name": "Modern Wooden Shirt - Nike 包款",
+    "photos": "t4.jpg,t1.jpg,t5.jpg",
+    "stock": 10,
+    "price": 10200,
+    "info": "Featuring Gallium-enhanced technology, our Sausages offers unparalleled trim performance",
+    "brandId": 1,
+    "categoryId": 11
+  },
+  {
+    "sn": "749da28a-3818-44f0-8cb8-f7cbcdb2ae27",
+    "name": "Bespoke Soft Chair - New Balance 短褲",
+    "photos": "t3.jpg,t5.jpg,t2.jpg",
+    "stock": 70,
+    "price": 3000,
+    "info": "Innovative Computer featuring muffled technology and Soft construction",
+    "brandId": 4,
+    "categoryId": 5
+  },
+  {
+    "sn": "bab307ec-4fd9-4887-b643-c50c41206e34",
+    "name": "Tasty Granite Table - adidas 包款",
+    "photos": "t5.jpg,t1.jpg,t4.jpg",
+    "stock": 10,
+    "price": 2800,
+    "info": "Generic Shoes designed with Plastic for golden performance",
+    "brandId": 2,
+    "categoryId": 11
+  },
+  {
+    "sn": "da55c9ae-8143-4b15-bcdf-1cb3e7b154a8",
+    "name": "Incredible Frozen Pants - Nike 短褲",
+    "photos": "t5.jpg,t2.jpg,t4.jpg",
+    "stock": 40,
+    "price": 6200,
+    "info": "Stylish Bike designed to make you stand out with mammoth looks",
+    "brandId": 1,
+    "categoryId": 5
+  },
+  {
+    "sn": "347a062a-8c56-4c9f-90c5-cdaa5b699657",
+    "name": "Fantastic Rubber Cheese - Nike 帽類",
+    "photos": "t3.jpg,t1.jpg,t4.jpg",
+    "stock": 60,
+    "price": 5000,
+    "info": "Experience the 藍紫色 brilliance of our Shirt, perfect for glossy environments",
+    "brandId": 1,
+    "categoryId": 12
+  },
+  {
+    "sn": "b715f584-cb10-4ff3-ba8a-3a02b6028ee3",
+    "name": "Rustic Rubber Shoes - PUMA 長褲",
+    "photos": "t4.jpg,t5.jpg,t2.jpg",
+    "stock": 30,
+    "price": 6000,
+    "info": "Experience the 淡褐色 brilliance of our Chair, perfect for hospitable environments",
+    "brandId": 3,
+    "categoryId": 7
+  },
+  {
+    "sn": "bdc22c3d-0bc3-4c28-8022-2a3d2d1cc88a",
+    "name": "Ergonomic Soft Chair - adidas 包款",
+    "photos": "t2.jpg,t4.jpg,t1.jpg",
+    "stock": 20,
+    "price": 14900,
+    "info": "New Bike model with 44 GB RAM, 41 GB storage, and expert features",
+    "brandId": 2,
+    "categoryId": 11
+  },
+  {
+    "sn": "a961a0d7-959c-41bd-a482-2c1ed7143fac",
+    "name": "Small Frozen Shoes - Nike 外套",
+    "photos": "t2.jpg,t5.jpg,t4.jpg",
+    "stock": 10,
+    "price": 4700,
+    "info": "The 梓晨 Cheese is the latest in a series of quixotic products from 趙 - 蔡",
+    "brandId": 1,
+    "categoryId": 8
+  },
+  {
+    "sn": "7300162d-83a0-4549-b38f-4bedd0170884",
+    "name": "Rustic Granite Chicken - New Balance 慢跑鞋",
+    "photos": "t2.jpg,t1.jpg,t5.jpg",
+    "stock": 30,
+    "price": 2700,
+    "info": "Introducing the Syrian Arab Republic-inspired Tuna, blending neighboring style with local craftsmanship",
+    "brandId": 4,
+    "categoryId": 9
+  },
+  {
+    "sn": "8f17459c-bed3-462b-ad6f-5935b5c90323",
+    "name": "Handcrafted Concrete Towels - Nike 帽類",
+    "photos": "t5.jpg,t4.jpg,t3.jpg",
+    "stock": 40,
+    "price": 3200,
+    "info": "Innovative Computer featuring unaware technology and Metal construction",
+    "brandId": 1,
+    "categoryId": 12
+  },
+  {
+    "sn": "70a58b49-9193-4e00-bc1d-1dcc38344208",
+    "name": "Practical Cotton Mouse - adidas 籃球鞋",
+    "photos": "t2.jpg,t5.jpg,t4.jpg",
+    "stock": 90,
+    "price": 2000,
+    "info": "The Organic dynamic model Gloves offers reliable performance and amazing design",
+    "brandId": 2,
+    "categoryId": 10
+  },
+  {
+    "sn": "ecdfc6bb-efb4-470b-a259-d7a52110aeb5",
+    "name": "Electronic Frozen Bacon - Nike 外套",
+    "photos": "t2.jpg,t4.jpg,t5.jpg",
+    "stock": 40,
+    "price": 8600,
+    "info": "Innovative Computer featuring tricky technology and Steel construction",
+    "brandId": 1,
+    "categoryId": 8
+  },
+  {
+    "sn": "5c48db38-58e0-47f2-8847-6be30665b39e",
+    "name": "Tasty Soft Fish - New Balance 短褲",
+    "photos": "t1.jpg,t4.jpg,t2.jpg",
+    "stock": 30,
+    "price": 11500,
+    "info": "Discover the hippopotamus-like agility of our Chips, perfect for gummy users",
+    "brandId": 4,
+    "categoryId": 5
+  },
+  {
+    "sn": "29009f9a-b114-436b-8d7c-5155436f8937",
+    "name": "Handcrafted Wooden Bacon - New Balance 帽類",
+    "photos": "t3.jpg,t5.jpg,t4.jpg",
+    "stock": 70,
+    "price": 6000,
+    "info": "Ergonomic Ball made with Granite for all-day cooperative support",
+    "brandId": 4,
+    "categoryId": 12
+  },
+  {
+    "sn": "f34633f7-7ddc-4232-a22c-8154c5a35fb8",
+    "name": "Modern Wooden Mouse - adidas 外套",
+    "photos": "t5.jpg,t1.jpg,t3.jpg",
+    "stock": 30,
+    "price": 10600,
+    "info": "Ergonomic Towels made with Soft for all-day creamy support",
+    "brandId": 2,
+    "categoryId": 8
+  },
+  {
+    "sn": "1f101a7f-1511-4b35-a34f-111923f47c1c",
+    "name": "Awesome Wooden Mouse - adidas 帽類",
+    "photos": "t3.jpg,t4.jpg,t5.jpg",
+    "stock": 50,
+    "price": 3900,
+    "info": "Ergonomic Pizza made with Wooden for all-day glum support",
+    "brandId": 2,
+    "categoryId": 12
+  },
+  {
+    "sn": "539684e2-7012-48c6-a70a-aac570adb71e",
+    "name": "Refined Cotton Shoes - New Balance 長褲",
+    "photos": "t5.jpg,t4.jpg,t2.jpg",
+    "stock": 70,
+    "price": 14100,
+    "info": "Discover the light new Chair with an exciting mix of Granite ingredients",
+    "brandId": 4,
+    "categoryId": 7
+  },
+  {
+    "sn": "39e5b7b8-edcc-4c38-9329-f2cd370733be",
+    "name": "Bespoke Fresh Computer - Nike 籃球鞋",
+    "photos": "t1.jpg,t2.jpg,t4.jpg",
+    "stock": 80,
+    "price": 9500,
+    "info": "Recycled Shirt designed with Concrete for colorful performance",
+    "brandId": 1,
+    "categoryId": 10
+  },
+  {
+    "sn": "48b451fb-0ffc-4e34-a3a8-4a940a320415",
+    "name": "Practical Metal Hat - New Balance 帽類",
+    "photos": "t1.jpg,t2.jpg,t3.jpg",
+    "stock": 70,
+    "price": 13500,
+    "info": "Stylish Fish designed to make you stand out with profuse looks",
+    "brandId": 4,
+    "categoryId": 12
+  },
+  {
+    "sn": "289f88fb-9a40-4ba4-bc9c-8072a832813b",
+    "name": "Luxurious Metal Pants - PUMA 籃球鞋",
+    "photos": "t2.jpg,t1.jpg,t5.jpg",
+    "stock": 10,
+    "price": 13900,
+    "info": "Refined Chicken designed with Bronze for witty performance",
+    "brandId": 3,
+    "categoryId": 10
+  },
+  {
+    "sn": "25351558-aa93-4234-987d-7fa264e4c893",
+    "name": "Ergonomic Steel Computer - adidas 長褲",
+    "photos": "t5.jpg,t2.jpg,t1.jpg",
+    "stock": 80,
+    "price": 6000,
+    "info": "The sleek and illustrious Chicken comes with 青綠色 LED lighting for smart functionality",
+    "brandId": 2,
+    "categoryId": 7
+  },
+  {
+    "sn": "aba3bfa6-ce55-4c4d-8991-aab31f28ca78",
+    "name": "Handcrafted Steel Car - Nike 籃球鞋",
+    "photos": "t4.jpg,t5.jpg,t1.jpg",
+    "stock": 30,
+    "price": 10600,
+    "info": "The 智宸 Soap is the latest in a series of untried products from 韋, 羅 and 夏",
+    "brandId": 1,
+    "categoryId": 10
+  },
+  {
+    "sn": "44527f23-edd8-4eb6-b7e9-b3fdd0bd4c3e",
+    "name": "Rustic Fresh Towels - PUMA 帽類",
+    "photos": "t5.jpg,t2.jpg,t4.jpg",
+    "stock": 70,
+    "price": 1700,
+    "info": "Stylish Keyboard designed to make you stand out with unsteady looks",
+    "brandId": 3,
+    "categoryId": 12
+  },
+  {
+    "sn": "63d00d55-36d9-4c89-899e-a5fd97fbb37f",
+    "name": "Rustic Granite Bacon - PUMA 帽類",
+    "photos": "t3.jpg,t5.jpg,t4.jpg",
+    "stock": 100,
+    "price": 9100,
+    "info": "The 擎宇 Chips is the latest in a series of wide-eyed products from 徐, 呂 and 蘇",
+    "brandId": 3,
+    "categoryId": 12
+  },
+  {
+    "sn": "26e38cd0-ca26-4213-97c8-800720bb8c1a",
+    "name": "Gorgeous Rubber Sausages - New Balance 長袖上衣",
+    "photos": "t5.jpg,t3.jpg,t1.jpg",
+    "stock": 40,
+    "price": 7400,
+    "info": "New 灰色 Tuna with ergonomic design for subtle comfort",
+    "brandId": 4,
+    "categoryId": 6
+  },
+  {
+    "sn": "5661e244-4ec1-4bf5-a1c0-31e2e620979b",
+    "name": "Licensed Steel Fish - New Balance 短袖上衣",
+    "photos": "t2.jpg,t5.jpg,t1.jpg",
+    "stock": 10,
+    "price": 8000,
+    "info": "Introducing the Afghanistan-inspired Shoes, blending infamous style with local craftsmanship",
+    "brandId": 4,
+    "categoryId": 4
+  },
+  {
+    "sn": "8bf9fb44-a693-4bac-bf4f-18aafc6b7af5",
+    "name": "Handmade Cotton Bacon - adidas 外套",
+    "photos": "t3.jpg,t2.jpg,t4.jpg",
+    "stock": 70,
+    "price": 11800,
+    "info": "Licensed Car designed with Cotton for buzzing performance",
+    "brandId": 2,
+    "categoryId": 8
+  },
+  {
+    "sn": "72553bb3-2036-40ff-8382-cd902b76eefa",
+    "name": "Handcrafted Concrete Towels - New Balance 慢跑鞋",
+    "photos": "t1.jpg,t4.jpg,t5.jpg",
+    "stock": 60,
+    "price": 12500,
+    "info": "New Pants model with 93 GB RAM, 132 GB storage, and uncomfortable features",
+    "brandId": 4,
+    "categoryId": 9
+  },
+  {
+    "sn": "49948470-0b01-46fe-a8a0-5bc0a406348b",
+    "name": "Elegant Steel Pizza - New Balance 長袖上衣",
+    "photos": "t4.jpg,t1.jpg,t3.jpg",
+    "stock": 20,
+    "price": 4800,
+    "info": "Our zesty-inspired Hat brings a taste of luxury to your recent lifestyle",
+    "brandId": 4,
+    "categoryId": 6
+  },
+  {
+    "sn": "bb3b924f-4428-4a56-a654-13c13e591b34",
+    "name": "Rustic Wooden Bike - Nike 長褲",
+    "photos": "t2.jpg,t5.jpg,t4.jpg",
+    "stock": 20,
+    "price": 5800,
+    "info": "The Centralized regional model Bike offers reliable performance and simple design",
+    "brandId": 1,
+    "categoryId": 7
+  },
+  {
+    "sn": "de50c52a-80d3-4a15-9867-8b55da6fed6a",
+    "name": "Incredible Granite Computer - PUMA 籃球鞋",
+    "photos": "t4.jpg,t3.jpg,t5.jpg",
+    "stock": 50,
+    "price": 11500,
+    "info": "Innovative Shirt featuring moist technology and Wooden construction",
+    "brandId": 3,
+    "categoryId": 10
+  },
+  {
+    "sn": "b55b3210-fc2c-4be1-a0cc-b7f99c88821d",
+    "name": "Elegant Frozen Sausages - Nike 短褲",
+    "photos": "t3.jpg,t1.jpg,t4.jpg",
+    "stock": 30,
+    "price": 14400,
+    "info": "Discover the impeccable new Bacon with an exciting mix of Concrete ingredients",
+    "brandId": 1,
+    "categoryId": 5
+  },
+  {
+    "sn": "ed5190e5-06f1-4173-95d9-01955861ff95",
+    "name": "Gorgeous Plastic Soap - New Balance 長褲",
+    "photos": "t2.jpg,t5.jpg,t3.jpg",
+    "stock": 80,
+    "price": 11400,
+    "info": "Stylish Mouse designed to make you stand out with difficult looks",
+    "brandId": 4,
+    "categoryId": 7
+  },
+  {
+    "sn": "5e0ff658-de17-44ac-8004-212eb990a90d",
+    "name": "Recycled Plastic Mouse - PUMA 短褲",
+    "photos": "t3.jpg,t5.jpg,t1.jpg",
+    "stock": 20,
+    "price": 9600,
+    "info": "New Sausages model with 51 GB RAM, 639 GB storage, and private features",
+    "brandId": 3,
+    "categoryId": 5
+  },
+  {
+    "sn": "3ce980c2-a2f2-4fd1-80fd-cc66de5eeab0",
+    "name": "Elegant Plastic Computer - PUMA 帽類",
+    "photos": "t2.jpg,t5.jpg,t3.jpg",
+    "stock": 20,
+    "price": 9600,
+    "info": "Oriental Chips designed with Plastic for impish performance",
+    "brandId": 3,
+    "categoryId": 12
+  },
+  {
+    "sn": "54f19012-597e-4bc2-8d9b-6876c7e38bf6",
+    "name": "Incredible Concrete Table - New Balance 籃球鞋",
+    "photos": "t5.jpg,t2.jpg,t3.jpg",
+    "stock": 90,
+    "price": 9500,
+    "info": "Experience the 藍綠色 brilliance of our Keyboard, perfect for lumpy environments",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "7b57500d-97a5-4f0f-9d13-af16cd784e48",
+    "name": "Luxurious Fresh Salad - New Balance 長褲",
+    "photos": "t5.jpg,t1.jpg,t3.jpg",
+    "stock": 70,
+    "price": 4600,
+    "info": "Savor the sour essence in our Car, designed for parallel culinary adventures",
+    "brandId": 4,
+    "categoryId": 7
+  },
+  {
+    "sn": "97991209-abe3-430e-8be2-0d14ec33a89e",
+    "name": "Sleek Wooden Shoes - Nike 慢跑鞋",
+    "photos": "t3.jpg,t4.jpg,t1.jpg",
+    "stock": 10,
+    "price": 3000,
+    "info": "Featuring Iodine-enhanced technology, our Shoes offers unparalleled functional performance",
+    "brandId": 1,
+    "categoryId": 9
+  },
+  {
+    "sn": "6bdf82d7-39d4-4d66-a642-ecb43ddec486",
+    "name": "Tasty Cotton Towels - PUMA 包款",
+    "photos": "t1.jpg,t4.jpg,t2.jpg",
+    "stock": 60,
+    "price": 11200,
+    "info": "Discover the rhinoceros-like agility of our Pizza, perfect for ripe users",
+    "brandId": 3,
+    "categoryId": 11
+  },
+  {
+    "sn": "3061c622-b867-44a2-9023-089cdc23a9c8",
+    "name": "Generic Cotton Ball - New Balance 帽類",
+    "photos": "t3.jpg,t5.jpg,t2.jpg",
+    "stock": 50,
+    "price": 5200,
+    "info": "Savor the spicy essence in our Mouse, designed for spiteful culinary adventures",
+    "brandId": 4,
+    "categoryId": 12
+  },
+  {
+    "sn": "d6c4989e-e2d5-47f1-ba1a-439957302c07",
+    "name": "Ergonomic Soft Salad - New Balance 慢跑鞋",
+    "photos": "t2.jpg,t4.jpg,t1.jpg",
+    "stock": 80,
+    "price": 3400,
+    "info": "Featuring Vanadium-enhanced technology, our Pants offers unparalleled ornery performance",
+    "brandId": 4,
+    "categoryId": 9
+  },
+  {
+    "sn": "fe859405-fcb9-40e6-ab7f-a9c9c4e2bb21",
+    "name": "Recycled Metal Mouse - PUMA 短褲",
+    "photos": "t2.jpg,t5.jpg,t1.jpg",
+    "stock": 30,
+    "price": 13800,
+    "info": "Featuring Radon-enhanced technology, our Fish offers unparalleled impossible performance",
+    "brandId": 3,
+    "categoryId": 5
+  },
+  {
+    "sn": "d1cf62f9-aa22-4e49-8f94-009a6d915b8a",
+    "name": "Small Steel Soap - PUMA 短袖上衣",
+    "photos": "t5.jpg,t2.jpg,t4.jpg",
+    "stock": 70,
+    "price": 14600,
+    "info": "Innovative Keyboard featuring neighboring technology and Wooden construction",
+    "brandId": 3,
+    "categoryId": 4
+  },
+  {
+    "sn": "119f5abf-ccf3-49ff-a5ed-0f5302c04da5",
+    "name": "Fantastic Plastic Cheese - adidas 慢跑鞋",
+    "photos": "t1.jpg,t5.jpg,t2.jpg",
+    "stock": 10,
+    "price": 14000,
+    "info": "New 靛藍色 Soap with ergonomic design for essential comfort",
+    "brandId": 2,
+    "categoryId": 9
+  },
+  {
+    "sn": "d24d66a7-ad32-4454-9410-38f427d389a7",
+    "name": "Licensed Granite Soap - PUMA 長褲",
+    "photos": "t1.jpg,t4.jpg,t5.jpg",
+    "stock": 20,
+    "price": 14300,
+    "info": "Discover the panda-like agility of our Computer, perfect for breakable users",
+    "brandId": 3,
+    "categoryId": 7
+  },
+  {
+    "sn": "332aadab-4848-4037-8292-a35c28b49adb",
+    "name": "Oriental Frozen Cheese - adidas 長袖上衣",
+    "photos": "t2.jpg,t4.jpg,t1.jpg",
+    "stock": 80,
+    "price": 14400,
+    "info": "Innovative Bacon featuring made-up technology and Concrete construction",
+    "brandId": 2,
+    "categoryId": 6
+  },
+  {
+    "sn": "a538c8b0-0f08-4beb-b279-6319a8a738c2",
+    "name": "Sleek Cotton Chips - New Balance 長褲",
+    "photos": "t4.jpg,t3.jpg,t5.jpg",
+    "stock": 90,
+    "price": 5600,
+    "info": "The 金色 Hat combines Jordan aesthetics with Neptunium-based durability",
+    "brandId": 4,
+    "categoryId": 7
+  },
+  {
+    "sn": "2041ad87-527a-4522-a484-dda84032f3a8",
+    "name": "Recycled Steel Chair - New Balance 長褲",
+    "photos": "t4.jpg,t2.jpg,t3.jpg",
+    "stock": 100,
+    "price": 13300,
+    "info": "Discover the giraffe-like agility of our Salad, perfect for acidic users",
+    "brandId": 4,
+    "categoryId": 7
+  },
+  {
+    "sn": "cb65c7b3-68ae-42a0-b6cd-2c668e146574",
+    "name": "Small Granite Pizza - adidas 長褲",
+    "photos": "t3.jpg,t2.jpg,t5.jpg",
+    "stock": 70,
+    "price": 2500,
+    "info": "Discover the impressionable new Ball with an exciting mix of Frozen ingredients",
+    "brandId": 2,
+    "categoryId": 7
+  },
+  {
+    "sn": "c2fadadb-fb2c-48bc-88a7-5d67dc87e4a8",
+    "name": "Fantastic Concrete Computer - PUMA 帽類",
+    "photos": "t2.jpg,t5.jpg,t4.jpg",
+    "stock": 80,
+    "price": 3000,
+    "info": "Stylish Towels designed to make you stand out with zealous looks",
+    "brandId": 3,
+    "categoryId": 12
+  },
+  {
+    "sn": "830547f9-eb00-431f-8d31-166463f37a3b",
+    "name": "Ergonomic Bronze Soap - Nike 慢跑鞋",
+    "photos": "t1.jpg,t3.jpg,t4.jpg",
+    "stock": 50,
+    "price": 9100,
+    "info": "The 天藍色 Fish combines Bosnia and Herzegovina aesthetics with Berkelium-based durability",
+    "brandId": 1,
+    "categoryId": 9
+  },
+  {
+    "sn": "ffd01759-71e9-4e5b-a902-cc0e27a04f88",
+    "name": "Sleek Granite Towels - Nike 長褲",
+    "photos": "t4.jpg,t5.jpg,t1.jpg",
+    "stock": 90,
+    "price": 14300,
+    "info": "Ergonomic Chips made with Cotton for all-day red support",
+    "brandId": 1,
+    "categoryId": 7
+  },
+  {
+    "sn": "99b8ba82-1374-4f70-8535-adeb643d2412",
+    "name": "Recycled Plastic Bike - Nike 長袖上衣",
+    "photos": "t3.jpg,t1.jpg,t2.jpg",
+    "stock": 100,
+    "price": 14500,
+    "info": "Experience the 銀色 brilliance of our Chair, perfect for pale environments",
+    "brandId": 1,
+    "categoryId": 6
+  },
+  {
+    "sn": "f169c781-84b9-4939-af08-9916c9fc7952",
+    "name": "Refined Wooden Car - New Balance 慢跑鞋",
+    "photos": "t3.jpg,t5.jpg,t2.jpg",
+    "stock": 20,
+    "price": 2300,
+    "info": "The Advanced sustainable portal Tuna offers reliable performance and liquid design",
+    "brandId": 4,
+    "categoryId": 9
+  },
+  {
+    "sn": "c4cc7c8e-14c9-48f8-bd59-2eec1229d209",
+    "name": "Rustic Bronze Table - Nike 包款",
+    "photos": "t4.jpg,t2.jpg,t5.jpg",
+    "stock": 20,
+    "price": 10800,
+    "info": "Professional-grade Chips perfect for joyous training and recreational use",
+    "brandId": 1,
+    "categoryId": 11
+  },
+  {
+    "sn": "1f2b1400-9558-41f4-9202-07a240d4419c",
+    "name": "Rustic Wooden Pizza - New Balance 籃球鞋",
+    "photos": "t1.jpg,t2.jpg,t5.jpg",
+    "stock": 30,
+    "price": 11200,
+    "info": "The Programmable uniform concept Fish offers reliable performance and fluffy design",
+    "brandId": 4,
+    "categoryId": 10
+  },
+  {
+    "sn": "c528a916-76c7-46e4-b2c9-cbbb583e89b6",
+    "name": "Tasty Wooden Shoes - New Balance 包款",
+    "photos": "t4.jpg,t2.jpg,t5.jpg",
+    "stock": 90,
+    "price": 14700,
+    "info": "Featuring Americium-enhanced technology, our Hat offers unparalleled smug performance",
+    "brandId": 4,
+    "categoryId": 11
+  },
+  {
+    "sn": "d61f4567-9820-45cb-8ace-788bd1eb38c8",
+    "name": "Incredible Cotton Hat - PUMA 外套",
+    "photos": "t1.jpg,t3.jpg,t4.jpg",
+    "stock": 60,
+    "price": 8100,
+    "info": "The sleek and white Gloves comes with 白色 LED lighting for smart functionality",
+    "brandId": 3,
+    "categoryId": 8
+  },
+  {
+    "sn": "c5b55bbd-86b8-41cb-a8b5-a6e9277a0f8e",
+    "name": "Incredible Granite Table - New Balance 長袖上衣",
+    "photos": "t1.jpg,t4.jpg,t5.jpg",
+    "stock": 100,
+    "price": 9500,
+    "info": "Ergonomic Bike made with Steel for all-day standard support",
+    "brandId": 4,
+    "categoryId": 6
+  },
+  {
+    "sn": "9b16cf38-f001-489f-bc40-a03742db27f3",
+    "name": "Generic Bronze Cheese - adidas 短褲",
+    "photos": "t3.jpg,t1.jpg,t2.jpg",
+    "stock": 60,
+    "price": 3200,
+    "info": "Innovative Keyboard featuring liquid technology and Metal construction",
+    "brandId": 2,
+    "categoryId": 5
+  },
+  {
+    "sn": "64dff71d-f2d9-4f7f-80a8-fe4cb3f38033",
+    "name": "Unbranded Soft Soap - New Balance 長褲",
+    "photos": "t1.jpg,t2.jpg,t5.jpg",
+    "stock": 30,
+    "price": 10300,
+    "info": "The Seamless discrete access Bike offers reliable performance and petty design",
+    "brandId": 4,
+    "categoryId": 7
+  },
+  {
+    "sn": "90decaea-7864-4df3-83c1-b13e76163c68",
+    "name": "Rustic Rubber Table - Nike 長褲",
+    "photos": "t5.jpg,t4.jpg,t2.jpg",
+    "stock": 10,
+    "price": 9200,
+    "info": "The Realigned reciprocal task-force Towels offers reliable performance and quintessential design",
+    "brandId": 1,
+    "categoryId": 7
+  },
+  {
+    "sn": "3a8f5928-a687-44cd-97cb-ebe23327eec7",
+    "name": "Modern Steel Soap - Nike 外套",
+    "photos": "t1.jpg,t3.jpg,t2.jpg",
+    "stock": 70,
+    "price": 11300,
+    "info": "Professional-grade Chair perfect for firsthand training and recreational use",
+    "brandId": 1,
+    "categoryId": 8
+  },
+  {
+    "sn": "42b19972-1aff-4e5a-a751-660be8a31fec",
+    "name": "Elegant Rubber Pizza - adidas 外套",
+    "photos": "t5.jpg,t1.jpg,t2.jpg",
+    "stock": 90,
+    "price": 7500,
+    "info": "The 天宇 Keyboard is the latest in a series of snarling products from 毛 - 江",
+    "brandId": 2,
+    "categoryId": 8
+  },
+  {
+    "sn": "7e073078-5fdb-4413-aefb-d2e54caa4bfb",
+    "name": "Rustic Frozen Gloves - PUMA 包款",
+    "photos": "t5.jpg,t3.jpg,t1.jpg",
+    "stock": 20,
+    "price": 8000,
+    "info": "The 雨澤 Bacon is the latest in a series of unwilling products from 龍 - 戴",
+    "brandId": 3,
+    "categoryId": 11
+  },
+  {
+    "sn": "57dd3ce7-d00e-4421-ae47-d11bf336a0a7",
+    "name": "Modern Plastic Pants - PUMA 慢跑鞋",
+    "photos": "t2.jpg,t5.jpg,t4.jpg",
+    "stock": 90,
+    "price": 10400,
+    "info": "New Chair model with 95 GB RAM, 484 GB storage, and imaginary features",
+    "brandId": 3,
+    "categoryId": 9
+  },
+  {
+    "sn": "baab0a3a-9a8c-40b5-a4b7-b55b00a018d4",
+    "name": "Luxurious Frozen Car - Nike 短袖上衣",
+    "photos": "t2.jpg,t4.jpg,t1.jpg",
+    "stock": 60,
+    "price": 9700,
+    "info": "Our crunchy-inspired Ball brings a taste of luxury to your elliptical lifestyle",
+    "brandId": 1,
+    "categoryId": 4
+  },
+  {
+    "sn": "4d6217ee-f3d6-413a-8a3a-2d111f174f2a",
+    "name": "Bespoke Frozen Computer - PUMA 長袖上衣",
+    "photos": "t2.jpg,t4.jpg,t1.jpg",
+    "stock": 100,
+    "price": 1600,
+    "info": "Professional-grade Fish perfect for puzzled training and recreational use",
+    "brandId": 3,
+    "categoryId": 6
+  },
+  {
+    "sn": "3ee7272a-f171-4192-a66a-de7509f1b8ed",
+    "name": "Generic Cotton Computer - Nike 外套",
+    "photos": "t2.jpg,t3.jpg,t1.jpg",
+    "stock": 100,
+    "price": 6600,
+    "info": "Practical Pizza designed with Fresh for fruitful performance",
+    "brandId": 1,
+    "categoryId": 8
+  },
+  {
+    "sn": "1cb8b368-07d9-4274-9ed5-d11b0cad07bc",
+    "name": "Intelligent Cotton Shirt - adidas 籃球鞋",
+    "photos": "t3.jpg,t1.jpg,t2.jpg",
+    "stock": 30,
+    "price": 4200,
+    "info": "Experience the 紅褐色 brilliance of our Tuna, perfect for livid environments",
+    "brandId": 2,
+    "categoryId": 10
+  },
+  {
+    "sn": "dee7a3f4-4fa8-469c-87bf-29a077f28f5a",
+    "name": "Electronic Granite Chicken - New Balance 短褲",
+    "photos": "t1.jpg,t4.jpg,t2.jpg",
+    "stock": 50,
+    "price": 4900,
+    "info": "Discover the snake-like agility of our Computer, perfect for whopping users",
+    "brandId": 4,
+    "categoryId": 5
+  },
+  {
+    "sn": "110d6208-4b86-4af1-88be-b636c937fb2c",
+    "name": "Practical Rubber Chips - adidas 長袖上衣",
+    "photos": "t5.jpg,t2.jpg,t4.jpg",
+    "stock": 100,
+    "price": 6800,
+    "info": "The 思淼 Table is the latest in a series of haunting products from 龍 - 史",
+    "brandId": 2,
+    "categoryId": 6
+  },
+  {
+    "sn": "e2c53da3-f6c0-4a4e-84a4-86e6c685935c",
+    "name": "Intelligent Soft Sausages - Nike 籃球鞋",
+    "photos": "t4.jpg,t3.jpg,t2.jpg",
+    "stock": 100,
+    "price": 4100,
+    "info": "Stylish Chips designed to make you stand out with submissive looks",
+    "brandId": 1,
+    "categoryId": 10
+  },
+  {
+    "sn": "b2e883ac-2a26-4b8f-a884-d3777167f15c",
+    "name": "Sleek Concrete Soap - PUMA 長褲",
+    "photos": "t5.jpg,t2.jpg,t1.jpg",
+    "stock": 10,
+    "price": 5600,
+    "info": "Savor the bitter essence in our Sausages, designed for wry culinary adventures",
+    "brandId": 3,
+    "categoryId": 7
+  }
+]

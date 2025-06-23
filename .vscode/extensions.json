@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "mgmcdermott.vscode-language-babel",
+    "vscode-icons-team.vscode-icons",
+    "formulahendry.auto-complete-tag",
+    "ms-ceintl.vscode-language-pack-zh-hant",
+    "riazxrazor.html-to-jsx",
+    "cweijan.vscode-mysql-client2",
+    "blanu.vscode-styled-jsx",
+    "clinyong.vscode-css-modules",
+  ]
+}

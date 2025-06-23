@@ -1,0 +1,47 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 10px;
+}
+
+.grid-item {
+  padding: 20px;
+  text-align: center;
+}
+
+.deferloading {
+  cursor: default !important;
+  position: relative;
+  display: inline-block;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  opacity: 0.8;
+}
+
+.deferloading.inline {
+  display: inline;
+}
+
+.deferloading:before {
+  content: '';
+  display: block;
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  animation: 2.2s ease forwards infinite placeHolderShimmer;
+  background: #444;
+  background: linear-gradient(-61deg, #f2f2f2 40%, #e1e3e1 50%, #f2f2f2 60%);
+  background-size: 100vw 100%;
+}
+
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -50vw 0;
+  }
+  100% {
+    background-position: 50vw 0;
+  }
+}
