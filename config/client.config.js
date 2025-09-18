@@ -1,5 +1,5 @@
 // 本檔案是用來設定環境變數的檔案，這裡的變數會被其他檔案引入使用
-export const PORT = 3000
+export const PORT = 3001
 // 直接從環境變數取得NODE_ENV(npm run dev or npm run start)
 const env = process.env.NODE_ENV
 // 本機環境 OR 營運環境 (true: 本機環境, false: 營運環境)
@@ -8,10 +8,10 @@ export const isDev = env === 'development'
 // 本機環境
 // next api路由版本
 const local = {
-  apiURL: 'http://localhost:3000/api',
-  serverURL: 'http://localhost:3000',
-  avatarURL: 'http://localhost:3000/avatar',
-  nextUrl: 'http://localhost:3000',
+  apiURL: 'http://localhost:3001/api',
+  serverURL: 'http://localhost:3001',
+  avatarURL: 'http://localhost:3001/avatar',
+  nextUrl: 'http://localhost:3001',
 }
 
 // 營運環境設定(部署至Vercel)

@@ -22,7 +22,7 @@ let options = {
     },
   ],
   redirectUrls: {
-    confirmUrl: 'http://localhost:3000/pay-confirm',
-    cancelUrl: 'http://localhost:3000/pay-cancel',
+    confirmUrl: 'http://localhost:3001/pay-confirm',
+    cancelUrl: 'http://localhost:3001/pay-cancel',
   },
 }
