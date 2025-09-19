@@ -26,7 +26,7 @@ const seedsFolder = 'seeds'
 const bcryptFields = ['password']
 // 需要先轉換為日期的欄位名稱 date format fields
 const dateFields = ['birth']
-
+// 啟動類型檔案，會自動載入環境變數
 async function main() {
   // seed 檔案存放路徑(相對於專案根目錄)
   const seedsPath = path.join(process.cwd(), seedsFolder)
@@ -49,16 +49,18 @@ async function main() {
   relationFileList.sort(function (a, b) {
     for (let i = 0; i < relations.length; i++) {
       const tmp = relations[i].split(':')
+      console.log(`🔍 關聯 ${i}: "${relations[i]}" 分割後:`, tmp, `長度: ${tmp.length}`);
       // oneToOne, oneToMany
       if (tmp.length === 2 && a.includes(tmp[0]) && b.includes(tmp[1])) {
         return -1
       }
 
+
       // manyToMany
       if (tmp.length === 3 && a.includes(tmp[0]) && b.includes(tmp[2])) {
         return -1
       }
-
+      
       // manyToMany
       if (tmp.length === 3 && a.includes(tmp[1]) && b.includes(tmp[2])) {
         return -1

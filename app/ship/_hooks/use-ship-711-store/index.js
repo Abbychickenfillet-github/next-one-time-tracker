@@ -183,7 +183,7 @@ export function useShip711StoreCallback(keyLocalStorage = 'store711') {
     setValue(params)
 
     // FIXME: mobile browser can't close self
-    // DOMException: Blocked a frame with origin "http://192.168.0.106:3000" from accessing a cross-origin frame.
+    // DOMException: Blocked a frame with origin "http://192.168.0.106:3001" from accessing a cross-origin frame.
     // 關閉自己視窗
     window.close()
 

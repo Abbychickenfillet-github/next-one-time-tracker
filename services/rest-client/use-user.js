@@ -102,41 +102,62 @@ export const useUserRegister = () => {
 
   return { register, isMutating, isError }
 }
-
+// ===== useMutation 詳細解釋 =====
+// useMutation 是 SWR 提供的 Hook，專門用於處理會改變伺服器狀態的操作
+// 例如：POST (新增)、PUT (更新)、DELETE (刪除) 等
+// 
+// trigger 是什麼？
+// trigger 是 useMutation 返回的函數，用來手動觸發 API 請求
+// 它會自動處理 loading 狀態、錯誤處理、重試機制等
 export const useAuthLogin = () => {
+  // useMutation 返回三個重要屬性：
+  // 1. trigger: 手動觸發 API 請求的函數
+  // 2. isMutating: 請求進行中的狀態 (true/false)
+  // 3. isError: 請求是否發生錯誤 (true/false)
   const { trigger, isMutating, isError } = useMutation(
-    `${apiURL}/auth/local/login`,
-    'POST'
+    `${apiURL}/auth/local/login`,  // API 端點 URL
+    'POST'                         // HTTP 方法
   )
+  
+  // 封裝 login 函數，讓外部更容易使用
   // POST方法時，要利用login({ username, password })來登入
   const login = async (data = {}) => {
+    // trigger 函數會發送 POST 請求到 /auth/local/login
+    // 並自動處理 loading 和 error 狀態
     return await trigger({ data: data })
   }
 
   return { login, isMutating, isError }
 }
 
+// ===== Google 登入功能 =====
 export const useAuthGoogleLogin = () => {
+  // trigger: 觸發 Google 登入 API 請求的函數
   const { trigger, isMutating, isError } = useMutation(
-    `${apiURL}/auth/google/login`,
-    'POST'
+    `${apiURL}/auth/google/login`,  // Google 登入 API 端點
+    'POST'                           // HTTP POST 方法
   )
+  
   // POST方法，要利用googleLogin(providerData)來登入
   const googleLogin = async (data = {}) => {
+    // trigger 會發送 Google 登入資料到伺服器
     return await trigger({ data: data })
   }
 
   return { googleLogin, isMutating, isError }
 }
 
-// 登出用
+// ===== 登出功能 =====
 export const useAuthLogout = () => {
+  // trigger: 觸發登出 API 請求的函數
   const { trigger, isMutating, isError } = useMutation(
-    `${apiURL}/auth/local/logout`,
-    'POST'
+    `${apiURL}/auth/local/logout`,  // 登出 API 端點
+    'POST'                           // HTTP POST 方法
   )
+  
   // POST方法時，要利用logout()來登出
   const logout = async () => {
+    // trigger 會發送登出請求到伺服器，清除 session
     return await trigger({ data: {} })
   }
 
@@ -144,11 +165,22 @@ export const useAuthLogout = () => {
 }
 
 /**
+ * ===== 取得當前登入用戶資料 =====
  * 載入會員id的資料用，需要登入後才能使用。此API路由會檢查JWT中的id是否符合本會員，不符合會失敗。
+ * 
+ * useQuery vs useMutation 的區別：
+ * - useQuery: 自動觸發，用於讀取資料 (GET)
+ * - useMutation: 手動觸發，用於修改資料 (POST/PUT/DELETE)
  */
 export const useUserGetMe = () => {
+  // useQuery 返回的屬性：
+  // - data: API 返回的資料
+  // - error: 錯誤訊息
+  // - isLoading: 載入狀態
+  // - mutate: 手動重新獲取資料的函數
+  // - isError: 是否有錯誤
   const { data, error, isLoading, mutate, isError } = useQuery(
-    `${apiURL}/users/me`
+    `${apiURL}/users/me`  // GET 請求，自動觸發
   )
 
   let user = null

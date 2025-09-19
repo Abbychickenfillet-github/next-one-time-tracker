@@ -4,18 +4,11 @@ generator client {
   output   = "./generated/client"
 }
 
-// 本地端開發使用mysql
+// 本地端開發使用postgresql
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // uses connection pooling
 }
-
-// vercel deploy with postgresql
-// datasource db {
-//   provider  = "postgresql"
-//   url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-//   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
-// }
 
 /// 以下為資料表定義
 // https://www.prisma.io/docs/concepts/components/prisma-schema/data-model
@@ -28,8 +21,8 @@ model Blog {
   // 這個欄位會在每次更新時"自動"更新時間，不需要手動更新
   // DateTime 會轉換成資料庫的 timestamp，time zone 會自動轉換成 UTC
   updatedAt DateTime @updatedAt @map("updated_at")
-  title     String   @db.VarChar(255)
-  content   String?  @db.Text
+  title     String
+  content   String?
   published Boolean  @default(false)
 
   // 關聯: User:Blog = 1:n 
@@ -39,26 +32,42 @@ model Blog {
 
 model TimeLog {
   id        Int      @id @default(autoincrement())
-  title     String
+  title     String   // 活動標題
+  description String? // 活動描述
   startTime DateTime @map("start_time")
-  endTime   DateTime @map("end_time")
+  endTime   DateTime? @map("end_time")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  
+  // 關聯到用戶
+  userId    Int?     @map("user_id")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // 關聯到步驟
   steps     Step[]
+  
+  // AI 分析結果
+  aiAnalysis String? @map("ai_analysis") // AI 分析結果
+  aiInsights String? @map("ai_insights") // AI 洞察
 }
 
 model Step {
-  id        Int      @id @default(autoincrement())
-  title     String
-  startTime DateTime @map("start_time")
-  endTime   DateTime @map("end_time")
-  timeLog   TimeLog  @relation(fields: [timeLogId], references: [id])
-  timeLogId Int      @map("time_log_id")
+  id          Int      @id @default(autoincrement())
+  timeLogId   Int      @map("time_log_id")
+  title       String   // 步驟標題
+  description String?  // 步驟描述
+  startTime   DateTime @map("start_time")
+  endTime     DateTime? @map("end_time")
+  
+  // 關聯到主活動
+  timeLog     TimeLog  @relation(fields: [timeLogId], references: [id], onDelete: Cascade)
 }
 
 model Brand {
   id       Int       @id @default(autoincrement())
   name     String    @unique
   img      String?
-  info     String    @db.Text
+  info     String
   // 關聯: Brand:Product = 1:n 
   products Product[]
 }
@@ -96,11 +105,11 @@ model Otp {
 model Profile {
   id       Int       @id @default(autoincrement())
   name     String?
-  bio      String?   @db.Text
+  bio      String?
   avatar   String?
   sex      String?
   // 日期格式: 2021-01-01
-  birth    DateTime? @db.Date
+  birth    DateTime?
   phone    String?
   postcode String?
   address  String?
@@ -113,10 +122,10 @@ model Product {
   id         Int        @id @default(autoincrement())
   name       String
   sn         String     @unique
-  photos     String?    @db.Text
+  photos     String?
   stock      Int        @default(0)
   price      Int        @default(0)
-  info       String     @db.Text
+  info       String
   // 關聯: Brand:Product = 1:n 
   brand      Brand      @relation(fields: [brandId], references: [id])
   brandId    Int        @map("brand_id")
@@ -137,8 +146,10 @@ model User {
   emailValidated  Boolean    @default(false) @map("email_validated")
   googleUid       String?    @unique @map("google_uid")
   lineUid         String?    @unique @map("line_uid")
-  lineAccessToken String?    @map("line_access_token") @db.Text
-  refreshToken    String?    @map("refresh_token") @db.Text
+  lineAccessToken String?
+  refreshToken    String?
   // 關聯: User:Product = n:m 透過 Favorite
   favorites       Favorite[]
+  // 關聯: User:TimeLog = 1:n
+  timeLogs        TimeLog[]
 }
