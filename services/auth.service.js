@@ -12,10 +12,10 @@ import { serverConfig } from '../config/server.config.js'
 // status: 'success' | 'error'
 // message: string
 // errors: { field: string, message: string }[]
-// payload: { data: { username, password } }
+// payload: { data: { name, password } }
 
 // 會員登入(本地端)
-// data = { username, password }
+// data = { name, password }
 export const login = async (data) => {
   // 驗證參數是否為正確的資料類型
   const validatedFields = loginSchema.safeParse(data)
@@ -33,9 +33,9 @@ export const login = async (data) => {
   }
 
   try {
-    // 查詢資料庫這帳號的使用者資料(如果username有設定為unique，可以用`findUnique`)
+    // 查詢資料庫這帳號的使用者資料(如果name有設定為unique，可以用`findUnique`)
     const user = await prisma.user.findUnique({
-      where: { username: data.username },
+      where: { name: data.name },
     })
 
     // null代表不存在

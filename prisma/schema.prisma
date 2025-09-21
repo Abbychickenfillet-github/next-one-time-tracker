@@ -4,10 +4,10 @@ generator client {
   output   = "./generated/client"
 }
 
-// 本地端開發使用postgresql
+// 使用 PostgreSQL 資料庫
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL") // uses connection pooling
+  url       = env("DATABASE_URL") // 使用 DATABASE_URL 環境變數
 }
 
 /// 以下為資料表定義
@@ -31,13 +31,11 @@ model Blog {
 }
 
 model TimeLog {
-  id        Int      @id @default(autoincrement())
-  title     String   // 活動標題
-  description String? // 活動描述
-  startTime DateTime @map("start_time")
-  endTime   DateTime? @map("end_time")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id          Int      @id @default(autoincrement())
+  title       String   // 活動標題
+  description String?  // 活動描述
+  startTime   DateTime @map("start_time")
+  endTime     DateTime? @map("end_time")
   
   // 關聯到用戶
   userId    Int?     @map("user_id")
@@ -46,9 +44,7 @@ model TimeLog {
   // 關聯到步驟
   steps     Step[]
   
-  // AI 分析結果
-  aiAnalysis String? @map("ai_analysis") // AI 分析結果
-  aiInsights String? @map("ai_insights") // AI 洞察
+ 
 }
 
 model Step {
@@ -102,21 +98,21 @@ model Otp {
   expiredAt DateTime @map("expired_at")
 }
 
-model Profile {
-  id       Int       @id @default(autoincrement())
-  name     String?
-  bio      String?
-  avatar   String?
-  sex      String?
-  // 日期格式: 2021-01-01
-  birth    DateTime?
-  phone    String?
-  postcode String?
-  address  String?
-  // 1:1 關聯
-  user     User      @relation(fields: [userId], references: [id])
-  userId   Int       @unique @map("user_id")
-}
+// model Profile {
+//   id       Int       @id @default(autoincrement())
+//   name     String?
+//   bio      String?
+//   avatar   String?
+//   sex      String?
+//   // 日期格式: 2021-01-01
+//   birth    DateTime?
+//   phone    String?
+//   postcode String?
+//   address  String?
+//   // 1:1 關聯
+//   user     User      @relation(fields: [userId], references: [id])
+//   userId   Int       @unique @map("user_id")
+// }
 
 model Product {
   id         Int        @id @default(autoincrement())
@@ -138,16 +134,24 @@ model Product {
 
 model User {
   id              Int        @id @default(autoincrement())
-  username        String     @unique
+  name            String?    // 顯示名稱，可選填，允許重複
   password        String
-  email           String     @unique
-  // 關聯 User:Profile = 1:1 
-  profile         Profile?
-  emailValidated  Boolean    @default(false) @map("email_validated")
+  email           String     @unique // 只有 email 需要唯一
+  phone           String?    // 手機號碼，可選填
+  birthdate       DateTime?  // 生日，可選填
+  gender          String?    // 性別，可選填
+  avatar          String?    // 頭像路徑，可選填
+  level           Int        @default(0) // 用戶等級，預設為 0
+  valid           Boolean    @default(true) // 帳號是否有效，預設為 true
+  createdAt       DateTime   @default(now()) @map("created_at")
   googleUid       String?    @unique @map("google_uid")
   lineUid         String?    @unique @map("line_uid")
   lineAccessToken String?
   refreshToken    String?
+  iat             String?    // JWT issued at
+  exp             String?    // JWT expiration
+  // 關聯 User:Profile = 1:1 (已註解掉 Profile 表)
+  // profile         Profile?
   // 關聯: User:Product = n:m 透過 Favorite
   favorites       Favorite[]
   // 關聯: User:TimeLog = 1:n

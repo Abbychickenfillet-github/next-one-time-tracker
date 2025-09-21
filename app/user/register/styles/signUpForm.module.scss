@@ -1,0 +1,513 @@
+// 定義 mixin
+
+$prefix: "guru-style-";
+$background: rgb(164, 114, 210);
+$border: #3498db;
+
+// 使用現代 Sass 函數替代棄用函數
+@use "sass:color";
+
+.debug-test {
+  // 使用現代 Sass 函數
+  --test-bg: #{$background};
+  --test-contrast: #{if(color.channel($background, "lightness", $space: hsl) > 0.5, #000, #fff)};
+  --test-shade: #{color.adjust($background, $lightness: -20%)};
+  --test-shade-contrast: #{if(color.channel(color.adjust($background, $lightness: -20%), "lightness", $space: hsl) > 0.5, #000, #fff)};
+  
+  background: var(--test-bg);
+  color: var(--test-contrast);
+  border: 1px solid;
+  padding: 10px;
+  margin: 10px 0;
+  
+  &::before {
+    content: "背景: " var(--test-bg) " | 文字: " var(--test-contrast);
+    display: block;
+    font-size: 12px;
+  }
+}
+
+@mixin button-variant($prefix, $background, $border) {
+  --#{$prefix}btn-color: #{if(color.channel($background, "lightness", $space: hsl) > 0.5, #000, #fff)};
+  --#{$prefix}btn-bg: #{$background};
+  --#{$prefix}btn-border-color: #{$border};
+  --#{$prefix}btn-hover-color: #{if(color.channel(color.adjust($background, $lightness: -20%), "lightness", $space: hsl) > 0.5, #000, #fff)};
+  --#{$prefix}btn-hover-bg: #{color.adjust($background, $lightness: -20%)};
+  --#{$prefix}btn-hover-border-color: #{color.adjust($border, $lightness: -20%)};
+  --#{$prefix}btn-focus-shadow-rgb: #{color.channel(color.mix(if(color.channel($background, "lightness", $space: hsl) > 0.5, #000, #fff), $border, 15%), "red", $space: rgb)}, #{color.channel(color.mix(if(color.channel($background, "lightness", $space: hsl) > 0.5, #000, #fff), $border, 15%), "green", $space: rgb)}, #{color.channel(color.mix(if(color.channel($background, "lightness", $space: hsl) > 0.5, #000, #fff), $border, 15%), "blue", $space: rgb)};
+}
+
+// 使用 mixin
+
+.button {
+  // 原有樣式保持不變...
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #bfd1e5;
+  font-size: large;
+
+  border-radius: 8px;
+  padding: 12px 24px;
+  transition: all 0.3s ease;
+  .button-icon {
+    transition: transform 0.3s ease;
+  }
+  &:active {
+    transform: translateY(0);  // 點擊時回到原位置
+  }
+  @include button-variant($prefix, $background, $border);
+
+  background-color: var(--guru-style-btn-bg);
+  border: 2px solid var(--guru-style-btn-border-color);
+  box-shadow: 0 0 5px rgba(var(--guru-style-btn-focus-shadow-rgb), 0.5);
+
+  &:hover {
+    background-color: var(--guru-style-btn-hover-bg);
+    border-color: var(--guru-style-btn-hover-border-color);
+    color: var(--guru-style-btn-hover-color);
+  }
+
+  &:focus {
+    box-shadow: 0 0 10px rgba(var(--guru-style-btn-focus-shadow-rgb), 0.5);
+  }
+}
+
+.button-variant-dark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #bfd1e5;
+  font-size: large;
+
+  border-radius: 8px;
+  padding: 12px 24px;
+  transition: all 0.3s ease;
+  .button-icon {
+    transition: transform 0.3s ease;
+  }
+  &:active {
+    transform: translateY(0);  // 點擊時回到原位置
+  }
+  @include button-variant($prefix, #5c95cd, #34495e);
+  
+  background-color: var(--guru-style-btn-bg);
+  color: var(--guru-style-btn-color);
+  border: 2px solid var(--guru-style-btn-border-color);
+  
+  &:hover {
+    background-color: var(--guru-style-btn-hover-bg);
+    color: var(--guru-style-btn-hover-color);
+    border-color: var(--guru-style-btn-hover-border-color);
+  }
+}
+
+.button-variant-light {
+  @include button-variant($prefix, #ecf0f1d0, #bdc3c7);
+  
+  background-color: var(--guru-style-btn-bg);
+  color: var(--guru-style-btn-color);
+  border: 2px solid var(--guru-style-btn-border-color);
+  
+  &:hover {
+    background-color: var(--guru-style-btn-hover-bg);
+    color: var(--guru-style-btn-hover-color);
+    border-color: var(--guru-style-btn-hover-border-color);
+  }
+}
+
+.gradient-bg {
+  position: relative;
+  background: linear-gradient(135deg, #3c007a, #000);
+  background-repeat: no-repeat;
+  background-size: cover ;  /* 改用 cover */
+  background-position: center bottom;  
+  display: flex;
+  flex-direction: column;
+}
+
+.blur {
+  /* background: rgba(255, 255, 255, 0.626);*/
+  /* width: 400px; 固定寬度 */
+  /* height: 400px; 固定高度 */
+  /* border-radius: 45%; 圓形 */
+  /* box-shadow: 0 0 50px 20px rgba(255, 255, 255, 0.5); 光暈效果 */
+  /* filter: blur(10px); 模糊效果 */
+  /* position: fixed; */
+  /* bottom: 0; */ 
+  /* CF8FFC 5B35AA 281C72 */
+  width: 1143.17px; height: 630px; transform: rotate(8.61deg); transform-origin: 0 0; background: linear-gradient(270deg, #ce8ffcda 0%, rgba(90, 53, 170, 0.548) 50%, #271c7280 100%); box-shadow: 185px 185px 185px; border-radius: 999px; filter: blur(185px);
+  position: absolute;
+  left: 20px;
+}
+@keyframes gradient-shift {
+  0% {
+    background: linear-gradient(135deg, #3c007a, #8d70f1, #000);
+  }
+  70% {
+    background: linear-gradient(135deg, #2e276e, #4c39c9);
+  }
+  100% {
+    background: linear-gradient(135deg, #8d70f1, #3c007a);
+  }
+}
+
+.left {
+  // position: relative;
+  text-align: left;
+  h4, h3 {
+    margin-left: 0;
+    align-self: flex-start;  // 在 flex 容器中靠左對齊
+  }
+  z-index: 20;  /* 確保在其他元素上方 */
+  // min-width: 200px;  /* 給予最小寬度 */
+  padding: 20px;    /* 給予一些內邊距 */
+  
+}
+.right {
+  background: rgba(190, 186, 208, 0.319);
+  border: white 1px solid;
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.988); /* 內陰影 */
+  border-radius: 15px;
+  position: relative; // 改用 relative 而不是 absolute
+  max-width: 95%;
+  margin: 20px;
+  padding: 0 15px;      // 增加內邊距
+  
+}
+.tabs {
+  margin-top: 50px;
+  margin-inline: 50px;
+}
+
+.inputs-group{
+  padding: 50px;
+  /* 包住所有inputs標籤的 div class */
+}
+/* tabs跟inputs要一樣長 */
+.inputs {
+  width: 100%;
+  height: 50px;
+  color: white; 
+  background-color: transparent; 
+  font-size: 12px; 
+  // font-family: Khula; 
+  font-weight: 400; 
+  letter-spacing: 3.20px; 
+  word-wrap: break-word; 
+  border-radius: 10px;
+  padding-left: 23px; padding-right: 23px; padding-top: 17px; 
+  padding-bottom: 17px; 
+  background: rgba(30, 25, 55, 0.30); 
+  border-radius: 10px; 
+  overflow: hidden; 
+  align-items: center; gap: 10px; 
+}
+.inputs::placeholder {
+  font-size: 10px; /* 設置文字大小 */
+  color: #888;
+  /* 設置文字顏色 */
+  // font-family: 'Arial', sans-serif; 
+  font-weight: normal; /* 設置字重 */   
+}
+
+.inputs:focus {
+      outline: none; /* 去除聚焦時的外框 */
+      border-color: rgba(255, 255, 255, 1); /* 聚焦時邊框顏色變化 */
+  }
+
+// signUpForm.module.scss
+.hover {
+  position: relative;
+  transition: all 0.3s ease;
+  
+  // 下劃線動畫效果
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #fff;
+    transition: width 0.3s ease;
+  }
+  
+  &:hover {
+    // 發光效果
+    text-shadow: 0 0 10px rgba(188, 126, 126, 0.8);
+    transform: translateY(-2px);
+    
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+// Label 圖標樣式
+.label-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  color: #E0B0FF;
+  transition: all 0.3s ease;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+// 忘記密碼連結樣式 - 進階版
+.forgot-password-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(128, 90, 245, 0.1);
+  border: 1px solid rgba(128, 90, 245, 0.2);
+  backdrop-filter: blur(5px);
+  
+  // 圖標樣式
+  .link-icon {
+    width: 16px;
+    height: 16px;
+    transition: all 0.3s ease;
+  }
+  
+  .arrow-icon {
+    width: 14px;
+    height: 14px;
+    transition: all 0.3s ease;
+  }
+  
+  span {
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  &:hover {
+    color: #805AF5;
+    background: rgba(128, 90, 245, 0.2);
+    border-color: rgba(128, 90, 245, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(128, 90, 245, 0.3);
+    
+    .link-icon {
+      transform: rotate(360deg);
+      filter: drop-shadow(0 0 8px rgba(128, 90, 245, 0.6));
+    }
+    
+    .arrow-icon {
+      transform: translateX(4px);
+      filter: drop-shadow(0 0 6px rgba(128, 90, 245, 0.6));
+    }
+    
+    span {
+      text-shadow: 0 0 8px rgba(128, 90, 245, 0.6);
+    }
+  }
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(128, 90, 245, 0.2);
+  }
+  
+  // 光效掃過
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+    border-radius: 8px;
+  }
+  
+  &:hover::before {
+    left: 100%;
+  }
+}
+
+// 登入按鈕樣式 - 現代玻璃擬態風格
+.submit-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, rgba(128, 90, 245, 0.8), rgba(224, 176, 255, 0.6));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  
+  // 發光效果
+  box-shadow: 
+    0 4px 15px rgba(128, 90, 245, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  
+  &:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, rgba(128, 90, 245, 0.9), rgba(224, 176, 255, 0.7));
+    box-shadow: 
+      0 8px 25px rgba(128, 90, 245, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    
+    .button-icon {
+      transform: translateX(4px);
+    }
+  }
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: 
+      0 2px 10px rgba(128, 90, 245, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  
+  // 按鈕圖標動畫
+  .button-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+  
+  // 按鈕內部光效
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  &:hover::before {
+    left: 100%;
+  }
+}
+
+// 可以加入更炫的效果
+// .tabs {
+//   .hover {
+//     // 漸變色效果
+//     background: linear-gradient(
+//       to right,
+//       #fff,
+//       #fff 50%,
+//       transparent 50%
+//     );
+//     background-clip: text;
+//     -webkit-background-clip: text;
+//     background-size: 200% 100%;
+//     background-position: 100%;
+//     transition: background-position 0.3s ease;
+    
+//     &:hover {
+//       background-position: 0;
+//       color: transparent;
+//       -webkit-text-fill-color: transparent;
+//     }
+//   }
+// }
+
+// 或者霓虹燈效果
+// .hover {
+//   &:hover {
+//     animation: neon 1.5s ease-in-out infinite alternate;
+//   }
+// }
+
+// @keyframes neon {
+//   from {
+//     text-shadow: 
+//       0 0 5px #fff,
+//       0 0 10px #fff,
+//       0 0 15px #805AF5,
+//       0 0 20px #805AF5,
+//       0 0 25px #805AF5;
+//   }
+//   to {
+//     text-shadow: 
+//       0 0 10px #fff,
+//       0 0 20px #fff,
+//       0 0 30px #805AF5,
+//       0 0 40px #805AF5,
+//       0 0 50px #805AF5;
+//   }
+// }
+
+.button{
+  // background: -webkit-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246d8e 100%);
+  // background: -o-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
+  // background: -moz-linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
+  // background: linear-gradient(360deg, #A793E9 0%, #5346B6 50%, #34246D 100%);
+  width: 100%;
+  // border-radius: 20px;
+  // margin: 25px;
+}
+.signup{
+  font-size: 100px;
+}
+.guru-laptop{
+  font-size: 64px; 
+  // font-family: Khula;
+  font-weight: 400; letter-spacing: 12.80px; 
+}
+.custom-label{
+  letter-spacing: 4px;
+}
+// signUpForm.module.scss
+// 在適當位置加入以下樣式
+
+// signUpForm.module.scss
+
+.input-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  // transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+  
+  // 加入發光效果
+  filter: drop-shadow(0 0 2px rgba(224, 176, 255, 0.3));
+}
+
+.custom-input {
+  // 原有樣式保持不變...
+  padding-right: 40px !important;
+  
+  &:focus + .input-icon {
+    opacity: 1;
+    filter: drop-shadow(0 0 4px rgba(224, 176, 255, 0.5));
+  }
+}
+
+
+
+
+// .signup-right{
+//   margin-block: 40px;
+//   margin-right:40px;
+// }
+
+
+.content-row {
+  // height: calc(100vh - 385px);
+  position: relative;
+  z-index: 2;
+}

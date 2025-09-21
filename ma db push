@@ -1,0 +1,29 @@
+ app/(api)/api/ai-analysis/route.ts               | 230 [32m++++++++++++[m
+ app/(api)/api/step/route.ts                      |  15 [32m+[m[31m-[m
+ app/(api)/api/timelog/route.ts                   | 142 [32m+++++++[m[31m-[m
+ app/demo/query-client-example/page.js            |  93 [32m+++++[m
+ app/demo/react-query-demo/page.js                | 109 [32m++++++[m
+ app/loading.js                                   |   7 [32m+[m
+ app/providers.js                                 |   9 [32m+[m
+ app/ship/_hooks/use-ship-711-store/index.js      |   2 [32m+[m[31m-[m
+ app/timelog/TimeLogClient.tsx                    | 191 [32m+++++++[m[31m---[m
+ app/timelog/ai-analysis/page.tsx                 | 239 [32m++++++++++++[m
+ app/timelog/history/page.tsx                     | 359 [32m++++++++++++++++++[m
+ components/timelog/TimeLogClient.tsx             | 360 [32m++++++++++++[m[31m------[m
+ config/{server.mysql.js => server.postgresql.js} |  13 [32m+[m[31m-[m
+ docs/01-postgresql-setup.md                      |  47 [32m+++[m
+ docs/02-prisma-generated-client.md               | 161 [32m++++++++[m
+ docs/03-mysql-to-postgresql-migration.md         | 128 [32m+++++++[m
+ docs/04-pgadmin-server-management.md             | 151 [32m++++++++[m
+ docs/05-database-naming-conventions.md           | 146 [32m++++++++[m
+ docs/06-prisma-database-management.md            | 263 [32m+++++++++++++[m
+ docs/07-swr-and-server-side-guide.md             | 433 [32m++++++++++++++++++++++[m
+ docs/08-react-hook-vs-function-guide.md          | 446 [32m+++++++++++++++++++++++[m
+ docs/09-firebase-auth-integration.md             | 181 [32m+++++++++[m
+ docs/10-openai-integration.md                    | 309 [32m++++++++++++++++[m
+ docs/README.md                                   |  91 [32m+++++[m
+ prisma/generated/.gitkeep                        |   0
+ prisma/schema.prisma                             |  65 [32m++[m[31m--[m
+ prisma/seed.js                                   |   6 [32m+[m[31m-[m
+ services/rest-client/use-user.js                 |  50 [32m++[m[31m-[m
+ 28 files changed, 4021 insertions(+), 225 deletions(-)

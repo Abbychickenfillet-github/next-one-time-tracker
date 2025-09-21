@@ -3,19 +3,24 @@ import { apiURL, isDev } from '@/config/client.config'
 
 export const defaultUser = {
   id: 0,
-  username: '',
+  name: '',
   googleUid: '',
   lineUid: '',
   email: '',
-  profile: {
-    name: '',
-    bio: '',
-    sex: '',
-    phone: '',
-    birth: '',
-    postcode: '',
-    address: '',
-  },
+  phone: '',
+  birthdate: '',
+  gender: '',
+  avatar: '',
+  // profile 已移除，相關欄位直接放在 User 表中
+  // profile: {
+  //   name: '',
+  //   bio: '',
+  //   sex: '',
+  //   phone: '',
+  //   birth: '',
+  //   postcode: '',
+  //   address: '',
+  // },
 }
 
 // GET
@@ -89,12 +94,14 @@ export const useUserRegister = () => {
     'POST'
   )
   // POST方法，要呼叫register(newUser)來註冊
-  // newUser資料範例(物件) 註: name改為在profile資料表中
+  // newUser資料範例(物件)
   // {
-  //     "username":"ginny",
-  //     "password":"123456",
   //     "name":"金妮",
+  //     "password":"123456",
   //     "email":"ginny@test.com",
+  //     "phone":"0912345678",
+  //     "birthdate":"1992-05-15",
+  //     "gender":"female"
   // }
   const register = async (data = {}) => {
     return await trigger({ data: data })
