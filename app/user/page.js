@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 export default function UserPage() {
   // 輸入表單用的狀態
-  const [userInput, setUserInput] = useState({ username: '', password: '' })
+  const [userInput, setUserInput] = useState({ name: '', password: '' })
 
   // 登入後設定全域的會員資料用
   const { mutate } = useAuthGet()

@@ -1,20 +1,34 @@
 [
   {
-    "username": "harry",
+    "name": "harry",
     "password": "11111",
     "email": "test@gmail.com",
-    "emailValidated": true
+    "phone": "0912345678",
+    "birthdate": "1990-01-01",
+    "gender": "male"
   },
   {
-    "username": "ginny",
+    "name": "ginny",
     "password": "22222",
     "email": "ginny@test.com",
-    "emailValidated": true
+    "phone": "0912345679",
+    "birthdate": "1992-05-15",
+    "gender": "female"
   },
   {
-    "username": "mione",
+    "name": "mione",
     "password": "33333",
     "email": "mione@test.com",
-    "emailValidated": true
+    "phone": "0912345680",
+    "birthdate": "1991-09-19",
+    "gender": "female"
+  },
+  {
+  "name": "mioned",
+  "password": "44444",
+  "email": "mioned@test.com",
+  "phone": "0912345681",
+  "birthdate": "1991-09-19",
+  "gender": "male"
   }
 ]

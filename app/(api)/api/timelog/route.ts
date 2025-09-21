@@ -59,31 +59,8 @@ export async function GET(req: Request) {
       prisma.timeLog.count({ where: whereCondition })
     ])
 
-    // 計算 AI 分析
-    const logsWithAnalysis = await Promise.all(
-      logs.map(async (log: any) => {
-        if (!log.aiAnalysis && log.endTime) {
-          // 計算活動時長
-          const duration = log.endTime.getTime() - log.startTime.getTime()
-          const durationMinutes = Math.floor(duration / (1000 * 60))
-          
-          // 簡單的 AI 分析（可以後續整合真正的 LLM）
-          const analysis = generateAIAnalysis(log, durationMinutes)
-          
-          // 更新資料庫
-          await prisma.timeLog.update({
-            where: { id: log.id },
-            data: { aiAnalysis: analysis }
-          })
-          
-          return { ...log, aiAnalysis: analysis }
-        }
-        return log
-      })
-    )
-
     return NextResponse.json({
-      logs: logsWithAnalysis,
+      logs,
       pagination: {
         page,
         limit,
@@ -95,37 +72,4 @@ export async function GET(req: Request) {
     console.error('TimeLog GET Error:', error)
     return NextResponse.json({ error: 'Failed to fetch TimeLogs' }, { status: 500 })
   }
-}
-
-// ===== AI 分析生成函數 =====
-function generateAIAnalysis(log: any, durationMinutes: number) {
-  const insights = []
-  
-  // 時長分析
-  if (durationMinutes < 30) {
-    insights.push('短時間專注活動')
-  } else if (durationMinutes < 120) {
-    insights.push('中等時長活動')
-  } else {
-    insights.push('長時間深度工作')
-  }
-  
-  // 時間段分析
-  const hour = log.startTime.getHours()
-  if (hour >= 6 && hour < 12) {
-    insights.push('早晨時段')
-  } else if (hour >= 12 && hour < 18) {
-    insights.push('下午時段')
-  } else {
-    insights.push('晚間時段')
-  }
-  
-  // 步驟分析
-  if (log.steps && log.steps.length > 3) {
-    insights.push('多階段複雜任務')
-  } else {
-    insights.push('簡單直接任務')
-  }
-  
-  return insights.join(' | ')
 }
