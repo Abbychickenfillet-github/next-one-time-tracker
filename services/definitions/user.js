@@ -38,7 +38,7 @@ export const updateUserSchema = z.object({
 
 // 更新會員密碼的驗証用的schema
 export const updatePasswordSchema = z.object({
-  currentPassword: z.string().min(5).max(30), // 5-30個字元，必要
+  currentPassword: z.string().min(8).max(30), // 5-30個字元，必要
   newPassword: z.string().min(5).max(30), // 5-30個字元，必要
 })
 

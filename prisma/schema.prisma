@@ -33,7 +33,6 @@ model Blog {
 model TimeLog {
   id          Int      @id @default(autoincrement())
   title       String   // 活動標題
-  description String?  // 活動描述
   startTime   DateTime @map("start_time")
   endTime     DateTime? @map("end_time")
   

@@ -21,8 +21,17 @@ export async function POST(request) {
     const payload = { userId: data?.payload?.user?.id }
     // 建立jwt session(Access Token) 並設定有效期限為3天
     await createSession(payload, '3d', 'ACCESS_TOKEN')
-    // 回應成功
-    return successResponse(res, data.payload)
+    
+    // 創建回應並確保 Cookie 被設置
+    const response = successResponse(res, data.payload)
+    
+    // 開發環境調試
+    if (isDev) {
+      console.log('✅ 登入成功，已設置 ACCESS_TOKEN Cookie')
+      console.log('📊 用戶 ID:', payload.userId)
+    }
+    
+    return response
   } else {
     const error = { message: data?.message }
     return errorResponse(res, error)

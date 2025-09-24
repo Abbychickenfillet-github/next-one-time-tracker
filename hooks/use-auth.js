@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 // import { getFavs } from '@/services/user'
 
 // ========================================
@@ -57,6 +57,7 @@ export const AuthProvider = ({ children }) => {
   // 🚀 路由相關
   // ========================================
   const router = useRouter()
+  const pathname = usePathname()
   
   // 登入頁面路由
   const loginRoute = '/member/login'
@@ -79,7 +80,7 @@ export const AuthProvider = ({ children }) => {
       console.log('🔑 登入 password:', password ? '[已隱藏]' : '未提供')
       
       // 向後端發送登入請求
-      const response = await fetch(`${process.env}/api/login`, {
+      const response = await fetch('/api/auth/local/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,6 +106,7 @@ export const AuthProvider = ({ children }) => {
       // 檢查登入是否成功
       if (result.status === 'success') {
         console.log('✅ 前端登入成功，設定狀態...')
+        console.log('🍪 Cookie 檢查:', document.cookie)
         
         // 使用函數式更新確保狀態正確設置
         setAuth(prevAuth => {
@@ -114,7 +116,7 @@ export const AuthProvider = ({ children }) => {
           const newState = {
             isAuth: true,  // 設置為已登入
             userData: {
-              user_id: result.data.user_id,
+              user_id: result.data.user_id || result.data.id,
               name: result.data.name,
               phone: result.data.phone,
               email: result.data.email,
@@ -141,14 +143,13 @@ export const AuthProvider = ({ children }) => {
           return newState
         })
         
-        // 等待狀態更新完成後再跳轉
-        console.log('🔄 等待認證狀態更新完成...')
-        await waitForAuthUpdate()
-        console.log('🔄 認證狀態更新完成，導向 dashboard 頁面...')
-        router.replace('/dashboard')  // 跳轉到儀表板
+        // 立即跳轉，不等待狀態更新
+        console.log('🔄 立即跳轉到 dashboard 頁面...')
+        router.replace('/dashboard')
         
       } else {
         console.error('登入失敗:', result.message || result)
+        throw new Error(result.message || '登入失敗')
       }
     } catch (error) {
       console.error('登入錯誤：', error)
@@ -193,7 +194,7 @@ export const AuthProvider = ({ children }) => {
       document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly;'
       
       // 向後端發送登出請求
-      const response = await fetch(`${process.env}/api/auth/logout`, {
+      const response = await fetch('/api/auth/local/logout', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -284,18 +285,18 @@ export const AuthProvider = ({ children }) => {
 
     try {
       console.log('🔍use-auth.js Line 272 開始檢查認證狀態...')
-      console.log('📍 use-auth.js Line 273 當前路徑:', router.pathname)
+      console.log('📍 use-auth.js Line 273 當前路徑:', pathname)
       console.log('🍪 use-auth.js Line 274 Cookie:', document.cookie)
       console.log('🔐 use-auth.js Line 275 當前 isAuth:', auth.isAuth)
       console.log('⏳ use-auth.js Line 276 當前 isLoading:', auth.isLoading)
       console.log('✅ 當前 hasChecked:', auth.hasChecked)
       console.log('🛡️ 受保護路由:', protectedRoutes)
-      console.log('🔍 是否在受保護路由:', protectedRoutes.includes(router.pathname))
-      console.log('🍪 是否有 accessToken:', document.cookie.includes('accessToken'))
+      console.log('🔍 是否在受保護路由:', protectedRoutes.includes(pathname))
+      console.log('🍪 是否有 ACCESS_TOKEN:', document.cookie.includes('ACCESS_TOKEN'))
       
       // 檢查是否在受保護路由且沒有token
       console.log('🔍 檢查受保護路由條件...')
-      if (protectedRoutes.includes(router.pathname) && !document.cookie.includes('accessToken')) {
+      if (protectedRoutes.includes(pathname) && !document.cookie.includes('ACCESS_TOKEN')) {
         console.log('⚠️ 沒有 token 且在受保護路由，跳轉登入')
         setAuth(prev => ({ ...prev, isLoading: false, hasChecked: true }))
         router.push(loginRoute)
@@ -305,7 +306,7 @@ export const AuthProvider = ({ children }) => {
       
       // 檢查是否已登入但嘗試訪問登入/註冊頁面
       console.log('🔍 檢查已登入用戶阻擋路由條件...')
-      if (document.cookie.includes('accessToken') && loggedInBlockedRoutes.includes(router.pathname)) {
+      if (document.cookie.includes('ACCESS_TOKEN') && loggedInBlockedRoutes.includes(router.pathname)) {
         console.log('⚠️ 已登入用戶嘗試訪問登入頁面，但先不跳轉，等待認證檢查完成')
         console.log('🍪 use-auth.js Line 290 Cookie 內容:', document.cookie)
         console.log('📍  use-auth.js Line 291 當前路徑:', router.pathname)
@@ -317,18 +318,18 @@ export const AuthProvider = ({ children }) => {
       }
       console.log('✅ 通過已登入用戶阻擋路由檢查')
       
-      // 如果沒有 accessToken，直接返回
-      if (!document.cookie.includes('accessToken')) {
-        console.log('❌ 沒有 accessToken')
+      // 如果沒有 ACCESS_TOKEN，直接返回
+      if (!document.cookie.includes('ACCESS_TOKEN')) {
+        console.log('❌ 沒有 ACCESS_TOKEN')
         console.log('🍪 完整 Cookie 內容:', document.cookie)
-        console.log('🔍 檢查 accessToken 是否存在:', document.cookie.includes('accessToken'))
+        console.log('🔍 檢查 ACCESS_TOKEN 是否存在:', document.cookie.includes('ACCESS_TOKEN'))
         setAuth(prev => ({ ...prev, isLoading: false, hasChecked: true }))
         return
       }
     
       // 向後端驗證 token 有效性
       console.log('🔍 向後端驗證 token...')
-      const response = await fetch(`${process.env}/api/auth/verify`, {
+      const response = await fetch('/api/auth/check', {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -363,7 +364,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('檢查認證失敗:', error)
       // 清除無效的 cookie
-      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      document.cookie = 'ACCESS_TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
       setAuth(prev => ({ 
         ...prev, 
         isAuth: false,
@@ -372,11 +373,11 @@ export const AuthProvider = ({ children }) => {
       }))
       
       // 如果在受保護路由，跳轉到登入頁面
-      if (protectedRoutes.includes(router.pathname)) {
+      if (protectedRoutes.includes(pathname)) {
         router.push(loginRoute)
       }
     }
-  }, [auth.hasChecked, auth.isLoading, router.pathname])
+  }, [pathname, router, protectedRoutes, loggedInBlockedRoutes, loginRoute])
 
   // ========================================
   // 🔄 狀態變化監聽器
@@ -396,7 +397,7 @@ export const AuthProvider = ({ children }) => {
     if (!auth.hasChecked) {
       handleCheckAuth()
     }
-  }, [router.pathname, auth.hasChecked, handleCheckAuth])
+  }, [pathname, auth.hasChecked, handleCheckAuth])
 
   // ========================================
   // 🔍 初始化認證檢查
@@ -404,10 +405,15 @@ export const AuthProvider = ({ children }) => {
   // 在組件掛載時檢查認證狀態
   useEffect(() => {
     // 只在組件首次掛載時檢查認證狀態
+    console.log('🚀 頁面載入，開始檢查認證狀態...')
+    console.log('🍪 當前 Cookie:', document.cookie)
+    console.log('🔍 是否有 ACCESS_TOKEN:', document.cookie.includes('ACCESS_TOKEN'))
+    console.log('📊 當前 auth 狀態:', auth)
+    
     if (!auth.hasChecked) {
       handleCheckAuth()
     }
-  }, [auth.hasChecked, handleCheckAuth])
+  }, []) // 空依賴數組，只在組件掛載時執行一次
 
   // ========================================
   // 📤 返回 Context Provider
