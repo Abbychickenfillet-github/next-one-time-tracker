@@ -1,13 +1,13 @@
 import { z } from 'zod'
 
 export const loginSchema = z.object({
-  name: z.string().min(1).max(50), // 1-50個字元，必要
-  password: z.string().min(5).max(30), // 5-30個字元，必要
+  email: z.string().email({ message: 'email格式不正確' }), // email格式，必要
+  password: z.string().min(8).max(30), // 8-30個字元，必要
 })
 
 export const resetPasswordSchema = z.object({
   email: z.string().email({ message: 'email格式不正確' }), // email格式
-  password: z.string().min(5).max(30), // 5-12個字元，必要
+  password: z.string().min(8).max(30), // 8-30個字元，必要
   token: z.string().length(6), // 6個字元，必要
 })
 

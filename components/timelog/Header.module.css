@@ -1,0 +1,249 @@
+/* Header 主題樣式 */
+
+/* 預設 Green 主題 */
+.header-theme {
+  background: linear-gradient(135deg, #0dcaf0, #0aa2c0);
+  color: white;
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-theme::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+  pointer-events: none;
+}
+
+/* Pink 主題 - 雲海粉紅色大理石效果 */
+:root[data-theme="pink"] .header-theme {
+  background: 
+    linear-gradient(135deg, 
+      rgba(255, 107, 157, 0.8) 0%,
+      rgba(255, 139, 171, 0.9) 25%,
+      rgba(255, 182, 193, 0.7) 50%,
+      rgba(255, 192, 203, 0.8) 75%,
+      rgba(255, 105, 180, 0.9) 100%
+    ),
+    radial-gradient(circle at 20% 20%, rgba(255, 107, 157, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 139, 171, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(255, 182, 193, 0.2) 0%, transparent 50%);
+  color: #ffffff;
+  animation: headerCloudFloat 15s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 在 Header 上添加雲海覆蓋層 */
+:root[data-theme="pink"] .header-theme::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(160, 74, 103, 0.4) 0%, transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(255, 139, 171, 0.4) 0%, transparent 60%),
+    radial-gradient(circle at 40% 60%, rgba(233, 30, 99, 0.3) 0%, transparent 60%);
+  animation: headerCloudFloat 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 確保 Header 內容在雲海效果之上 */
+:root[data-theme="pink"] .header-theme > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* 大理石紋理效果 */
+:root[data-theme="pink"] .header-theme::before {
+  background: 
+    linear-gradient(45deg, 
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 25%,
+      rgba(255, 255, 255, 0.05) 50%,
+      transparent 75%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+  background-size: 20px 20px;
+  animation: marbleShimmer 3s ease-in-out infinite;
+}
+
+/* 雲海浮動動畫 */
+@keyframes headerCloudFloat {
+  0%, 100% { 
+    background-position: 0% 0%, 20% 20%, 80% 80%, 40% 60%;
+  }
+  25% { 
+    background-position: 10% 5%, 30% 25%, 70% 85%, 50% 65%;
+  }
+  50% { 
+    background-position: 5% 10%, 25% 30%, 85% 70%, 35% 55%;
+  }
+  75% { 
+    background-position: 15% 8%, 35% 15%, 75% 75%, 45% 70%;
+  }
+}
+
+/* 大理石光澤動畫 */
+@keyframes marbleShimmer {
+  0%, 100% { 
+    opacity: 0.1;
+    transform: translateX(0);
+  }
+  50% { 
+    opacity: 0.2;
+    transform: translateX(10px);
+  }
+}
+
+/* 按鈕樣式 */
+.header-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 2;
+}
+
+.header-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Pink 主題按鈕 */
+:root[data-theme="pink"] .header-button {
+  background: rgba(255, 107, 157, 0.2);
+  border: 1px solid rgba(255, 107, 157, 0.4);
+  color: white;
+}
+
+:root[data-theme="pink"] .header-button:hover {
+  background: rgba(255, 107, 157, 0.3);
+  border-color: rgba(255, 107, 157, 0.6);
+  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+/* Logo 樣式 */
+.logo {
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+:root[data-theme="pink"] .logo {
+  filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.5));
+}
+
+/* 文字樣式 */
+.header-theme span {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+:root[data-theme="pink"] .header-theme span {
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(255, 107, 157, 0.3);
+}
+
+/* 整合的 Breadcrumb 樣式 */
+.header-theme nav {
+  position: relative;
+  z-index: 2;
+}
+
+.header-theme .breadcrumb {
+  background: transparent !important;
+  padding: 0;
+  margin: 0;
+  border: none;
+  backdrop-filter: none;
+}
+
+.header-theme .breadcrumb li {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.header-theme .breadcrumb li + li:before {
+  color: rgba(255, 255, 255, 0.7) !important;
+  padding: 0 0.5rem;
+}
+
+.header-theme .breadcrumb li a {
+  color: rgba(255, 255, 255, 0.8) !important;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.header-theme .breadcrumb li a:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+}
+
+/* Pink 主題 Breadcrumb */
+:root[data-theme="pink"] .header-theme .breadcrumb li {
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+:root[data-theme="pink"] .header-theme .breadcrumb li + li:before {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+:root[data-theme="pink"] .header-theme .breadcrumb li a {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+:root[data-theme="pink"] .header-theme .breadcrumb li a:hover {
+  color: white !important;
+  background: rgba(255, 107, 157, 0.2);
+  box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+}
+
+/* 響應式設計 */
+@media screen and (max-width: 768px) {
+  .header-theme {
+    padding: 0.75rem 1rem;
+  }
+  
+  .header-theme .breadcrumb {
+    display: none; /* 在小螢幕上隱藏 breadcrumb */
+  }
+  
+  :root[data-theme="pink"] .header-theme {
+    animation: none; /* 在行動裝置上停用動畫以提升性能 */
+  }
+  
+  .header-theme::before {
+    animation: none;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .header-theme .breadcrumb li {
+    font-size: 0.8rem;
+  }
+  
+  .header-theme .breadcrumb li + li:before {
+    padding: 0 0.25rem;
+  }
+}

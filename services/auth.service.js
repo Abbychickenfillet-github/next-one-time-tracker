@@ -31,11 +31,11 @@ export const login = async (data) => {
       },
     }
   }
-
+// 登入檢查帳號密碼是否正確
   try {
-    // 查詢資料庫這帳號的使用者資料(如果name有設定為unique，可以用`findUnique`)
+    // 查詢資料庫這帳號的使用者資料(使用email查詢)
     const user = await prisma.user.findUnique({
-      where: { name: data.name },
+      where: { email: data.email },
     })
 
     // null代表不存在

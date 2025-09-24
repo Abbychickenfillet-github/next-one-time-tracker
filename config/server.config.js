@@ -88,14 +88,14 @@ export const serverConfig = {
   // line pay設定值
   linePay: {
     development: {
-      channelId: '1234567890',
-      channelSecret: 'abcdefghijklmnopqrs',
+      channelId: process.env.LINE_PAY_CHANNEL_ID || '1234567890',
+      channelSecret: process.env.LINE_PAY_CHANNEL_SECRET || 'abcdefghijklmnopqrs',
       confirmUrl: baseUrl + '/line-pay/callback',
       cancelUrl: baseUrl + '/line-pay/cancel',
     },
     production: {
-      channelId: '1234567890',
-      channelSecret: 'abcdefghijklmnopqrs',
+      channelId: process.env.LINE_PAY_CHANNEL_ID || '1234567890',
+      channelSecret: process.env.LINE_PAY_CHANNEL_SECRET || 'abcdefghijklmnopqrs',
       confirmUrl: baseUrl + '/line-pay/callback',
       cancelUrl: baseUrl + '/line-pay/cancel',
     },

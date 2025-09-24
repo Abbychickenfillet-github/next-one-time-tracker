@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useUserRegister } from '@/services/rest-client/use-user'
 
-import styles from './styles/signUpForm.module.scss'
+// 樣式已移至全域 theme-system.scss
 import Swal from 'sweetalert2'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -22,6 +22,11 @@ export default function RegisterPage() {
   const [showpassword, setShowpassword] = useState(false)
   const [showConfirmpassword, setShowConfirmpassword] = useState(false)
   const { auth } = useAuth()
+  
+  // 多步驟表單狀態
+  const [currentStep, setCurrentStep] = useState(1)
+  const totalSteps = 3
+  
   const [user, setUser] = useState({
     name: '',
     email: '',
@@ -44,21 +49,94 @@ export default function RegisterPage() {
   })
 
   const [submitError, setSubmitError] = useState('')
+
+  // 步驟導航函數
+  const nextStep = () => {
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1)
+    }
+  }
+
+  const prevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
+  // 步驟驗證函數
+  const validateCurrentStep = () => {
+    let newErrors = { ...errors }
+    let isValid = true
+
+    if (currentStep === 1) {
+      // 第一步：基本資訊驗證
+      if (!user.email) {
+        newErrors.email = '信箱為必填'
+        isValid = false
+      } else if (!/\S+@\S+\.\S+/.test(user.email)) {
+        newErrors.email = '信箱格式不正確'
+        isValid = false
+      }
+
+      if (user.name && user.name.length > 20) {
+        newErrors.name = '姓名不能超過20個字元'
+        isValid = false
+      }
+    } else if (currentStep === 2) {
+      // 第二步：密碼驗證
+      const passwordErrors = validatePassword(user.password)
+      if (passwordErrors.length > 0) {
+        newErrors.password = passwordErrors[0]
+        isValid = false
+      }
+
+      if (!user.confirmpassword) {
+        newErrors.confirmpassword = '請再次輸入密碼'
+        isValid = false
+      } else if (user.confirmpassword !== user.password) {
+        newErrors.confirmpassword = '兩次輸入的密碼不一致'
+        isValid = false
+      }
+    } else if (currentStep === 3) {
+      // 第三步：其他資訊驗證
+      if (user.gender && !['female', 'male', 'undisclosed'].includes(user.gender)) {
+        newErrors.gender = '請選擇有效的性別'
+        isValid = false
+      }
+
+      if (!user.agree) {
+        newErrors.agree = '請同意網站會員註冊條款'
+        isValid = false
+      }
+    }
+
+    setErrors(newErrors)
+    return isValid
+  }
+
+  const handleNext = () => {
+    if (validateCurrentStep()) {
+      nextStep()
+    }
+  }
+
 // 確保密碼符合規則的函式
   const validatePassword = (password) => {
     //函式內宣告2個變數
     const rules = {
       minLength: password.length >= 8,
-      hasUpperCase: /[A-Z]/.test(password), //2
+      hasUpperCase: /[A-Z]/.test(password),
       hasLowerCase: /[a-z]/.test(password),
       hasNumber: /\d/.test(password),
+      hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
     }
 
     const messages = {
       minLength: '密碼至少需要8個字元',
-      hasUpperCase: '需要包含大寫字母', //2
+      hasUpperCase: '需要包含大寫字母',
       hasLowerCase: '需要包含小寫字母',
       hasNumber: '需要包含數字',
+      hasSpecialChar: '需要包含特殊符號',
     }
 
     // 函式的返回值
@@ -198,117 +276,37 @@ export default function RegisterPage() {
       setSubmitError(errorMessage)
     }
   }
-  useEffect(() => {
-    // 如果用戶已登入，重定向到儀表板
-    if (auth.isAuth) {
-      window.location.href = '/dashboard'
-    }
-  }, [auth.isAuth])
+  // 渲染步驟內容
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
   return (
     <>
-      <Head>
-        <title>註冊</title>
-      </Head>
-
-      {/* <Header /> */}
-
-      <div
-        className={`${styles['gradient-bg']} ${styles['signup-bg']} min-vh-100`}
-      >
-        {/* <Image
-          src="/bgi/signup_bgi.png"
-          alt="background"
-          fill
-          style={{ objectFit: 'cover' }}
-          quality={100}
-        /> */}
-
-        <div className="container position-relative h-100">
-          <div className="row h-100 align-items-center justify-content-center">
-            {/* 左側歡迎區域 */}
-            <div className="col-lg-6 col-md-12 mb-5 mb-lg-0">
-              <div className="text-center text-lg-start">
-                <div className="mb-4">
-                  <GlowingText
-                    text="Welcome"
-                    className="text-white display-4 fw-bold mb-3"
-                  />
+            {/* 姓名輸入 */}
+            <div className="mb-3">
+              <label htmlFor="name" className="text-white fw-semibold">
+                姓名
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                value={user.name}
+                onChange={handleFieldChange}
+                placeholder="請輸入您的姓名 (可選填)"
+                maxLength={20}
+                style={{
+                  backdropFilter: 'blur(10px)',
+                  color: 'white',
+                }}
+              />
+              {errors.name && (
+                <div className="alert alert-danger py-2 mt-2" role="alert">
+                  {errors.name}
                 </div>
-                <div className="mb-4">
-                  <GlowingText
-                    text="Signing up to Timelog"
-                    className="text-white display-3 fw-bold"
-                  />
-                </div>
-                <p className="text-white-50 fs-5">
-                  加入我們，開啟你的筆電探索之旅
-                </p>
-              </div>
+              )}
             </div>
-
-            {/* 右側註冊表單 */}
-            <div className="col-lg-5 col-md-8 col-sm-12">
-              <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25">
-                {/* 頁籤切換 */}
-                <div className="d-flex justify-content-center mb-4">
-                  <div className="btn-group" role="group">
-                    <Link
-                      href="/user"
-                      className="btn btn-outline-light px-4 py-2"
-                    >
-                      登入
-                    </Link>
-                    <Link
-                      href="/user/register"
-                      className="btn btn-outline-light active px-4 py-2"
-                    >
-                      註冊
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 錯誤訊息 */}
-                {submitError && (
-                  <div className="alert alert-danger py-2 mb-4" role="alert">
-                    <i className="bi bi-exclamation-triangle me-2"></i>
-                    {submitError}
-                  </div>
-                )}
-
-                {/* 註冊表單 */}
-                <form
-                  onSubmit={handleSubmit}
-                  className="needs-validation"
-                  noValidate
-                >
-                  {/* 姓名輸入 */}
-                  <div className="mb-3">
-                    <label htmlFor="name" className="text-white fw-semibold">
-                      姓名
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
-                      value={user.name}
-                      onChange={handleFieldChange}
-                      placeholder="請輸入您的姓名 (可選填)"
-                      maxLength={20}
-                      style={{
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                      }}
-                    />
-                    {errors.name && (
-                      <div
-                        className="alert alert-danger py-2 mt-2"
-                        role="alert"
-                      >
-                        {errors.name}
-                      </div>
-                    )}
-                  </div>
 
                   <div className="mb-3">
                     <label htmlFor="email" className="text-white fw-semibold">
@@ -329,21 +327,20 @@ export default function RegisterPage() {
                       }}
                     />
                     {errors.email && (
-                      <div
-                        className="alert alert-danger py-2 mt-2"
-                        role="alert"
-                      >
+                <div className="alert alert-danger py-2 mt-2" role="alert">
                         {errors.email}
                       </div>
                     )}
                   </div>
+          </>
+        )
 
+      case 2:
+        return (
+          <>
                   {/* 密碼輸入 */}
                   <div className="mb-4">
-                    <label
-                      htmlFor="password"
-                      className="form-label text-white fw-semibold"
-                    >
+              <label htmlFor="password" className="form-label text-white fw-semibold">
                       密碼
                     </label>
                     <div className="position-relative">
@@ -376,10 +373,7 @@ export default function RegisterPage() {
                       </button>
                     </div>
                     {errors.password && (
-                      <div
-                        className="alert alert-danger py-2 mt-2"
-                        role="alert"
-                      >
+                <div className="alert alert-danger py-2 mt-2" role="alert">
                         {errors.password}
                       </div>
                     )}
@@ -408,28 +402,25 @@ export default function RegisterPage() {
                         type="checkbox"
                         id="showConfirmpassword"
                         checked={showConfirmpassword}
-                        onChange={() =>
-                          setShowConfirmpassword(!showConfirmpassword)
-                        }
+                  onChange={() => setShowConfirmpassword(!showConfirmpassword)}
                         className="form-check-input"
                       />
-                      <label
-                        htmlFor="showConfirmpassword"
-                        className="text-white form-check-label"
-                      >
+                <label htmlFor="showConfirmpassword" className="text-white form-check-label">
                         顯示密碼
                       </label>
                     </div>
                     {errors.confirmpassword && (
-                      <div
-                        className="alert alert-danger py-2 mt-2"
-                        role="alert"
-                      >
+                <div className="alert alert-danger py-2 mt-2" role="alert">
                         {errors.confirmpassword}
                       </div>
                     )}
                   </div>
+          </>
+        )
 
+      case 3:
+        return (
+          <>
                   <div className="mb-3">
                     <label htmlFor="phone" className="text-white fw-semibold">
                       手機
@@ -450,10 +441,7 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="mb-3">
-                    <label
-                      htmlFor="birthdate"
-                      className="text-white fw-semibold"
-                    >
+              <label htmlFor="birthdate" className="text-white fw-semibold">
                       生日
                     </label>
                     <div className="">
@@ -494,24 +482,24 @@ export default function RegisterPage() {
                     </select>
                   </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="avatar" className="text-white fw-semibold">
-                      頭像路徑
-                    </label>
-                    <input
-                      type="text"
-                      id="avatar"
-                      name="avatar"
-                      className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
-                      value={user.avatar}
-                      onChange={handleFieldChange}
-                      placeholder="請輸入頭像路徑 (可選)"
-                      style={{
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                      }}
-                    />
-                  </div>
+            <div className="mb-3">
+              <label htmlFor="avatar" className="text-white fw-semibold">
+                頭像路徑
+              </label>
+              <input
+                type="text"
+                id="avatar"
+                name="avatar"
+                className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                value={user.avatar}
+                onChange={handleFieldChange}
+                placeholder="請輸入頭像路徑 (可選)"
+                style={{
+                  backdropFilter: 'blur(10px)',
+                  color: 'white',
+                }}
+              />
+            </div>
 
                   <div className="mb-3">
                     <div className="form-check">
@@ -523,49 +511,219 @@ export default function RegisterPage() {
                         onChange={handleFieldChange}
                         className="form-check-input"
                       />
-                      <label
-                        htmlFor="agree"
-                        className="text-white form-check-label"
-                      >
+                <label htmlFor="agree" className="text-white form-check-label">
                         我同意網站會員註冊條款
                       </label>
                     </div>
                     {errors.agree && (
-                      <div
-                        className="alert alert-danger py-2 mt-2"
-                        role="alert"
-                      >
+                <div className="alert alert-danger py-2 mt-2" role="alert">
                         {errors.agree}
                       </div>
                     )}
                   </div>
+          </>
+        )
 
-                  {/* 送出按鈕 */}
-                  <div className="d-grid mb-4">
+      default:
+        return null
+    }
+  }
+
+  useEffect(() => {
+    // 如果用戶已登入，重定向到儀表板
+    if (auth.isAuth) {
+      window.location.href = '/dashboard'
+    }
+  }, [auth.isAuth])
+  return (
+    <>
+      <Head>
+        <title>註冊</title>
+      </Head>
+
+      {/* <Header /> */}
+      {/* 我想要做一個按鈕來切換主題顏色 */}
+
+      <div
+        className="gradient-bg min-vh-100"
+      >
+        {/* 雲海效果 - 只在 Pink 主題時顯示 */}
+        <div className="cloud-effect"></div>
+
+
+        <div className="container position-relative h-100">
+          <div className="row h-100 align-items-center justify-content-center">
+            {/* 左側歡迎區域 */}
+            <div className="col-lg-7 col-md-12 mb-5 mb-lg-0">
+              <div className="text-center text-lg-start position-relative m-0">
+                {/* 背景圖片 */}
+                <Image
+                  src="/7-Reasons-To-Keep-Jade-Plant-At-Your-Entrance.jpg"
+                  alt="背景圖片"
+                  fill
+                  style={{ 
+                    objectFit: 'cover',
+                    opacity: 0.3,
+                    zIndex: -1,
+                    borderRadius: '15px',
+                    minHeight: '100vh',
+                  }}
+                  priority
+                />
+                
+                <div className="mb-5">
+                  <GlowingText
+                    text="Welcome"
+                    className="text-white display-4 fw-bold mb-4"
+                  />
+                </div>
+                <div className="mb-5">
+                  <GlowingText
+                    text="TimeLog & Analysis"
+                    className="text-white display-3 fw-bold"
+                  />
+                </div>
+                <p className="text-white-50 fs-5 mb-4">
+                  加入我們，開始成為時間管理大師
+                </p>
+                <p className="text-white-50 fs-6">
+                  智能分析你的時間使用，提升工作效率
+                </p>
+              </div>
+            </div>
+
+            {/* 右側註冊表單 */}
+            <div className="col-lg-5 col-md-8 col-sm-12">
+              <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25">
+                {/* 頁籤切換 */}
+                <div className="d-flex justify-content-center mb-4">
+                  <div className="btn-group" role="group">
+                    <Link
+                      href="/user/login"
+                      className="btn btn-outline-light px-4 py-2"
+                    >
+                      登入
+                    </Link>
+                    <Link
+                      href="/user/register"
+                      className="btn btn-outline-light active px-4 py-2"
+                    >
+                      註冊
+                    </Link>
+                  </div>
+                </div>
+
+                {/* 步驟指示器 */}
+                <div className="d-flex justify-content-center mb-4">
+                  <div className="d-flex align-items-center">
+                    {[1, 2, 3].map((step) => (
+                      <div key={step} className="d-flex align-items-center">
+                        <div
+                          className={`rounded-circle d-flex align-items-center justify-content-center ${
+                            currentStep >= step
+                              ? 'bg-primary text-white'
+                              : 'bg-secondary text-white'
+                          }`}
+                          style={{ width: '30px', height: '30px', fontSize: '14px' }}
+                        >
+                          {step}
+                        </div>
+                        {step < 3 && (
+                          <div
+                            className={`mx-2 ${
+                              currentStep > step ? 'text-primary' : 'text-secondary'
+                            }`}
+                            style={{ width: '30px', height: '2px' }}
+                          >
+                            <div
+                              className={`h-100 ${
+                                currentStep > step ? 'bg-primary' : 'bg-secondary'
+                              }`}
+                            ></div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 步驟標題 */}
+                <div className="text-center mb-4">
+                  <h5 className="text-white">
+                    {currentStep === 1 && '基本資訊'}
+                    {currentStep === 2 && '密碼設定'}
+                    {currentStep === 3 && '個人資料'}
+                  </h5>
+                </div>
+
+                {/* 錯誤訊息 */}
+                {submitError && (
+                  <div className="alert alert-danger py-2 mb-4" role="alert">
+                    <i className="bi bi-exclamation-triangle me-2"></i>
+                    {submitError}
+                  </div>
+                )}
+
+                {/* 註冊表單 */}
+                <form
+                  onSubmit={handleSubmit}
+                  className="needs-validation"
+                  noValidate
+                >
+                  {/* 步驟內容 */}
+                  {renderStepContent()}
+
+                  {/* 步驟導航按鈕 */}
+                  <div className="d-flex justify-content-between mt-4">
+                    <button
+                      type="button"
+                      className={`btn btn-outline-light px-4 py-2 ${
+                        currentStep === 1 ? 'invisible' : ''
+                      }`}
+                      onClick={prevStep}
+                    >
+                      上一步
+                    </button>
+                    
+                    {currentStep < totalSteps ? (
+                      <button
+                        type="button"
+                        className="btn btn-primary px-4 py-2"
+                        onClick={handleNext}
+                        style={{
+                          background: 'linear-gradient(45deg, #805AF5, #E0B0FF)',
+                          border: 'none',
+                          borderRadius: '12px',
+                        }}
+                      >
+                        下一步
+                      </button>
+                    ) : (
                     <button
                       type="submit"
-                      className="btn btn-primary btn-lg fw-semibold py-3"
+                        className="btn btn-primary px-4 py-2"
                       style={{
                         background: 'linear-gradient(45deg, #805AF5, #E0B0FF)',
                         border: 'none',
                         borderRadius: '12px',
                       }}
                     >
-                      註冊
+                        完成註冊
                     </button>
+                    )}
                   </div>
+                </form>
 
                   {/* 登入提示 */}
-                  <div className="text-center">
+                <div className="text-center mt-4">
                     <span className="text-white-50">已經有帳號？</span>
                     <Link
-                      href="/user"
+                    href="/user"
                       className="text-white text-decoration-none ms-1 fw-semibold"
                     >
                       立即登入
                     </Link>
                   </div>
-                </form>
               </div>
             </div>
           </div>
