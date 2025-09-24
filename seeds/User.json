@@ -30,5 +30,13 @@
   "phone": "0912345681",
   "birthdate": "1991-09-19",
   "gender": "male"
+  },
+  {
+    "name": "yoki",
+    "password": "1234abcA@",
+    "email": "yoki@gmail.com",
+    "phone": "0912345682",
+    "birthdate": "1995-03-15",
+    "gender": "male"
   }
 ]

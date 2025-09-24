@@ -1,7 +1,7 @@
 [
   {
     "timeLogId": 1,
-    "userId": 6,
+    "userId": 5,
     "title": "安裝 Next.js",
     "description": "使用 create-next-app 創建專案",
     "startTime": "2024-01-01T09:00:00.000Z",
@@ -9,7 +9,7 @@
   },
   {
     "timeLogId": 1,
-    "userId": 6,
+    "userId": 5,
     "title": "學習路由系統",
     "description": "了解 App Router 和 Pages Router 的差異",
     "startTime": "2024-01-01T09:30:00.000Z",
@@ -17,7 +17,7 @@
   },
   {
     "timeLogId": 1,
-    "userId": 6,
+    "userId": 5,
     "title": "實作 API Routes",
     "description": "創建第一個 API 端點",
     "startTime": "2024-01-01T10:30:00.000Z",
@@ -25,7 +25,7 @@
   },
   {
     "timeLogId": 2,
-    "userId": 6,
+    "userId": 5,
     "title": "設計資料庫結構",
     "description": "使用 Prisma 設計 TimeLog 和 Step 模型",
     "startTime": "2024-01-01T14:00:00.000Z",
@@ -33,7 +33,7 @@
   },
   {
     "timeLogId": 3,
-    "userId": 6,
+    "userId": 5,
     "title": "實作前端組件",
     "description": "創建時間記錄的 React 組件",
     "startTime": "2024-01-01T15:00:00.000Z",
@@ -41,7 +41,7 @@
   },
   {
     "timeLogId": 4,
-    "userId": 6,
+    "userId": 5,
     "title": "測試功能",
     "description": "測試時間記錄和步驟管理功能",
     "startTime": "2024-01-01T16:30:00.000Z",
@@ -49,7 +49,7 @@
   },
   {
     "timeLogId": 5,
-    "userId": 6,
+    "userId": 5,
     "title": "學習認證系統",
     "description": "實作 JWT 認證和會話管理",
     "startTime": "2024-01-03T09:00:00.000Z",
@@ -57,7 +57,7 @@
   },
   {
     "timeLogId": 5,
-    "userId": 6,
+    "userId": 5,
     "title": "調試 JWT 問題",
     "description": "解決 JWT payload 和 cookie 問題",
     "startTime": "2024-01-03T14:00:00.000Z",
