@@ -6,8 +6,8 @@ import VoiceInput from './VoiceInput'
 
 export default function TimeLogClient() {
   // ===== 用戶認證 =====
-  const auth = useAuth() as any
-  const user = auth?.user
+  const { auth } = useAuth()
+  const user = auth?.userData
   
   // ===== 狀態管理 =====
   const [title, setTitle] = useState('')                    // 活動名稱 (對應: 活動名稱輸入框)
@@ -59,6 +59,12 @@ export default function TimeLogClient() {
     if (!startTime) return alert('活動尚未開始')
     if (!endTime) return alert('活動尚未結束')
 
+    // 檢查是否已登入
+    if (!auth.isAuth) {
+      alert('請先登入才能儲存到資料庫')
+      return
+    }
+
     try {
       // 儲存主活動到 TimeLog 資料表
       const timeLogRes = await fetch('/api/timelog', {
@@ -66,31 +72,46 @@ export default function TimeLogClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title,
-          description: `主要活動：${title}`,
           startTime,
           endTime,
-          userId: user?.id || null // 加入用戶 ID
+          userId: user?.user_id || null // 加入用戶 ID
         }),
       })
 
       if (!timeLogRes.ok) throw new Error('Failed to save TimeLog')
-      const newLog = await timeLogRes.json()
+      const timeLogResult = await timeLogRes.json()
+      
+      if (timeLogResult.status !== 'success') {
+        throw new Error(timeLogResult.message || 'Failed to save TimeLog')
+      }
+      
+      const newLog = timeLogResult.data
+      console.log('✅ TimeLog 創建成功:', newLog)
       
       // 儲存所有步驟到 Step 資料表
       for (const step of steps) {
-        const stepRes = await fetch('/api/step', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            timeLogId: newLog.id,  // 關聯到主活動
-            title: step.title || step.text,
-            description: step.description || step.text,
-            startTime: step.startTime || new Date(),
-            endTime: step.endTime
-          }),
-        })
-        
-        if (!stepRes.ok) throw new Error('Failed to save step')
+        if (step.type === 'step') { // 只儲存實際的步驟，不儲存 start/end 記錄
+          const stepRes = await fetch('/api/step', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              timeLogId: newLog.id,  // 關聯到主活動
+              title: step.title || step.text,
+              description: step.description || step.text,
+              startTime: step.startTime || new Date(),
+              endTime: step.endTime
+            }),
+          })
+          
+          if (!stepRes.ok) throw new Error('Failed to save step')
+          
+          const stepResult = await stepRes.json()
+          if (stepResult.status !== 'success') {
+            throw new Error(stepResult.message || 'Failed to save step')
+          }
+          
+          console.log('✅ Step 創建成功:', stepResult.data)
+        }
       }
 
       console.log('✅ 成功儲存所有資料')
@@ -187,27 +208,80 @@ export default function TimeLogClient() {
 
   return (
     <main className="container mt-4">
+      {/* ===== 用戶資訊顯示 ===== */}
+      {auth.isAuth ? (
+        <div className="alert alert-info mb-4">
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>👤 當前用戶:</strong> {user?.name || user?.email}
+              <br />
+              <small className="text-muted">用戶 ID: {user?.user_id}</small>
+            </div>
+            <div>
+              <span className="badge bg-success">已登入</span>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="alert alert-warning mb-4">
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>👤 訪客模式</strong>
+              <br />
+              <small className="text-muted">您可以測試時間記錄功能，但需要登入才能儲存到資料庫</small>
+            </div>
+            <div>
+              <span className="badge bg-warning">未登入</span>
+              <a href="/user/login" className="btn btn-sm btn-primary ms-2">登入</a>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* ===== 語音輸入元件 ===== */}
       <VoiceInput onResult={handleVoiceResult} />
       
       {/* ===== 主要控制區域 ===== */}
       <div className="mb-4">
         {/* 儲存到資料庫按鈕 */}
-        <button className="btn btn-info mb-4" onClick={handleSaveToDB}>
-          儲存活動資訊到資料庫
+        <button 
+          className={`btn mb-4 ${auth.isAuth ? 'btn-info' : 'btn-outline-secondary'}`}
+          onClick={handleSaveToDB}
+          disabled={!auth.isAuth}
+          title={auth.isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'}
+        >
+          {auth.isAuth ? '💾 儲存活動資訊到資料庫' : '🔒 請先登入才能儲存'}
         </button>
         
         {/* 活動名稱輸入框 */}
-        <label htmlFor="titleInput" className="form-label">
-          活動名稱
+        <label htmlFor="titleInput" className="form-label fw-bold text-dark mb-2 text-center animate__animated animate__fadeInDown animate__delay-1s">
+          📝 活動名稱
         </label>
         <input
           type="text"
           id="titleInput"
-          className="form-control mb-2"
+          className="form-control mb-2 animate__animated animate__fadeInUp animate__delay-2s"
           placeholder="輸入活動大名"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          style={{
+            backgroundColor: 'white',
+            border: '2px solid #dee2e6',
+            borderRadius: '8px',
+            padding: '12px 16px',
+            fontSize: '16px',
+            color: '#212529',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            transition: 'all 0.3s ease'
+          }}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#0d6efd'
+            e.target.style.boxShadow = '0 0 0 0.2rem rgba(13, 110, 253, 0.25)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = '#dee2e6'
+            e.target.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
+          }}
         />
         {/* 狀態指示器 */}
         <div className="mb-3">
@@ -270,7 +344,7 @@ export default function TimeLogClient() {
 
       {/* 階段記錄區域 */}
       <div className="mb-3">
-        <label htmlFor="stepDescription" className="form-label">
+        <label htmlFor="stepDescription" className="form-label fw-bold text-dark mb-2">
           📝 記錄活動階段
         </label>
         <div className="d-flex gap-2">
@@ -283,6 +357,27 @@ export default function TimeLogClient() {
             onChange={(e) => setDesc(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={!startTime || !!endTime}
+            style={{
+              backgroundColor: 'white',
+              border: '2px solid #dee2e6',
+              borderRadius: '8px',
+              padding: '12px 16px',
+              fontSize: '16px',
+              color: '#212529',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              transition: 'all 0.3s ease',
+              opacity: (!startTime || !!endTime) ? 0.6 : 1
+            }}
+            onFocus={(e) => {
+              if (!e.target.disabled) {
+                e.target.style.borderColor = '#0d6efd'
+                e.target.style.boxShadow = '0 0 0 0.2rem rgba(13, 110, 253, 0.25)'
+              }
+            }}
+            onBlur={(e) => {
+              e.target.style.borderColor = '#dee2e6'
+              e.target.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
+            }}
           />
           <button
             id="voiceBtn"

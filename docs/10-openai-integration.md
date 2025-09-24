@@ -307,3 +307,4 @@ export default function AIAnalysisCard() {
 - **目標設定**：AI 協助設定時間管理目標
 - **習慣追蹤**：分析並改善時間使用習慣
 - **效率優化**：提供具體的效率提升建議
+

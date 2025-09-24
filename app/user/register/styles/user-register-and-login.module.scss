@@ -1,0 +1,146 @@
+// ========================================
+// 🎨 主題系統
+// ========================================
+
+// 藍綠色主題 (Bootstrap bg-info 風格) - 黑底白字
+:root[data-theme="green"] {
+  --primary-bg: linear-gradient(135deg, #1a1a1a, #2d2d2d, #0a0a0a);
+  --secondary-bg: linear-gradient(135deg, #0dcaf0, #0aa2c0);
+  --accent-color: #0dcaf0;
+  --accent-hover: #0aa2c0;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.9);
+  --form-bg: rgba(255, 255, 255, 0.1);
+  --form-border: rgba(13, 202, 240, 0.3);
+  --button-bg: linear-gradient(45deg, #0dcaf0, #0aa2c0);
+  --button-hover: linear-gradient(45deg, #0aa2c0, #087990);
+  --glow-color: #0dcaf0;
+  --navbar-bg: rgba(0, 0, 0, 0.9);
+  --breadcrumb-bg: rgba(13, 202, 240, 0.1);
+  --breadcrumb-text: #0dcaf0;
+}
+
+// 粉紅色主題 (Pink Cloud) - 粉字黑底
+:root[data-theme="pink"] {
+  --primary-bg: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(26, 10, 26, 0.8)), url('/linear-gradient-bg1.jpg');
+  --secondary-bg: linear-gradient(135deg, rgba(255, 107, 157, 0.3), rgba(255, 139, 171, 0.3));
+  --accent-color: #ff6b9d;
+  --accent-hover: #ff1744;
+  --text-primary: #ff6b9d;
+  --text-secondary: rgba(255, 107, 157, 0.8);
+  --form-bg: rgba(255, 107, 157, 0.1);
+  --form-border: rgba(255, 107, 157, 0.3);
+  --button-bg: linear-gradient(45deg, #ff6b9d, #ff8fab);
+  --button-hover: linear-gradient(45deg, #ff1744, #e91e63);
+  --glow-color: #ff6b9d;
+  --navbar-bg: rgba(0, 0, 0, 0.9);
+  --breadcrumb-bg: rgba(255, 107, 157, 0.1);
+  --breadcrumb-text: #ff6b9d;
+}
+
+
+// ========================================
+// 🎯 主要樣式
+// ========================================
+
+.gradient-bg {
+  position: relative;
+  background: var(--primary-bg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center bottom;  
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: all 0.5s ease;
+  // animation: gradient-shift 8s ease-in-out infinite;
+  
+}
+
+// 漸層動畫效果
+// @keyframes gradient-shift {
+//   0% {
+//     background-color: #ccc;
+//   }
+//   50% {
+//     background-color: #b473bd;
+//   }
+//   100% {
+//     background-color: #ccc;
+//   }
+// }
+
+// 雲海效果 (粉紅色主題專用)
+.cloud-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(160, 74, 103, 0.4) 0%, transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(255, 139, 171, 0.4) 0%, transparent 60%),
+    radial-gradient(circle at 40% 60%, rgba(233, 30, 99, 0.3) 0%, transparent 60%);
+  animation: cloudFloat 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+// 只在 Pink 主題時顯示雲海效果
+:root[data-theme="pink"] .cloud-effect {
+  opacity: 1;
+}
+
+@keyframes cloudFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(1deg); }
+}
+// 左側歡迎區域
+.left {
+  text-align: left;
+  z-index: 20;
+  padding: 20px;
+  position: relative;
+  
+  h4, h3 {
+    margin-left: 0;
+    align-self: flex-start;
+  }
+  z-index: 20;  /* 確保在其他元素上方 */
+  // min-width: 200px;  /* 給予最小寬度 */
+  padding: 20px;    /* 給予一些內邊距 */
+}
+
+// 發光文字效果
+.glow-text {
+  text-shadow: 
+    0 0 10px var(--glow-color),
+    0 0 20px var(--glow-color),
+    0 0 30px var(--glow-color);
+  animation: glowPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes glowPulse {
+  from {
+    text-shadow: 
+      0 0 10px var(--glow-color),
+      0 0 20px var(--glow-color),
+      0 0 30px var(--glow-color);
+  }
+  to {
+    text-shadow: 
+      0 0 20px var(--glow-color),
+      0 0 30px var(--glow-color),
+      0 0 40px var(--glow-color);
+  }
+}
+
+// 主題切換按鈕樣式已移至 styles/theme-toggle.scss
+// 此處已移除重複樣式
+
+.content-row {
+  position: relative;
+  z-index: 2;
+}

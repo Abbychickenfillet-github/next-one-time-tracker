@@ -47,6 +47,8 @@
 ```javascript
 const { trigger, isMutating, isError } = useMutation(url, method)
 ```
+useQuery = 自動讀取資料 (GET)
+useMutation = 手動修改資料(POST/PUT/DELETE)
 
 ### 解構賦值解析
 
@@ -419,6 +421,58 @@ const data = await trigger({ data: loginData })
 1. 客戶端發送請求 → 2. 服務端接收請求 → 3. 服務端操作資料庫 → 4. 服務端返回結果 → 5. 客戶端接收結果
 ```
 
+### Q6: useMutation 和 useState 有什麼區別？
+
+**A:** 這是兩種不同的狀態管理方式：
+
+#### 使用 useState（傳統方式）：
+```javascript
+const [loading, setLoading] = useState(false)
+const [error, setError] = useState(null)
+
+const handleSubmit = async (data) => {
+  setLoading(true)
+  setError(null)
+  try {
+    const response = await fetch('/api/users', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+    const result = await response.json()
+    // 處理結果
+  } catch (err) {
+    setError(err.message)
+  } finally {
+    setLoading(false)
+  }
+}
+```
+
+#### 使用 useMutation（SWR 方式）：
+```javascript
+const { trigger, isMutating, isError } = useMutation('/api/users', 'POST')
+
+const handleSubmit = async (data) => {
+  try {
+    const result = await trigger({ data })
+    // 處理結果
+  } catch (err) {
+    // 錯誤處理
+  }
+}
+```
+
+**差異比較：**
+- ✅ **useMutation**：自動管理 loading/error 狀態，代碼更簡潔
+- ❌ **useState**：需要手動管理狀態，代碼較冗長
+- ✅ **useMutation**：內建錯誤處理和重試機制
+- ❌ **useState**：需要自己實現錯誤處理
+
+**建議：**
+- 新專案建議使用 `useMutation`
+- 舊專案可以逐步遷移到 `useMutation`
+- 簡單的狀態管理仍可使用 `useState`
+
 ---
 
 ## 🎯 總結
@@ -431,3 +485,82 @@ const data = await trigger({ data: loginData })
 
 這個架構讓前端和後端各司其職，提供良好的開發體驗和效能！🚀
 
+
+**TanStack Query**（原名 React Query）是一個非常流行的 React 資料獲取和狀態管理庫！
+
+## �� **TanStack Query 的背景**：
+
+### **公司歷史**：
+- **原名**：React Query（2021年之前）
+- **現名**：TanStack Query（2021年後）
+- **開發者**：Tanner Linsley
+- **公司**：TanStack（前身為 React Query 團隊）
+
+### **為什麼改名**？
+1. **擴展性**：不只是 React，還支援 Vue、Solid 等框架
+2. **品牌統一**：TanStack 旗下有多個工具（Query、Table、Form 等）
+3. **避免混淆**：避免與 React 官方工具混淆
+
+## 🔍 **TanStack Query vs SWR**：
+
+你的專案使用的是 **SWR**，但 TanStack Query 是另一個選擇：
+
+### **SWR（你目前使用的）**：
+```javascript
+// SWR 語法
+const { data, error, isLoading } = useSWR('/api/users')
+const { trigger, isMutating } = useSWRMutation('/api/users', 'POST')
+```
+
+### **TanStack Query 語法**：
+```javascript
+// TanStack Query 語法
+const { data, error, isLoading } = useQuery({
+  queryKey: ['users'],
+  queryFn: () => fetch('/api/users').then(res => res.json())
+})
+
+const { mutate, isPending } = useMutation({
+  mutationFn: (newUser) => fetch('/api/users', {
+    method: 'POST',
+    body: JSON.stringify(newUser)
+  })
+})
+```
+
+## 📊 **兩個庫的比較**：
+
+| 特性 | SWR | TanStack Query |
+|------|-----|----------------|
+| **語法簡潔度** | ✅ 更簡潔 | ❌ 較複雜 |
+| **功能豐富度** | ❌ 基本功能 | ✅ 功能更豐富 |
+| **快取策略** | ✅ 簡單有效 | ✅ 更靈活 |
+| **學習曲線** | ✅ 容易上手 | ❌ 較陡峭 |
+| **社群大小** | ✅ 大 | ✅ 更大 |
+| **TypeScript 支援** | ✅ 好 | ✅ 更好 |
+
+## 🎯 **為什麼你的專案選擇 SWR**？
+
+1. **簡潔性**：SWR 的 API 更簡潔，容易理解
+2. **輕量級**：檔案大小較小
+3. **Vercel 開發**：SWR 是 Vercel 開發的，與 Next.js 整合好
+4. **足夠用**：對於大多數應用，SWR 的功能已經足夠
+  jijijijinnkjhiyi8yity
+## �� **TanStack Query 的優勢**：
+
+1. **更強大的快取**：支援更複雜的快取策略
+2. **更好的錯誤處理**：內建重試、錯誤邊界等
+3. **更豐富的功能**：支援樂觀更新、無限滾動等
+4. **更好的 TypeScript**：類型推斷更準確
+
+## 🤔 **是否需要遷移？**
+
+**建議**：除非遇到 SWR 無法解決的問題，否則不需要遷移。SWR 對於你的專案來說已經足夠好了！
+
+**什麼時候考慮遷移**：
+- 需要複雜的快取策略
+- 需要樂觀更新
+- 需要無限滾動
+- 團隊更熟悉 TanStack Query
+
+你對 TanStack Query 有什麼特別想了解的嗎？ 

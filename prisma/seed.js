@@ -12,9 +12,9 @@ import { isDev, convertToCamelCase } from '../lib/utils.js'
 // 定義表關聯在這裡，目的是按正確順序的匯入種子資料，否則會出現外鍵約束錯誤或無法匯入的問題
 // 外鍵都是置於後面的資料表(外鍵來源表:外鍵所在目標表)
 // foreignKey is in the second table
-const oneToOne = ['User:Profile']
+// const oneToOne = ['User:Profile'] // 已註解掉，因為移除了 Profile 表
 // foreignKey is in the second table
-const oneToMany = ['Category:Product', 'Brand:Product']
+const oneToMany = ['Category:Product', 'Brand:Product', 'TimeLog:Step']
 // foreignKey is in the third table
 const manyToMany = ['User:Product:Favorite']
 
@@ -25,13 +25,13 @@ const seedsFolder = 'seeds'
 // 需要先轉換為bcrypt編碼的欄位名稱 create bcrypt password hash
 const bcryptFields = ['password']
 // 需要先轉換為日期的欄位名稱 date format fields
-const dateFields = ['birth']
+const dateFields = ['birthdate'] // 改為 birthdate，因為 User 表中的欄位名稱
 // 啟動類型檔案，會自動載入環境變數
 async function main() {
   // seed 檔案存放路徑(相對於專案根目錄)
   const seedsPath = path.join(process.cwd(), seedsFolder)
   const filenames = await fs.promises.readdir(seedsPath)
-  const relations = [...oneToOne, ...oneToMany, ...manyToMany]
+  const relations = [...oneToMany, ...manyToMany] // 移除 oneToOne，因為已註解掉 Profile 表
 
   let relationFileList = []
 

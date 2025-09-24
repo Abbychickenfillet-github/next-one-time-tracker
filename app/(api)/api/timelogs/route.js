@@ -1,0 +1,138 @@
+import { NextResponse as res } from 'next/server'
+import { decrypt } from '@/lib/jwt-session'
+import { cookies } from 'next/headers'
+import prisma from '@/lib/prisma.js'
+import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+
+// ========================================
+// 📊 獲取用戶時間戳記錄 API: GET /api/timelogs
+// ========================================
+// 功能：獲取當前登入用戶的時間戳記錄
+// 認證方式：透過 JWT Token 從 Cookie 中取得用戶身份
+export async function GET(request) {
+  try {
+    // ========================================
+    // 🍪 1. 從 Cookie 中取得 JWT Token
+    // ========================================
+    const cookie = (await cookies()).get('ACCESS_TOKEN')?.value
+    console.log('從 Cookie 取得的 ACCESS_TOKEN:', cookie ? '存在' : '不存在')
+
+    // ========================================
+    // 🔓 2. 解密 JWT Token 取得用戶資訊
+    // ========================================
+    const session = await decrypt(cookie)
+    console.log('解密後的 session:', session ? '成功' : '失敗')
+
+    // ========================================
+    // ✅ 3. 驗證用戶身份
+    // ========================================
+    if (!session?.payload?.userId) {
+      console.log('❌ 認證失敗：沒有有效的用戶 ID')
+      const error = { message: '授權失敗，沒有存取令牌' }
+      return errorResponse(res, error)
+    }
+
+    // ========================================
+    // 🆔 4. 取得用戶 ID
+    // ========================================
+    const userId = session?.payload?.userId
+    console.log('取得用戶 ID:', userId)
+
+    // ========================================
+    // 📊 5. 查詢用戶的時間戳記錄
+    // ========================================
+    const timeLogs = await prisma.timeLog.findMany({
+      where: {
+        userId: userId
+      },
+      include: {
+        steps: true, // 包含相關的步驟
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      },
+      orderBy: {
+        startTime: 'desc' // 按開始時間降序排列
+      }
+    })
+
+    // ========================================
+    // 📈 6. 計算統計數據
+    // ========================================
+    const totalLogs = timeLogs.length
+    const totalDuration = timeLogs.reduce((total, log) => {
+      if (log.endTime) {
+        const duration = new Date(log.endTime) - new Date(log.startTime)
+        return total + duration
+      }
+      return total
+    }, 0)
+
+    // 計算今日記錄
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const todayLogs = timeLogs.filter(log => 
+      new Date(log.startTime) >= today
+    )
+
+    // 計算本週記錄
+    const weekStart = new Date(today)
+    weekStart.setDate(today.getDate() - today.getDay())
+    const weekLogs = timeLogs.filter(log => 
+      new Date(log.startTime) >= weekStart
+    )
+
+    // ========================================
+    // 📤 7. 回傳 API 回應
+    // ========================================
+    const responseData = {
+      timeLogs: timeLogs.map(log => ({
+        id: log.id,
+        title: log.title,
+        description: log.description,
+        startTime: log.startTime,
+        endTime: log.endTime,
+        duration: log.endTime ? 
+          Math.round((new Date(log.endTime) - new Date(log.startTime)) / (1000 * 60 * 60) * 100) / 100 : 
+          null, // 小時為單位
+        steps: log.steps.map(step => ({
+          id: step.id,
+          title: step.title,
+          description: step.description,
+          startTime: step.startTime,
+          endTime: step.endTime
+        })),
+        user: log.user
+      })),
+      statistics: {
+        totalLogs,
+        totalDuration: Math.round(totalDuration / (1000 * 60 * 60) * 100) / 100, // 轉換為小時
+        todayLogs: todayLogs.length,
+        weekLogs: weekLogs.length,
+        efficiency: totalLogs > 0 ? Math.min(95, Math.round((totalLogs / 10) * 100)) : 0 // 簡單的效率計算
+      }
+    }
+
+    // 如果是開發環境，顯示查詢結果
+    if (isDev) {
+      console.log('時間戳記錄查詢結果:', {
+        總記錄數: totalLogs,
+        總時數: responseData.statistics.totalDuration,
+        今日記錄: todayLogs.length,
+        本週記錄: weekLogs.length
+      })
+    }
+
+    return successResponse(res, responseData)
+
+  } catch (error) {
+    console.error('獲取時間戳記錄失敗:', error)
+    const errorMsg = { message: '獲取時間戳記錄失敗' }
+    return errorResponse(res, errorMsg)
+  }
+}
+

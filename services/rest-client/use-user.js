@@ -1,69 +1,120 @@
-import { useMutation, useQuery, fetcher } from './use-fetcher'
-import { apiURL, isDev } from '@/config/client.config'
+// ========================================
+// 🎣 用戶相關的 React Hooks
+// ========================================
+// 這個檔案包含所有與用戶相關的自定義 React Hooks
+// 使用 SWR 庫來管理 API 請求的狀態和快取
+// 
+// 主要功能：
+// - 用戶認證檢查 (useAuthGet)
+// - 用戶註冊 (useUserRegister) 
+// - 用戶登入/登出 (useUserLogin, useUserLogout)
+// - 用戶資料更新 (useUserUpdateProfile, useUserUpdatePassword)
+// - 用戶頭像更新 (useUserUpdateAvatar)
+// - 收藏功能 (useUserFavorite)
 
+import { useMutation, useQuery, fetcher } from './use-fetcher'  // SWR 相關的 hooks
+import { apiURL, isDev } from '@/config/client.config'          // API 基礎 URL 和開發環境設定
+
+// ========================================
+// 📋 預設用戶資料結構
+// ========================================
+// 定義用戶資料的預設值，確保資料結構一致性
+// 當用戶未登入或 API 請求失敗時使用
 export const defaultUser = {
-  id: 0,
-  username: '',
-  googleUid: '',
-  lineUid: '',
-  email: '',
-  profile: {
-    name: '',
-    bio: '',
-    sex: '',
-    phone: '',
-    birth: '',
-    postcode: '',
-    address: '',
-  },
+  id: 0,           // 用戶 ID，0 表示未登入
+  name: '',        // 用戶姓名，可選填
+  googleUid: '',   // Google 登入 ID
+  lineUid: '',     // Line 登入 ID
+  email: '',       // 電子郵件
+  phone: '',       // 手機號碼
+  birthdate: '',   // 生日
+  gender: '',      // 性別
+  avatar: '',      // 頭像路徑
+  // profile 已移除，相關欄位直接放在 User 表中
+  // profile: {
+  //   name: '',
+  //   bio: '',
+  //   sex: '',
+  //   phone: '',
+  //   birth: '',
+  //   postcode: '',
+  //   address: '',
+  // },
 }
 
-// GET
+// GET - 獲取用戶認證狀態和資料
 export const useAuthGet = () => {
-  const { data, error, isLoading, mutate, isError } = useQuery(
-    `${apiURL}/auth/check`
+  // 使用 SWR 的 useQuery hook 來發送 GET 請求到 /auth/check 端點
+  // 這些變數來自 SWR 庫，用於管理 API 請求的狀態
+  const { 
+    data,        // API 回應的資料，包含用戶資訊和收藏清單
+    error,       // 請求錯誤物件，如果請求失敗會包含錯誤資訊
+    isLoading,   // 布林值，表示請求是否正在進行中
+    mutate,      // 函數，用於手動重新驗證和更新資料
+    isError      // 布林值，表示請求是否發生錯誤
+  } = useQuery(
+    `${apiURL}/auth/check`  // 請求的 URL，檢查用戶認證狀態
   )
 
-  let user = defaultUser
-  let favorites = []
+  // 初始化預設值
+  let user = defaultUser      // 預設用戶資料結構
+  let favorites = []          // 預設收藏清單為空陣列
+  
+  // 如果 API 請求成功，更新用戶資料和收藏清單
   if (data && data?.status === 'success') {
-    user = data?.data?.user
-    favorites = data?.data?.favorites
+    user = data?.data?.user           // 從 API 回應中取得用戶資料
+    favorites = data?.data?.favorites // 從 API 回應中取得收藏清單
   }
 
+  // 返回所有相關的狀態和資料，供組件使用
   return {
-    user,
-    favorites,
-    data,
-    error,
-    isLoading,
-    mutate,
-    isError,
+    user,        // 當前用戶資料
+    favorites,   // 用戶的收藏清單
+    data,        // 完整的 API 回應資料
+    error,       // 錯誤資訊（如果有的話）
+    isLoading,   // 載入狀態
+    mutate,      // 重新驗證函數
+    isError,     // 錯誤狀態
   }
 }
 
+// PUT - 更新用戶密碼
 export const useUserUpdatePassword = () => {
-  const { trigger, isMutating, isError } = useMutation(
-    `${apiURL}/users/me/password`,
-    'PUT'
+  // 使用 SWR 的 useMutation hook 來發送 PUT 請求到 /users/me/password 端點
+  // 這些變數來自 SWR Mutation 庫，用於管理 POST/PUT/DELETE 請求的狀態
+  const { 
+    trigger,     // 函數，用於觸發 API 請求 - 手動發送 HTTP 請求的函數，返回 Promise
+    isMutating,  // 布林值，表示 mutation 是否正在進行中
+    isError      // 布林值，表示 mutation 是否發生錯誤
+  } = useMutation(
+    `${apiURL}/users/me/password`,  // 請求的 URL，更新用戶密碼
+    'PUT'                           // HTTP 方法
   )
-  // 要利用updateProfile(data)來更新會員資料
+  
+  // 封裝的更新密碼函數
   // data = { currentPassword: '舊密碼', newPassword: '新密碼' }
   const updatePassword = async (data = {}) => {
-    return await trigger({ data: data })
+    return await trigger({ data: data })  // 觸發 API 請求
   }
 
   return { updatePassword, isMutating, isError }
 }
 
+// PUT - 更新用戶個人資料
 export const useUserUpdateProfile = () => {
-  const { trigger, isMutating, isError } = useMutation(
-    `${apiURL}/users/me/profile`,
-    'PUT'
+  // 使用 SWR 的 useMutation hook 來發送 PUT 請求到 /users/me/profile 端點
+  const { 
+    trigger,     // 函數，用於觸發 API 請求 - 手動發送 HTTP 請求的函數，返回 Promise
+    isMutating,  // 布林值，表示 mutation 是否正在進行中
+    isError      // 布林值，表示 mutation 是否發生錯誤
+  } = useMutation(
+    `${apiURL}/users/me/profile`,  // 請求的 URL，更新用戶個人資料
+    'PUT'                          // HTTP 方法
   )
-  // 要利用updateProfile(data)來更新會員資料
+  
+  // 封裝的更新個人資料函數
   const updateProfile = async (data = {}) => {
-    return await trigger({ data: data })
+    return await trigger({ data: data })  // 觸發 API 請求
   }
 
   return { updateProfile, isMutating, isError }
@@ -89,12 +140,14 @@ export const useUserRegister = () => {
     'POST'
   )
   // POST方法，要呼叫register(newUser)來註冊
-  // newUser資料範例(物件) 註: name改為在profile資料表中
+  // newUser資料範例(物件)
   // {
-  //     "username":"ginny",
-  //     "password":"123456",
   //     "name":"金妮",
+  //     "password":"123456",
   //     "email":"ginny@test.com",
+  //     "phone":"0912345678",
+  //     "birthdate":"1992-05-15",
+  //     "gender":"female"
   // }
   const register = async (data = {}) => {
     return await trigger({ data: data })

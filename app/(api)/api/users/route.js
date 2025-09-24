@@ -19,7 +19,7 @@ export async function POST(request) {
   // API回應
   if (data?.status === 'success') {
     // 成功回應
-    return successResponse(res)
+    return successResponse(res, data.payload)
   } else {
     const error = { message: data?.message }
     return errorResponse(res, error)
