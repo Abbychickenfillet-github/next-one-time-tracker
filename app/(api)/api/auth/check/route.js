@@ -1,3 +1,25 @@
+// ========================================
+// 🔍 認證狀態檢查 API 路由 (Authentication Check API Route)
+// ========================================
+// 用途：檢查用戶當前的認證狀態，不進行登入操作
+// 功能：
+// 1. 從 cookie 中讀取 ACCESS_TOKEN
+// 2. 解密 JWT token 獲取用戶 ID
+// 3. 根據用戶 ID 查詢完整的用戶資料和收藏清單
+// 4. 返回用戶資料給前端
+// 
+// 與其他認證路由的關係：
+// - /api/auth/local/login: 處理登入，建立認證狀態
+// - /api/auth/local/logout: 處理登出，清除認證狀態
+// - /api/auth/google/login: Google OAuth 登入
+// - /api/auth/line/login: LINE OAuth 登入
+// 
+// 使用場景：
+// - 頁面載入時檢查用戶是否已登入
+// - 前端 useAuthGet() hook 會調用此 API
+// - 受保護路由的認證檢查
+// ========================================
+
 // 導入回應函式
 import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
 import { NextResponse as res } from 'next/server'

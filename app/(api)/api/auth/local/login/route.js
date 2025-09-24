@@ -1,3 +1,20 @@
+// ========================================
+// 🔐 本地登入 API 路由 (Local Login API Route)
+// ========================================
+// 用途：處理用戶的本地登入請求（帳號密碼登入）
+// 功能：
+// 1. 接收前端傳來的 email 和 password
+// 2. 透過 auth.service 驗證用戶憑證
+// 3. 登入成功後建立 JWT session 並設置 ACCESS_TOKEN cookie
+// 4. 返回用戶資料給前端
+// 
+// 與其他認證路由的關係：
+// - /api/auth/check: 檢查現有認證狀態，不進行登入
+// - /api/auth/local/logout: 處理登出，清除認證狀態
+// - /api/auth/google/login: Google OAuth 登入
+// - /api/auth/line/login: LINE OAuth 登入
+// ========================================
+
 import { NextResponse as res } from 'next/server'
 
 // 導入服務層的類別
