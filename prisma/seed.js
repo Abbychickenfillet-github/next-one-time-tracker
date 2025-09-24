@@ -14,7 +14,7 @@ import { isDev, convertToCamelCase } from '../lib/utils.js'
 // foreignKey is in the second table
 // const oneToOne = ['User:Profile'] // 已註解掉，因為移除了 Profile 表
 // foreignKey is in the second table
-const oneToMany = ['Category:Product', 'Brand:Product', 'TimeLog:Step']
+const oneToMany = ['Category:Product', 'Brand:Product', 'User:TimeLog', 'User:Step', 'TimeLog:Step']
 // foreignKey is in the third table
 const manyToMany = ['User:Product:Favorite']
 

@@ -55,8 +55,8 @@ export default function TimeLogHistory() {
         limit: pagination.limit.toString()
       })
       
-      if (user?.id) {
-        params.append('userId', user.id.toString())
+      if (user?.user_id) {
+        params.append('userId', user.user_id.toString())
       }
 
       const response = await fetch(`/api/timelog?${params}`)

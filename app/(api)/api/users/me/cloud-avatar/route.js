@@ -50,8 +50,8 @@ export const POST = async (req) => {
   const filename = userId + '.' + ext
 
   //   const ext = path.extname(req.file.originalname)
-  //   const newFilename = req.user.id + ext
-  //   const userId = req.user.id
+  //   const newFilename = req.user.user_id + ext
+  //   const userId = req.user.user_id
 
   if (isDev) console.log(filename)
 

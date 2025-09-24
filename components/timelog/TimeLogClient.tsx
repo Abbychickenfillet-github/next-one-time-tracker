@@ -6,8 +6,8 @@ import VoiceInput from './VoiceInput'
 
 export default function TimeLogClient() {
   // ===== 用戶認證 =====
-  const { auth } = useAuth()
-  const user = auth?.userData
+  const { auth, user: authUser, isAuth } = useAuth()
+  const user: any = authUser || null
   
   // ===== 狀態管理 =====
   const [title, setTitle] = useState('')                    // 活動名稱 (對應: 活動名稱輸入框)
@@ -60,7 +60,7 @@ export default function TimeLogClient() {
     if (!endTime) return alert('活動尚未結束')
 
     // 檢查是否已登入
-    if (!auth.isAuth) {
+    if (!isAuth) {
       alert('請先登入才能儲存到資料庫')
       return
     }
@@ -74,7 +74,7 @@ export default function TimeLogClient() {
           title,
           startTime,
           endTime,
-          userId: user?.user_id || null // 加入用戶 ID
+          userId: user?.id || null // 加入用戶 ID
         }),
       })
 
@@ -209,7 +209,7 @@ export default function TimeLogClient() {
   return (
     <main className="container mt-4">
       {/* ===== 用戶資訊顯示 ===== */}
-      {auth.isAuth ? (
+      {isAuth ? (
         <div className="alert alert-info mb-4">
           <div className="d-flex justify-content-between align-items-center">
             <div>
@@ -245,12 +245,12 @@ export default function TimeLogClient() {
       <div className="mb-4">
         {/* 儲存到資料庫按鈕 */}
         <button 
-          className={`btn mb-4 ${auth.isAuth ? 'btn-info' : 'btn-outline-secondary'}`}
+          className={`btn mb-4 ${isAuth ? 'btn-info' : 'btn-outline-secondary'}`}
           onClick={handleSaveToDB}
-          disabled={!auth.isAuth}
-          title={auth.isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'}
+          disabled={!isAuth}
+          title={isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'}
         >
-          {auth.isAuth ? '💾 儲存活動資訊到資料庫' : '🔒 請先登入才能儲存'}
+          {isAuth ? '💾 儲存活動資訊到資料庫' : '🔒 請先登入才能儲存'}
         </button>
         
         {/* 活動名稱輸入框 */}
@@ -288,7 +288,9 @@ export default function TimeLogClient() {
           <div className="d-flex justify-content-between align-items-center mb-2">
             <div>
               <span className="badge bg-secondary me-2">目前時間</span>
-              <span className="fw-bold">{currentTime.toLocaleTimeString()}</span>
+              <span className="fw-bold">
+                {typeof window !== 'undefined' ? currentTime.toLocaleTimeString() : '載入中...'}
+              </span>
             </div>
             <div>
               <span className={`badge ${startTime && !endTime ? 'bg-success' : endTime ? 'bg-danger' : 'bg-secondary'}`}>

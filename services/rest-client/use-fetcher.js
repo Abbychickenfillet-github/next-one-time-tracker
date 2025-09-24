@@ -90,7 +90,7 @@ export const fetcher = (...args) => {
 
   return fetch(fetchUrl, {
     // 讓fetch能夠傳送cookie, set withCredentials
-    // credentials: 'include',
+    credentials: 'include',
     method,
     headers,
   }).then((res) => res.json())

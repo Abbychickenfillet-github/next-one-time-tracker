@@ -26,7 +26,7 @@ const initUserData = {
   district: '',         // 區域
   road_name: '',        // 道路名稱
   detailed_address: '', // 詳細地址
-  image_path: '',       // 頭像路徑
+  image_pathname: '',       // 頭像路徑
   remarks: '',          // 備註
   level: 0,             // 用戶等級
   google_uid: null,     // Google登入ID
@@ -60,13 +60,13 @@ export const AuthProvider = ({ children }) => {
   const pathname = usePathname()
   
   // 登入頁面路由
-  const loginRoute = '/member/login'
+  const loginRoute = '/user/login'
   
   // 受保護的路由（需要登入才能訪問）
   const protectedRoutes = useMemo(() => ['/dashboard', '/coupon/coupon-user'], [])
   
   // 已登入用戶不能訪問的路由（需要先登出）
-  const loggedInBlockedRoutes = useMemo(() => ['/member/login', '/member/signup'], [])
+  const loggedInBlockedRoutes = useMemo(() => ['/user/login', '/user/register'], [])
 
   // ========================================
   // 🔑 登入函數
@@ -106,50 +106,21 @@ export const AuthProvider = ({ children }) => {
       // 檢查登入是否成功
       if (result.status === 'success') {
         console.log('✅ 前端登入成功，設定狀態...')
-        console.log('🍪 Cookie 檢查:', document.cookie)
         
-        // 使用函數式更新確保狀態正確設置
-        setAuth(prevAuth => {
-          console.log('更新前的狀態:', prevAuth)
-          
-          // 構建新的認證狀態
-          const newState = {
-            isAuth: true,  // 設置為已登入
-            userData: {
-              user_id: result.data.user_id || result.data.id,
-              name: result.data.name,
-              phone: result.data.phone,
-              email: result.data.email,
-              gender: result.data.gender,
-              birthdate: result.data.birthdate,
-              country: result.data.country,
-              city: result.data.city,
-              district: result.data.district,
-              road_name: result.data.road_name,
-              detailed_address: result.data.detailed_address,
-              remarks: result.data.remarks,
-              level: result.data.level,
-              google_uid: result.data.google_uid || null,
-              line_uid: result.data.line_uid || null,
-              photo_url: result.data.photo_url || '',
-              iat: result.data.iat || '',
-              exp: result.data.exp || '',
-            },
-            isLoading: false,
-            hasChecked: true
-          }
-          
-          console.log('更新後的狀態:', newState)
-          return newState
-        })
+        // 登入成功後，直接設置認證狀態
+        setAuth(prev => ({ 
+          ...prev, 
+          isAuth: true,
+          userData: result.data?.user || prev.userData,
+          isLoading: false,
+          hasChecked: true
+        }))
         
-        // 立即跳轉，不等待狀態更新
-        console.log('🔄 立即跳轉到 dashboard 頁面...')
-        router.replace('/dashboard')
+        console.log('🔄 登入成功，跳轉到 dashboard...')
+        router.replace('/dashboard')  // 跳轉到儀表板
         
       } else {
         console.error('登入失敗:', result.message || result)
-        throw new Error(result.message || '登入失敗')
       }
     } catch (error) {
       console.error('登入錯誤：', error)
@@ -181,20 +152,20 @@ export const AuthProvider = ({ children }) => {
       // 先清除本地認證狀態
       clearAuthState()
       
-      // 強制清除瀏覽器中的 accessToken cookie（多種方式確保清除）
+      // 強制清除瀏覽器中的 ACCESS_TOKEN cookie（多種方式確保清除）
       console.log('🧹 清除瀏覽器 cookie...')
       // 清除所有可能的 cookie 組合
-      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost;'
-      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-      document.cookie = 'accessToken=; max-age=0; path=/; domain=localhost;'
-      document.cookie = 'accessToken=; max-age=0; path=/;'
-      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost; secure;'
-      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure;'
-      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost; httpOnly;'
-      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly;'
+      document.cookie = 'ACCESS_TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost;'
+      document.cookie = 'ACCESS_TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      document.cookie = 'ACCESS_TOKEN=; max-age=0; path=/; domain=localhost;'
+      document.cookie = 'ACCESS_TOKEN=; max-age=0; path=/;'
+      document.cookie = 'ACCESS_TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost; secure;'
+      document.cookie = 'ACCESS_TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure;'
+      document.cookie = 'ACCESS_TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost; httpOnly;'
+      document.cookie = 'ACCESS_TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly;'
       
       // 向後端發送登出請求
-      const response = await fetch('/api/auth/local/logout', {
+      const response = await fetch('/api/auth/logout', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -217,7 +188,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       // 無論如何都跳轉到登入頁面（只跳轉一次）
       console.log('🔄 跳轉到登入頁面...')
-      router.replace('/member/login')
+      router.replace('/user/login')
     }
   }, [clearAuthState, router]) // 依賴 clearAuthState 和 router
 
@@ -257,8 +228,8 @@ export const AuthProvider = ({ children }) => {
   //    - 大部分組件都是通過 useAuth() 獲取 auth 狀態
   // 
   // 🔗 3. 調用 auth 路由的組件：
-  //    - 登入頁面：/pages/member/login.js (使用 login 函數)
-  //    - 註冊頁面：/pages/member/signup.js (使用 auth 狀態)
+  //    - 登入頁面：/pages/user/login.js (使用 login 函數)
+  //    - 註冊頁面：/pages/user/register.js (使用 auth 狀態)
   //    - 儀表板：/pages/dashboard/index.js (使用 auth 狀態)
   //    - 購物車：/pages/cart/index.js (使用 auth 狀態)
   //    - 部落格：/pages/blog/**/*.js (使用 auth 狀態)
@@ -306,10 +277,10 @@ export const AuthProvider = ({ children }) => {
       
       // 檢查是否已登入但嘗試訪問登入/註冊頁面
       console.log('🔍 檢查已登入用戶阻擋路由條件...')
-      if (document.cookie.includes('ACCESS_TOKEN') && loggedInBlockedRoutes.includes(router.pathname)) {
+      if (document.cookie.includes('ACCESS_TOKEN') && loggedInBlockedRoutes.includes(pathname)) {
         console.log('⚠️ 已登入用戶嘗試訪問登入頁面，但先不跳轉，等待認證檢查完成')
         console.log('🍪 use-auth.js Line 290 Cookie 內容:', document.cookie)
-        console.log('📍  use-auth.js Line 291 當前路徑:', router.pathname)
+        console.log('📍  use-auth.js Line 291 當前路徑:', pathname)
         console.log('🚫  use-auth.js Line 292 被阻擋的路由:', loggedInBlockedRoutes)
         // 不立即跳轉，讓認證檢查完成後再處理
         // setAuth(prev => ({ ...prev, isLoading: false, hasChecked: true }))
@@ -329,7 +300,7 @@ export const AuthProvider = ({ children }) => {
     
       // 向後端驗證 token 有效性
       console.log('🔍 向後端驗證 token...')
-      const response = await fetch('/api/auth/check', {
+      const response = await fetch(`/api/auth/verify`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -344,13 +315,13 @@ export const AuthProvider = ({ children }) => {
           setAuth(prev => ({ 
             ...prev, 
             isAuth: true,
-            userData: result.data || prev.userData,
+            userData: result.data?.user || prev.userData,
             isLoading: false,
             hasChecked: true
           }))
           
           // 如果已登入但當前在登入/註冊頁面，跳轉到 dashboard
-          if (loggedInBlockedRoutes.includes(router.pathname)) {
+          if (loggedInBlockedRoutes.includes(pathname)) {
             console.log('🔄 已登入用戶在登入頁面，跳轉到 dashboard')
             router.push('/dashboard')
           }
@@ -377,7 +348,7 @@ export const AuthProvider = ({ children }) => {
         router.push(loginRoute)
       }
     }
-  }, [pathname, router, protectedRoutes, loggedInBlockedRoutes, loginRoute])
+  }, [auth.hasChecked, auth.isLoading, pathname, router, protectedRoutes, loggedInBlockedRoutes, loginRoute])
 
   // ========================================
   // 🔄 狀態變化監聽器
@@ -389,30 +360,15 @@ export const AuthProvider = ({ children }) => {
     }
   }, [auth])
 
-  // ========================================
-  // 🔄 路由變化監聽器
-  // ========================================
+  // 🚀 頁面載入時立即檢查認證狀態
   useEffect(() => {
-    // 當路由變化時，如果還沒有檢查過認證，則檢查
-    if (!auth.hasChecked) {
+    // 一進入主頁就檢查是否有登入
+      console.log('🚀 頁面載入，開始檢查認證狀態...')
+      console.log('🍪 當前 Cookie:', document.cookie)
+      console.log('🔍 是否有 ACCESS_TOKEN:', document.cookie.includes('ACCESS_TOKEN'))
+      
+      
       handleCheckAuth()
-    }
-  }, [pathname, auth.hasChecked, handleCheckAuth])
-
-  // ========================================
-  // 🔍 初始化認證檢查
-  // ========================================
-  // 在組件掛載時檢查認證狀態
-  useEffect(() => {
-    // 只在組件首次掛載時檢查認證狀態
-    console.log('🚀 頁面載入，開始檢查認證狀態...')
-    console.log('🍪 當前 Cookie:', document.cookie)
-    console.log('🔍 是否有 ACCESS_TOKEN:', document.cookie.includes('ACCESS_TOKEN'))
-    console.log('📊 當前 auth 狀態:', auth)
-    
-    if (!auth.hasChecked) {
-      handleCheckAuth()
-    }
   }, []) // 空依賴數組，只在組件掛載時執行一次
 
   // ========================================
@@ -423,6 +379,8 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         auth,              // 認證狀態和用戶數據
+        user: auth.userData, // 用戶數據（從 auth.userData 中提取）
+        isAuth: auth.isAuth, // 認證狀態（從 auth.isAuth 中提取）
         login,             // 登入函數
         logout,            // 登出函數
         setAuth,           // 設置認證狀態的函數
