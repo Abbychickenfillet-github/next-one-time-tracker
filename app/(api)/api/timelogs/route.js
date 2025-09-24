@@ -52,7 +52,7 @@ export async function GET(request) {
         steps: true, // 包含相關的步驟
         user: {
           select: {
-            id: true,
+            user_id: true,
             name: true,
             email: true
           }
@@ -103,7 +103,7 @@ export async function GET(request) {
           null, // 小時為單位
         steps: log.steps.map(step => ({
           id: step.id,
-          title: log.title,
+          title: step.title,
           description: step.description,
           startTime: step.startTime,
           endTime: step.endTime
