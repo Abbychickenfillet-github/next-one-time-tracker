@@ -1,0 +1,110 @@
+.glowing_txt {
+  display: flex;
+  align-items: start;
+  justify-content: start;
+}
+.glowing_txt h1 {
+  margin: 0;
+  padding: 0;
+  color: #f4ecec;
+  font-size: 5rem;
+  letter-spacing: 10px;
+}
+@media screen and (max-width: 992px) {
+  .glowing_txt h1 {
+    font-size: 2.7rem;
+  }
+}
+@media screen and (max-width: 768px) {
+  .glowing_txt h1 {
+    font-size: 2.5rem;
+  }
+}
+@media screen and (max-width: 576px) {
+  .glowing_txt h1 {
+    font-size: 2rem;
+  }
+}
+.glowing_txt h1 span {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  animation: animate 4.5s linear infinite;
+}
+.glowing_txt h1 span:nth-child(1) {
+  animation-delay: 0s;
+}
+.glowing_txt h1 span:nth-child(2) {
+  animation-delay: 0.25s;
+}
+.glowing_txt h1 span:nth-child(3) {
+  animation-delay: 0.5s;
+}
+.glowing_txt h1 span:nth-child(4) {
+  animation-delay: 0.75s;
+}
+.glowing_txt h1 span:nth-child(5) {
+  animation-delay: 1s;
+}
+.glowing_txt h1 span:nth-child(6) {
+  animation-delay: 1.25s;
+}
+.glowing_txt h1 span:nth-child(7) {
+  animation-delay: 1.5s;
+}
+.glowing_txt h1 span:nth-child(8) {
+  animation-delay: 1.75s;
+}
+.glowing_txt h1 span:nth-child(9) {
+  animation-delay: 2s;
+}
+.glowing_txt h1 span:nth-child(10) {
+  animation-delay: 2.25s;
+}
+.glowing_txt h1 span:nth-child(11) {
+  animation-delay: 2.5s;
+}
+.glowing_txt h1 span:nth-child(12) {
+  animation-delay: 2.75s;
+}
+.glowing_txt h1 span:nth-child(13) {
+  animation-delay: 3s;
+}
+.glowing_txt h1 span:nth-child(14) {
+  animation-delay: 3.25s;
+}
+.glowing_txt h1 span:nth-child(15) {
+  animation-delay: 3.5s;
+}
+.glowing_txt h1 span:nth-child(16) {
+  animation-delay: 3.75s;
+}
+.glowing_txt h1 span:nth-child(17) {
+  animation-delay: 4s;
+}
+.glowing_txt h1 span:nth-child(18) {
+  animation-delay: 4.25s;
+}
+.glowing_txt h1 span:nth-child(19) {
+  animation-delay: 4.5s;
+}
+.glowing_txt h1 span:nth-child(20) {
+  animation-delay: 4.75s;
+}
+.glowing_txt h1 .space {
+  width: 0.5em;
+  display: inline-block;
+}
+
+@keyframes animate {
+  0%, 100% {
+    color: #fff;
+    filter: blur(2px);
+    text-shadow: 0 0 10px #8b5cf6, 0 0 20px #8b5cf6, 0 0 40px #8b5cf6, 0 0 60px #8b5cf6, 0 0 80px #8b5cf6, 0 0 100px #8b5cf6, 0 0 120px #8b5cf6, 0 0 140px #8b5cf6, 0 0 160px #8b5cf6, 0 0 180px #8b5cf6, 0 0 200px #8b5cf6;
+  }
+  5%, 95% {
+    color: #f1f1f1;
+    filter: blur(0px);
+    text-shadow: none;
+  }
+}/*# sourceMappingURL=glowing-text.module.css.map */

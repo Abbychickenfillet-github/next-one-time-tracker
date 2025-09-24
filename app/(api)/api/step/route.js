@@ -1,0 +1,193 @@
+import { NextResponse as res } from 'next/server'
+import { decrypt } from '@/lib/jwt-session'
+import { cookies } from 'next/headers'
+import prisma from '@/lib/prisma.js'
+import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+
+// ========================================
+// 📊 創建步驟記錄 API: POST /api/step
+// ========================================
+// 功能：創建新的步驟記錄
+// 認證方式：透過 JWT Token 從 Cookie 中取得用戶身份
+export async function POST(request) {
+  try {
+    // ========================================
+    // 📥 1. 解析請求資料
+    // ========================================
+    const body = await request.json()
+    if (isDev) {
+      console.log('步驟記錄請求資料:', {
+        ...body,
+        startTime: body.startTime ? new Date(body.startTime).toISOString() : '未提供',
+        endTime: body.endTime ? new Date(body.endTime).toISOString() : '未提供'
+      })
+    }
+
+    // ========================================
+    // 🍪 2. 從 Cookie 中取得 JWT Token
+    // ========================================
+    const cookie = (await cookies()).get('ACCESS_TOKEN')?.value
+    console.log('從 Cookie 取得的 ACCESS_TOKEN:', cookie ? '存在' : '不存在')
+
+    // ========================================
+    // 🔓 3. 解密 JWT Token 取得用戶資訊
+    // ========================================
+    const session = await decrypt(cookie)
+    console.log('解密後的 session:', session ? '成功' : '失敗')
+
+    // ========================================
+    // ✅ 4. 驗證用戶身份
+    // ========================================
+    if (!session?.payload?.userId) {
+      console.log('❌ 認證失敗：沒有有效的用戶 ID')
+      const error = { message: '授權失敗，沒有存取令牌' }
+      return errorResponse(res, error)
+    }
+
+    // ========================================
+    // 🆔 5. 取得用戶 ID
+    // ========================================
+    const userId = session?.payload?.userId
+    console.log('取得用戶 ID:', userId)
+
+    // ========================================
+    // 📊 6. 驗證 TimeLog 是否屬於當前用戶
+    // ========================================
+    const timeLog = await prisma.timeLog.findFirst({
+      where: {
+        id: body.timeLogId,
+        userId: userId
+      }
+    })
+
+    if (!timeLog) {
+      console.log('❌ TimeLog 不存在或不屬於當前用戶')
+      const error = { message: '時間戳記錄不存在或無權限' }
+      return errorResponse(res, error)
+    }
+
+    // ========================================
+    // 📊 7. 創建步驟記錄
+    // ========================================
+    const step = await prisma.step.create({
+      data: {
+        timeLogId: body.timeLogId,
+        title: body.title,
+        description: body.description,
+        startTime: new Date(body.startTime),
+        endTime: body.endTime ? new Date(body.endTime) : null
+      },
+      include: {
+        timeLog: {
+          select: {
+            id: true,
+            title: true,
+            userId: true
+          }
+        }
+      }
+    })
+
+    // ========================================
+    // 📤 8. 回傳 API 回應
+    // ========================================
+    if (isDev) {
+      console.log('✅ 步驟記錄創建成功:', {
+        ID: step.id,
+        標題: step.title,
+        開始時間: step.startTime,
+        結束時間: step.endTime,
+        關聯TimeLog: step.timeLogId
+      })
+    }
+
+    return successResponse(res, {
+      id: step.id,
+      timeLogId: step.timeLogId,
+      title: step.title,
+      description: step.description,
+      startTime: step.startTime,
+      endTime: step.endTime,
+      timeLog: step.timeLog
+    })
+
+  } catch (error) {
+    console.error('創建步驟記錄失敗:', error)
+    const errorMsg = { message: '創建步驟記錄失敗' }
+    return errorResponse(res, errorMsg)
+  }
+}
+
+// ========================================
+// 📊 獲取步驟記錄 API: GET /api/step
+// ========================================
+// 功能：獲取步驟記錄列表
+export async function GET(request) {
+  try {
+    // ========================================
+    // 🍪 1. 從 Cookie 中取得 JWT Token
+    // ========================================
+    const cookie = (await cookies()).get('ACCESS_TOKEN')?.value
+    const session = await decrypt(cookie)
+
+    // ========================================
+    // ✅ 2. 驗證用戶身份
+    // ========================================
+    if (!session?.payload?.userId) {
+      const error = { message: '授權失敗，沒有存取令牌' }
+      return errorResponse(res, error)
+    }
+
+    // ========================================
+    // 🆔 3. 取得用戶 ID
+    // ========================================
+    const userId = session?.payload?.userId
+
+    // ========================================
+    // 📊 4. 查詢步驟記錄
+    // ========================================
+    const steps = await prisma.step.findMany({
+      where: {
+        timeLog: {
+          userId: userId
+        }
+      },
+      include: {
+        timeLog: {
+          select: {
+            id: true,
+            title: true,
+            userId: true
+          }
+        }
+      },
+      orderBy: {
+        startTime: 'desc'
+      }
+    })
+
+    // ========================================
+    // 📤 5. 回傳 API 回應
+    // ========================================
+    return successResponse(res, {
+      steps: steps.map(step => ({
+        id: step.id,
+        timeLogId: step.timeLogId,
+        title: step.title,
+        description: step.description,
+        startTime: step.startTime,
+        endTime: step.endTime,
+        duration: step.endTime ? 
+          Math.round((new Date(step.endTime) - new Date(step.startTime)) / (1000 * 60 * 60) * 100) / 100 : 
+          null,
+        timeLog: step.timeLog
+      }))
+    })
+
+  } catch (error) {
+    console.error('獲取步驟記錄失敗:', error)
+    const errorMsg = { message: '獲取步驟記錄失敗' }
+    return errorResponse(res, errorMsg)
+  }
+}
+
