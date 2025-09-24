@@ -17,7 +17,7 @@ import GlowingText from '@/components/glowing-text/glowing-text'
 export default function LogIn() {
   const [showpassword, setShowpassword] = useState(false)
   const router = useRouter()
-  const { login, auth } = useAuth()
+  const { login, auth, isAuth } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({ error: ' ' })
@@ -33,7 +33,7 @@ export default function LogIn() {
       await login(formData.get('email'), formData.get('password'))
       
       // 只有在真正成功時才顯示成功訊息
-      if (auth.isAuth) {
+      if (isAuth) {
         console.log('登入成功，auth 狀態:', auth)
         
         // 顯示詳細的登入成功訊息
@@ -86,13 +86,13 @@ export default function LogIn() {
     
     // 如果用戶已登入，重定向到儀表板
     console.log('Login 頁面 auth 狀態:', auth) // 加入 debug
-    if (auth?.isAuth) {
+    if (isAuth) {
       // 使用 replace 而不是 push，避免歷史記錄問題
       router.replace('/dashboard')
       console.log('用戶已登入，跳轉到 dashboard')
       return
     }
-  }, [auth?.isAuth, auth?.hasChecked, router])
+  }, [isAuth, auth?.hasChecked, router])
   return (
     <>
       <Head>
@@ -130,13 +130,11 @@ export default function LogIn() {
                         </div>
                         <div className="mb-5">
                           <GlowingText
-                            text="成為時間管理分析大師"
+                            text="成為時間分析師"
                             className="text-white display-3 fw-bold"
                           />
                         </div>
-                        <p className="text-white-50 fs-5 mb-4">
-                          登入你的帳號，開始時間管理
-                        </p>
+
                         <p className="text-white-50 fs-6 mb-4">
                           智能分析你的時間使用，提升工作效率
                         </p>

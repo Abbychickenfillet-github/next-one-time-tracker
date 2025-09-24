@@ -139,13 +139,13 @@ export const lineLoginGetAuthUrl = async () => {
   }
 }
 
-// id = user.id
-export const lineLoginLogout = async (id) => {
+// user_id = user.user_id
+export const lineLoginLogout = async (user_id) => {
   try {
     // 獲得資料庫的lineAccessToken
     const user = await prisma.user.findUnique({
       where: {
-        id,
+        user_id,
       },
     })
 

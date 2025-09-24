@@ -16,6 +16,7 @@
 // ========================================
 
 import { NextResponse as res } from 'next/server'
+import { cookies } from 'next/headers'
 
 // 導入服務層的類別
 import { login } from '@/services/auth.service'
@@ -35,20 +36,34 @@ export async function POST(request) {
 
   // API回應
   if (data?.status === 'success') {
-    const payload = { userId: data?.payload?.user?.id }
+    const payload = { userId: data?.payload?.user?.user_id }
+    
+    // 開發環境調試
+    if (isDev) {
+      console.log('🔍 登入用戶數據:', data?.payload?.user)
+      console.log('🔍 user_id:', data?.payload?.user?.user_id)
+      console.log('🔍 最終 payload:', payload)
+    }
+    
     // 建立jwt session(Access Token) 並設定有效期限為3天
     await createSession(payload, '3d', 'ACCESS_TOKEN')
-    
-    // 創建回應並確保 Cookie 被設置
-    const response = successResponse(res, data.payload)
     
     // 開發環境調試
     if (isDev) {
       console.log('✅ 登入成功，已設置 ACCESS_TOKEN Cookie')
       console.log('📊 用戶 ID:', payload.userId)
+      console.log('🔍 測試 JWT 創建是否成功...')
+      
+      // 測試 JWT 是否正確創建
+      const testCookie = (await cookies()).get('ACCESS_TOKEN')?.value
+      console.log('🍪 Cookie 值:', testCookie ? '存在' : '不存在')
+      if (testCookie) {
+        console.log('🍪 Cookie 長度:', testCookie.length)
+      }
     }
     
-    return response
+    // 直接返回 JSON 響應，不覆蓋 cookie
+    return res.json({ status: 'success', data: data.payload }, { status: 200 })
   } else {
     const error = { message: data?.message }
     return errorResponse(res, error)

@@ -1,61 +1,43 @@
 generator client {
   provider = "prisma-client-js"
-  // 自定義輸出路徑(7.0+)
   output   = "./generated/client"
 }
 
-// 使用 PostgreSQL 資料庫
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL") // 使用 DATABASE_URL 環境變數
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 /// 以下為資料表定義
-// https://www.prisma.io/docs/concepts/components/prisma-schema/data-model
-// 部落格CRUD範例
 model Blog {
   id        Int      @id @default(autoincrement())
-  // DateTime 會轉換成資料庫的 timestamp，time zone 會自動轉換成 UTC
-  // 格式: 2021-01-01T00:00:00.000Z
   createdAt DateTime @default(now()) @map("created_at")
-  // 這個欄位會在每次更新時"自動"更新時間，不需要手動更新
-  // DateTime 會轉換成資料庫的 timestamp，time zone 會自動轉換成 UTC
   updatedAt DateTime @updatedAt @map("updated_at")
   title     String
   content   String?
   published Boolean  @default(false)
-
-  // 關聯: User:Blog = 1:n 
-  // author    User     @relation(fields: [authorId], references: [id])
-  // authorId  Int
 }
 
 model TimeLog {
-  id          Int      @id @default(autoincrement())
-  title       String   // 活動標題
-  startTime   DateTime @map("start_time")
-  endTime     DateTime? @map("end_time")
-  
-  // 關聯到用戶
-  userId    Int?     @map("user_id")
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // 關聯到步驟
+  id        Int       @id @default(autoincrement())
+  title     String
+  startTime DateTime  @map("start_time")
+  endTime   DateTime? @map("end_time")
+  userId    Int?      @map("user_id")
   steps     Step[]
-  
- 
+  user      User?     @relation(fields: [userId], references: [user_id], onDelete: Cascade)
 }
 
 model Step {
-  id          Int      @id @default(autoincrement())
-  timeLogId   Int      @map("time_log_id")
-  title       String   // 步驟標題
-  description String?  // 步驟描述
-  startTime   DateTime @map("start_time")
+  id          Int       @id @default(autoincrement())
+  timeLogId   Int       @map("time_log_id")
+  userId      Int?      @map("user_id")
+  title       String
+  description String?
+  startTime   DateTime  @map("start_time")
   endTime     DateTime? @map("end_time")
-  
-  // 關聯到主活動
-  timeLog     TimeLog  @relation(fields: [timeLogId], references: [id], onDelete: Cascade)
+  timeLog     TimeLog   @relation(fields: [timeLogId], references: [id], onDelete: Cascade)
+  user        User?     @relation(fields: [userId], references: [user_id], onDelete: Cascade)
 }
 
 model Brand {
@@ -63,7 +45,6 @@ model Brand {
   name     String    @unique
   img      String?
   info     String
-  // 關聯: Brand:Product = 1:n 
   products Product[]
 }
 
@@ -71,47 +52,26 @@ model Category {
   id       Int       @id @default(autoincrement())
   name     String    @unique
   parentId Int?      @map("parent_id")
-  // 關聯: Category:Product = 1:n 
   products Product[]
 }
 
 model Favorite {
-  // 關聯: User:Favorite = 1:n 
-  user      User    @relation(fields: [userId], references: [id])
   userId    Int     @map("user_id")
-  // 關聯: Product:Favorite = 1:n 
-  product   Product @relation(fields: [productId], references: [id])
   productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+  user      User    @relation(fields: [userId], references: [user_id])
 
-  // 複合主鍵 
   @@id([userId, productId])
 }
 
 model Otp {
   id        Int      @id @default(autoincrement())
-  // email需要是唯一的，避免重複發送或被濫用，安全性考量
   email     String   @unique
   token     String
   hash      String?
   createdAt DateTime @default(now()) @map("created_at")
   expiredAt DateTime @map("expired_at")
 }
-
-// model Profile {
-//   id       Int       @id @default(autoincrement())
-//   name     String?
-//   bio      String?
-//   avatar   String?
-//   sex      String?
-//   // 日期格式: 2021-01-01
-//   birth    DateTime?
-//   phone    String?
-//   postcode String?
-//   address  String?
-//   // 1:1 關聯
-//   user     User      @relation(fields: [userId], references: [id])
-//   userId   Int       @unique @map("user_id")
-// }
 
 model Product {
   id         Int        @id @default(autoincrement())
@@ -121,38 +81,32 @@ model Product {
   stock      Int        @default(0)
   price      Int        @default(0)
   info       String
-  // 關聯: Brand:Product = 1:n 
-  brand      Brand      @relation(fields: [brandId], references: [id])
   brandId    Int        @map("brand_id")
-  // 關聯: Category:Product = 1:n 
-  category   Category   @relation(fields: [categoryId], references: [id])
   categoryId Int        @map("category_id")
-  // 關聯: User:Product = n:m 透過 Favorite
   favorites  Favorite[]
+  brand      Brand      @relation(fields: [brandId], references: [id])
+  category   Category   @relation(fields: [categoryId], references: [id])
 }
 
 model User {
-  id              Int        @id @default(autoincrement())
-  name            String?    // 顯示名稱，可選填，允許重複
+  user_id         Int        @id @default(autoincrement())
+  name            String?
   password        String
-  email           String     @unique // 只有 email 需要唯一
-  phone           String?    // 手機號碼，可選填
-  birthdate       DateTime?  // 生日，可選填
-  gender          String?    // 性別，可選填
-  avatar          String?    // 頭像路徑，可選填
-  level           Int        @default(0) // 用戶等級，預設為 0
-  valid           Boolean    @default(true) // 帳號是否有效，預設為 true
+  email           String     @unique
+  phone           String?
+  birthdate       DateTime?
+  gender          String?
+  avatar          String?
+  level           Int        @default(0)
+  valid           Boolean    @default(true)
   createdAt       DateTime   @default(now()) @map("created_at")
   googleUid       String?    @unique @map("google_uid")
   lineUid         String?    @unique @map("line_uid")
   lineAccessToken String?
   refreshToken    String?
-  iat             String?    // JWT issued at
-  exp             String?    // JWT expiration
-  // 關聯 User:Profile = 1:1 (已註解掉 Profile 表)
-  // profile         Profile?
-  // 關聯: User:Product = n:m 透過 Favorite
+  iat             String?
+  exp             String?
   favorites       Favorite[]
-  // 關聯: User:TimeLog = 1:n
   timeLogs        TimeLog[]
+  steps           Step[]
 }

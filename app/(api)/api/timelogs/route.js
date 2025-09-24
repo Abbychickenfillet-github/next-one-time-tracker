@@ -22,6 +22,9 @@ export async function GET(request) {
     // ========================================
     const session = await decrypt(cookie)
     console.log('解密後的 session:', session ? '成功' : '失敗')
+    console.log('🔍 session 完整結構:', JSON.stringify(session, null, 2))
+    console.log('🔍 session?.payload:', session?.payload)
+    console.log('🔍 session?.payload?.userId:', session?.payload?.userId)
 
     // ========================================
     // ✅ 3. 驗證用戶身份
@@ -93,7 +96,6 @@ export async function GET(request) {
       timeLogs: timeLogs.map(log => ({
         id: log.id,
         title: log.title,
-        description: log.description,
         startTime: log.startTime,
         endTime: log.endTime,
         duration: log.endTime ? 
@@ -101,7 +103,7 @@ export async function GET(request) {
           null, // 小時為單位
         steps: log.steps.map(step => ({
           id: step.id,
-          title: step.title,
+          title: log.title,
           description: step.description,
           startTime: step.startTime,
           endTime: step.endTime
@@ -135,4 +137,5 @@ export async function GET(request) {
     return errorResponse(res, errorMsg)
   }
 }
+
 

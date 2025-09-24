@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 import Head from 'next/head'
 
 export default function Dashboard() {
-  const { auth, logout } = useAuth()
+  const { auth, logout, user, isAuth } = useAuth()
   const router = useRouter()
   const [timeLogs, setTimeLogs] = useState([])
   const [statistics, setStatistics] = useState({
@@ -23,22 +23,24 @@ export default function Dashboard() {
   useEffect(() => {
     console.log('Dashboard: 認證狀態檢查', {
       hasChecked: auth.hasChecked,
-      isAuth: auth.isAuth,
-      isLoading: auth.isLoading
+      isAuth: isAuth,
+      isLoading: auth.isLoading,
+      user: user
     })
     
-    if (auth.hasChecked && !auth.isAuth) {
-      console.log('❌ 未認證，跳轉到登入頁面')
-      router.replace('/user/login')
-    }
-  }, [auth, router])
+    // 暫時註解掉自動跳轉，讓你可以測試 dashboard
+    // if (auth.hasChecked && !isAuth) {
+    //   console.log('❌ 未認證，跳轉到登入頁面')
+    //   router.replace('/user/login')
+    // }
+  }, [auth, isAuth, router])
 
   // 獲取真實的時間戳記錄數據
   useEffect(() => {
-    if (auth.isAuth) {
+    if (isAuth) {
       fetchTimeLogs()
     }
-  }, [auth.isAuth])
+  }, [isAuth])
 
   const fetchTimeLogs = async () => {
     try {
@@ -118,14 +120,19 @@ export default function Dashboard() {
             <span className="visually-hidden">載入中...</span>
           </div>
           <p className="mt-3">載入中...</p>
+          <p className="small text-muted">
+            認證狀態: {auth.hasChecked ? '已檢查' : '檢查中'} | 
+            登入狀態: {isAuth ? '已登入' : '未登入'}
+          </p>
         </div>
       </div>
     )
   }
 
-  if (!auth.isAuth) {
-    return null
-  }
+  // 暫時註解掉認證檢查，讓你可以測試 dashboard
+  // if (!isAuth) {
+  //   return null
+  // }
 
   return (
     <>
@@ -145,7 +152,7 @@ export default function Dashboard() {
                   type="button" 
                   data-bs-toggle="dropdown"
                 >
-                  👤 {auth.userData.email}
+                  👤 {user?.email || '用戶'}
                 </button>
                 <ul className="dropdown-menu">
                   <li><button className="dropdown-item" onClick={handleLogout}>登出</button></li>
@@ -165,7 +172,7 @@ export default function Dashboard() {
                     <div className="col-md-8">
                       <h2 className="text-white mb-2">歡迎回來！</h2>
                       <p className="text-white-50 mb-0">
-                        您好，{auth.userData.name || auth.userData.email}，這是您的時間管理儀表板
+                        您好，{auth.userData?.name || auth?.userData?.email}，這是您的時間管理儀表板
                       </p>
                     </div>
                     <div className="col-md-4 text-end">
@@ -329,10 +336,10 @@ export default function Dashboard() {
                       <div className="col-md-6">
                         <h6>🔐 JWT Token 資訊:</h6>
                         <ul className="list-unstyled small">
-                          <li><strong>狀態:</strong> {auth.isAuth ? '✅ 已認證' : '❌ 未認證'}</li>
-                          <li><strong>用戶 ID:</strong> {auth.userData.user_id}</li>
-                          <li><strong>Email:</strong> {auth.userData.email}</li>
-                          <li><strong>姓名:</strong> {auth.userData.name || '未設定'}</li>
+                          <li><strong>狀態:</strong> {isAuth ? '✅ 已認證' : '❌ 未認證'}</li>
+                          <li><strong>用戶 ID:</strong> {user?.id || '未設定'}</li>
+                          <li><strong>Email:</strong> {user?.email || '未設定'}</li>
+                          <li><strong>姓名:</strong> {user?.name || '未設定'}</li>
                         </ul>
                       </div>
                       <div className="col-md-6">
