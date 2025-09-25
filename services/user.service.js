@@ -66,7 +66,7 @@ export const getUserById = async (id) => {
     // 使用findUnique方法取得單筆使用者資料
     const user = await prisma.user.findUnique({
       where: {
-        id,
+        user_id: id,
       },
       // include: {
       //   profile: true, // 已移除 profile 表
@@ -85,7 +85,7 @@ export const getUserById = async (id) => {
     // 如果user的屬性中有null值，轉換為空字串
     if (user) {
       for (const key in user) {
-        if (user[key] === null) {
+        if (user[key] === null) { // 這裡檢查的是 value，不是 key
           user[key] = ''
         }
       }
@@ -145,7 +145,7 @@ export const getUserByField = async (where = {}) => {
     // 如果user的屬性中有null值，轉換為空字串
     if (user) {
       for (const key in user) {
-        if (user[key] === null) {
+        if (user[key] === null) { // 這裡檢查的是 value，不是 key
           user[key] = ''
         }
       }
@@ -263,7 +263,7 @@ export const createUser = async (data) => {
     // 如果user的屬性中有null值，轉換為空字串
     if (user) {
       for (const key in user) {
-        if (user[key] === null) {
+        if (user[key] === null) {// 這裡檢查的是 value，不是 key
           user[key] = ''
         }
       }
@@ -327,7 +327,7 @@ export const updateUserById = async (id, data) => {
   try {
     // 使用findUnique方法取得單筆使用者資料
     const dbUser = await prisma.user.findUnique({
-      where: { id },
+      where: { user_id: id },
     })
 
     if (!dbUser) {
@@ -340,7 +340,7 @@ export const updateUserById = async (id, data) => {
 
     // 更新欄位
     const updataUser = await prisma.user.update({
-      where: { id },
+      where: { user_id: id },
       data,
     })
 

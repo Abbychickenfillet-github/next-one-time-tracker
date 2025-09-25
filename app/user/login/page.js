@@ -119,7 +119,6 @@ export default function LogIn() {
                             borderRadius: '15px',
                             minHeight: '100vh',
                           }}
-                          priority
                         />
                         
                         <div className="mb-5">

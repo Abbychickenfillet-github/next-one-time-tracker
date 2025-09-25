@@ -568,7 +568,6 @@ export default function RegisterPage() {
                     borderRadius: '15px',
                     minHeight: '100vh',
                   }}
-                  priority
                 />
                 
                 <div className="mb-5">
