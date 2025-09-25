@@ -323,7 +323,9 @@ export default function TimeLogClient() {
                 <div className="fw-bold text-primary">
                   {endTime
                     ? `${Math.floor((endTime.getTime() - startTime.getTime()) / 1000 / 60)} 分鐘`
-                    : `${Math.floor((currentTime.getTime() - startTime.getTime()) / 1000 / 60)} 分鐘`
+                    : currentTime
+                      ? `${Math.floor((currentTime.getTime() - startTime.getTime()) / 1000 / 60)} 分鐘`
+                      : '計算中...'
                   }
                 </div>
               </div>
