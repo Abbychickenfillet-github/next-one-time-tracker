@@ -66,13 +66,13 @@ export const serverConfig = {
   // LINE Developer 的 "Callback URL" 設定一致，目前與LINE登入頁設定為一致(登入頁路由=回調頁路由)
   lineLogin: {
     development: {
-      channelId: '1234567890',
-      channelSecret: 'abcdefghijklmnopqrs',
+      channelId: 'test_202509267841@line.pay',
+      channelSecret: 'TXadX0Rvd',
       callbackUrl: baseUrl + '/user/line-login',
     },
     production: {
-      channelId: '1234567890',
-      channelSecret: 'abcdefghijklmnopqrs',
+      channelId: 'test_202509267841@line.pay',
+      channelSecret: 'aTXadX0Rvd',
       callbackUrl: baseUrl + '/user/line-login',
     },
   },
@@ -88,14 +88,14 @@ export const serverConfig = {
   // line pay設定值
   linePay: {
     development: {
-      channelId: process.env.LINE_PAY_CHANNEL_ID || '1234567890',
-      channelSecret: process.env.LINE_PAY_CHANNEL_SECRET || 'abcdefghijklmnopqrs',
+      channelId: process.env.LINE_PAY_CHANNEL_ID || '12008177891',
+      channelSecret: process.env.LINE_PAY_CHANNEL_SECRET || '9a2f9cbdf8058762307491a2da9ab15c',
       confirmUrl: baseUrl + '/line-pay/callback',
       cancelUrl: baseUrl + '/line-pay/cancel',
     },
     production: {
-      channelId: process.env.LINE_PAY_CHANNEL_ID || '1234567890',
-      channelSecret: process.env.LINE_PAY_CHANNEL_SECRET || 'abcdefghijklmnopqrs',
+      channelId: process.env.LINE_PAY_CHANNEL_ID || '12008177891',
+      channelSecret: process.env.LINE_PAY_CHANNEL_SECRET || '9a2f9cbdf8058762307491a2da9ab15c',
       confirmUrl: baseUrl + '/line-pay/callback',
       cancelUrl: baseUrl + '/line-pay/cancel',
     },

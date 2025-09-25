@@ -4,8 +4,18 @@ import { NextResponse } from 'next/server'
 import { confirmPayment } from '@/services/line-pay.service.js'
 // 導入回應函式
 import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+// 導入 IP 白名單檢查
+import { linePayIPMiddleware } from '@/lib/ip-whitelist.js'
 
 export async function GET(request) {
+  // IP 白名單檢查（僅在生產環境啟用）
+  if (process.env.NODE_ENV === 'production') {
+    const ipCheckResult = linePayIPMiddleware(request)
+    if (ipCheckResult) {
+      return ipCheckResult // 返回 403 Forbidden
+    }
+  }
+
   // 取得查詢參數，與設定預設值
   const searchParams = request.nextUrl.searchParams
   const transactionId = searchParams.get('transactionId') || ''

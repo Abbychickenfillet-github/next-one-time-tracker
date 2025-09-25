@@ -8,7 +8,7 @@ export default function TimeLogClient() {
   // ===== 用戶認證 =====
   const { auth, user: authUser, isAuth } = useAuth()
   const user: any = authUser || null
-  
+
   // ===== 狀態管理 =====
   const [title, setTitle] = useState('')                    // 活動名稱 (對應: 活動名稱輸入框)
   const [desc, setDesc] = useState('')                      // 階段描述 (對應: 記錄活動階段輸入框)
@@ -16,17 +16,29 @@ export default function TimeLogClient() {
   const [endTime, setEndTime] = useState<Date | null>(null)      // 活動結束時間 (對應: 結束按鈕)
   const [lastStepTime, setLastStepTime] = useState<Date | null>(null)  // 最後步驟時間
   const [steps, setSteps] = useState<any[]>([])             // 步驟列表 (對應: 活動記錄列表)
-  const [currentTime, setCurrentTime] = useState(new Date())  // 目前時間 (對應: 目前時間顯示)
+  const [currentTime, setCurrentTime] = useState<Date | null>(null)  // 目前時間 (對應: 目前時間顯示)
+  const [isClient, setIsClient] = useState(false)  // 客戶端渲染標記
   const stepListRef = useRef<HTMLOListElement | null>(null) // 步驟列表的 DOM 引用
+
+  // ===== 客戶端渲染標記 =====
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   // ===== 即時時間更新 =====
   // 對應: 目前時間顯示 (每秒更新一次)
   useEffect(() => {
+    if (!isClient) return
+
+    // 立即設定初始時間
+    setCurrentTime(new Date())
+
     const timer = setInterval(() => {
       setCurrentTime(new Date())
     }, 1000)
+
     return () => clearInterval(timer)
-  }, [])
+  }, [isClient])
 
   // ===== 開始活動 =====
   // 對應: Start 按鈕 (綠色按鈕)
@@ -80,14 +92,14 @@ export default function TimeLogClient() {
 
       if (!timeLogRes.ok) throw new Error('Failed to save TimeLog')
       const timeLogResult = await timeLogRes.json()
-      
+
       if (timeLogResult.status !== 'success') {
         throw new Error(timeLogResult.message || 'Failed to save TimeLog')
       }
-      
+
       const newLog = timeLogResult.data
       console.log('✅ TimeLog 創建成功:', newLog)
-      
+
       // 儲存所有步驟到 Step 資料表
       for (const step of steps) {
         if (step.type === 'step') { // 只儲存實際的步驟，不儲存 start/end 記錄
@@ -102,14 +114,14 @@ export default function TimeLogClient() {
               endTime: step.endTime
             }),
           })
-          
+
           if (!stepRes.ok) throw new Error('Failed to save step')
-          
+
           const stepResult = await stepRes.json()
           if (stepResult.status !== 'success') {
             throw new Error(stepResult.message || 'Failed to save step')
           }
-          
+
           console.log('✅ Step 創建成功:', stepResult.data)
         }
       }
@@ -155,14 +167,14 @@ export default function TimeLogClient() {
     const now = new Date()
     setSteps((prev) =>
       prev.map((step, i) =>
-        i === index 
-          ? { 
-              ...step, 
+        i === index
+          ? {
+              ...step,
               ended: true,           // 標記為已結束
               endTime: now,         // 記錄結束時間
               text: step.text + ` (結束於: ${now.toLocaleTimeString()})`,
               description: step.description + ` (結束於: ${now.toLocaleTimeString()})`
-            } 
+            }
           : step
       )
     )
@@ -237,14 +249,14 @@ export default function TimeLogClient() {
           </div>
         </div>
       )}
-      
+
       {/* ===== 語音輸入元件 ===== */}
       <VoiceInput onResult={handleVoiceResult} />
-      
+
       {/* ===== 主要控制區域 ===== */}
       <div className="mb-4">
         {/* 儲存到資料庫按鈕 */}
-        <button 
+        <button
           className={`btn mb-4 ${isAuth ? 'btn-info' : 'btn-outline-secondary'}`}
           onClick={handleSaveToDB}
           disabled={!isAuth}
@@ -252,7 +264,7 @@ export default function TimeLogClient() {
         >
           {isAuth ? '💾 儲存活動資訊到資料庫' : '🔒 請先登入才能儲存'}
         </button>
-        
+
         {/* 活動名稱輸入框 */}
         <label htmlFor="titleInput" className="form-label fw-bold text-dark mb-2 text-center animate__animated animate__fadeInDown animate__delay-1s">
           📝 活動名稱
@@ -289,7 +301,7 @@ export default function TimeLogClient() {
             <div>
               <span className="badge bg-secondary me-2">目前時間</span>
               <span className="fw-bold">
-                {typeof window !== 'undefined' ? currentTime.toLocaleTimeString() : '載入中...'}
+                {isClient && currentTime ? currentTime.toLocaleTimeString() : '載入中...'}
               </span>
             </div>
             <div>
@@ -298,7 +310,7 @@ export default function TimeLogClient() {
               </span>
             </div>
           </div>
-          
+
           {/* 活動時間統計 */}
           {startTime && (
             <div className="row text-center">
@@ -309,7 +321,7 @@ export default function TimeLogClient() {
               <div className="col-4">
                 <small className="text-muted">已進行</small>
                 <div className="fw-bold text-primary">
-                  {endTime 
+                  {endTime
                     ? `${Math.floor((endTime.getTime() - startTime.getTime()) / 1000 / 60)} 分鐘`
                     : `${Math.floor((currentTime.getTime() - startTime.getTime()) / 1000 / 60)} 分鐘`
                   }
@@ -327,15 +339,15 @@ export default function TimeLogClient() {
 
         <div className="d-flex gap-2">
           {/* 開始 */}
-          <button 
-            className={`btn flex-grow-1 ${startTime && !endTime ? 'btn-outline-success' : 'btn-success'}`} 
+          <button
+            className={`btn flex-grow-1 ${startTime && !endTime ? 'btn-outline-success' : 'btn-success'}`}
             onClick={handleStart}
             disabled={!!(startTime && !endTime)}
           >
             {startTime && !endTime ? '⏸️ 進行中' : '▶️ Start'}
           </button>
-          <button 
-            className={`btn flex-grow-1 ${endTime ? 'btn-outline-danger' : 'btn-danger'}`} 
+          <button
+            className={`btn flex-grow-1 ${endTime ? 'btn-outline-danger' : 'btn-danger'}`}
             onClick={handleEnd}
             disabled={!startTime || !!endTime}
           >
@@ -414,10 +426,10 @@ export default function TimeLogClient() {
             <li
               key={i}
               className={`list-group-item d-flex justify-content-between align-items-center ${
-                step.type === 'start' 
-                  ? 'list-group-item-success' 
-                  : step.type === 'end' 
-                    ? 'list-group-item-danger' 
+                step.type === 'start'
+                  ? 'list-group-item-success'
+                  : step.type === 'end'
+                    ? 'list-group-item-danger'
                     : 'list-group-item-light'
               }`}
             >
