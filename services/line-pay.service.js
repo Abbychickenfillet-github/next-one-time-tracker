@@ -1,12 +1,12 @@
 // 產生uuid用和hash字串用
 import * as crypto from 'crypto'
-// line pay使用npm套件
-import { createLinePayClient } from 'line-pay-merchant'
+// 移除 line-pay-merchant 依賴，改用手動實作
+// import { createLinePayClient } from 'line-pay-merchant'
 // 導入session函式
 import { getSession, setSession, deleteSession } from '../lib/iron-session'
 
-// 存取`.env`設定檔案使用
-import 'dotenv/config.js'
+// 移除 dotenv import，Next.js 15 會自動載入環境變數
+// import 'dotenv/config.js'
 
 import { serverConfig } from '../config/server.config.js'
 import { isDev } from '../lib/utils.js'
@@ -17,8 +17,8 @@ import { isDev } from '../lib/utils.js'
 // message: string
 // payload: any
 
-// 定義安全的私鑰字串
-const linePayClient = createLinePayClient({
+// 手動實作 Line Pay API 呼叫
+const linePayConfig = {
   channelId: isDev
     ? serverConfig.linePay.development.channelId
     : serverConfig.linePay.production.channelId,
@@ -26,7 +26,53 @@ const linePayClient = createLinePayClient({
     ? serverConfig.linePay.development.channelSecret
     : serverConfig.linePay.production.channelSecret,
   env: process.env.NODE_ENV,
-})
+}
+
+// Line Pay API 基礎 URL
+const LINE_PAY_API_URL = isDev
+  ? 'https://sandbox-api-pay.line.me'
+  : 'https://api-pay.line.me'
+
+// 手動實作 Line Pay API 呼叫函式
+const createLinePayRequest = async (endpoint, method, body = null) => {
+  const url = `${LINE_PAY_API_URL}${endpoint}`
+  const timestamp = Date.now().toString()
+  const nonce = crypto.randomBytes(16).toString('hex')
+
+  // 建立簽名
+  const signature = crypto
+    .createHmac('sha256', linePayConfig.channelSecretKey)
+    .update(linePayConfig.channelSecretKey + endpoint + body + nonce + timestamp)
+    .digest('base64')
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-LINE-ChannelId': linePayConfig.channelId,
+    'X-LINE-ChannelSecret': linePayConfig.channelSecretKey,
+    'X-LINE-MerchantDeviceType': 'SERVER',
+    'X-LINE-MerchantDeviceProfileId': 'PROFILE_ID',
+    'X-LINE-Timestamp': timestamp,
+    'X-LINE-Nonce': nonce,
+    'X-LINE-Signature': signature,
+  }
+
+  const options = {
+    method,
+    headers,
+  }
+
+  if (body) {
+    options.body = JSON.stringify(body)
+  }
+
+  try {
+    const response = await fetch(url, options)
+    const data = await response.json()
+    return { body: data }
+  } catch (error) {
+    throw new Error(`Line Pay API 呼叫失敗: ${error.message}`)
+  }
+}
 
 // 設定重新導向與失敗導向的網址
 const redirectUrls = {
@@ -87,9 +133,11 @@ export const requestPayment = async (amount) => {
 
   try {
     // 向line pay傳送的訂單資料
-    const linePayResponse = await linePayClient.request.send({
-      body: { ...order, redirectUrls },
-    })
+    const linePayResponse = await createLinePayRequest(
+      '/v3/payments/request',
+      'POST',
+      { ...order, redirectUrls }
+    )
 
     // 深拷貝一份order資料
     const reservation = JSON.parse(JSON.stringify(order))
@@ -141,13 +189,14 @@ export const confirmPayment = async (transactionId) => {
 
   try {
     // 最後確認交易
-    const linePayResponse = await linePayClient.confirm.send({
-      transactionId: transactionId,
-      body: {
+    const linePayResponse = await createLinePayRequest(
+      `/v3/payments/${transactionId}/confirm`,
+      'POST',
+      {
         currency: 'TWD',
         amount: amount,
-      },
-    })
+      }
+    )
 
     // linePayResponse.body回傳的資料
     if (isDev) console.log('line-pay confirm response: ', linePayResponse)
@@ -169,10 +218,10 @@ export const confirmPayment = async (transactionId) => {
 // 檢查交易用(查詢LINE Pay付款請求的狀態。商家應隔一段時間後直接檢查付款狀態)
 export const checkPaymentStatus = async (transactionId) => {
   try {
-    const linePayResponse = await linePayClient.checkPaymentStatus.send({
-      transactionId: transactionId,
-      params: {},
-    })
+    const linePayResponse = await createLinePayRequest(
+      `/v3/payments/authorizations/${transactionId}`,
+      'GET'
+    )
 
     // 範例:
     // {

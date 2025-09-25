@@ -34,7 +34,6 @@
     "iron-session": "^8.0.4",
     "jose": "^5.9.6",
     "jsonwebtoken": "^9.0.2",
-    "line-pay-merchant": "^0.9.0",
     "lodash": "^4.17.21",
     "motion": "^12.5.0",
     "ms": "^2.1.3",
