@@ -1,7 +1,7 @@
 import 'server-only' // 限制只能在伺服器端使用
 
-// 載入 .env 環境變數
-import 'dotenv/config.js'
+// 移除 dotenv import，Next.js 15 會自動載入環境變數
+// import 'dotenv/config.js'
 
 // env: development | production
 const env = process.env.NODE_ENV || 'development'
