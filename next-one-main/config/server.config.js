@@ -66,13 +66,13 @@ export const serverConfig = {
   // LINE Developer 的 "Callback URL" 設定一致，目前與LINE登入頁設定為一致(登入頁路由=回調頁路由)
   lineLogin: {
     development: {
-      channelId: 'test_202509267841@line.pay',
-      channelSecret: 'TXadX0Rvd',
+      channelId: '1234567890',
+      channelSecret: 'abcdefghijklmnopqrs',
       callbackUrl: baseUrl + '/user/line-login',
     },
     production: {
-      channelId: 'test_202509267841@line.pay',
-      channelSecret: 'aTXadX0Rvd',
+      channelId: '1234567890',
+      channelSecret: 'abcdefghijklmnopqrs',
       callbackUrl: baseUrl + '/user/line-login',
     },
   },

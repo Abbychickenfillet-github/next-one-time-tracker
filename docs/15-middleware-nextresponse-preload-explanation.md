@@ -366,3 +366,4 @@ process.env.DATABASE_URL
 - [NextResponse API 參考](https://nextjs.org/docs/app/api-reference/functions/next-response)
 - [Resource Preload 最佳實踐](https://web.dev/preload-critical-assets/)
 - [正則表達式負向先行斷言](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Assertions)
+
