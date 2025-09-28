@@ -92,7 +92,7 @@ export default function LogIn() {
       console.log('用戶已登入，跳轉到 dashboard')
       return
     }
-  }, [isAuth, auth?.hasChecked, router])
+  }, [isAuth, auth?.hasChecked, router, auth])
   return (
     <>
       <Head>

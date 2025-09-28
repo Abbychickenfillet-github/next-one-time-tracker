@@ -1,48 +1,48 @@
 'use client'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { useState } from 'react'
+// import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+// import { useState } from 'react'
 
-// 創建 QueryClient 實例
-function createQueryClient() {
-  return new QueryClient({
-    defaultOptions: {
-      queries: {
-        // 數據在 5 分鐘內被認為是新鮮的
-        staleTime: 5 * 60 * 1000,
-        // 緩存保留 10 分鐘
-        cacheTime: 10 * 60 * 1000,
-        // 失敗時重試 3 次
-        retry: 3,
-        // 窗口聚焦時不重新獲取
-        refetchOnWindowFocus: false,
-        // 網絡重連時重新獲取
-        refetchOnReconnect: true,
-      },
-      mutations: {
-        // 變更失敗時重試 1 次
-        retry: 1,
-      },
-    },
-  })
-}
+// 創建 QueryClient 實例 (未使用)
+// function createQueryClient() {
+//   return new QueryClient({
+//     defaultOptions: {
+//       queries: {
+//         // 數據在 5 分鐘內被認為是新鮮的
+//         staleTime: 5 * 60 * 1000,
+//         // 緩存保留 10 分鐘
+//         cacheTime: 10 * 60 * 1000,
+//         // 失敗時重試 3 次
+//         retry: 3,
+//         // 窗口聚焦時不重新獲取
+//         refetchOnWindowFocus: false,
+//         // 網絡重連時重新獲取
+//         refetchOnReconnect: true,
+//       },
+//       mutations: {
+//         // 變更失敗時重試 1 次
+//         retry: 1,
+//       },
+//     },
+//   })
+// }
 
-// QueryClient Provider 組件
-function ReactQueryProvider({ children }) {
-  // 使用 useState 確保 QueryClient 實例在組件生命週期中保持穩定
-  const [queryClient] = useState(() => createQueryClient())
+// QueryClient Provider 組件 (保留作為參考，未使用)
+// function ReactQueryProvider({ children }) {
+//   // 使用 useState 確保 QueryClient 實例在組件生命週期中保持穩定
+//   const [queryClient] = useState(() => createQueryClient())
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-      {/* 開發環境下顯示 React Query DevTools */}
-      {process.env.NODE_ENV === 'development' && (
-        <ReactQueryDevtools initialIsOpen={false} />
-      )}
-    </QueryClientProvider>
-  )
-}
+//   return (
+//     <QueryClientProvider client={queryClient}>
+//       {children}
+//       {/* 開發環境下顯示 React Query DevTools */}
+//       {process.env.NODE_ENV === 'development' && (
+//         <ReactQueryDevtools initialIsOpen={false} />
+//       )}
+//     </QueryClientProvider>
+//   )
+// }
 
 // 使用範例
 export default function QueryClientExample() {

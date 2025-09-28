@@ -215,19 +215,19 @@ export const AuthProvider = ({ children }) => {
   // ========================================
   // ⏳ 等待認證狀態更新函數
   // ========================================
-  // 功能：等待認證狀態更新完成
-  const _waitForAuthUpdate = useCallback(() => {
-    return new Promise((resolve) => {
-      const checkAuth = () => {
-        if (auth.hasChecked) {
-          resolve()
-        } else {
-          setTimeout(checkAuth, 50)
-        }
-      }
-      checkAuth()
-    })
-  }, [auth.hasChecked])
+  // 功能：等待認證狀態更新完成 (未使用)
+  // const _waitForAuthUpdate = useCallback(() => {
+  //   return new Promise((resolve) => {
+  //     const checkAuth = () => {
+  //       if (auth.hasChecked) {
+  //         resolve()
+  //       } else {
+  //         setTimeout(checkAuth, 50)
+  //       }
+  //     }
+  //     checkAuth()
+  //   })
+  // }, [auth.hasChecked])
 
   // ========================================
   // 🔍 檢查認證狀態函數 (使用 useCallback 避免無限循環)
@@ -388,6 +388,7 @@ export const AuthProvider = ({ children }) => {
   }, [
     auth.hasChecked,
     auth.isLoading,
+    auth.isAuth,
     pathname,
     router,
     protectedRoutes,
@@ -416,7 +417,7 @@ export const AuthProvider = ({ children }) => {
     )
 
     handleCheckAuth()
-  }, []) // 空依賴數組，只在組件掛載時執行一次
+  }, [handleCheckAuth]) // 依賴 handleCheckAuth
 
   // ========================================
   // 📤 返回 Context Provider
