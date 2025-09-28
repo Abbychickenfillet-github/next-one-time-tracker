@@ -605,6 +605,13 @@ export default function CombinationPage() {
                 }`}
                 onFocus={() => handleFormFocus('register')}
                 onClick={() => handleFormFocus('register')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleFormFocus('register')
+                  }
+                }}
+                role="button"
+                tabIndex={0}
               >
                 <div className="text-center mb-4">
                   <h3 className="text-white fw-bold">註冊新帳號</h3>
@@ -736,6 +743,13 @@ export default function CombinationPage() {
                 }`}
                 onFocus={() => handleFormFocus('login')}
                 onClick={() => handleFormFocus('login')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleFormFocus('login')
+                  }
+                }}
+                role="button"
+                tabIndex={0}
               >
                 <div className="text-center mb-4">
                   <h3 className="text-white fw-bold">登入帳號</h3>

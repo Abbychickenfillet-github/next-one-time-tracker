@@ -1,4 +1,4 @@
-import './global.css'
+// import './global.css'
 import { Suspense } from 'react'
 import '@/styles/globals.scss'
 

@@ -38,8 +38,8 @@ next-env.d.ts
 
 # misc
 /prisma/generated/client
-package-lock.json
-yarn.lock
+# package-lock.json
+# yarn.lock
 /.temp/
 /.html/
 pages/only-test-dev/
