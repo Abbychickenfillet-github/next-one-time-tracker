@@ -107,6 +107,6 @@ model User {
   iat             String?
   exp             String?
   favorites       Favorite[]
-  timeLogs        TimeLog[]
   steps           Step[]
+  timeLogs        TimeLog[]
 }

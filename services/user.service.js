@@ -630,7 +630,7 @@ export const updateUserPasswordById = async (id, data) => {
   try {
     // 使用findUnique方法取得單筆使用者資料
     const dbUser = await prisma.user.findUnique({
-      where: { id },
+      where: { user_id: id },
     })
 
     if (!dbUser) {
@@ -661,7 +661,7 @@ export const updateUserPasswordById = async (id, data) => {
 
     // 更新密碼欄位
     const updateUser = await prisma.user.update({
-      where: { id },
+      where: { user_id: id },
       data: { password: passwordHash },
     })
 
@@ -902,7 +902,7 @@ export const deleteUserById = async (id) => {
 
   try {
     const deleteUser = await prisma.user.delete({
-      where: { id: id },
+      where: { user_id: id },
     })
 
     return {

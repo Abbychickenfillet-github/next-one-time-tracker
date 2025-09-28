@@ -14,12 +14,12 @@ const local = {
   nextUrl: 'http://localhost:3001',
 }
 
-// 營運環境設定(部署至Vercel)
+// 營運環境設定(部署至Zeabur)
 const production = {
-  apiURL: 'https://next-app-one-eta.vercel.app/api',
-  serverURL: 'https://next-app-one-eta.vercel.app',
-  avatarURL: 'https://next-app-one-eta.vercel.app/avatar',
-  nextUrl: 'https://next-app-one-eta.vercel.app',
+  apiURL: 'https://time-insight.zeabur.app/api',
+  serverURL: 'https://time-insight.zeabur.app',
+  avatarURL: 'https://time-insight.zeabur.app/avatar',
+  nextUrl: 'https://time-insight.zeabur.app',
 }
 
 export const apiURL = isDev ? local.apiURL : production.apiURL

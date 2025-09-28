@@ -12,7 +12,7 @@ export const isDev = env === 'development'
 // baseUrl: 開發or營運環境的網址
 export const baseUrl = isDev
   ? 'http://localhost:3001'
-  : 'https://next-app-one-eta.vercel.app'
+  : 'https://time-insight.zeabur.app/api/payment/line-pay/confirm'
 
 export const serverConfig = {
   // (deprecated)
