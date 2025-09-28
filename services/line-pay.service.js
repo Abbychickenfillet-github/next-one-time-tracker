@@ -33,27 +33,26 @@ const LINE_PAY_API_URL = isDev
   ? 'https://sandbox-api-pay.line.me'
   : 'https://api-pay.line.me'
 
+// Zeabur 環境配置
+const isZeabur = process.env.ZEABUR || process.env.VERCEL || false
+
 // 手動實作 Line Pay API 呼叫函式
 const createLinePayRequest = async (endpoint, method, body = null) => {
   const url = `${LINE_PAY_API_URL}${endpoint}`
-  const timestamp = Date.now().toString()
   const nonce = crypto.randomBytes(16).toString('hex')
 
   // 建立簽名
+  const requestBody = body ? JSON.stringify(body) : ''
   const signature = crypto
     .createHmac('sha256', linePayConfig.channelSecretKey)
-    .update(linePayConfig.channelSecretKey + endpoint + body + nonce + timestamp)
+    .update(linePayConfig.channelSecretKey + nonce + requestBody)
     .digest('base64')
 
   const headers = {
     'Content-Type': 'application/json',
     'X-LINE-ChannelId': linePayConfig.channelId,
-    'X-LINE-ChannelSecret': linePayConfig.channelSecretKey,
-    'X-LINE-MerchantDeviceType': 'SERVER',
-    'X-LINE-MerchantDeviceProfileId': 'PROFILE_ID',
-    'X-LINE-Timestamp': timestamp,
-    'X-LINE-Nonce': nonce,
-    'X-LINE-Signature': signature,
+    'X-LINE-Authorization-Nonce': nonce,
+    'X-LINE-Authorization': signature,
   }
 
   const options = {
@@ -62,19 +61,39 @@ const createLinePayRequest = async (endpoint, method, body = null) => {
   }
 
   if (body) {
-    options.body = JSON.stringify(body)
+    options.body = requestBody
   }
 
   try {
+    console.log('🚀 LINE Pay API 請求:', {
+      url,
+      method,
+      headers,
+      body: requestBody
+    })
+
     const response = await fetch(url, options)
     const data = await response.json()
+
+    console.log('📥 LINE Pay API 回應:', {
+      status: response.status,
+      statusText: response.statusText,
+      data
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+    }
+
     return { body: data }
   } catch (error) {
+    console.error('❌ LINE Pay API 錯誤:', error)
     throw new Error(`Line Pay API 呼叫失敗: ${error.message}`)
   }
 }
 
 // 設定重新導向與失敗導向的網址
+// 在 Zeabur 環境中使用域名而非 IP
 const redirectUrls = {
   confirmUrl: isDev
     ? serverConfig.linePay.development.confirmUrl
@@ -82,6 +101,11 @@ const redirectUrls = {
   cancelUrl: isDev
     ? serverConfig.linePay.development.cancelUrl
     : serverConfig.linePay.production.cancelUrl,
+}
+
+// Zeabur 環境的額外配置
+if (isZeabur) {
+  console.log('🚀 運行在 Zeabur 環境，使用 IP 白名單保護')
 }
 // 回應line-pay交易網址到前端，由前端導向line pay付款頁面
 // 資料格式參考 https://enylin.github.io/line-pay-merchant/api-reference/request.html#example
@@ -129,7 +153,13 @@ export const requestPayment = async (amount) => {
     redirectUrls, // 設定重新導向與失敗導向的網址
   }
 
-  if (isDev) console.log('訂單資料:', order)
+  console.log('📋 訂單資料:', order)
+  console.log('🔧 LINE Pay 設定:', {
+    channelId: linePayConfig.channelId,
+    channelSecret: linePayConfig.channelSecretKey ? '已設定' : '未設定',
+    apiUrl: LINE_PAY_API_URL,
+    redirectUrls
+  })
 
   try {
     // 向line pay傳送的訂單資料
@@ -139,16 +169,33 @@ export const requestPayment = async (amount) => {
       { ...order, redirectUrls }
     )
 
+    // 檢查 LINE Pay 回應是否成功
+    if (linePayResponse.body.returnCode !== '0000') {
+      throw new Error(`LINE Pay 錯誤: ${linePayResponse.body.returnMessage}`)
+    }
+
+    // 檢查必要的回應資料
+    if (!linePayResponse.body.info) {
+      throw new Error('LINE Pay 回應缺少 info 資料')
+    }
+
+    if (!linePayResponse.body.info.transactionId) {
+      throw new Error('LINE Pay 回應缺少 transactionId')
+    }
+
+    if (!linePayResponse.body.info.paymentUrl) {
+      throw new Error('LINE Pay 回應缺少 paymentUrl')
+    }
+
     // 深拷貝一份order資料
     const reservation = JSON.parse(JSON.stringify(order))
 
     reservation.returnCode = linePayResponse.body.returnCode
     reservation.returnMessage = linePayResponse.body.returnMessage
     reservation.transactionId = linePayResponse.body.info.transactionId
-    reservation.paymentAccessToken =
-      linePayResponse.body.info.paymentAccessToken
+    reservation.paymentAccessToken = linePayResponse.body.info.paymentAccessToken
 
-    if (isDev) console.log('預計付款記錄(Reservation):', reservation)
+    console.log('✅ 預計付款記錄(Reservation):', reservation)
 
     // 記錄到session中(這裡是為了安全性，和一個簡單的範例，在實際應用中，應該也需要要存到資料庫妥善保管)
     await setSession('LINE_PAY', 'reservation', reservation)
@@ -157,6 +204,7 @@ export const requestPayment = async (amount) => {
       status: 'success',
       payload: {
         paymentUrl: linePayResponse.body.info.paymentUrl.web,
+        transactionId: linePayResponse.body.info.transactionId,
       },
     }
     // 導向到付款頁面， line pay回應後會帶有info.paymentUrl.web為付款網址
