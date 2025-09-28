@@ -27,7 +27,7 @@ export default [
       '**/eslint.config.js',
       '**/dist',
       '**/pnpm-lock.yaml',
-      '**/yarn.lock',
+      // '**/yarn.lock',
       '**/.temp',
       '**/prisma/generated/**',
     ],

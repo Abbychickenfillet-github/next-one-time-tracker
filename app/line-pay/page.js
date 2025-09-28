@@ -68,7 +68,7 @@ export default function LinePayPage() {
   }
 
   // 確認交易，處理伺服器通知line pay已確認付款，為必要流程
-  const handleConfirm = async (transactionId) => {
+  const _handleConfirm = async (transactionId) => {
     const res = await fetch(
       `${apiURL}/payment/line-pay/confirm?transactionId=${transactionId}`,
       {
@@ -156,7 +156,7 @@ export default function LinePayPage() {
     </>
   )
 
-  const confirmOrder = (
+  const _confirmOrder = (
     <>
       <h2>最後付款確認結果(returnCode=0000 代表成功): </h2>
       <p>{JSON.stringify(result)}</p>

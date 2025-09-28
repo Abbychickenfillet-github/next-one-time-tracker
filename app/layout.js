@@ -2,7 +2,7 @@
 import { Suspense } from 'react'
 import { Providers } from './providers'
 import TopNavbar from '@/components/top-navbar'
-import '@/app/globals.scss'
+import '@/styles/globals.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'animate.css'
 

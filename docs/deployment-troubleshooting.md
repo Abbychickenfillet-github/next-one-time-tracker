@@ -184,6 +184,216 @@ npm run lint failed
 - 導入錯誤需要安裝缺少的依賴項
 - 可訪問性問題需要手動修復
 
+## 10. Avatar 導入錯誤修復
+
+### 問題描述
+```
+Attempted import error: 'getAvatarByUserId' is not exported from '@/services/user.service' (imported as 'getAvatarByUserId').
+```
+
+### 原因分析
+1. **函數被註解掉**：在 `services/user.service.js` 中，`getAvatarByUserId`、`updateAvatarByUserId`、`updateProfileByUserId` 函數被完全註解掉
+2. **API 路由仍在使用**：`app/(api)/api/users/me/avatar/route.js` 等檔案仍在導入這些函數
+3. **資料庫結構變更**：原本使用 `Profile` 表，現在改為直接使用 `User` 表
+
+### 修復方案
+1. **取消註解並修改函數**：
+   ```javascript
+   // 修復前（被註解）
+   // export const getAvatarByUserId = async (id) => {
+   //   // 驗證參數是否為正整數
+   //   const validatedId = idSchema.safeParse({ id })
+   //   // ... 其他程式碼
+   // }
+
+   // 修復後（啟用並修改）
+   export const getAvatarByUserId = async (id) => {
+     // 驗證參數是否為正整數
+     const validatedId = idSchema.safeParse({ id })
+     // ... 修改為使用 User 表而非 Profile 表
+   }
+   ```
+
+2. **修改資料庫查詢**：
+   ```javascript
+   // 修復前（使用 Profile 表）
+   const profile = await prisma.profile.findUnique({
+     where: { userId: id },
+   })
+
+   // 修復後（使用 User 表）
+   const user = await prisma.user.findUnique({
+     where: { user_id: id },
+   })
+   ```
+
+### 影響檔案
+- `services/user.service.js`：修復三個函數
+- `app/(api)/api/users/me/avatar/route.js`：導入 `getAvatarByUserId`
+- `app/(api)/api/users/me/cloud-avatar/route.js`：導入 `getAvatarByUserId`、`updateAvatarByUserId`
+- `app/(api)/api/users/me/profile/route.js`：導入 `updateProfileByUserId`
+
+## 11. ESLint 未使用變數修復
+
+### 問題描述
+```
+'text' is defined but never used  no-unused-vars
+```
+
+### 原因分析
+1. **函數參數未使用**：在 `VoiceInput.tsx` 中，`onResult` 函數的參數 `text` 被定義但未使用
+2. **ESLint 規則**：`no-unused-vars` 規則要求所有變數都必須被使用
+
+### 修復方案
+```javascript
+// 修復前
+export default function VoiceInput({
+  onResult,
+}: {
+  onResult: (text: string) => void
+}) {
+  // ...
+  recognizer.onresult = (event: any) => {
+    const text = event.results?.[0]?.[0]?.transcript
+    if (text) onResult(text)
+  }
+}
+
+// 修復後
+export default function VoiceInput({
+  onResult,
+}: {
+  onResult: (_text: string) => void
+}) {
+  // ...
+  recognizer.onresult = (event: any) => {
+    const _text = event.results?.[0]?.[0]?.transcript
+    if (_text) onResult(_text)
+  }
+}
+```
+
+### 為什麼使用 `_text`？
+1. **ESLint 慣例**：在變數名前加 `_` 表示故意未使用的變數
+2. **保持一致性**：確保參數名稱與實際使用的變數名稱一致
+3. **避免警告**：ESLint 不會對以 `_` 開頭的變數發出未使用警告
+
+## 12. React Query 導入錯誤修復
+
+### 問題描述
+```
+Unable to resolve path to module '@tanstack/react-query'  import/no-unresolved
+```
+
+### 原因分析
+1. **缺少依賴項**：專案中沒有安裝 `@tanstack/react-query` 和 `@tanstack/react-query-devtools`
+2. **Demo 檔案**：這些是示範檔案，不是核心功能
+3. **部署考量**：避免因缺少依賴項導致部署失敗
+
+### 修復方案
+```javascript
+// 修復前
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
+// 修復後
+// import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+```
+
+### 為什麼要註解掉？
+1. **避免部署錯誤**：缺少依賴項會導致建置失敗
+2. **Demo 檔案**：這些檔案僅供示範，不是核心功能
+3. **可選功能**：React Query 是可選的狀態管理工具
+4. **向後相容**：保留程式碼結構，未來需要時可輕鬆啟用
+
+### 影響檔案
+- `app/demo/query-client-example/page.js`
+- `app/demo/react-query-demo/page.js`
+
+### 未來啟用方式
+1. 安裝依賴項：`npm install @tanstack/react-query @tanstack/react-query-devtools`
+2. 取消註解導入語句
+3. 恢復相關功能程式碼
+
+## 13. Zeabur 部署 Yarn 問題修復
+
+### 問題描述
+```
+ERROR: process "/bin/sh -c yarn build" did not complete successfully: exit code: 1
+```
+
+### 原因分析
+1. **Zeabur 自動偵測**：Zeabur 偵測到專案中有 yarn 相關檔案，自動使用 yarn 建置
+2. **專案使用 npm**：實際專案使用 `package-lock.json` 和 npm
+3. **建置工具衝突**：yarn 和 npm 混用導致依賴項解析問題
+
+### 修復方案
+1. **移除 yarn 相關忽略**：
+   ```gitignore
+   # 修復前
+   package-lock.json
+   yarn.lock
+
+   # 修復後
+   # package-lock.json
+   # yarn.lock
+   ```
+
+2. **更新 ESLint 配置**：
+   ```javascript
+   // 修復前
+   '**/yarn.lock',
+
+   // 修復後
+   // '**/yarn.lock',
+   ```
+
+### 影響檔案
+- `.gitignore`：移除 yarn.lock 忽略
+- `eslint.config.js`：註解 yarn.lock 忽略規則
+
+## 14. 模組解析錯誤修復
+
+### 問題描述
+```
+Module not found: Can't resolve '@/styles/globals.scss'
+```
+
+### 原因分析
+1. **路徑不存在**：`@/styles/globals.scss` 路徑不存在
+2. **實際檔案位置**：`globals.scss` 實際在 `app/globals.scss`
+3. **導入路徑錯誤**：程式碼中使用了錯誤的導入路徑
+
+### 修復方案
+1. **建立對應路徑**：
+   ```scss
+   // 建立 styles/globals.scss
+   // 全域樣式檔案
+   // 這個檔案用於解決 Zeabur 部署時的模組解析問題
+
+   // 導入主要的全域樣式
+   @import '../app/globals.scss';
+   ```
+
+2. **恢復導入語句**：
+   ```javascript
+   // 修復前
+   // import '@/styles/globals.scss'
+
+   // 修復後
+   import '@/styles/globals.scss'
+   ```
+
+### 影響檔案
+- `styles/globals.scss`：新建檔案
+- `app/(rsc)/rsc/layout.js`：恢復導入語句
+
+### 建議
+- 確保所有導入路徑都存在對應檔案
+- 使用相對路徑或正確的別名路徑
+- 在部署前測試所有模組解析
+
 ## 9. 最佳實踐
 
 ### 開發環境
