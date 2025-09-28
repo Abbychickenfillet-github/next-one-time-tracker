@@ -14,12 +14,12 @@ const local = {
   nextUrl: 'http://localhost:3001',
 }
 
-// 營運環境設定(部署至Zeabur)
+// 營運環境設定(部署至Zeabur) - 含備援網域
 const production = {
-  apiURL: 'https://insightful-timelog.zeabur.app/api',
-  serverURL: 'https://insightful-timelog.zeabur.app',
-  avatarURL: 'https://insightful-timelog.zeabur.app/avatar',
-  nextUrl: 'https://insightful-timelog.zeabur.app',
+  apiURL: 'https://insightful-timelog.zeabur.app/api' || 'https://qute-insightful-timelog-analysis-helper.zeabur.app/api' || 'https://time-insight.zeabur.app/api',
+  serverURL: 'https://insightful-timelog.zeabur.app' || 'https://qute-insightful-timelog-analysis-helper.zeabur.app' || 'https://time-insight.zeabur.app',
+  avatarURL: 'https://insightful-timelog.zeabur.app/avatar' || 'https://qute-insightful-timelog-analysis-helper.zeabur.app/avatar' || 'https://time-insight.zeabur.app/avatar',
+  nextUrl: 'https://insightful-timelog.zeabur.app' || 'https://qute-insightful-timelog-analysis-helper.zeabur.app' || 'https://time-insight.zeabur.app',
 }
 
 export const apiURL = isDev ? local.apiURL : production.apiURL
