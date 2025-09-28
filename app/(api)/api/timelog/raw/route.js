@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 import pool from '@/config/server.postgresql.js'
-
+// 這個檔案室用來測試API的
 export async function GET() {
   try {
     // 使用原生 SQL 查詢
     const result = await pool.query(`
-      SELECT 
+      SELECT
         tl.id,
         tl.title,
         tl.start_time,

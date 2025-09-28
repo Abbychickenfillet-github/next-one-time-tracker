@@ -12,7 +12,7 @@ export const isDev = env === 'development'
 // baseUrl: 開發or營運環境的網址
 export const baseUrl = isDev
   ? 'http://localhost:3001'
-  : 'https://time-insight.zeabur.app'
+  : 'https://insightful-timelog.zeabur.app'
 
 export const serverConfig = {
   // (deprecated)
@@ -20,7 +20,7 @@ export const serverConfig = {
   // 前端網址
   nextUrl: baseUrl,
   // 後端伺服器佈置後的網域名稱，與cookie有關
-  domain: isDev ? '' : 'time-insight.zeabur.app',
+  domain: isDev ? '' : 'insightful-timelog.zeabur.app',
   smtp: {
     type: 'gmail', // ethereal | gmail
     ethereal: {
