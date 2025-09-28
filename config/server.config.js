@@ -89,13 +89,17 @@ export const serverConfig = {
   linePay: {
     development: {
       channelId: process.env.LINE_PAY_CHANNEL_ID || '12008177891',
-      channelSecret: process.env.LINE_PAY_CHANNEL_SECRET || '9a2f9cbdf8058762307491a2da9ab15c',
+      channelSecret:
+        process.env.LINE_PAY_CHANNEL_SECRET ||
+        '9a2f9cbdf8058762307491a2da9ab15c',
       confirmUrl: baseUrl + '/line-pay/callback',
       cancelUrl: baseUrl + '/line-pay/cancel',
     },
     production: {
       channelId: process.env.LINE_PAY_CHANNEL_ID || '12008177891',
-      channelSecret: process.env.LINE_PAY_CHANNEL_SECRET || '9a2f9cbdf8058762307491a2da9ab15c',
+      channelSecret:
+        process.env.LINE_PAY_CHANNEL_SECRET ||
+        '9a2f9cbdf8058762307491a2da9ab15c',
       confirmUrl: baseUrl + '/line-pay/callback',
       cancelUrl: baseUrl + '/line-pay/cancel',
     },

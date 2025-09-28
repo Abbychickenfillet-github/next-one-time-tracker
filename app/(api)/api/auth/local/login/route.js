@@ -7,7 +7,7 @@
 // 2. 透過 auth.service 驗證用戶憑證
 // 3. 登入成功後建立 JWT session 並設置 ACCESS_TOKEN cookie
 // 4. 返回用戶資料給前端
-// 
+//
 // 與其他認證路由的關係：
 // - /api/auth/check: 檢查現有認證狀態，不進行登入
 // - /api/auth/local/logout: 處理登出，清除認證狀態
@@ -21,7 +21,7 @@ import { cookies } from 'next/headers'
 // 導入服務層的類別
 import { login } from '@/services/auth.service'
 // 導入回應函式
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { errorResponse, isDev } from '@/lib/utils.js'
 import { createSession } from '@/lib/jwt-session'
 
 export async function POST(request) {
@@ -37,23 +37,23 @@ export async function POST(request) {
   // API回應
   if (data?.status === 'success') {
     const payload = { userId: data?.payload?.user?.user_id }
-    
+
     // 開發環境調試
     if (isDev) {
       console.log('🔍 登入用戶數據:', data?.payload?.user)
       console.log('🔍 user_id:', data?.payload?.user?.user_id)
       console.log('🔍 最終 payload:', payload)
     }
-    
+
     // 建立jwt session(Access Token) 並設定有效期限為3天
     await createSession(payload, '3d', 'ACCESS_TOKEN')
-    
+
     // 開發環境調試
     if (isDev) {
       console.log('✅ 登入成功，已設置 ACCESS_TOKEN Cookie')
       console.log('📊 用戶 ID:', payload.userId)
       console.log('🔍 測試 JWT 創建是否成功...')
-      
+
       // 測試 JWT 是否正確創建
       const testCookie = (await cookies()).get('ACCESS_TOKEN')?.value
       console.log('🍪 Cookie 值:', testCookie ? '存在' : '不存在')
@@ -61,7 +61,7 @@ export async function POST(request) {
         console.log('🍪 Cookie 長度:', testCookie.length)
       }
     }
-    
+
     // 直接返回 JSON 響應，不覆蓋 cookie
     return res.json({ status: 'success', data: data.payload }, { status: 200 })
   } else {

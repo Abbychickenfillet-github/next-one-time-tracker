@@ -1,5 +1,5 @@
 'use client'
-import { Suspense, useState } from 'react'
+import { Suspense } from 'react'
 import { Providers } from './providers'
 import TopNavbar from '@/components/top-navbar'
 import '@/app/globals.scss'
@@ -7,13 +7,9 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'animate.css'
 
 import Header from '@/components/timelog/Header'
-import { Button } from 'react-bootstrap'
-
 
 // RootLayout 元件 - 定義整個應用程式的根布局結構
 export default function RootLayout({ children }) {
-
-
   return (
     <html lang="en">
       <head />

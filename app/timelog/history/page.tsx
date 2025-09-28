@@ -41,7 +41,7 @@ export default function TimeLogHistory() {
     page: 1,
     limit: 10,
     total: 0,
-    totalPages: 0
+    totalPages: 0,
   })
   const [loading, setLoading] = useState(true)
   const [selectedLog, setSelectedLog] = useState<TimeLog | null>(null)
@@ -52,16 +52,16 @@ export default function TimeLogHistory() {
       setLoading(true)
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: pagination.limit.toString()
+        limit: pagination.limit.toString(),
       })
-      
+
       if (user?.user_id) {
         params.append('userId', user.user_id.toString())
       }
 
       const response = await fetch(`/api/timelog?${params}`)
       const data = await response.json()
-      
+
       setLogs(data.logs)
       setPagination(data.pagination)
     } catch (error) {
@@ -84,7 +84,7 @@ export default function TimeLogHistory() {
     const minutes = Math.floor(duration / (1000 * 60))
     const hours = Math.floor(minutes / 60)
     const remainingMinutes = minutes % 60
-    
+
     if (hours > 0) {
       return `${hours}小時${remainingMinutes}分鐘`
     }
@@ -99,7 +99,7 @@ export default function TimeLogHistory() {
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     })
   }
 
@@ -122,7 +122,9 @@ export default function TimeLogHistory() {
         <div className="col-12">
           <h2 className="mb-4">
             📊 我的時間記錄
-            {user && <small className="text-muted ms-2">({user.username})</small>}
+            {user && (
+              <small className="text-muted ms-2">({user.username})</small>
+            )}
           </h2>
 
           {/* 統計卡片 */}
@@ -139,7 +141,7 @@ export default function TimeLogHistory() {
               <div className="card bg-success text-white">
                 <div className="card-body text-center">
                   <h5 className="card-title">已完成</h5>
-                  <h3>{logs.filter(log => log.endTime).length}</h3>
+                  <h3>{logs.filter((log) => log.endTime).length}</h3>
                 </div>
               </div>
             </div>
@@ -147,7 +149,7 @@ export default function TimeLogHistory() {
               <div className="card bg-warning text-white">
                 <div className="card-body text-center">
                   <h5 className="card-title">進行中</h5>
-                  <h3>{logs.filter(log => !log.endTime).length}</h3>
+                  <h3>{logs.filter((log) => !log.endTime).length}</h3>
                 </div>
               </div>
             </div>
@@ -155,7 +157,9 @@ export default function TimeLogHistory() {
               <div className="card bg-info text-white">
                 <div className="card-body text-center">
                   <h5 className="card-title">總步驟數</h5>
-                  <h3>{logs.reduce((sum, log) => sum + log.steps.length, 0)}</h3>
+                  <h3>
+                    {logs.reduce((sum, log) => sum + log.steps.length, 0)}
+                  </h3>
                 </div>
               </div>
             </div>
@@ -188,29 +192,39 @@ export default function TimeLogHistory() {
                           {log.description && (
                             <>
                               <br />
-                              <small className="text-muted">{log.description}</small>
+                              <small className="text-muted">
+                                {log.description}
+                              </small>
                             </>
                           )}
                         </td>
                         <td>{formatDateTime(log.startTime)}</td>
                         <td>
-                          {log.endTime ? formatDateTime(log.endTime) : (
+                          {log.endTime ? (
+                            formatDateTime(log.endTime)
+                          ) : (
                             <span className="badge bg-warning">進行中</span>
                           )}
                         </td>
                         <td>
-                          <span className={`badge ${
-                            log.endTime ? 'bg-success' : 'bg-warning'
-                          }`}>
+                          <span
+                            className={`badge ${
+                              log.endTime ? 'bg-success' : 'bg-warning'
+                            }`}
+                          >
                             {calculateDuration(log.startTime, log.endTime)}
                           </span>
                         </td>
                         <td>
-                          <span className="badge bg-info">{log.steps.length}</span>
+                          <span className="badge bg-info">
+                            {log.steps.length}
+                          </span>
                         </td>
                         <td>
                           {log.aiAnalysis ? (
-                            <small className="text-success">{log.aiAnalysis}</small>
+                            <small className="text-success">
+                              {log.aiAnalysis}
+                            </small>
                           ) : (
                             <small className="text-muted">分析中...</small>
                           )}
@@ -235,7 +249,9 @@ export default function TimeLogHistory() {
           {pagination.totalPages > 1 && (
             <nav className="mt-4">
               <ul className="pagination justify-content-center">
-                <li className={`page-item ${pagination.page === 1 ? 'disabled' : ''}`}>
+                <li
+                  className={`page-item ${pagination.page === 1 ? 'disabled' : ''}`}
+                >
                   <button
                     className="page-link"
                     onClick={() => fetchLogs(pagination.page - 1)}
@@ -244,9 +260,15 @@ export default function TimeLogHistory() {
                     上一頁
                   </button>
                 </li>
-                
-                {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
-                  <li key={page} className={`page-item ${page === pagination.page ? 'active' : ''}`}>
+
+                {Array.from(
+                  { length: pagination.totalPages },
+                  (_, i) => i + 1
+                ).map((page) => (
+                  <li
+                    key={page}
+                    className={`page-item ${page === pagination.page ? 'active' : ''}`}
+                  >
                     <button
                       className="page-link"
                       onClick={() => fetchLogs(page)}
@@ -255,8 +277,10 @@ export default function TimeLogHistory() {
                     </button>
                   </li>
                 ))}
-                
-                <li className={`page-item ${pagination.page === pagination.totalPages ? 'disabled' : ''}`}>
+
+                <li
+                  className={`page-item ${pagination.page === pagination.totalPages ? 'disabled' : ''}`}
+                >
                   <button
                     className="page-link"
                     onClick={() => fetchLogs(pagination.page + 1)}
@@ -271,7 +295,10 @@ export default function TimeLogHistory() {
 
           {/* 詳情 Modal */}
           {selectedLog && (
-            <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <div
+              className="modal show d-block"
+              style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+            >
               <div className="modal-dialog modal-lg">
                 <div className="modal-content">
                   <div className="modal-header">
@@ -291,18 +318,20 @@ export default function TimeLogHistory() {
                       <div className="col-md-6">
                         <strong>結束時間：</strong>
                         <p>
-                          {selectedLog.endTime ? formatDateTime(selectedLog.endTime) : '進行中'}
+                          {selectedLog.endTime
+                            ? formatDateTime(selectedLog.endTime)
+                            : '進行中'}
                         </p>
                       </div>
                     </div>
-                    
+
                     {selectedLog.description && (
                       <div className="mb-3">
                         <strong>描述：</strong>
                         <p>{selectedLog.description}</p>
                       </div>
                     )}
-                    
+
                     {selectedLog.aiAnalysis && (
                       <div className="mb-3">
                         <strong>🤖 AI 分析：</strong>
@@ -311,7 +340,7 @@ export default function TimeLogHistory() {
                         </div>
                       </div>
                     )}
-                    
+
                     <div className="mb-3">
                       <strong>📝 步驟詳情：</strong>
                       <div className="list-group">
@@ -327,11 +356,14 @@ export default function TimeLogHistory() {
                                 )}
                                 <small>
                                   {formatDateTime(step.startTime)}
-                                  {step.endTime && ` - ${formatDateTime(step.endTime)}`}
+                                  {step.endTime &&
+                                    ` - ${formatDateTime(step.endTime)}`}
                                 </small>
                               </div>
                               {step.endTime && (
-                                <span className="badge bg-success">✅ 完成</span>
+                                <span className="badge bg-success">
+                                  ✅ 完成
+                                </span>
                               )}
                             </div>
                           </div>

@@ -3,17 +3,17 @@
 // ========================================
 // 這個檔案包含所有與用戶相關的自定義 React Hooks
 // 使用 SWR 庫來管理 API 請求的狀態和快取
-// 
+//
 // 主要功能：
 // - 用戶認證檢查 (useAuthGet)
-// - 用戶註冊 (useUserRegister) 
+// - 用戶註冊 (useUserRegister)
 // - 用戶登入/登出 (useUserLogin, useUserLogout)
 // - 用戶資料更新 (useUserUpdateProfile, useUserUpdatePassword)
 // - 用戶頭像更新 (useUserUpdateAvatar)
 // - 收藏功能 (useUserFavorite)
 
-import { useMutation, useQuery, fetcher } from './use-fetcher'  // SWR 相關的 hooks
-import { apiURL, isDev } from '@/config/client.config'          // API 基礎 URL 和開發環境設定
+import { useMutation, useQuery, fetcher } from './use-fetcher' // SWR 相關的 hooks
+import { apiURL, isDev } from '@/config/client.config' // API 基礎 URL 和開發環境設定
 
 // ========================================
 // 📋 預設用戶資料結構
@@ -21,15 +21,15 @@ import { apiURL, isDev } from '@/config/client.config'          // API 基礎 UR
 // 定義用戶資料的預設值，確保資料結構一致性
 // 當用戶未登入或 API 請求失敗時使用
 export const defaultUser = {
-  id: 0,           // 用戶 ID，0 表示未登入
-  name: '',        // 用戶姓名，可選填
-  googleUid: '',   // Google 登入 ID
-  lineUid: '',     // Line 登入 ID
-  email: '',       // 電子郵件
-  phone: '',       // 手機號碼
-  birthdate: '',   // 生日
-  gender: '',      // 性別
-  avatar: '',      // 頭像路徑
+  id: 0, // 用戶 ID，0 表示未登入
+  name: '', // 用戶姓名，可選填
+  googleUid: '', // Google 登入 ID
+  lineUid: '', // Line 登入 ID
+  email: '', // 電子郵件
+  phone: '', // 手機號碼
+  birthdate: '', // 生日
+  gender: '', // 性別
+  avatar: '', // 頭像路徑
   // profile 已移除，相關欄位直接放在 User 表中
   // profile: {
   //   name: '',
@@ -46,35 +46,35 @@ export const defaultUser = {
 export const useAuthGet = () => {
   // 使用 SWR 的 useQuery hook 來發送 GET 請求到 /auth/check 端點
   // 這些變數來自 SWR 庫，用於管理 API 請求的狀態
-  const { 
-    data,        // API 回應的資料，包含用戶資訊和收藏清單
-    error,       // 請求錯誤物件，如果請求失敗會包含錯誤資訊
-    isLoading,   // 布林值，表示請求是否正在進行中
-    mutate,      // 函數，用於手動重新驗證和更新資料
-    isError      // 布林值，表示請求是否發生錯誤
+  const {
+    data, // API 回應的資料，包含用戶資訊和收藏清單
+    error, // 請求錯誤物件，如果請求失敗會包含錯誤資訊
+    isLoading, // 布林值，表示請求是否正在進行中
+    mutate, // 函數，用於手動重新驗證和更新資料
+    isError, // 布林值，表示請求是否發生錯誤
   } = useQuery(
-    `${apiURL}/auth/check`  // 請求的 URL，檢查用戶認證狀態
+    `${apiURL}/auth/check` // 請求的 URL，檢查用戶認證狀態
   )
 
   // 初始化預設值
-  let user = defaultUser      // 預設用戶資料結構
-  let favorites = []          // 預設收藏清單為空陣列
-  
+  let user = defaultUser // 預設用戶資料結構
+  let favorites = [] // 預設收藏清單為空陣列
+
   // 如果 API 請求成功，更新用戶資料和收藏清單
   if (data && data?.status === 'success') {
-    user = data?.data?.user           // 從 API 回應中取得用戶資料
+    user = data?.data?.user // 從 API 回應中取得用戶資料
     favorites = data?.data?.favorites // 從 API 回應中取得收藏清單
   }
 
   // 返回所有相關的狀態和資料，供組件使用
   return {
-    user,        // 當前用戶資料
-    favorites,   // 用戶的收藏清單
-    data,        // 完整的 API 回應資料
-    error,       // 錯誤資訊（如果有的話）
-    isLoading,   // 載入狀態
-    mutate,      // 重新驗證函數
-    isError,     // 錯誤狀態
+    user, // 當前用戶資料
+    favorites, // 用戶的收藏清單
+    data, // 完整的 API 回應資料
+    error, // 錯誤資訊（如果有的話）
+    isLoading, // 載入狀態
+    mutate, // 重新驗證函數
+    isError, // 錯誤狀態
   }
 }
 
@@ -82,19 +82,19 @@ export const useAuthGet = () => {
 export const useUserUpdatePassword = () => {
   // 使用 SWR 的 useMutation hook 來發送 PUT 請求到 /users/me/password 端點
   // 這些變數來自 SWR Mutation 庫，用於管理 POST/PUT/DELETE 請求的狀態
-  const { 
-    trigger,     // 函數，用於觸發 API 請求 - 手動發送 HTTP 請求的函數，返回 Promise
-    isMutating,  // 布林值，表示 mutation 是否正在進行中
-    isError      // 布林值，表示 mutation 是否發生錯誤
+  const {
+    trigger, // 函數，用於觸發 API 請求 - 手動發送 HTTP 請求的函數，返回 Promise
+    isMutating, // 布林值，表示 mutation 是否正在進行中
+    isError, // 布林值，表示 mutation 是否發生錯誤
   } = useMutation(
-    `${apiURL}/users/me/password`,  // 請求的 URL，更新用戶密碼
-    'PUT'                           // HTTP 方法
+    `${apiURL}/users/me/password`, // 請求的 URL，更新用戶密碼
+    'PUT' // HTTP 方法
   )
-  
+
   // 封裝的更新密碼函數
   // data = { currentPassword: '舊密碼', newPassword: '新密碼' }
   const updatePassword = async (data = {}) => {
-    return await trigger({ data: data })  // 觸發 API 請求
+    return await trigger({ data: data }) // 觸發 API 請求
   }
 
   return { updatePassword, isMutating, isError }
@@ -103,18 +103,18 @@ export const useUserUpdatePassword = () => {
 // PUT - 更新用戶個人資料
 export const useUserUpdateProfile = () => {
   // 使用 SWR 的 useMutation hook 來發送 PUT 請求到 /users/me/profile 端點
-  const { 
-    trigger,     // 函數，用於觸發 API 請求 - 手動發送 HTTP 請求的函數，返回 Promise
-    isMutating,  // 布林值，表示 mutation 是否正在進行中
-    isError      // 布林值，表示 mutation 是否發生錯誤
+  const {
+    trigger, // 函數，用於觸發 API 請求 - 手動發送 HTTP 請求的函數，返回 Promise
+    isMutating, // 布林值，表示 mutation 是否正在進行中
+    isError, // 布林值，表示 mutation 是否發生錯誤
   } = useMutation(
-    `${apiURL}/users/me/profile`,  // 請求的 URL，更新用戶個人資料
-    'PUT'                          // HTTP 方法
+    `${apiURL}/users/me/profile`, // 請求的 URL，更新用戶個人資料
+    'PUT' // HTTP 方法
   )
-  
+
   // 封裝的更新個人資料函數
   const updateProfile = async (data = {}) => {
-    return await trigger({ data: data })  // 觸發 API 請求
+    return await trigger({ data: data }) // 觸發 API 請求
   }
 
   return { updateProfile, isMutating, isError }
@@ -158,7 +158,7 @@ export const useUserRegister = () => {
 // ===== useMutation 詳細解釋 =====
 // useMutation 是 SWR 提供的 Hook，專門用於處理會改變伺服器狀態的操作
 // 例如：POST (新增)、PUT (更新)、DELETE (刪除) 等
-// 
+//
 // trigger 是什麼？
 // trigger 是 useMutation 返回的函數，用來手動觸發 API 請求
 // 它會自動處理 loading 狀態、錯誤處理、重試機制等
@@ -168,10 +168,10 @@ export const useAuthLogin = () => {
   // 2. isMutating: 請求進行中的狀態 (true/false)
   // 3. isError: 請求是否發生錯誤 (true/false)
   const { trigger, isMutating, isError } = useMutation(
-    `${apiURL}/auth/local/login`,  // API 端點 URL
-    'POST'                         // HTTP 方法
+    `${apiURL}/auth/local/login`, // API 端點 URL
+    'POST' // HTTP 方法
   )
-  
+
   // 封裝 login 函數，讓外部更容易使用
   // POST方法時，要利用login({ username, password })來登入
   const login = async (data = {}) => {
@@ -187,10 +187,10 @@ export const useAuthLogin = () => {
 export const useAuthGoogleLogin = () => {
   // trigger: 觸發 Google 登入 API 請求的函數
   const { trigger, isMutating, isError } = useMutation(
-    `${apiURL}/auth/google/login`,  // Google 登入 API 端點
-    'POST'                           // HTTP POST 方法
+    `${apiURL}/auth/google/login`, // Google 登入 API 端點
+    'POST' // HTTP POST 方法
   )
-  
+
   // POST方法，要利用googleLogin(providerData)來登入
   const googleLogin = async (data = {}) => {
     // trigger 會發送 Google 登入資料到伺服器
@@ -204,10 +204,10 @@ export const useAuthGoogleLogin = () => {
 export const useAuthLogout = () => {
   // trigger: 觸發登出 API 請求的函數
   const { trigger, isMutating, isError } = useMutation(
-    `${apiURL}/auth/local/logout`,  // 登出 API 端點
-    'POST'                           // HTTP POST 方法
+    `${apiURL}/auth/local/logout`, // 登出 API 端點
+    'POST' // HTTP POST 方法
   )
-  
+
   // POST方法時，要利用logout()來登出
   const logout = async () => {
     // trigger 會發送登出請求到伺服器，清除 session
@@ -220,7 +220,7 @@ export const useAuthLogout = () => {
 /**
  * ===== 取得當前登入用戶資料 =====
  * 載入會員id的資料用，需要登入後才能使用。此API路由會檢查JWT中的id是否符合本會員，不符合會失敗。
- * 
+ *
  * useQuery vs useMutation 的區別：
  * - useQuery: 自動觸發，用於讀取資料 (GET)
  * - useMutation: 手動觸發，用於修改資料 (POST/PUT/DELETE)
@@ -233,7 +233,7 @@ export const useUserGetMe = () => {
   // - mutate: 手動重新獲取資料的函數
   // - isError: 是否有錯誤
   const { data, error, isLoading, mutate, isError } = useQuery(
-    `${apiURL}/users/me`  // GET 請求，自動觸發
+    `${apiURL}/users/me` // GET 請求，自動觸發
   )
 
   let user = null

@@ -18,8 +18,10 @@ export async function POST(request) {
     if (isDev) {
       console.log('步驟記錄請求資料:', {
         ...body,
-        startTime: body.startTime ? new Date(body.startTime).toISOString() : '未提供',
-        endTime: body.endTime ? new Date(body.endTime).toISOString() : '未提供'
+        startTime: body.startTime
+          ? new Date(body.startTime).toISOString()
+          : '未提供',
+        endTime: body.endTime ? new Date(body.endTime).toISOString() : '未提供',
       })
     }
 
@@ -56,8 +58,8 @@ export async function POST(request) {
     const timeLog = await prisma.timeLog.findFirst({
       where: {
         id: body.timeLogId,
-        userId: userId
-      }
+        userId: userId,
+      },
     })
 
     if (!timeLog) {
@@ -75,17 +77,17 @@ export async function POST(request) {
         title: body.title,
         description: body.description,
         startTime: new Date(body.startTime),
-        endTime: body.endTime ? new Date(body.endTime) : null
+        endTime: body.endTime ? new Date(body.endTime) : null,
       },
       include: {
         timeLog: {
           select: {
             id: true,
             title: true,
-            userId: true
-          }
-        }
-      }
+            userId: true,
+          },
+        },
+      },
     })
 
     // ========================================
@@ -97,7 +99,7 @@ export async function POST(request) {
         標題: step.title,
         開始時間: step.startTime,
         結束時間: step.endTime,
-        關聯TimeLog: step.timeLogId
+        關聯TimeLog: step.timeLogId,
       })
     }
 
@@ -108,9 +110,8 @@ export async function POST(request) {
       description: step.description,
       startTime: step.startTime,
       endTime: step.endTime,
-      timeLog: step.timeLog
+      timeLog: step.timeLog,
     })
-
   } catch (error) {
     console.error('創建步驟記錄失敗:', error)
     const errorMsg = { message: '創建步驟記錄失敗' }
@@ -122,7 +123,7 @@ export async function POST(request) {
 // 📊 獲取步驟記錄 API: GET /api/step
 // ========================================
 // 功能：獲取步驟記錄列表
-export async function GET(request) {
+export async function GET() {
   try {
     // ========================================
     // 🍪 1. 從 Cookie 中取得 JWT Token
@@ -149,46 +150,47 @@ export async function GET(request) {
     const steps = await prisma.step.findMany({
       where: {
         timeLog: {
-          userId: userId
-        }
+          userId: userId,
+        },
       },
       include: {
         timeLog: {
           select: {
             id: true,
             title: true,
-            userId: true
-          }
-        }
+            userId: true,
+          },
+        },
       },
       orderBy: {
-        startTime: 'desc'
-      }
+        startTime: 'desc',
+      },
     })
 
     // ========================================
     // 📤 5. 回傳 API 回應
     // ========================================
     return successResponse(res, {
-      steps: steps.map(step => ({
+      steps: steps.map((step) => ({
         id: step.id,
         timeLogId: step.timeLogId,
         title: step.title,
         description: step.description,
         startTime: step.startTime,
         endTime: step.endTime,
-        duration: step.endTime ? 
-          Math.round((new Date(step.endTime) - new Date(step.startTime)) / (1000 * 60 * 60) * 100) / 100 : 
-          null,
-        timeLog: step.timeLog
-      }))
+        duration: step.endTime
+          ? Math.round(
+              ((new Date(step.endTime) - new Date(step.startTime)) /
+                (1000 * 60 * 60)) *
+                100
+            ) / 100
+          : null,
+        timeLog: step.timeLog,
+      })),
     })
-
   } catch (error) {
     console.error('獲取步驟記錄失敗:', error)
     const errorMsg = { message: '獲取步驟記錄失敗' }
     return errorResponse(res, errorMsg)
   }
 }
-
-

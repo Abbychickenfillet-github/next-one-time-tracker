@@ -29,6 +29,7 @@ export default [
       '**/pnpm-lock.yaml',
       '**/yarn.lock',
       '**/.temp',
+      '**/prisma/generated/**',
     ],
   },
   ...fixupConfigRules(

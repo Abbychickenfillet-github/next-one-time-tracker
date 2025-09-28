@@ -14,7 +14,13 @@ import { isDev, convertToCamelCase } from '../lib/utils.js'
 // foreignKey is in the second table
 // const oneToOne = ['User:Profile'] // 已註解掉，因為移除了 Profile 表
 // foreignKey is in the second table
-const oneToMany = ['Category:Product', 'Brand:Product', 'User:TimeLog', 'User:Step', 'TimeLog:Step']
+const oneToMany = [
+  'Category:Product',
+  'Brand:Product',
+  'User:TimeLog',
+  'User:Step',
+  'TimeLog:Step',
+]
 // foreignKey is in the third table
 const manyToMany = ['User:Product:Favorite']
 
@@ -49,18 +55,21 @@ async function main() {
   relationFileList.sort(function (a, b) {
     for (let i = 0; i < relations.length; i++) {
       const tmp = relations[i].split(':')
-      console.log(`🔍 關聯 ${i}: "${relations[i]}" 分割後:`, tmp, `長度: ${tmp.length}`);
+      console.log(
+        `🔍 關聯 ${i}: "${relations[i]}" 分割後:`,
+        tmp,
+        `長度: ${tmp.length}`
+      )
       // oneToOne, oneToMany
       if (tmp.length === 2 && a.includes(tmp[0]) && b.includes(tmp[1])) {
         return -1
       }
 
-
       // manyToMany
       if (tmp.length === 3 && a.includes(tmp[0]) && b.includes(tmp[2])) {
         return -1
       }
-      
+
       // manyToMany
       if (tmp.length === 3 && a.includes(tmp[1]) && b.includes(tmp[2])) {
         return -1
