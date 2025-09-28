@@ -28,23 +28,17 @@ export default function TopNavbar() {
           >
             教學文件
           </Link>
-          <Link
-            href="/user/register"
-            target="_self"
-          >
+          <Link href="/user/register" target="_self">
             註冊
           </Link>
-          <Link
-            href="/user/login"
-            target="_self"
-          >
+          <Link href="/user/login" target="_self">
             登入
           </Link>
           <Link href="#" className={styles.icon} onClick={toggleMenu}>
             <FaBars color="#0dcaf0" />
           </Link>
         </div>
-        
+
         {/* 主題切換按鈕 */}
         <div className={styles.themeToggleContainer}>
           <ThemeToggle />

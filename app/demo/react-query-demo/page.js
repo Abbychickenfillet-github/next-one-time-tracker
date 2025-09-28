@@ -14,7 +14,7 @@ const createUser = async (userData) => {
   const response = await fetch('/api/users', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(userData)
+    body: JSON.stringify(userData),
   })
   if (!response.ok) throw new Error('Failed to create user')
   return response.json()
@@ -25,11 +25,11 @@ export default function ReactQueryDemo() {
   const queryClient = useQueryClient()
 
   // 1. 使用 useQuery 獲取數據
-  const { 
-    data: users, 
-    isLoading, 
-    error, 
-    isError 
+  const {
+    data: users,
+    isLoading,
+    error,
+    isError,
   } = useQuery({
     queryKey: ['users'], // 緩存鍵
     queryFn: fetchUsers, // 獲取數據的函數
@@ -46,7 +46,7 @@ export default function ReactQueryDemo() {
     },
     onError: (error) => {
       console.error('創建用戶失敗:', error)
-    }
+    },
   })
 
   const handleSubmit = (e) => {
@@ -62,12 +62,12 @@ export default function ReactQueryDemo() {
   return (
     <div className="container mt-4">
       <h1>React Query Demo</h1>
-      
+
       {/* 顯示用戶列表 */}
       <div className="mb-4">
         <h2>用戶列表</h2>
         <ul className="list-group">
-          {users?.map(user => (
+          {users?.map((user) => (
             <li key={user.id} className="list-group-item">
               {user.name} - {user.email}
             </li>
@@ -78,7 +78,9 @@ export default function ReactQueryDemo() {
       {/* 添加新用戶表單 */}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="name" className="form-label">用戶名稱</label>
+          <label htmlFor="name" className="form-label">
+            用戶名稱
+          </label>
           <input
             type="text"
             id="name"
@@ -88,8 +90,8 @@ export default function ReactQueryDemo() {
             placeholder="輸入用戶名稱"
           />
         </div>
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="btn btn-primary"
           disabled={createUserMutation.isPending}
         >
@@ -100,11 +102,10 @@ export default function ReactQueryDemo() {
       {/* 顯示狀態信息 */}
       <div className="mt-3">
         <small className="text-muted">
-          查詢狀態: {isLoading ? '載入中' : '已載入'} | 
-          變更狀態: {createUserMutation.isPending ? '處理中' : '待機'}
+          查詢狀態: {isLoading ? '載入中' : '已載入'} | 變更狀態:{' '}
+          {createUserMutation.isPending ? '處理中' : '待機'}
         </small>
       </div>
     </div>
   )
 }
-

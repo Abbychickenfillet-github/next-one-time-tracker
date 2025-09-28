@@ -9,7 +9,7 @@ import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
 // ========================================
 // 功能：獲取當前登入用戶的時間戳記錄
 // 認證方式：透過 JWT Token 從 Cookie 中取得用戶身份
-export async function GET(request) {
+export async function GET() {
   try {
     // ========================================
     // 🍪 1. 從 Cookie 中取得 JWT Token
@@ -46,7 +46,7 @@ export async function GET(request) {
     // ========================================
     const timeLogs = await prisma.timeLog.findMany({
       where: {
-        userId: userId
+        userId: userId,
       },
       include: {
         steps: true, // 包含相關的步驟
@@ -54,13 +54,13 @@ export async function GET(request) {
           select: {
             user_id: true,
             name: true,
-            email: true
-          }
-        }
+            email: true,
+          },
+        },
       },
       orderBy: {
-        startTime: 'desc' // 按開始時間降序排列
-      }
+        startTime: 'desc', // 按開始時間降序排列
+      },
     })
 
     // ========================================
@@ -78,45 +78,49 @@ export async function GET(request) {
     // 計算今日記錄
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    const todayLogs = timeLogs.filter(log => 
-      new Date(log.startTime) >= today
-    )
+    const todayLogs = timeLogs.filter((log) => new Date(log.startTime) >= today)
 
     // 計算本週記錄
     const weekStart = new Date(today)
     weekStart.setDate(today.getDate() - today.getDay())
-    const weekLogs = timeLogs.filter(log => 
-      new Date(log.startTime) >= weekStart
+    const weekLogs = timeLogs.filter(
+      (log) => new Date(log.startTime) >= weekStart
     )
 
     // ========================================
     // 📤 7. 回傳 API 回應
     // ========================================
     const responseData = {
-      timeLogs: timeLogs.map(log => ({
+      timeLogs: timeLogs.map((log) => ({
         id: log.id,
         title: log.title,
         startTime: log.startTime,
         endTime: log.endTime,
-        duration: log.endTime ? 
-          Math.round((new Date(log.endTime) - new Date(log.startTime)) / (1000 * 60 * 60) * 100) / 100 : 
-          null, // 小時為單位
-        steps: log.steps.map(step => ({
+        duration: log.endTime
+          ? Math.round(
+              ((new Date(log.endTime) - new Date(log.startTime)) /
+                (1000 * 60 * 60)) *
+                100
+            ) / 100
+          : null, // 小時為單位
+        steps: log.steps.map((step) => ({
           id: step.id,
           title: step.title,
           description: step.description,
           startTime: step.startTime,
-          endTime: step.endTime
+          endTime: step.endTime,
         })),
-        user: log.user
+        user: log.user,
       })),
       statistics: {
         totalLogs,
-        totalDuration: Math.round(totalDuration / (1000 * 60 * 60) * 100) / 100, // 轉換為小時
+        totalDuration:
+          Math.round((totalDuration / (1000 * 60 * 60)) * 100) / 100, // 轉換為小時
         todayLogs: todayLogs.length,
         weekLogs: weekLogs.length,
-        efficiency: totalLogs > 0 ? Math.min(95, Math.round((totalLogs / 10) * 100)) : 0 // 簡單的效率計算
-      }
+        efficiency:
+          totalLogs > 0 ? Math.min(95, Math.round((totalLogs / 10) * 100)) : 0, // 簡單的效率計算
+      },
     }
 
     // 如果是開發環境，顯示查詢結果
@@ -125,17 +129,14 @@ export async function GET(request) {
         總記錄數: totalLogs,
         總時數: responseData.statistics.totalDuration,
         今日記錄: todayLogs.length,
-        本週記錄: weekLogs.length
+        本週記錄: weekLogs.length,
       })
     }
 
     return successResponse(res, responseData)
-
   } catch (error) {
     console.error('獲取時間戳記錄失敗:', error)
     const errorMsg = { message: '獲取時間戳記錄失敗' }
     return errorResponse(res, errorMsg)
   }
 }
-
-

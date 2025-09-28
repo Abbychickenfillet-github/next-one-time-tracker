@@ -25,7 +25,7 @@ export async function PUT(request) {
     console.log('密碼更新請求資料:', {
       ...body,
       currentPassword: body.currentPassword ? '[已隱藏]' : '未提供',
-      newPassword: body.newPassword ? '[已隱藏]' : '未提供'
+      newPassword: body.newPassword ? '[已隱藏]' : '未提供',
     })
   }
 

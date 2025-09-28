@@ -5,7 +5,6 @@
 
 // ✨「告訴你的編輯器：這個物件（nextConfig）的型別來自 NextConfig，這樣可以獲得自動補全、型別檢查、文件提示」✨
 
-
 const nextConfig = {
   // 關閉React Strict Mode工具(避免useEffect執行兩次)
   reactStrictMode: false,

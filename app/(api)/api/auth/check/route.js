@@ -7,13 +7,13 @@
 // 2. 解密 JWT token 獲取用戶 ID
 // 3. 根據用戶 ID 查詢完整的用戶資料和收藏清單
 // 4. 返回用戶資料給前端
-// 
+//
 // 與其他認證路由的關係：
 // - /api/auth/local/login: 處理登入，建立認證狀態
 // - /api/auth/local/logout: 處理登出，清除認證狀態
 // - /api/auth/google/login: Google OAuth 登入
 // - /api/auth/line/login: LINE OAuth 登入
-// 
+//
 // 使用場景：
 // - 頁面載入時檢查用戶是否已登入
 // - 前端 useAuthGet() hook 會調用此 API
@@ -46,19 +46,18 @@ export async function GET() {
 
     // 取得會員所有資料，包含profile
     const data1 = await getUserById(userId)
-    
+
     if (!data1?.payload?.user) {
       return errorResponse(res, { message: '找不到使用者或使用者已被停用' })
     }
 
     // 取得會員收藏清單
     const data2 = await getFavoritesByUserId(userId)
-    
+
     return successResponse(res, {
       user: data1?.payload?.user,
       favorites: data2?.payload?.favorites,
     })
-    
   } catch (error) {
     console.error('Token 驗證失敗:', error)
     return errorResponse(res, { message: 'Token 驗證失敗' })

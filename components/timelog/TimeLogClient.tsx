@@ -6,18 +6,18 @@ import VoiceInput from './VoiceInput'
 
 export default function TimeLogClient() {
   // ===== 用戶認證 =====
-  const { auth, user: authUser, isAuth } = useAuth()
+  const { user: authUser, isAuth } = useAuth()
   const user: any = authUser || null
 
   // ===== 狀態管理 =====
-  const [title, setTitle] = useState('')                    // 活動名稱 (對應: 活動名稱輸入框)
-  const [desc, setDesc] = useState('')                      // 階段描述 (對應: 記錄活動階段輸入框)
-  const [startTime, setStartTime] = useState<Date | null>(null)  // 活動開始時間 (對應: 開始按鈕)
-  const [endTime, setEndTime] = useState<Date | null>(null)      // 活動結束時間 (對應: 結束按鈕)
-  const [lastStepTime, setLastStepTime] = useState<Date | null>(null)  // 最後步驟時間
-  const [steps, setSteps] = useState<any[]>([])             // 步驟列表 (對應: 活動記錄列表)
-  const [currentTime, setCurrentTime] = useState<Date | null>(null)  // 目前時間 (對應: 目前時間顯示)
-  const [isClient, setIsClient] = useState(false)  // 客戶端渲染標記
+  const [title, setTitle] = useState('') // 活動名稱 (對應: 活動名稱輸入框)
+  const [desc, setDesc] = useState('') // 階段描述 (對應: 記錄活動階段輸入框)
+  const [startTime, setStartTime] = useState<Date | null>(null) // 活動開始時間 (對應: 開始按鈕)
+  const [endTime, setEndTime] = useState<Date | null>(null) // 活動結束時間 (對應: 結束按鈕)
+  const [steps, setSteps] = useState<any[]>([]) // 步驟列表 (對應: 活動記錄列表)
+  const [currentTime, setCurrentTime] = useState<Date | null>(null) // 目前時間 (對應: 目前時間顯示)
+  const [isClient, setIsClient] = useState(false) // 客戶端渲染標記
+  const [lastStepTime, setLastStepTime] = useState<Date | null>(null) // 最後步驟時間
   const stepListRef = useRef<HTMLOListElement | null>(null) // 步驟列表的 DOM 引用
 
   // ===== 客戶端渲染標記 =====
@@ -47,9 +47,9 @@ export default function TimeLogClient() {
     if (startTime && !endTime) return alert('活動尚未結束')
 
     const now = new Date()
-    setStartTime(now)           // 設定活動開始時間
-    setLastStepTime(now)        // 設定最後步驟時間
-    setEndTime(null)            // 清除結束時間
+    setStartTime(now) // 設定活動開始時間
+    setLastStepTime(now) // 設定最後步驟時間
+    setEndTime(null) // 清除結束時間
 
     // 在步驟列表中加入開始記錄
     setSteps((prev) => [
@@ -86,7 +86,7 @@ export default function TimeLogClient() {
           title,
           startTime,
           endTime,
-          userId: user?.id || null // 加入用戶 ID
+          userId: user?.id || null, // 加入用戶 ID
         }),
       })
 
@@ -102,16 +102,17 @@ export default function TimeLogClient() {
 
       // 儲存所有步驟到 Step 資料表
       for (const step of steps) {
-        if (step.type === 'step') { // 只儲存實際的步驟，不儲存 start/end 記錄
+        if (step.type === 'step') {
+          // 只儲存實際的步驟，不儲存 start/end 記錄
           const stepRes = await fetch('/api/step', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              timeLogId: newLog.id,  // 關聯到主活動
+              timeLogId: newLog.id, // 關聯到主活動
               title: step.title || step.text,
               description: step.description || step.text,
               startTime: step.startTime || new Date(),
-              endTime: step.endTime
+              endTime: step.endTime,
             }),
           })
 
@@ -142,7 +143,7 @@ export default function TimeLogClient() {
     if (endTime) return alert('活動已結束')
 
     const now = new Date()
-    setLastStepTime(now)        // 更新最後步驟時間
+    setLastStepTime(now) // 更新最後步驟時間
 
     // 在步驟列表中加入新的階段記錄
     setSteps((prev) => [
@@ -158,7 +159,7 @@ export default function TimeLogClient() {
       },
     ])
 
-    setDesc('')                 // 清空描述輸入框
+    setDesc('') // 清空描述輸入框
   }
 
   // ===== 結束子步驟 =====
@@ -170,10 +171,11 @@ export default function TimeLogClient() {
         i === index
           ? {
               ...step,
-              ended: true,           // 標記為已結束
-              endTime: now,         // 記錄結束時間
+              ended: true, // 標記為已結束
+              endTime: now, // 記錄結束時間
               text: step.text + ` (結束於: ${now.toLocaleTimeString()})`,
-              description: step.description + ` (結束於: ${now.toLocaleTimeString()})`
+              description:
+                step.description + ` (結束於: ${now.toLocaleTimeString()})`,
             }
           : step
       )
@@ -187,7 +189,7 @@ export default function TimeLogClient() {
     if (endTime) return alert('活動已結束')
 
     const now = new Date()
-    setEndTime(now)             // 設定活動結束時間
+    setEndTime(now) // 設定活動結束時間
 
     // 在步驟列表中加入結束記錄
     setSteps((prev) => [
@@ -208,14 +210,14 @@ export default function TimeLogClient() {
   // 對應: 階段描述輸入框 (按 Enter 快速記錄)
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleAddStep()           // 按 Enter 等同於點擊「記錄時間點」
+      handleAddStep() // 按 Enter 等同於點擊「記錄時間點」
     }
   }
 
   // ===== 語音輸入處理 =====
   // 對應: 語音輸入元件
   const handleVoiceResult = (text: string) => {
-    setDesc(text)               // 將語音識別結果填入描述輸入框
+    setDesc(text) // 將語音識別結果填入描述輸入框
   }
 
   return (
@@ -240,11 +242,15 @@ export default function TimeLogClient() {
             <div>
               <strong>👤 訪客模式</strong>
               <br />
-              <small className="text-muted">您可以測試時間記錄功能，但需要登入才能儲存到資料庫</small>
+              <small className="text-muted">
+                您可以測試時間記錄功能，但需要登入才能儲存到資料庫
+              </small>
             </div>
             <div>
               <span className="badge bg-warning">未登入</span>
-              <a href="/user/login" className="btn btn-sm btn-primary ms-2">登入</a>
+              <a href="/user/login" className="btn btn-sm btn-primary ms-2">
+                登入
+              </a>
             </div>
           </div>
         </div>
@@ -261,12 +267,18 @@ export default function TimeLogClient() {
           onClick={handleSaveToDB}
           disabled={!isAuth}
           title={isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'}
+          aria-label={
+            isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'
+          }
         >
           {isAuth ? '💾 儲存活動資訊到資料庫' : '🔒 請先登入才能儲存'}
         </button>
 
         {/* 活動名稱輸入框 */}
-        <label htmlFor="titleInput" className="form-label fw-bold text-dark mb-2 text-center animate__animated animate__fadeInDown animate__delay-1s">
+        <label
+          htmlFor="titleInput"
+          className="form-label fw-bold text-dark mb-2 text-center animate__animated animate__fadeInDown animate__delay-1s"
+        >
           📝 活動名稱
         </label>
         <input
@@ -276,6 +288,7 @@ export default function TimeLogClient() {
           placeholder="輸入活動大名"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          aria-label="活動名稱輸入框"
           style={{
             backgroundColor: 'white',
             border: '2px solid #dee2e6',
@@ -284,7 +297,7 @@ export default function TimeLogClient() {
             fontSize: '16px',
             color: '#212529',
             boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
           }}
           onFocus={(e) => {
             e.target.style.borderColor = '#0d6efd'
@@ -301,12 +314,20 @@ export default function TimeLogClient() {
             <div>
               <span className="badge bg-secondary me-2">目前時間</span>
               <span className="fw-bold">
-                {isClient && currentTime ? currentTime.toLocaleTimeString() : '載入中...'}
+                {isClient && currentTime
+                  ? currentTime.toLocaleTimeString()
+                  : '載入中...'}
               </span>
             </div>
             <div>
-              <span className={`badge ${startTime && !endTime ? 'bg-success' : endTime ? 'bg-danger' : 'bg-secondary'}`}>
-                {startTime && !endTime ? '進行中' : endTime ? '已結束' : '準備中'}
+              <span
+                className={`badge ${startTime && !endTime ? 'bg-success' : endTime ? 'bg-danger' : 'bg-secondary'}`}
+              >
+                {startTime && !endTime
+                  ? '進行中'
+                  : endTime
+                    ? '已結束'
+                    : '準備中'}
               </span>
             </div>
           </div>
@@ -325,8 +346,7 @@ export default function TimeLogClient() {
                     ? `${Math.floor((endTime.getTime() - startTime.getTime()) / 1000 / 60)} 分鐘`
                     : currentTime
                       ? `${Math.floor((currentTime.getTime() - startTime.getTime()) / 1000 / 60)} 分鐘`
-                      : '計算中...'
-                  }
+                      : '計算中...'}
                 </div>
               </div>
               <div className="col-4">
@@ -345,6 +365,7 @@ export default function TimeLogClient() {
             className={`btn flex-grow-1 ${startTime && !endTime ? 'btn-outline-success' : 'btn-success'}`}
             onClick={handleStart}
             disabled={!!(startTime && !endTime)}
+            aria-label="開始記錄時間"
           >
             {startTime && !endTime ? '⏸️ 進行中' : '▶️ Start'}
           </button>
@@ -352,6 +373,7 @@ export default function TimeLogClient() {
             className={`btn flex-grow-1 ${endTime ? 'btn-outline-danger' : 'btn-danger'}`}
             onClick={handleEnd}
             disabled={!startTime || !!endTime}
+            aria-label="結束記錄時間"
           >
             {endTime ? '✅ 已結束' : '⏹️ End'}
           </button>
@@ -360,7 +382,10 @@ export default function TimeLogClient() {
 
       {/* 階段記錄區域 */}
       <div className="mb-3">
-        <label htmlFor="stepDescription" className="form-label fw-bold text-dark mb-2">
+        <label
+          htmlFor="stepDescription"
+          className="form-label fw-bold text-dark mb-2"
+        >
           📝 記錄活動階段
         </label>
         <div className="d-flex gap-2">
@@ -373,6 +398,7 @@ export default function TimeLogClient() {
             onChange={(e) => setDesc(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={!startTime || !!endTime}
+            aria-label="階段描述輸入框"
             style={{
               backgroundColor: 'white',
               border: '2px solid #dee2e6',
@@ -382,12 +408,13 @@ export default function TimeLogClient() {
               color: '#212529',
               boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
               transition: 'all 0.3s ease',
-              opacity: (!startTime || !!endTime) ? 0.6 : 1
+              opacity: !startTime || !!endTime ? 0.6 : 1,
             }}
             onFocus={(e) => {
               if (!e.target.disabled) {
                 e.target.style.borderColor = '#0d6efd'
-                e.target.style.boxShadow = '0 0 0 0.2rem rgba(13, 110, 253, 0.25)'
+                e.target.style.boxShadow =
+                  '0 0 0 0.2rem rgba(13, 110, 253, 0.25)'
               }
             }}
             onBlur={(e) => {
@@ -401,6 +428,7 @@ export default function TimeLogClient() {
             type="button"
             disabled={!startTime || !!endTime}
             title="語音輸入功能"
+            aria-label="語音輸入功能"
           >
             🎤 語音
           </button>
@@ -409,6 +437,7 @@ export default function TimeLogClient() {
             type="button"
             onClick={handleAddStep}
             disabled={!startTime || !!endTime || !desc.trim()}
+            aria-label="記錄時間點"
           >
             ⏱️ 記錄時間點
           </button>
@@ -420,10 +449,12 @@ export default function TimeLogClient() {
 
       {/* 步驟列表 */}
       <div className="mb-3">
-        <h6 className="text-muted mb-2">
-          📋 活動記錄 ({steps.length} 個步驟)
-        </h6>
-        <ol className="list-group list-group-numbered" ref={stepListRef}>
+        <h6 className="text-muted mb-2">📋 活動記錄 ({steps.length} 個步驟)</h6>
+        <ol
+          className="list-group list-group-numbered"
+          ref={stepListRef}
+          aria-label="活動記錄列表"
+        >
           {steps.map((step, i) => (
             <li
               key={i}
@@ -437,7 +468,11 @@ export default function TimeLogClient() {
             >
               <div className="flex-grow-1">
                 <span className="me-2">
-                  {step.type === 'start' ? '🚀' : step.type === 'end' ? '🏁' : '📍'}
+                  {step.type === 'start'
+                    ? '🚀'
+                    : step.type === 'end'
+                      ? '🏁'
+                      : '📍'}
                 </span>
                 {step.text}
               </div>

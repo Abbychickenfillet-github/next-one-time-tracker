@@ -4,7 +4,6 @@ import {
   // dateToStringWithTimeZone,
   isDev,
   isEmpty,
-  dateToString,
 } from '../lib/utils.js'
 // 驗證資料用
 import { idSchema } from './definitions/common.js'
@@ -85,7 +84,8 @@ export const getUserById = async (id) => {
     // 如果user的屬性中有null值，轉換為空字串
     if (user) {
       for (const key in user) {
-        if (user[key] === null) { // 這裡檢查的是 value，不是 key
+        if (user[key] === null) {
+          // 這裡檢查的是 value，不是 key
           user[key] = ''
         }
       }
@@ -145,7 +145,8 @@ export const getUserByField = async (where = {}) => {
     // 如果user的屬性中有null值，轉換為空字串
     if (user) {
       for (const key in user) {
-        if (user[key] === null) { // 這裡檢查的是 value，不是 key
+        if (user[key] === null) {
+          // 這裡檢查的是 value，不是 key
           user[key] = ''
         }
       }
@@ -263,7 +264,8 @@ export const createUser = async (data) => {
     // 如果user的屬性中有null值，轉換為空字串
     if (user) {
       for (const key in user) {
-        if (user[key] === null) {// 這裡檢查的是 value，不是 key
+        if (user[key] === null) {
+          // 這裡檢查的是 value，不是 key
           user[key] = ''
         }
       }
@@ -362,230 +364,200 @@ export const updateUserById = async (id, data) => {
 }
 
 // 更新個人資料 (已註解掉，因為移除了 Profile 表)
-// export const updateProfileByUserId = async (id, data) => {
-//   // 驗證參數是否為正整數
-//   const validatedId = idSchema.safeParse({
-//     id,
-//   })
+export const updateProfileByUserId = async (id, data) => {
+  // 驗證參數是否為正整數
+  const validatedId = idSchema.safeParse({
+    id,
+  })
 
-//   // 如果任何表單欄位無效，提前返回
-//   if (!validatedId.success) {
-//     return {
-//       status: 'error',
-//       message: '參數資料類型不正確',
-//       errors: validatedId.error.flatten().fieldErrors,
-//       payload: { id },
-//     }
-//   }
+  // 如果任何表單欄位無效，提前返回
+  if (!validatedId.success) {
+    return {
+      status: 'error',
+      message: '參數資料類型不正確',
+      errors: validatedId.error.flatten().fieldErrors,
+      payload: { id },
+    }
+  }
 
-//   // updateUserProfile資料範例(物件)
-//   // {
-//   //   "name":"金妮",
-//   //   "bio":"Hello World",
-//   //   "sex":"女",
-//   //   "birth":"1990-01-01",
-//   //   "phone":"0912345678",
-//   //   "postcode":"100",
-//   //   "address":"台北市中正區"
-//   // }
+  // 檢查從前端來的資料是否符合格式
+  const validatedFields = updateUserSchema.safeParse(data)
 
-//   // 檢查從前端來的資料是否符合格式
-//   const validatedFields = updateProfileSchema.safeParse(data)
+  // 如果任何表單欄位無效，提前返回
+  if (!validatedFields.success) {
+    return {
+      status: 'error',
+      message: '參數資料類型不正確',
+      errors: validatedFields.error.flatten().fieldErrors,
+      payload: { data },
+    }
+  }
 
-//   // 如果任何表單欄位無效，提前返回
-//   if (!validatedFields.success) {
-//     return {
-//       status: 'error',
-//       message: '參數資料類型不正確',
-//       errors: validatedFields.error.flatten().fieldErrors,
-//       payload: { data },
-//     }
-//   }
+  try {
+    const dbUser = await prisma.user.findUnique({
+      where: {
+        user_id: id,
+      },
+    })
 
-//   try {
-//     const dbProfile = await prisma.profile.findUnique({
-//       where: {
-//         userId: id,
-//       },
-//     })
+    if (!dbUser) {
+      return {
+        status: 'error',
+        message: '會員不存在',
+        payload: { id, data },
+      }
+    }
 
-//     if (!dbProfile) {
-//       return {
-//         status: 'error',
-//         message: '會員個人資料不存在',
-//         payload: { id, data },
-//       }
-//     }
+    // 更新會員資料
+    const updateUser = await prisma.user.update({
+      where: { user_id: id },
+      data: data,
+    })
 
-//     // 檢查是否有任何一個欄位有變更
-//     const isProfileUnchanged = Object.keys(data).every((key) => {
-//       if (key === 'birth') return dateToString(dbProfile[key]) === data[key]
-//       else return dbProfile[key] === data[key]
-//     })
+    if (!updateUser) {
+      return {
+        status: 'error',
+        message: '更新會員個人資料失敗',
+        payload: { id, data },
+      }
+    }
 
-//     if (isProfileUnchanged) {
-//       return {
-//         status: 'error',
-//         message: '會員個人資料無變更',
-//         payload: { id, data },
-//       }
-//     }
+    return {
+      status: 'success',
+      message: '更新會員個人資料成功',
+      payload: { user: updateUser },
+    }
+  } catch (error) {
+    // 如果是開發環境，顯示錯誤訊息
+    isDev && console.log(error.message)
 
-//     // 將生日的日期字串(yyyy-mm-dd)轉為Date物件
-//     const updateData = { ...data }
-//     // 如果有生日欄位，轉換為Date物件，否則為null
-//     updateData.birth = updateData.birth ? new Date(updateData.birth) : null
-
-//     // 更新會員個人資料
-//     const updateProfile = await prisma.profile.update({
-//       where: { userId: id },
-//       data: updateData,
-//     })
-
-//     if (!updateProfile) {
-//       return {
-//         status: 'error',
-//         message: '更新會員個人資料失敗',
-//         payload: { id, data },
-//       }
-//     }
-
-//     return {
-//       status: 'success',
-//       message: '更新會員個人資料成功',
-//       payload: { profile: updateProfile },
-//     }
-//   } catch (error) {
-//     // 如果是開發環境，顯示錯誤訊息
-//     isDev && console.log(error.message)
-
-//     return {
-//       status: 'error',
-//       message: '更新會員個人資料失敗',
-//       payload: { id, data },
-//     }
-//   }
-// }
+    return {
+      status: 'error',
+      message: '更新會員個人資料失敗',
+      payload: { id, data },
+    }
+  }
+}
 
 // 獲得會員頭像 (已註解掉，因為移除了 Profile 表)
-// export const getAvatarByUserId = async (id) => {
-//   // 驗證參數是否為正整數
-//   const validatedId = idSchema.safeParse({
-//     id,
-//   })
+export const getAvatarByUserId = async (id) => {
+  // 驗證參數是否為正整數
+  const validatedId = idSchema.safeParse({
+    id,
+  })
 
-//   // 如果任何表單欄位無效，提前返回
-//   if (!validatedId.success) {
-//     return {
-//       status: 'error',
-//       message: '參數資料類型不正確',
-//       errors: validatedId.error.flatten().fieldErrors,
-//       payload: { id },
-//     }
-//   }
+  // 如果任何表單欄位無效，提前返回
+  if (!validatedId.success) {
+    return {
+      status: 'error',
+      message: '參數資料類型不正確',
+      errors: validatedId.error.flatten().fieldErrors,
+      payload: { id },
+    }
+  }
 
-//   try {
-//     // 使用findUnique方法取得單筆使用者資料
-//     const profile = await prisma.profile.findUnique({
-//       where: { userId: id },
-//     })
+  try {
+    // 使用findUnique方法取得單筆使用者資料
+    const user = await prisma.user.findUnique({
+      where: { user_id: id },
+    })
 
-//     if (!profile) {
-//       return {
-//         status: 'error',
-//         message: '會員個人資料不存在',
-//         payload: { id },
-//       }
-//     }
+    if (!user) {
+      return {
+        status: 'error',
+        message: '會員不存在',
+        payload: { id },
+      }
+    }
 
-//     return {
-//       status: 'success',
-//       message: '取得會員頭像成功',
-//       payload: { avatar: profile.avatar },
-//     }
-//   } catch (error) {
-//     // 如果是開發環境，顯示錯誤訊息
-//     isDev && console.log(error.message)
+    return {
+      status: 'success',
+      message: '取得會員頭像成功',
+      payload: { avatar: user.avatar || null },
+    }
+  } catch (error) {
+    // 如果是開發環境，顯示錯誤訊息
+    isDev && console.log(error.message)
 
-//     return {
-//       status: 'error',
-//       message: '取得會員頭像失敗',
-//       payload: { id },
-//     }
-//   }
-// }
+    return {
+      status: 'error',
+      message: '取得會員頭像失敗',
+      payload: { id },
+    }
+  }
+}
 
 // 更新個人頭像 (已註解掉，因為移除了 Profile 表)
-// export const updateAvatarByUserId = async (id, avatar) => {
-//   // 驗證參數是否為正整數
-//   const validatedId = idSchema.safeParse({
-//     id,
-//   })
+export const updateAvatarByUserId = async (id, avatar) => {
+  // 驗證參數是否為正整數
+  const validatedId = idSchema.safeParse({
+    id,
+  })
 
-//   // 如果任何表單欄位無效，提前返回
-//   if (!validatedId.success) {
-//     return {
-//       status: 'error',
-//       message: '參數資料類型不正確',
-//       errors: validatedId.error.flatten().fieldErrors,
-//       payload: { id },
-//     }
-//   }
+  // 如果任何表單欄位無效，提前返回
+  if (!validatedId.success) {
+    return {
+      status: 'error',
+      message: '參數資料類型不正確',
+      errors: validatedId.error.flatten().fieldErrors,
+      payload: { id },
+    }
+  }
 
-//   // 檢查從avatar資料是否符合格式(檔案名稱/路徑)
-//   if (typeof avatar !== 'string' || avatar === '') {
-//     return {
-//       status: 'error',
-//       message: '參數資料類型不正確',
-//       payload: { id, avatar },
-//     }
-//   }
+  // 檢查從avatar資料是否符合格式(檔案名稱/路徑)
+  if (typeof avatar !== 'string' || avatar === '') {
+    return {
+      status: 'error',
+      message: '參數資料類型不正確',
+      payload: { id, avatar },
+    }
+  }
 
-//   try {
-//     const dbProfile = await prisma.profile.findUnique({
-//       where: {
-//         userId: id,
-//       },
-//     })
+  try {
+    const dbUser = await prisma.user.findUnique({
+      where: {
+        user_id: id,
+      },
+    })
 
-//     if (!dbProfile) {
-//       return {
-//         status: 'error',
-//         message: '會員個人資料不存在',
-//         payload: { id, avatar },
-//       }
-//     }
+    if (!dbUser) {
+      return {
+        status: 'error',
+        message: '會員不存在',
+        payload: { id, avatar },
+      }
+    }
 
-//     // 更新會員個人資料
-//     const updateProfile = await prisma.profile.update({
-//       where: { userId: id },
-//       data: { avatar: avatar },
-//     })
+    // 更新會員頭像
+    const updateUser = await prisma.user.update({
+      where: { user_id: id },
+      data: { avatar: avatar },
+    })
 
-//     if (!updateProfile) {
-//       return {
-//         status: 'error',
-//         message: '更新會員個人頭像失敗',
-//         payload: { id, avatar },
-//       }
-//     }
+    if (!updateUser) {
+      return {
+        status: 'error',
+        message: '更新會員個人頭像失敗',
+        payload: { id, avatar },
+      }
+    }
 
-//     return {
-//       status: 'success',
-//       message: '更新會員個人頭像成功',
-//       payload: { profile: updateProfile },
-//     }
-//   } catch (error) {
-//     // 如果是開發環境，顯示錯誤訊息
-//     isDev && console.log(error.message)
+    return {
+      status: 'success',
+      message: '更新會員個人頭像成功',
+      payload: { user: updateUser },
+    }
+  } catch (error) {
+    // 如果是開發環境，顯示錯誤訊息
+    isDev && console.log(error.message)
 
-//     return {
-//       status: 'error',
-//       message: '更新會員個人頭像失敗',
-//       payload: { id, avatar },
-//     }
-//   }
-// }
+    return {
+      status: 'error',
+      message: '更新會員個人頭像失敗',
+      payload: { id, avatar },
+    }
+  }
+}
 
 // 更新會員密碼
 // data={currentPassword, newPassword}

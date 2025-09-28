@@ -55,7 +55,7 @@ export default function RegisterPage() {
       const resData = await res.json()
 
       console.log('註冊回應:', resData)
-      
+
       if (resData.status === 'success') {
         toast.success('資訊 - 會員註冊成功')
         // 清空表單
@@ -82,8 +82,8 @@ export default function RegisterPage() {
       <h1>會員註冊</h1>
       <hr />
       <p>
-        規則:
-        註冊時，email不能與目前資料庫有相同的值。所有資料都儲存在 User 表中。
+        規則: 註冊時，email不能與目前資料庫有相同的值。所有資料都儲存在 User
+        表中。
       </p>
       <p>注意: 進行註冊時，應該要在會員登出狀態</p>
       <p>會員狀態:{isAuth ? '已登入' : '未登入'}</p>

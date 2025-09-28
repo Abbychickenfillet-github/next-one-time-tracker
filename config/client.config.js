@@ -35,7 +35,6 @@ export const loginRoute = '/user'
 export const protectedRoutes = [
   // 這代表/dashboard/底下的所有路由都會被保護
   // '/dashboard',
-
 ]
 
 // breadcrumb面包屑使用

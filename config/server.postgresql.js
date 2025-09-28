@@ -33,7 +33,7 @@ function createPool() {
       port: process.env.DB_PORT || 5432,
     }
     // 只在第一次建立時顯示
-    console.log(poolConfig);
+    console.log(poolConfig)
     console.log('🛠️ 使用開發環境連線配置')
   }
 

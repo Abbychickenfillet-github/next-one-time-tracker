@@ -18,18 +18,17 @@ export async function GET() {
 
     const userId = session?.payload?.userId
     const data1 = await getUserById(userId)
-    
+
     if (!data1?.payload?.user) {
       return errorResponse(res, { message: '找不到使用者或使用者已被停用' })
     }
 
     const data2 = await getFavoritesByUserId(userId)
-    
+
     return successResponse(res, {
       user: data1?.payload?.user,
       favorites: data2?.payload?.favorites,
     })
-    
   } catch (error) {
     console.error('Token 驗證失敗:', error)
     return errorResponse(res, { message: 'Token 驗證失敗' })

@@ -27,23 +27,23 @@ export default async function middleware(req) {
   if (isProtectedRoute && !session?.payload?.userId) {
     return NextResponse.redirect(new URL('/user/combination', req.nextUrl))
   }
-// new URL(url, base) 是 Next.js 提供的 URL 物件，用於構建 URL
-// url 是目標 URL
-// base 是基礎 URL
-// 例如：new URL('/user', req.nextUrl) 會構建 /user 的 URL
-// 例如：new URL('/user/combination', req.nextUrl) 會構建 /user/combination 的 URL
-// 例如：new URL('/dashboard', req.nextUrl) 會構建 /dashboard 的 URL
-// 例如：new URL('/user', req.nextUrl) 會構建 /user 的 URL
-// req.nextUrl = {
-//   pathname: '/dashboard',           // 當前路徑
-//   search: '?param=value',           // 查詢參數
-//   hash: '#section',                // 錨點Anchor (文章段落標題section1, section2)
-//   origin: 'http://localhost:3000',   // 來源
-//   hostname: 'localhost',            // 主機名
-//   port: '3000',                    // 端口
-//   protocol: 'http:',               // 協議
-//   href: 'http://localhost:3000/dashboard?param=value#section'  // 完整 URL
-// }
+  // new URL(url, base) 是 Next.js 提供的 URL 物件，用於構建 URL
+  // url 是目標 URL
+  // base 是基礎 URL
+  // 例如：new URL('/user', req.nextUrl) 會構建 /user 的 URL
+  // 例如：new URL('/user/combination', req.nextUrl) 會構建 /user/combination 的 URL
+  // 例如：new URL('/dashboard', req.nextUrl) 會構建 /dashboard 的 URL
+  // 例如：new URL('/user', req.nextUrl) 會構建 /user 的 URL
+  // req.nextUrl = {
+  //   pathname: '/dashboard',           // 當前路徑
+  //   search: '?param=value',           // 查詢參數
+  //   hash: '#section',                // 錨點Anchor (文章段落標題section1, section2)
+  //   origin: 'http://localhost:3000',   // 來源
+  //   hostname: 'localhost',            // 主機名
+  //   port: '3000',                    // 端口
+  //   protocol: 'http:',               // 協議
+  //   href: 'http://localhost:3000/dashboard?param=value#section'  // 完整 URL
+  // }
   // 5. 如果用戶已經身份驗證且訪問登入頁面，重定向到 dashboard
   // 🔧 修改原因：檢查具體的登入頁面路由而不是使用 startsWith('/dashboard')
   // 原因：

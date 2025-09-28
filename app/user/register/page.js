@@ -22,11 +22,11 @@ export default function RegisterPage() {
   const [showpassword, setShowpassword] = useState(false)
   const [showConfirmpassword, setShowConfirmpassword] = useState(false)
   const { auth } = useAuth()
-  
+
   // 多步驟表單狀態
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 3
-  
+
   const [user, setUser] = useState({
     name: '',
     email: '',
@@ -99,7 +99,10 @@ export default function RegisterPage() {
       }
     } else if (currentStep === 3) {
       // 第三步：其他資訊驗證
-      if (user.gender && !['female', 'male', 'undisclosed'].includes(user.gender)) {
+      if (
+        user.gender &&
+        !['female', 'male', 'undisclosed'].includes(user.gender)
+      ) {
         newErrors.gender = '請選擇有效的性別'
         isValid = false
       }
@@ -120,7 +123,7 @@ export default function RegisterPage() {
     }
   }
 
-// 確保密碼符合規則的函式
+  // 確保密碼符合規則的函式
   const validatePassword = (password) => {
     //函式內宣告2個變數
     const rules = {
@@ -143,14 +146,12 @@ export default function RegisterPage() {
     //  Object.entries() 是產生新的陣列，不會影響到原物件
     return (
       Object.entries(rules)
-        .filter(([rule, valid]) => !valid)
+        .filter(([, valid]) => !valid)
         // !valid 意思是找出值是 false 的規則，也就是找出錯誤沒有依照規則填寫密碼的牴觸項目對嗎
         .map(([rule]) => messages[rule])
     )
     // 用 rule 當作 key 去 messages 物件找對應的訊息
   }
-
-  
 
   const handleFieldChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -221,7 +222,7 @@ export default function RegisterPage() {
 
       // 過濾掉不需要發送到後端的欄位
       const { confirmpassword, agree, ...userData } = user
-      
+
       const response = await register(userData)
       const resData = await response.json()
 
@@ -280,8 +281,8 @@ export default function RegisterPage() {
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
-  return (
-    <>
+        return (
+          <>
             {/* 姓名輸入 */}
             <div className="mb-3">
               <label htmlFor="name" className="text-white fw-semibold">
@@ -308,179 +309,185 @@ export default function RegisterPage() {
               )}
             </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="email" className="text-white fw-semibold">
-                      帳號(信箱)
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
-                      value={user.email}
-                      onChange={handleFieldChange}
-                      placeholder="請輸入您的信箱"
-                      required
-                      style={{
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                      }}
-                    />
-                    {errors.email && (
+            <div className="mb-3">
+              <label htmlFor="email" className="text-white fw-semibold">
+                帳號(信箱)
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                value={user.email}
+                onChange={handleFieldChange}
+                placeholder="請輸入您的信箱"
+                required
+                style={{
+                  backdropFilter: 'blur(10px)',
+                  color: 'white',
+                }}
+              />
+              {errors.email && (
                 <div className="alert alert-danger py-2 mt-2" role="alert">
-                        {errors.email}
-                      </div>
-                    )}
-                  </div>
+                  {errors.email}
+                </div>
+              )}
+            </div>
           </>
         )
 
       case 2:
         return (
           <>
-                  {/* 密碼輸入 */}
-                  <div className="mb-4">
-              <label htmlFor="password" className="form-label text-white fw-semibold">
-                      密碼
-                    </label>
-                    <div className="position-relative">
-                      <input
-                        type={showpassword ? 'text' : 'password'}
-                        id="password"
-                        name="password"
-                        value={user.password}
-                        onChange={handleFieldChange}
-                        className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
-                        placeholder="請輸入您的密碼"
-                        required
-                        maxLength={62}
-                        style={{
-                          backdropFilter: 'blur(10px)',
-                          color: 'white',
-                        }}
-                      />
-                      <button
-                        type="button"
-                        className="btn position-absolute top-50 end-0 translate-middle-y me-3 p-0"
-                        onClick={() => setShowpassword(!showpassword)}
-                        style={{ background: 'none', border: 'none' }}
-                      >
-                        {showpassword ? (
-                          <AiOutlineEyeInvisible size={20} color="#E0B0FF" />
-                        ) : (
-                          <AiOutlineEye size={20} color="#E0B0FF" />
-                        )}
-                      </button>
-                    </div>
-                    {errors.password && (
+            {/* 密碼輸入 */}
+            <div className="mb-4">
+              <label
+                htmlFor="password"
+                className="form-label text-white fw-semibold"
+              >
+                密碼
+              </label>
+              <div className="position-relative">
+                <input
+                  type={showpassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  value={user.password}
+                  onChange={handleFieldChange}
+                  className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                  placeholder="請輸入您的密碼"
+                  required
+                  maxLength={62}
+                  style={{
+                    backdropFilter: 'blur(10px)',
+                    color: 'white',
+                  }}
+                />
+                <button
+                  type="button"
+                  className="btn position-absolute top-50 end-0 translate-middle-y me-3 p-0"
+                  onClick={() => setShowpassword(!showpassword)}
+                  style={{ background: 'none', border: 'none' }}
+                >
+                  {showpassword ? (
+                    <AiOutlineEyeInvisible size={20} color="#E0B0FF" />
+                  ) : (
+                    <AiOutlineEye size={20} color="#E0B0FF" />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
                 <div className="alert alert-danger py-2 mt-2" role="alert">
-                        {errors.password}
-                      </div>
-                    )}
-                  </div>
+                  {errors.password}
+                </div>
+              )}
+            </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="confirmpassword" className="text-white">
-                      確認密碼
-                    </label>
-                    <input
-                      type={showConfirmpassword ? 'text' : 'password'}
-                      id="confirmpassword"
-                      name="confirmpassword"
-                      className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
-                      value={user.confirmpassword}
-                      onChange={handleFieldChange}
-                      placeholder="請再次輸入您的密碼"
-                      required
-                      style={{
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                      }}
-                    />
-                    <div className="form-check">
-                      <input
-                        type="checkbox"
-                        id="showConfirmpassword"
-                        checked={showConfirmpassword}
+            <div className="mb-3">
+              <label htmlFor="confirmpassword" className="text-white">
+                確認密碼
+              </label>
+              <input
+                type={showConfirmpassword ? 'text' : 'password'}
+                id="confirmpassword"
+                name="confirmpassword"
+                className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                value={user.confirmpassword}
+                onChange={handleFieldChange}
+                placeholder="請再次輸入您的密碼"
+                required
+                style={{
+                  backdropFilter: 'blur(10px)',
+                  color: 'white',
+                }}
+              />
+              <div className="form-check">
+                <input
+                  type="checkbox"
+                  id="showConfirmpassword"
+                  checked={showConfirmpassword}
                   onChange={() => setShowConfirmpassword(!showConfirmpassword)}
-                        className="form-check-input"
-                      />
-                <label htmlFor="showConfirmpassword" className="text-white form-check-label">
-                        顯示密碼
-                      </label>
-                    </div>
-                    {errors.confirmpassword && (
+                  className="form-check-input"
+                />
+                <label
+                  htmlFor="showConfirmpassword"
+                  className="text-white form-check-label"
+                >
+                  顯示密碼
+                </label>
+              </div>
+              {errors.confirmpassword && (
                 <div className="alert alert-danger py-2 mt-2" role="alert">
-                        {errors.confirmpassword}
-                      </div>
-                    )}
-                  </div>
+                  {errors.confirmpassword}
+                </div>
+              )}
+            </div>
           </>
         )
 
       case 3:
         return (
           <>
-                  <div className="mb-3">
-                    <label htmlFor="phone" className="text-white fw-semibold">
-                      手機
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
-                      value={user.phone}
-                      onChange={handleFieldChange}
-                      placeholder="請輸入您的手機號碼"
-                      style={{
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                      }}
-                    />
-                  </div>
+            <div className="mb-3">
+              <label htmlFor="phone" className="text-white fw-semibold">
+                手機
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                value={user.phone}
+                onChange={handleFieldChange}
+                placeholder="請輸入您的手機號碼"
+                style={{
+                  backdropFilter: 'blur(10px)',
+                  color: 'white',
+                }}
+              />
+            </div>
 
-                  <div className="mb-3">
+            <div className="mb-3">
               <label htmlFor="birthdate" className="text-white fw-semibold">
-                      生日
-                    </label>
-                    <div className="">
-                      <input
-                        type="date"
-                        id="birthdate"
-                        name="birthdate"
-                        className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
-                        value={user.birthdate}
-                        onChange={handleFieldChange}
-                        style={{
-                          backdropFilter: 'blur(10px)',
-                          color: 'white',
-                        }}
-                      />
-                    </div>
-                  </div>
+                生日
+              </label>
+              <div className="">
+                <input
+                  type="date"
+                  id="birthdate"
+                  name="birthdate"
+                  className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                  value={user.birthdate}
+                  onChange={handleFieldChange}
+                  style={{
+                    backdropFilter: 'blur(10px)',
+                    color: 'white',
+                  }}
+                />
+              </div>
+            </div>
 
-                  <div className="mb-3">
-                    <label htmlFor="gender" className="text-white fw-semibold">
-                      性別
-                    </label>
-                    <select
-                      id="gender"
-                      name="gender"
-                      className="form-select form-select-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
-                      value={user.gender}
-                      onChange={handleFieldChange}
-                      style={{
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                      }}
-                    >
-                      <option value="">請選擇</option>
-                      <option value="female">女</option>
-                      <option value="male">男</option>
-                      <option value="undisclosed">不透漏</option>
-                    </select>
-                  </div>
+            <div className="mb-3">
+              <label htmlFor="gender" className="text-white fw-semibold">
+                性別
+              </label>
+              <select
+                id="gender"
+                name="gender"
+                className="form-select form-select-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                value={user.gender}
+                onChange={handleFieldChange}
+                style={{
+                  backdropFilter: 'blur(10px)',
+                  color: 'white',
+                }}
+              >
+                <option value="">請選擇</option>
+                <option value="female">女</option>
+                <option value="male">男</option>
+                <option value="undisclosed">不透漏</option>
+              </select>
+            </div>
 
             <div className="mb-3">
               <label htmlFor="avatar" className="text-white fw-semibold">
@@ -501,26 +508,26 @@ export default function RegisterPage() {
               />
             </div>
 
-                  <div className="mb-3">
-                    <div className="form-check">
-                      <input
-                        type="checkbox"
-                        id="agree"
-                        name="agree"
-                        checked={user.agree}
-                        onChange={handleFieldChange}
-                        className="form-check-input"
-                      />
+            <div className="mb-3">
+              <div className="form-check">
+                <input
+                  type="checkbox"
+                  id="agree"
+                  name="agree"
+                  checked={user.agree}
+                  onChange={handleFieldChange}
+                  className="form-check-input"
+                />
                 <label htmlFor="agree" className="text-white form-check-label">
-                        我同意網站會員註冊條款
-                      </label>
-                    </div>
-                    {errors.agree && (
+                  我同意網站會員註冊條款
+                </label>
+              </div>
+              {errors.agree && (
                 <div className="alert alert-danger py-2 mt-2" role="alert">
-                        {errors.agree}
-                      </div>
-                    )}
-                  </div>
+                  {errors.agree}
+                </div>
+              )}
+            </div>
           </>
         )
 
@@ -544,12 +551,9 @@ export default function RegisterPage() {
       {/* <Header /> */}
       {/* 我想要做一個按鈕來切換主題顏色 */}
 
-      <div
-        className="gradient-bg min-vh-100"
-      >
+      <div className="gradient-bg min-vh-100">
         {/* 雲海效果 - 只在 Pink 主題時顯示 */}
         <div className="cloud-effect"></div>
-
 
         <div className="container position-relative h-100">
           <div className="row h-100 align-items-center justify-content-center">
@@ -561,7 +565,7 @@ export default function RegisterPage() {
                   src="/7-Reasons-To-Keep-Jade-Plant-At-Your-Entrance.jpg"
                   alt="背景圖片"
                   fill
-                  style={{ 
+                  style={{
                     objectFit: 'cover',
                     opacity: 0.3,
                     zIndex: -1,
@@ -569,7 +573,7 @@ export default function RegisterPage() {
                     minHeight: '100vh',
                   }}
                 />
-                
+
                 <div className="mb-5">
                   <GlowingText
                     text="Welcome"
@@ -623,20 +627,28 @@ export default function RegisterPage() {
                               ? 'bg-primary text-white'
                               : 'bg-secondary text-white'
                           }`}
-                          style={{ width: '30px', height: '30px', fontSize: '14px' }}
+                          style={{
+                            width: '30px',
+                            height: '30px',
+                            fontSize: '14px',
+                          }}
                         >
                           {step}
                         </div>
                         {step < 3 && (
                           <div
                             className={`mx-2 ${
-                              currentStep > step ? 'text-primary' : 'text-secondary'
+                              currentStep > step
+                                ? 'text-primary'
+                                : 'text-secondary'
                             }`}
                             style={{ width: '30px', height: '2px' }}
                           >
                             <div
                               className={`h-100 ${
-                                currentStep > step ? 'bg-primary' : 'bg-secondary'
+                                currentStep > step
+                                  ? 'bg-primary'
+                                  : 'bg-secondary'
                               }`}
                             ></div>
                           </div>
@@ -683,14 +695,15 @@ export default function RegisterPage() {
                     >
                       上一步
                     </button>
-                    
+
                     {currentStep < totalSteps ? (
                       <button
                         type="button"
                         className="btn btn-primary px-4 py-2"
                         onClick={handleNext}
                         style={{
-                          background: 'linear-gradient(45deg, #805AF5, #E0B0FF)',
+                          background:
+                            'linear-gradient(45deg, #805AF5, #E0B0FF)',
                           border: 'none',
                           borderRadius: '12px',
                         }}
@@ -698,31 +711,32 @@ export default function RegisterPage() {
                         下一步
                       </button>
                     ) : (
-                    <button
-                      type="submit"
+                      <button
+                        type="submit"
                         className="btn btn-primary px-4 py-2"
-                      style={{
-                        background: 'linear-gradient(45deg, #805AF5, #E0B0FF)',
-                        border: 'none',
-                        borderRadius: '12px',
-                      }}
-                    >
+                        style={{
+                          background:
+                            'linear-gradient(45deg, #805AF5, #E0B0FF)',
+                          border: 'none',
+                          borderRadius: '12px',
+                        }}
+                      >
                         完成註冊
-                    </button>
+                      </button>
                     )}
                   </div>
                 </form>
 
-                  {/* 登入提示 */}
+                {/* 登入提示 */}
                 <div className="text-center mt-4">
-                    <span className="text-white-50">已經有帳號？</span>
-                    <Link
+                  <span className="text-white-50">已經有帳號？</span>
+                  <Link
                     href="/user"
-                      className="text-white text-decoration-none ms-1 fw-semibold"
-                    >
-                      立即登入
-                    </Link>
-                  </div>
+                    className="text-white text-decoration-none ms-1 fw-semibold"
+                  >
+                    立即登入
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

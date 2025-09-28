@@ -32,7 +32,7 @@ export async function POST(request) {
     if (!notificationData.transactionId) {
       return errorResponse(NextResponse, {
         message: '缺少交易編號',
-        code: 'MISSING_TRANSACTION_ID'
+        code: 'MISSING_TRANSACTION_ID',
       })
     }
 
@@ -46,14 +46,13 @@ export async function POST(request) {
     return successResponse(NextResponse, {
       message: '通知處理成功',
       transactionId: notificationData.transactionId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     })
-
   } catch (error) {
     console.error('LINE Pay 通知處理失敗:', error)
     return errorResponse(NextResponse, {
       message: '通知處理失敗',
-      error: error.message
+      error: error.message,
     })
   }
 }
@@ -73,7 +72,6 @@ export async function GET(request) {
   return successResponse(NextResponse, {
     message: 'LINE Pay 通知端點正常運作',
     environment: process.env.NODE_ENV,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   })
 }
-

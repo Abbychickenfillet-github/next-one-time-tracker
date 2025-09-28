@@ -17,10 +17,10 @@ export async function GET() {
       ORDER BY tl.start_time DESC
       LIMIT 10
     `)
-    
+
     return NextResponse.json({
       status: 'success',
-      data: result.rows
+      data: result.rows,
     })
   } catch (error) {
     console.error('Database query error:', error)
@@ -30,5 +30,3 @@ export async function GET() {
     )
   }
 }
-
-

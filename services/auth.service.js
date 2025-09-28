@@ -31,7 +31,7 @@ export const login = async (data) => {
       },
     }
   }
-// 登入檢查帳號密碼是否正確
+  // 登入檢查帳號密碼是否正確
   try {
     // 查詢資料庫這帳號的使用者資料(使用email查詢)
     const user = await prisma.user.findUnique({

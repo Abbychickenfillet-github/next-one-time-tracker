@@ -4,33 +4,32 @@ import { useState, useEffect } from 'react'
 import { useUserRegister } from '@/services/rest-client/use-user'
 import { useAuthLogin } from '@/services/rest-client/use-user'
 import Swal from 'sweetalert2'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { MdOutlineEmail } from 'react-icons/md'
 import Head from 'next/head'
-import GlowingText from '@/components/glowing-text/glowing-text'
 
 export default function CombinationPage() {
   // 註冊相關狀態
   const { register } = useUserRegister()
   const [showRegisterPassword, setShowRegisterPassword] = useState(false)
-  const [showRegisterConfirmPassword, setShowRegisterConfirmPassword] = useState(false)
-  
+  const [showRegisterConfirmPassword, setShowRegisterConfirmPassword] =
+    useState(false)
+
   // 登入相關狀態
   const { login } = useAuthLogin()
   const [showLoginPassword, setShowLoginPassword] = useState(false)
-  
+
   const { auth } = useAuth()
-  
+
   // 表單焦點狀態
   const [activeForm, setActiveForm] = useState(null)
-  
+
   // 多步驟表單狀態
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 3
-  
+
   // 註冊表單狀態
   const [registerUser, setRegisterUser] = useState({
     name: '',
@@ -160,7 +159,10 @@ export default function CombinationPage() {
       }
     } else if (currentStep === 3) {
       // 第三步：其他資訊驗證
-      if (registerUser.gender && !['female', 'male', 'undisclosed'].includes(registerUser.gender)) {
+      if (
+        registerUser.gender &&
+        !['female', 'male', 'undisclosed'].includes(registerUser.gender)
+      ) {
         newErrors.gender = '請選擇有效的性別'
         isValid = false
       }
@@ -332,7 +334,10 @@ export default function CombinationPage() {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="register-email" className="text-white fw-semibold">
+              <label
+                htmlFor="register-email"
+                className="text-white fw-semibold"
+              >
                 帳號(信箱)
               </label>
               <input
@@ -363,7 +368,10 @@ export default function CombinationPage() {
           <>
             {/* 密碼輸入 */}
             <div className="mb-4">
-              <label htmlFor="register-password" className="form-label text-white fw-semibold">
+              <label
+                htmlFor="register-password"
+                className="form-label text-white fw-semibold"
+              >
                 密碼
               </label>
               <div className="position-relative">
@@ -425,10 +433,15 @@ export default function CombinationPage() {
                   type="checkbox"
                   id="showRegisterConfirmpassword"
                   checked={showRegisterConfirmPassword}
-                  onChange={() => setShowRegisterConfirmPassword(!showRegisterConfirmPassword)}
+                  onChange={() =>
+                    setShowRegisterConfirmPassword(!showRegisterConfirmPassword)
+                  }
                   className="form-check-input"
                 />
-                <label htmlFor="showRegisterConfirmpassword" className="text-white form-check-label">
+                <label
+                  htmlFor="showRegisterConfirmpassword"
+                  className="text-white form-check-label"
+                >
                   顯示密碼
                 </label>
               </div>
@@ -445,7 +458,10 @@ export default function CombinationPage() {
         return (
           <>
             <div className="mb-3">
-              <label htmlFor="register-phone" className="text-white fw-semibold">
+              <label
+                htmlFor="register-phone"
+                className="text-white fw-semibold"
+              >
                 手機
               </label>
               <input
@@ -464,7 +480,10 @@ export default function CombinationPage() {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="register-birthdate" className="text-white fw-semibold">
+              <label
+                htmlFor="register-birthdate"
+                className="text-white fw-semibold"
+              >
                 生日
               </label>
               <input
@@ -482,7 +501,10 @@ export default function CombinationPage() {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="register-gender" className="text-white fw-semibold">
+              <label
+                htmlFor="register-gender"
+                className="text-white fw-semibold"
+              >
                 性別
               </label>
               <select
@@ -504,7 +526,10 @@ export default function CombinationPage() {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="register-avatar" className="text-white fw-semibold">
+              <label
+                htmlFor="register-avatar"
+                className="text-white fw-semibold"
+              >
                 頭像路徑
               </label>
               <input
@@ -532,7 +557,10 @@ export default function CombinationPage() {
                   onChange={handleRegisterFieldChange}
                   className="form-check-input"
                 />
-                <label htmlFor="register-agree" className="text-white form-check-label">
+                <label
+                  htmlFor="register-agree"
+                  className="text-white form-check-label"
+                >
                   我同意網站會員註冊條款
                 </label>
               </div>
@@ -571,7 +599,7 @@ export default function CombinationPage() {
           <div className="row h-100 align-items-center justify-content-center">
             {/* 左側註冊表單 */}
             <div className="col-lg-6 col-md-12 mb-5 mb-lg-0">
-              <div 
+              <div
                 className={`bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25 transition-all duration-300 ${
                   activeForm === 'login' ? 'opacity-50 pointer-events-none' : ''
                 }`}
@@ -580,7 +608,9 @@ export default function CombinationPage() {
               >
                 <div className="text-center mb-4">
                   <h3 className="text-white fw-bold">註冊新帳號</h3>
-                  <p className="text-white-50">加入我們，開始成為時間管理大師</p>
+                  <p className="text-white-50">
+                    加入我們，開始成為時間管理大師
+                  </p>
                 </div>
 
                 {/* 步驟指示器 */}
@@ -594,20 +624,28 @@ export default function CombinationPage() {
                               ? 'bg-primary text-white'
                               : 'bg-secondary text-white'
                           }`}
-                          style={{ width: '30px', height: '30px', fontSize: '14px' }}
+                          style={{
+                            width: '30px',
+                            height: '30px',
+                            fontSize: '14px',
+                          }}
                         >
                           {step}
                         </div>
                         {step < 3 && (
                           <div
                             className={`mx-2 ${
-                              currentStep > step ? 'text-primary' : 'text-secondary'
+                              currentStep > step
+                                ? 'text-primary'
+                                : 'text-secondary'
                             }`}
                             style={{ width: '30px', height: '2px' }}
                           >
                             <div
                               className={`h-100 ${
-                                currentStep > step ? 'bg-primary' : 'bg-secondary'
+                                currentStep > step
+                                  ? 'bg-primary'
+                                  : 'bg-secondary'
                               }`}
                             ></div>
                           </div>
@@ -635,7 +673,11 @@ export default function CombinationPage() {
                 )}
 
                 {/* 註冊表單 */}
-                <form onSubmit={handleRegisterSubmit} className="needs-validation" noValidate>
+                <form
+                  onSubmit={handleRegisterSubmit}
+                  className="needs-validation"
+                  noValidate
+                >
                   {/* 步驟內容 */}
                   {renderStepContent()}
 
@@ -650,14 +692,15 @@ export default function CombinationPage() {
                     >
                       上一步
                     </button>
-                    
+
                     {currentStep < totalSteps ? (
                       <button
                         type="button"
                         className="btn btn-primary px-4 py-2"
                         onClick={handleNext}
                         style={{
-                          background: 'linear-gradient(45deg, #805AF5, #E0B0FF)',
+                          background:
+                            'linear-gradient(45deg, #805AF5, #E0B0FF)',
                           border: 'none',
                           borderRadius: '12px',
                         }}
@@ -669,7 +712,8 @@ export default function CombinationPage() {
                         type="submit"
                         className="btn btn-primary px-4 py-2"
                         style={{
-                          background: 'linear-gradient(45deg, #805AF5, #E0B0FF)',
+                          background:
+                            'linear-gradient(45deg, #805AF5, #E0B0FF)',
                           border: 'none',
                           borderRadius: '12px',
                         }}
@@ -684,16 +728,20 @@ export default function CombinationPage() {
 
             {/* 右側登入表單 */}
             <div className="col-lg-6 col-md-8 col-sm-12">
-              <div 
+              <div
                 className={`bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25 transition-all duration-300 ${
-                  activeForm === 'register' ? 'opacity-50 pointer-events-none' : ''
+                  activeForm === 'register'
+                    ? 'opacity-50 pointer-events-none'
+                    : ''
                 }`}
                 onFocus={() => handleFormFocus('login')}
                 onClick={() => handleFormFocus('login')}
               >
                 <div className="text-center mb-4">
                   <h3 className="text-white fw-bold">登入帳號</h3>
-                  <p className="text-white-50">歡迎回來，繼續你的時間管理之旅</p>
+                  <p className="text-white-50">
+                    歡迎回來，繼續你的時間管理之旅
+                  </p>
                 </div>
 
                 {/* 錯誤訊息 */}
@@ -705,10 +753,17 @@ export default function CombinationPage() {
                 )}
 
                 {/* 登入表單 */}
-                <form onSubmit={handleLoginSubmit} className="needs-validation" noValidate>
+                <form
+                  onSubmit={handleLoginSubmit}
+                  className="needs-validation"
+                  noValidate
+                >
                   {/* 帳號(信箱)輸入 */}
                   <div className="mb-3">
-                    <label htmlFor="login-email" className="text-white fw-semibold">
+                    <label
+                      htmlFor="login-email"
+                      className="text-white fw-semibold"
+                    >
                       帳號(信箱)
                     </label>
                     <div className="position-relative">
@@ -733,7 +788,10 @@ export default function CombinationPage() {
                       />
                     </div>
                     {loginErrors.email && (
-                      <div className="alert alert-danger py-2 mt-2" role="alert">
+                      <div
+                        className="alert alert-danger py-2 mt-2"
+                        role="alert"
+                      >
                         {loginErrors.email}
                       </div>
                     )}
@@ -741,7 +799,10 @@ export default function CombinationPage() {
 
                   {/* 密碼輸入 */}
                   <div className="mb-4">
-                    <label htmlFor="login-password" className="form-label text-white fw-semibold">
+                    <label
+                      htmlFor="login-password"
+                      className="form-label text-white fw-semibold"
+                    >
                       密碼
                     </label>
                     <div className="position-relative">
@@ -773,7 +834,10 @@ export default function CombinationPage() {
                       </button>
                     </div>
                     {loginErrors.password && (
-                      <div className="alert alert-danger py-2 mt-2" role="alert">
+                      <div
+                        className="alert alert-danger py-2 mt-2"
+                        role="alert"
+                      >
                         {loginErrors.password}
                       </div>
                     )}

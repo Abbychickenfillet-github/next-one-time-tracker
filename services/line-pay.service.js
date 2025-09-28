@@ -69,7 +69,7 @@ const createLinePayRequest = async (endpoint, method, body = null) => {
       url,
       method,
       headers,
-      body: requestBody
+      body: requestBody,
     })
 
     const response = await fetch(url, options)
@@ -78,7 +78,7 @@ const createLinePayRequest = async (endpoint, method, body = null) => {
     console.log('📥 LINE Pay API 回應:', {
       status: response.status,
       statusText: response.statusText,
-      data
+      data,
     })
 
     if (!response.ok) {
@@ -158,7 +158,7 @@ export const requestPayment = async (amount) => {
     channelId: linePayConfig.channelId,
     channelSecret: linePayConfig.channelSecretKey ? '已設定' : '未設定',
     apiUrl: LINE_PAY_API_URL,
-    redirectUrls
+    redirectUrls,
   })
 
   try {
@@ -193,7 +193,8 @@ export const requestPayment = async (amount) => {
     reservation.returnCode = linePayResponse.body.returnCode
     reservation.returnMessage = linePayResponse.body.returnMessage
     reservation.transactionId = linePayResponse.body.info.transactionId
-    reservation.paymentAccessToken = linePayResponse.body.info.paymentAccessToken
+    reservation.paymentAccessToken =
+      linePayResponse.body.info.paymentAccessToken
 
     console.log('✅ 預計付款記錄(Reservation):', reservation)
 
