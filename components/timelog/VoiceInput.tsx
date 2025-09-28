@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 export default function VoiceInput({
   onResult,
 }: {
-  onResult: (_text: string) => void
+  onResult: (text: string) => void
 }) {
   useEffect(() => {
     const Recognition =
@@ -13,8 +13,8 @@ export default function VoiceInput({
     const recognizer = new Recognition()
     recognizer.lang = 'zh-TW'
     recognizer.onresult = (event: any) => {
-      const _text = event.results?.[0]?.[0]?.transcript
-      if (_text) onResult(_text)
+      const transcript = event.results?.[0]?.[0]?.transcript
+      if (transcript) onResult(transcript)
     }
     recognizer.onerror = () => alert('語音輸入發生錯誤，請再試一次')
     document

@@ -1,6 +1,6 @@
 // app/timelog/history/page.tsx
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 
 interface TimeLog {
@@ -47,33 +47,36 @@ export default function TimeLogHistory() {
   const [selectedLog, setSelectedLog] = useState<TimeLog | null>(null)
 
   // 載入時間記錄
-  const fetchLogs = async (page = 1) => {
-    try {
-      setLoading(true)
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: pagination.limit.toString(),
-      })
+  const fetchLogs = useCallback(
+    async (page = 1) => {
+      try {
+        setLoading(true)
+        const params = new URLSearchParams({
+          page: page.toString(),
+          limit: pagination.limit.toString(),
+        })
 
-      if (user?.user_id) {
-        params.append('userId', user.user_id.toString())
+        if (user?.user_id) {
+          params.append('userId', user.user_id.toString())
+        }
+
+        const response = await fetch(`/api/timelog?${params}`)
+        const data = await response.json()
+
+        setLogs(data.logs)
+        setPagination(data.pagination)
+      } catch (error) {
+        console.error('載入時間記錄失敗:', error)
+      } finally {
+        setLoading(false)
       }
-
-      const response = await fetch(`/api/timelog?${params}`)
-      const data = await response.json()
-
-      setLogs(data.logs)
-      setPagination(data.pagination)
-    } catch (error) {
-      console.error('載入時間記錄失敗:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+    },
+    [user?.user_id, pagination.limit]
+  )
 
   useEffect(() => {
     fetchLogs()
-  }, [user])
+  }, [user, fetchLogs])
 
   // 計算活動時長
   const calculateDuration = (startTime: string, endTime?: string) => {

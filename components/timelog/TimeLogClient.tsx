@@ -17,7 +17,7 @@ export default function TimeLogClient() {
   const [steps, setSteps] = useState<any[]>([]) // 步驟列表 (對應: 活動記錄列表)
   const [currentTime, setCurrentTime] = useState<Date | null>(null) // 目前時間 (對應: 目前時間顯示)
   const [isClient, setIsClient] = useState(false) // 客戶端渲染標記
-  const [_lastStepTime, setLastStepTime] = useState<Date | null>(null) // 最後步驟時間
+  const [, setLastStepTime] = useState<Date | null>(null) // 最後步驟時間
   const stepListRef = useRef<HTMLOListElement | null>(null) // 步驟列表的 DOM 引用
 
   // ===== 客戶端渲染標記 =====

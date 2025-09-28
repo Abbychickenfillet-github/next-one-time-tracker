@@ -221,7 +221,7 @@ export default function RegisterPage() {
       }
 
       // 過濾掉不需要發送到後端的欄位
-      const { confirmpassword: _confirmpassword, agree: _agree, ...userData } = user
+      const { confirmpassword, agree, ...userData } = user
 
       const response = await register(userData)
       const resData = await response.json()

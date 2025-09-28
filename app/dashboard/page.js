@@ -33,7 +33,7 @@ export default function Dashboard() {
     //   console.log('❌ 未認證，跳轉到登入頁面')
     //   router.replace('/user/login')
     // }
-  }, [auth, isAuth, router])
+  }, [auth, isAuth, router, user])
 
   // 獲取真實的時間戳記錄數據
   useEffect(() => {

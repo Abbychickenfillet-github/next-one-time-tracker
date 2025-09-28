@@ -1,37 +1,38 @@
 'use client'
 
 import { useState } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+// import { useRouter } from 'next/navigation' // 未使用
 import { useAuth } from '@/hooks/use-auth'
 import Link from 'next/link'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Image from 'next/image'
 import { isDev, apiURL } from '@/config/client.config'
-// 載入loading元件
-import CssLoader from '@/components/css-loader'
+// 載入loading元件 (未使用)
+// import CssLoader from '@/components/css-loader'
 
 export default function LinePayPage() {
   // 檢查是否登入
   const { isAuth } = useAuth()
 
-  // 從line-pay回來後要進行loading，確認交易需要一小段時間
-  const [loading, setLoading] = useState(false)
+  // 從line-pay回來後要進行loading，確認交易需要一小段時間 (未使用)
+  // const [loading, setLoading] = useState(false)
 
   // 商品用狀態
   const [price, setPrice] = useState(100)
   const [quantity, setQuantity] = useState(2)
 
-  // confirm回來用的，在記錄確認之後，line-pay回傳訊息與代碼，例如
+  // confirm回來用的，在記錄確認之後，line-pay回傳訊息與代碼，例如 (未使用)
   // {returnCode: '1172', returnMessage: 'Existing same orderId.'}
-  const [result, setResult] = useState({
-    returnCode: '',
-    returnMessage: '',
-  })
+  // const [result, setResult] = useState({
+  //   returnCode: '',
+  //   returnMessage: '',
+  // })
 
   // 取得網址參數，例如: ?transactionId=xxxxxx
   const searchParams = useSearchParams()
-  const router = useRouter()
+  // const router = useRouter() // 未使用
 
   if (isDev) console.log('transactionId', searchParams.get('transactionId'))
 
@@ -67,41 +68,41 @@ export default function LinePayPage() {
     }
   }
 
-  // 確認交易，處理伺服器通知line pay已確認付款，為必要流程
-  const _handleConfirm = async (transactionId) => {
-    const res = await fetch(
-      `${apiURL}/payment/line-pay/confirm?transactionId=${transactionId}`,
-      {
-        method: 'GET',
-        // 讓fetch能夠傳送cookie
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      }
-    )
+  // 確認交易，處理伺服器通知line pay已確認付款，為必要流程 (未使用)
+  // const _handleConfirm = async (transactionId) => {
+  //   const res = await fetch(
+  //     `${apiURL}/payment/line-pay/confirm?transactionId=${transactionId}`,
+  //     {
+  //       method: 'GET',
+  //       // 讓fetch能夠傳送cookie
+  //       credentials: 'include',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Accept: 'application/json',
+  //       },
+  //     }
+  //   )
 
-    const resData = await res.json()
-    console.log(resData)
+  //   const resData = await res.json()
+  //   console.log(resData)
 
-    if (resData.status === 'success') {
-      // 呈現結果
-      setResult(resData.data)
-      // 顯示成功訊息
-      toast.success('付款成功')
-    } else {
-      toast.error('付款失敗')
-    }
+  //   if (resData.status === 'success') {
+  //     // 呈現結果
+  //     setResult(resData.data)
+  //     // 顯示成功訊息
+  //     toast.success('付款成功')
+  //   } else {
+  //     toast.error('付款失敗')
+  //   }
 
-    // 關閉loading動畫
-    setTimeout(() => {
-      // 關閉loading動畫
-      setLoading(false)
-      // 導向至訂單頁
-      router.replace('/line-pay')
-    }, 3000)
-  }
+  //   // 關閉loading動畫
+  //   setTimeout(() => {
+  //     // 關閉loading動畫
+  //     setLoading(false)
+  //     // 導向至訂單頁
+  //     router.replace('/line-pay')
+  //   }, 3000)
+  // }
 
   // confirm回來用的
   // useEffect(() => {
@@ -156,31 +157,31 @@ export default function LinePayPage() {
     </>
   )
 
-  const _confirmOrder = (
-    <>
-      <h2>最後付款確認結果(returnCode=0000 代表成功): </h2>
-      <p>{JSON.stringify(result)}</p>
-      <p>
-        <button
-          onClick={() => {
-            window.location.href = '/line-pay'
-          }}
-        >
-          重新測試
-        </button>
-      </p>
-    </>
-  )
+  // const _confirmOrder = (
+  //   <>
+  //     <h2>最後付款確認結果(returnCode=0000 代表成功): </h2>
+  //     <p>{JSON.stringify(result)}</p>
+  //     <p>
+  //       <button
+  //         onClick={() => {
+  //           window.location.href = '/line-pay'
+  //         }}
+  //       >
+  //         重新測試
+  //       </button>
+  //     </p>
+  //   </>
+  // )
 
-  if (loading)
-    return (
-      <>
-        {/* <RotatingLines eight={40} width={40} /> */}
-        <CssLoader />
-        載入中，請稍後...
-        <ToastContainer />
-      </>
-    )
+  // if (loading)
+  //   return (
+  //     <>
+  //       {/* <RotatingLines eight={40} width={40} /> */}
+  //       <CssLoader />
+  //       載入中，請稍後...
+  //       <ToastContainer />
+  //     </>
+  //   )
 
   return (
     <>
