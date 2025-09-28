@@ -9,18 +9,18 @@ const env = process.env.NODE_ENV || 'development'
 // 判斷是否為開發環境
 export const isDev = env === 'development'
 
-// baseUrl: 開發or營運環境的網址
+// baseUrl: 開發or營運環境的網址 - 含備援網域
 export const baseUrl = isDev
   ? 'http://localhost:3001'
-  : 'https://insightful-timelog.zeabur.app'
+  : 'https://insightful-timelog.zeabur.app' || 'https://qute-insightful-timelog-analysis-helper.zeabur.app' || 'https://time-insight.zeabur.app'
 
 export const serverConfig = {
   // (deprecated)
   sessionStoreType: isDev ? 'file' : 'redis', // file | redis
   // 前端網址
   nextUrl: baseUrl,
-  // 後端伺服器佈置後的網域名稱，與cookie有關
-  domain: isDev ? '' : 'insightful-timelog.zeabur.app',
+  // 後端伺服器佈置後的網域名稱，與cookie有關 - 含備援網域
+  domain: isDev ? '' : 'insightful-timelog.zeabur.app' || 'qute-insightful-timelog-analysis-helper.zeabur.app' || 'time-insight.zeabur.app',
   smtp: {
     type: 'gmail', // ethereal | gmail
     ethereal: {
