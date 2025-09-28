@@ -29,7 +29,7 @@ function createQueryClient() {
 }
 
 // QueryClient Provider 組件
-export function ReactQueryProvider({ children }) {
+function ReactQueryProvider({ children }) {
   // 使用 useState 確保 QueryClient 實例在組件生命週期中保持穩定
   const [queryClient] = useState(() => createQueryClient())
 

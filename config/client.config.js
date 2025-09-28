@@ -16,10 +16,10 @@ const local = {
 
 // 營運環境設定(部署至Zeabur)
 const production = {
-  apiURL: 'https://time-insight.zeabur.app/api',
-  serverURL: 'https://time-insight.zeabur.app',
-  avatarURL: 'https://time-insight.zeabur.app/avatar',
-  nextUrl: 'https://time-insight.zeabur.app',
+  apiURL: 'https://insightful-timelog.zeabur.app/api',
+  serverURL: 'https://insightful-timelog.zeabur.app',
+  avatarURL: 'https://insightful-timelog.zeabur.app/avatar',
+  nextUrl: 'https://insightful-timelog.zeabur.app',
 }
 
 export const apiURL = isDev ? local.apiURL : production.apiURL

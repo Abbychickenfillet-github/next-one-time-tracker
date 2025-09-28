@@ -417,7 +417,7 @@ export const useAuthLogin = () => {
 // config/client.config.js
 export const apiURL = isDev
   ? 'http://localhost:3001/api'  // 開發環境
-  : 'https://time-insight.zeabur.app/api/payment/line-pay/confirm/api'  // 生產環境
+  : 'https://insightful-timelog.zeabur.app/api/payment/line-pay/confirm/api'  // 生產環境
 ```
 
 ### 使用場景對比
