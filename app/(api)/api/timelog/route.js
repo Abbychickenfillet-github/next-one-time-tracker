@@ -27,19 +27,19 @@ export async function POST(request) {
     // 🍪 2. 從 Cookie 中取得 JWT Token
     // ========================================
     const cookie = (await cookies()).get('ACCESS_TOKEN')?.value
-    console.log('從 Cookie 取得的 ACCESS_TOKEN:', cookie ? '存在' : '不存在')
+    console.log('timelog API執行時，從 Cookie 取得的 ACCESS_TOKEN:', cookie ? '存在' : '不存在')
 
     // ========================================
     // 🔓 3. 解密 JWT Token 取得用戶資訊
     // ========================================
     const session = await decrypt(cookie)
-    console.log('解密後的 session:', session ? '成功' : '失敗')
+    console.log('timelog API執行時，解密後的 session:', session ? '成功' : '失敗')
 
     // ========================================
     // ✅ 4. 驗證用戶身份
     // ========================================
     if (!session?.payload?.userId) {
-      console.log('❌ 認證失敗：沒有有效的用戶 ID')
+      console.log('timelog API執行時，認證失敗：沒有有效的用戶 ID')
       const error = { message: '授權失敗，沒有存取令牌' }
       return errorResponse(res, error)
     }
@@ -48,7 +48,7 @@ export async function POST(request) {
     // 🆔 5. 取得用戶 ID
     // ========================================
     const userId = session?.payload?.userId
-    console.log('取得用戶 ID:', userId)
+    console.log('timelog API執行時，取得用戶 ID:', userId)
 
     // ========================================
     // 📊 6. 創建時間戳記錄
@@ -63,8 +63,7 @@ export async function POST(request) {
       include: {
         user: {
           select: {
-            id: true,
-            name: true,
+            user_id: true,
             email: true
           }
         }
@@ -136,7 +135,7 @@ export async function GET(request) {
         steps: true,
         user: {
           select: {
-            id: true,
+            user_id: true,
             name: true,
             email: true
           }
@@ -156,8 +155,8 @@ export async function GET(request) {
         title: log.title,
         startTime: log.startTime,
         endTime: log.endTime,
-        duration: log.endTime ? 
-          Math.round((new Date(log.endTime) - new Date(log.startTime)) / (1000 * 60 * 60) * 100) / 100 : 
+        duration: log.endTime ?
+          Math.round((new Date(log.endTime) - new Date(log.startTime)) / (1000 * 60 * 60) * 100) / 100 :
           null,
         steps: log.steps,
         user: log.user
