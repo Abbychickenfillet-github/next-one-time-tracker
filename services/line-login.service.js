@@ -139,13 +139,13 @@ export const lineLoginGetAuthUrl = async () => {
   }
 }
 
-// user_id = user.user_id
-export const lineLoginLogout = async (user_id) => {
+// lineUid = LINE 使用者的唯一識別碼
+export const lineLoginLogout = async (lineUid) => {
   try {
     // 獲得資料庫的lineAccessToken
     const user = await prisma.user.findUnique({
       where: {
-        user_id,
+        lineUid: lineUid,
       },
     })
 
@@ -158,7 +158,7 @@ export const lineLoginLogout = async (user_id) => {
     // 清除資料庫的lineAccessToken
     await prisma.user.update({
       where: {
-        id,
+        lineUid: lineUid,
       },
       data: {
         lineAccessToken: '',
