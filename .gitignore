@@ -49,3 +49,4 @@ pnpm-lock.yaml
 /logs
 /testing/
 .env
+.env.production
