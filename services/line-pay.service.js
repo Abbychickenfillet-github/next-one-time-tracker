@@ -19,12 +19,16 @@ import { isDev } from '../lib/utils.js'
 
 // 手動實作 Line Pay API 呼叫
 const linePayConfig = {
-  channelId: process.env.LINE_PAY_CHANNEL_ID || (isDev
-    ? serverConfig.linePay.development.channelId
-    : serverConfig.linePay.production.channelId),
-  channelSecretKey: process.env.LINE_PAY_CHANNEL_SECRET || (isDev
-    ? serverConfig.linePay.development.channelSecret
-    : serverConfig.linePay.production.channelSecret),
+  channelId:
+    process.env.LINE_PAY_CHANNEL_ID ||
+    (isDev
+      ? serverConfig.linePay.development.channelId
+      : serverConfig.linePay.production.channelId),
+  channelSecretKey:
+    process.env.LINE_PAY_CHANNEL_SECRET ||
+    (isDev
+      ? serverConfig.linePay.development.channelSecret
+      : serverConfig.linePay.production.channelSecret),
   env: process.env.NODE_ENV,
 }
 
@@ -52,7 +56,7 @@ const createLinePayRequest = async (endpoint, method, body = null) => {
     'X-LINE-Authorization-Nonce': nonce,
     'X-LINE-Authorization': signature,
     'User-Agent': 'LINE Pay API Client',
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'Accept-Language': 'zh-TW',
     'X-LINE-Request-Id': crypto.randomUUID(),
     'X-LINE-Environment': 'sandbox',
@@ -75,7 +79,9 @@ const createLinePayRequest = async (endpoint, method, body = null) => {
       body: requestBody,
       channelId: linePayConfig.channelId,
       channelSecret: linePayConfig.channelSecretKey ? '已設定' : '未設定',
-      channelSecretLength: linePayConfig.channelSecretKey ? linePayConfig.channelSecretKey.length : 0,
+      channelSecretLength: linePayConfig.channelSecretKey
+        ? linePayConfig.channelSecretKey.length
+        : 0,
     })
 
     const response = await fetch(url, options)
@@ -153,13 +159,13 @@ export const requestPayment = async (amount) => {
             id: crypto.randomBytes(5).toString('hex'),
             name: '商品一批',
             quantity: 1,
-            price: amount
+            price: amount,
           },
         ],
       },
     ],
     options: { display: { locale: 'zh_TW' } },
-    redirectUrls:{
+    redirectUrls: {
       confirmUrl: 'http://localhost:3001/line-pay/callback',
       cancelUrl: 'http://localhost:3001/line-pay/cancel',
     }, // 設定重新導向與失敗導向的網址

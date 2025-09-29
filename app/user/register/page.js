@@ -221,6 +221,7 @@ export default function RegisterPage() {
       }
 
       // 過濾掉不需要發送到後端的欄位
+      // eslint-disable-next-line no-unused-vars
       const { confirmpassword, agree, ...userData } = user
 
       const response = await register(userData)

@@ -11,7 +11,7 @@ export default function ThemeToggle() {
     setCurrentTheme(theme)
     document.documentElement.setAttribute('data-theme', theme)
     // 設定在 HTML 根元素
-    if(theme){
+    if (theme) {
       console.log(`🚀 設定在 HTML 根元素，屬性data-theme，屬性值${theme}`)
     }
     localStorage.setItem('theme', theme)

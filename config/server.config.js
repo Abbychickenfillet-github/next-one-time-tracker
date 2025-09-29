@@ -14,14 +14,20 @@ console.log('🔧 [DEBUG] server.config.js - isDev:', isDev)
 // baseUrl: 開發or營運環境的網址 - 含備援網域
 export const baseUrl = isDev
   ? 'http://localhost:3001'
-  : 'https://insightful-timelog.zeabur.app' || 'https://qute-insightful-timelog-analysis-helper.zeabur.app' || 'https://time-insight.zeabur.app'
+  : 'https://insightful-timelog.zeabur.app' ||
+    'https://qute-insightful-timelog-analysis-helper.zeabur.app' ||
+    'https://time-insight.zeabur.app'
 console.log('🔧 [DEBUG] server.config.js - baseUrl:', baseUrl)
 
 export const serverConfig = {
   // 前端網址
   nextUrl: baseUrl,
   // 後端伺服器佈置後的網域名稱，與cookie有關 - 含備援網域
-  domain: isDev ? '' : 'insightful-timelog.zeabur.app' || 'qute-insightful-timelog-analysis-helper.zeabur.app' || 'time-insight.zeabur.app',
+  domain: isDev
+    ? ''
+    : 'insightful-timelog.zeabur.app' ||
+      'qute-insightful-timelog-analysis-helper.zeabur.app' ||
+      'time-insight.zeabur.app',
   smtp: {
     type: 'gmail', // ethereal | gmail
     ethereal: {
@@ -108,9 +114,27 @@ export const serverConfig = {
 }
 
 console.log('🔧 [DEBUG] server.config.js - serverConfig 初始化完成')
-console.log('🔧 [DEBUG] server.config.js - process.env.LINE_PAY_CHANNEL_ID:', process.env.LINE_PAY_CHANNEL_ID)
-console.log('🔧 [DEBUG] server.config.js - process.env.LINE_PAY_CHANNEL_SECRET:', process.env.LINE_PAY_CHANNEL_SECRET ? '已設定' : '未設定')
-console.log('🔧 [DEBUG] server.config.js - serverConfig.linePay.development.channelId:', serverConfig.linePay.development.channelId)
-console.log('🔧 [DEBUG] server.config.js - serverConfig.linePay.development.channelSecret:', serverConfig.linePay.development.channelSecret ? '已設定' : '未設定')
-console.log('🔧 [DEBUG] server.config.js - serverConfig.linePay.development.confirmUrl:', serverConfig.linePay.development.confirmUrl)
-console.log('🔧 [DEBUG] server.config.js - serverConfig.linePay.development.cancelUrl:', serverConfig.linePay.development.cancelUrl)
+console.log(
+  '🔧 [DEBUG] server.config.js - process.env.LINE_PAY_CHANNEL_ID:',
+  process.env.LINE_PAY_CHANNEL_ID
+)
+console.log(
+  '🔧 [DEBUG] server.config.js - process.env.LINE_PAY_CHANNEL_SECRET:',
+  process.env.LINE_PAY_CHANNEL_SECRET ? '已設定' : '未設定'
+)
+console.log(
+  '🔧 [DEBUG] server.config.js - serverConfig.linePay.development.channelId:',
+  serverConfig.linePay.development.channelId
+)
+console.log(
+  '🔧 [DEBUG] server.config.js - serverConfig.linePay.development.channelSecret:',
+  serverConfig.linePay.development.channelSecret ? '已設定' : '未設定'
+)
+console.log(
+  '🔧 [DEBUG] server.config.js - serverConfig.linePay.development.confirmUrl:',
+  serverConfig.linePay.development.confirmUrl
+)
+console.log(
+  '🔧 [DEBUG] server.config.js - serverConfig.linePay.development.cancelUrl:',
+  serverConfig.linePay.development.cancelUrl
+)

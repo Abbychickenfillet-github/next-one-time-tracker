@@ -46,7 +46,10 @@ export default function LinePayPage() {
 
     // 先連到API路由，取得LINE Pay付款網址
     console.log(`🚀 開始goLinePay函數請求`)
-    console.log('📡 請求 URL:', `${apiURL}/payment/line-pay/request?amount=${quantity * price}`)
+    console.log(
+      '📡 請求 URL:',
+      `${apiURL}/payment/line-pay/request?amount=${quantity * price}`
+    )
     console.log('🔧 apiURL 值:', apiURL)
     console.log('🔧 isDev 值:', isDev)
 
@@ -169,7 +172,7 @@ export default function LinePayPage() {
         disabled={!isAuth}
         style={{
           opacity: !isAuth ? 0.5 : 1,
-          cursor: !isAuth ? 'not-allowed' : 'pointer'
+          cursor: !isAuth ? 'not-allowed' : 'pointer',
         }}
       >
         {isAuth ? '前往付款' : '請先登入'}
