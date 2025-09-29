@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 export default function VoiceInput({
   onResult,
 }: {
+  // eslint-disable-next-line no-unused-vars
   onResult: (text: string) => void
 }) {
   useEffect(() => {
