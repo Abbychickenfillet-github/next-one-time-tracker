@@ -19,19 +19,17 @@ import { isDev } from '../lib/utils.js'
 
 // 手動實作 Line Pay API 呼叫
 const linePayConfig = {
-  channelId: isDev
+  channelId: process.env.LINE_PAY_CHANNEL_ID || (isDev
     ? serverConfig.linePay.development.channelId
-    : serverConfig.linePay.production.channelId,
-  channelSecretKey: isDev
+    : serverConfig.linePay.production.channelId),
+  channelSecretKey: process.env.LINE_PAY_CHANNEL_SECRET || (isDev
     ? serverConfig.linePay.development.channelSecret
-    : serverConfig.linePay.production.channelSecret,
+    : serverConfig.linePay.production.channelSecret),
   env: process.env.NODE_ENV,
 }
 
-// Line Pay API 基礎 URL
-const LINE_PAY_API_URL = isDev
-  ? 'https://sandbox-api-pay.line.me'
-  : 'https://api-pay.line.me'
+// Line Pay API 基礎 URL - 使用 v2 API
+const LINE_PAY_API_URL = 'https://sandbox-api-pay.line.me'
 
 // Zeabur 環境配置
 const isZeabur = process.env.ZEABUR || process.env.VERCEL || false
@@ -41,7 +39,7 @@ const createLinePayRequest = async (endpoint, method, body = null) => {
   const url = `${LINE_PAY_API_URL}${endpoint}`
   const nonce = crypto.randomBytes(16).toString('hex')
 
-  // 建立簽名
+  // 建立簽名 - 修正簽名演算法
   const requestBody = body ? JSON.stringify(body) : ''
   const signature = crypto
     .createHmac('sha256', linePayConfig.channelSecretKey)
@@ -53,6 +51,11 @@ const createLinePayRequest = async (endpoint, method, body = null) => {
     'X-LINE-ChannelId': linePayConfig.channelId,
     'X-LINE-Authorization-Nonce': nonce,
     'X-LINE-Authorization': signature,
+    'User-Agent': 'LINE Pay API Client',
+    'Accept': 'application/json',
+    'Accept-Language': 'zh-TW',
+    'X-LINE-Request-Id': crypto.randomUUID(),
+    'X-LINE-Environment': 'sandbox',
   }
 
   const options = {
@@ -70,6 +73,9 @@ const createLinePayRequest = async (endpoint, method, body = null) => {
       method,
       headers,
       body: requestBody,
+      channelId: linePayConfig.channelId,
+      channelSecret: linePayConfig.channelSecretKey ? '已設定' : '未設定',
+      channelSecretLength: linePayConfig.channelSecretKey ? linePayConfig.channelSecretKey.length : 0,
     })
 
     const response = await fetch(url, options)
@@ -85,7 +91,7 @@ const createLinePayRequest = async (endpoint, method, body = null) => {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`)
     }
 
-    return { body: data }
+    return { body: data, comments: {} }
   } catch (error) {
     console.error('❌ LINE Pay API 錯誤:', error)
     throw new Error(`Line Pay API 呼叫失敗: ${error.message}`)
@@ -102,6 +108,8 @@ const redirectUrls = {
     ? serverConfig.linePay.development.cancelUrl
     : serverConfig.linePay.production.cancelUrl,
 }
+
+console.log('🔧 [DEBUG] redirectUrls 設定:', redirectUrls)
 
 // Zeabur 環境的額外配置
 if (isZeabur) {
@@ -132,25 +140,29 @@ export const requestPayment = async (amount) => {
 
   // 要傳送給line pay的訂單資訊
   const order = {
-    orderId: crypto.randomUUID(),
+    orderId: '20250929001',
     currency: 'TWD',
     amount: amount,
     packages: [
       {
         id: crypto.randomBytes(5).toString('hex'),
         amount: amount,
+        name: '商品一批',
         products: [
           {
             id: crypto.randomBytes(5).toString('hex'),
             name: '商品一批',
             quantity: 1,
-            price: amount,
+            price: amount
           },
         ],
       },
     ],
     options: { display: { locale: 'zh_TW' } },
-    redirectUrls, // 設定重新導向與失敗導向的網址
+    redirectUrls:{
+      confirmUrl: 'http://localhost:3001/line-pay/callback',
+      cancelUrl: 'http://localhost:3001/line-pay/cancel',
+    }, // 設定重新導向與失敗導向的網址
   }
 
   console.log('📋 訂單資料:', order)
@@ -162,11 +174,11 @@ export const requestPayment = async (amount) => {
   })
 
   try {
-    // 向line pay傳送的訂單資料
+    // 向line pay傳送的訂單資料 - 使用 v2 API
     const linePayResponse = await createLinePayRequest(
-      '/v3/payments/request',
+      '/v2/payments/request',
       'POST',
-      { ...order, redirectUrls }
+      order
     )
 
     // 檢查 LINE Pay 回應是否成功
@@ -237,9 +249,9 @@ export const confirmPayment = async (transactionId) => {
   const amount = reservation?.amount
 
   try {
-    // 最後確認交易
+    // 最後確認交易 - 使用 v2 API
     const linePayResponse = await createLinePayRequest(
-      `/v3/payments/${transactionId}/confirm`,
+      `/v2/payments/${transactionId}/confirm`,
       'POST',
       {
         currency: 'TWD',
@@ -268,7 +280,7 @@ export const confirmPayment = async (transactionId) => {
 export const checkPaymentStatus = async (transactionId) => {
   try {
     const linePayResponse = await createLinePayRequest(
-      `/v3/payments/authorizations/${transactionId}`,
+      `/v2/payments/authorizations/${transactionId}`,
       'GET'
     )
 

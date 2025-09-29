@@ -10,6 +10,10 @@ export default function ThemeToggle() {
   const toggleTheme = useCallback((theme) => {
     setCurrentTheme(theme)
     document.documentElement.setAttribute('data-theme', theme)
+    // 設定在 HTML 根元素
+    if(theme){
+      console.log(`🚀 設定在 HTML 根元素，屬性data-theme，屬性值${theme}`)
+    }
     localStorage.setItem('theme', theme)
   }, [])
 
@@ -18,10 +22,12 @@ export default function ThemeToggle() {
     const savedTheme = localStorage.getItem('theme') || 'green'
     setCurrentTheme(savedTheme)
     document.documentElement.setAttribute('data-theme', savedTheme)
+    // 幫HTML標籤元素設定屬性data-theme，屬性值savedTheme是變數嗎？
   }, [])
 
   return (
     <div className={styles.themeToggle}>
+      // 綠色主題按鈕
       <button
         className={`${styles.themeButton} ${styles.green} ${
           currentTheme === 'green' ? styles.active : ''
@@ -32,6 +38,7 @@ export default function ThemeToggle() {
         <span className={styles.themeIcon}>🌿</span>
         <span className={styles.themeName}>Green theme</span>
       </button>
+      // 粉紅色主題按鈕
       <button
         className={`${styles.themeButton} ${styles.pink} ${
           currentTheme === 'pink' ? styles.active : ''

@@ -14,7 +14,7 @@ import { isDev, apiURL } from '@/config/client.config'
 
 export default function LinePayPage() {
   // 檢查是否登入
-  const { isAuth } = useAuth()
+  const { isAuth, user } = useAuth()
 
   // 從line-pay回來後要進行loading，確認交易需要一小段時間 (未使用)
   // const [loading, setLoading] = useState(false)
@@ -38,7 +38,18 @@ export default function LinePayPage() {
 
   // 導向至LINE Pay付款頁面
   const goLinePay = async () => {
+    // 檢查是否已登入
+    if (!isAuth) {
+      toast.error('請先登入以保留訂單資訊')
+      return
+    }
+
     // 先連到API路由，取得LINE Pay付款網址
+    console.log(`🚀 開始goLinePay函數請求`)
+    console.log('📡 請求 URL:', `${apiURL}/payment/line-pay/request?amount=${quantity * price}`)
+    console.log('🔧 apiURL 值:', apiURL)
+    console.log('🔧 isDev 值:', isDev)
+
     const res = await fetch(
       `${apiURL}/payment/line-pay/request?amount=${quantity * price}`,
       {
@@ -153,7 +164,16 @@ export default function LinePayPage() {
         width={85}
         height={25}
       />
-      <button onClick={goLinePay}>前往付款</button>
+      <button
+        onClick={goLinePay}
+        disabled={!isAuth}
+        style={{
+          opacity: !isAuth ? 0.5 : 1,
+          cursor: !isAuth ? 'not-allowed' : 'pointer'
+        }}
+      >
+        {isAuth ? '前往付款' : '請先登入'}
+      </button>
     </>
   )
 
@@ -187,12 +207,12 @@ export default function LinePayPage() {
     <>
       <h1>Line Pay測試</h1>
       <p>
-        本功能目前與資料庫無關，但會用到後端伺服器的session機制，這是為了付完款後返回後，需要訂單的金額作最後確認用的。
+        本功能需要會員登入才能使用，會用到後端伺服器的session機制，這是為了付完款後返回後，需要訂單的金額作最後確認用的。
       </p>
       <p>
-        會員登入狀態: {isAuth ? '已登入' : '未登入'}
+        會員登入狀態: {isAuth ? `已登入 - ${user?.name || '用戶'}` : '未登入'}
         <br />
-        <Link href="/user">連至會員登入頁</Link>
+        {!isAuth && <Link href="/user">連至會員登入頁</Link>}
       </p>
       <hr />
       {orderDisplay}
