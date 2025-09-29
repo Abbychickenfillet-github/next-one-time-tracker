@@ -27,7 +27,7 @@ export default function ThemeToggle() {
 
   return (
     <div className={styles.themeToggle}>
-      // 綠色主題按鈕
+      {/* 綠色主題按鈕 */}
       <button
         className={`${styles.themeButton} ${styles.green} ${
           currentTheme === 'green' ? styles.active : ''
@@ -38,7 +38,7 @@ export default function ThemeToggle() {
         <span className={styles.themeIcon}>🌿</span>
         <span className={styles.themeName}>Green theme</span>
       </button>
-      // 粉紅色主題按鈕
+      {/* 粉紅色主題按鈕 */}
       <button
         className={`${styles.themeButton} ${styles.pink} ${
           currentTheme === 'pink' ? styles.active : ''
