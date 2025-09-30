@@ -80,3 +80,36 @@
   background: linear-gradient(45deg, rgba(255, 107, 157, 0.2), rgba(255, 139, 171, 0.2));
   box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
 }
+
+/* RWD 響應式設計 */
+@media (max-width: 768px) {
+  .breadcrumb {
+    padding: 8px 12px;
+    font-size: 12px;
+    margin-bottom: 15px;
+  }
+
+  .breadcrumb li {
+    font-size: 12px;
+  }
+
+  .breadcrumb li a {
+    padding: 2px 6px;
+  }
+}
+
+@media (max-width: 576px) {
+  .breadcrumb {
+    padding: 6px 10px;
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+
+  .breadcrumb li {
+    font-size: 11px;
+  }
+
+  .breadcrumb li a {
+    padding: 1px 4px;
+  }
+}
