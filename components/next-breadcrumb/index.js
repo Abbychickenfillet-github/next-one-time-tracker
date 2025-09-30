@@ -9,7 +9,7 @@ import ClockIcon from '@/components/clock-icon'
 // 中文路徑對照陣列，到configs/index.js中設定
 import { pathsLocaleMap } from '@/config/client.config'
 // 額外樣式檔案
-import styles from '@/styles/next-breadcrumb.scss'
+import '@/styles/next-breadcrumb.scss'
 
 /**
  * NextBreadCrumb 搭配 useRouter 動態產生的麵包屑元件(breadcrumb)
@@ -83,7 +83,7 @@ export default function NextBreadCrumb({
 
   return (
     <nav aria-label="breadcrumb" style={{ lineHeight: '32px' }}>
-      <Breadcrumb className={styles['breadcrumb']}>
+      <Breadcrumb className="breadcrumb">
         {getPathFormatLocale()}
       </Breadcrumb>
     </nav>
