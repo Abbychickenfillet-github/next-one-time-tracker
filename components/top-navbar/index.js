@@ -28,6 +28,12 @@ export default function TopNavbar() {
           >
             教學文件
           </Link>
+          <Link
+            href="https://github.com/mfee-react/project-guide"
+            target="_blank"
+          >
+            為什麼有這個網頁
+          </Link>
           <Link href="/user/register" target="_self">
             註冊
           </Link>

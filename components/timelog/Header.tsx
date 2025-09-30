@@ -56,7 +56,7 @@ export default function Header() {
 
           {/* 整合的 Breadcrumb */}
           <div className="ms-4 flex-grow-1">
-            <NextBreadCrumb />
+            <NextBreadCrumb isHomeIcon={true} />
           </div>
         </div>
 

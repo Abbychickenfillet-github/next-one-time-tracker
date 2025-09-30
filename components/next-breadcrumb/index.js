@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation'
 import { useCallback } from 'react'
 import Link from 'next/link'
+import { BiHome } from 'react-icons/bi'
 // 中文路徑對照陣列，到configs/index.js中設定
 import { pathsLocaleMap } from '@/config/client.config'
 // 額外樣式檔案
@@ -14,13 +15,13 @@ import styles from './next-breadcrumb.module.css'
  * @component
  * @param {object} props
  * @param {boolean} [props.omitRoot=false] omit root node(home)
- * @param {JSX.Element} [props.homeIcon=<i className="bi bi-house-door-fill"></i>]
+ * @param {JSX.Element} [props.homeIcon=<BiHome />]
  * @param {boolean} [props.isHomeIcon=false] with home icon
  * @returns {JSX.Element}
  */
 export default function NextBreadCrumb({
   omitRoot = false,
-  homeIcon = <>&#8962;</>,
+  homeIcon = <BiHome />,
   isHomeIcon = false,
 }) {
   // 得到目前的網址的路徑
