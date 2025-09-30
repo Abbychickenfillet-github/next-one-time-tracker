@@ -1,0 +1,42 @@
+/* 時鐘圖示動畫樣式 */
+.clockIcon {
+  display: inline-block;
+  font-size: 16px;
+  animation: tick-tock 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 0, 0.6));
+  transition: all 0.3s ease;
+}
+
+.clockIcon:hover {
+  filter: drop-shadow(0 0 12px rgba(255, 255, 0, 0.8));
+  transform: scale(1.1);
+}
+
+/* 時鐘擺動動畫 */
+@keyframes tick-tock {
+  0%, 100% {
+    transform: rotate(0deg);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 0, 0.6));
+  }
+  25% {
+    transform: rotate(5deg);
+    filter: drop-shadow(0 0 12px rgba(255, 255, 0, 0.8));
+  }
+  75% {
+    transform: rotate(-5deg);
+    filter: drop-shadow(0 0 12px rgba(255, 255, 0, 0.8));
+  }
+}
+
+/* 響應式設計 */
+@media screen and (max-width: 768px) {
+  .clockIcon {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .clockIcon {
+    font-size: 12px;
+  }
+}

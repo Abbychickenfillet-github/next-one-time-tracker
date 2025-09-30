@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import styles from './theme-toggle.module.css'
+import { Button } from 'react-bootstrap'
 
 export default function ThemeToggle() {
   const [currentTheme, setCurrentTheme] = useState('green')
@@ -26,29 +26,31 @@ export default function ThemeToggle() {
   }, [])
 
   return (
-    <div className={styles.themeToggle}>
+    <div className="themeToggle">
       {/* 綠色主題按鈕 */}
-      <button
-        className={`${styles.themeButton} ${styles.green} ${
-          currentTheme === 'green' ? styles.active : ''
+      <Button
+        variant="outline-primary"
+        className={`themeButton green ${
+          currentTheme === 'green' ? 'active' : ''
         }`}
         onClick={() => toggleTheme('green')}
         title="黑底白字 + Bootstrap bg-info"
       >
-        <span className={styles.themeIcon}>🌿</span>
-        <span className={styles.themeName}>Green theme</span>
-      </button>
+        <span className="themeIcon">🌿</span>
+        <span className="themeName">Green theme</span>
+      </Button>
       {/* 粉紅色主題按鈕 */}
-      <button
-        className={`${styles.themeButton} ${styles.pink} ${
-          currentTheme === 'pink' ? styles.active : ''
+      <Button
+        variant="outline-primary"
+        className={`themeButton pink ${
+          currentTheme === 'pink' ? 'active' : ''
         }`}
         onClick={() => toggleTheme('pink')}
         title="粉字黑底 + 雲海效果"
       >
-        <span className={styles.themeIcon}>🌸</span>
-        <span className={styles.themeName}>Pink theme</span>
-      </button>
+        <span className="themeIcon">🌸</span>
+        <span className="themeName">Pink theme</span>
+      </Button>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import Head from 'next/head'
+import { Accordion } from 'react-bootstrap'
 
 export default function Dashboard() {
   const { auth, logout, user, isAuth } = useAuth()
@@ -100,6 +101,45 @@ export default function Dashboard() {
     }
   }
 
+  const handleDeleteTimeLog = async (logId, logTitle) => {
+    const result = await Swal.fire({
+      title: '確認刪除',
+      text: `您確定要刪除「${logTitle}」這個時間戳記錄嗎？`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '刪除',
+      cancelButtonText: '取消',
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+    })
+
+    if (result.isConfirmed) {
+      try {
+        // 這裡可以加入實際的刪除 API 呼叫
+        console.log('刪除時間戳記錄:', logId)
+
+        // 暫時顯示成功訊息
+        Swal.fire({
+          title: '刪除成功',
+          text: '時間戳記錄已成功刪除',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+        })
+
+        // 重新載入資料
+        await fetchTimeLogs()
+      } catch (error) {
+        console.error('刪除失敗:', error)
+        Swal.fire({
+          title: '刪除失敗',
+          text: '刪除時間戳記錄時發生錯誤',
+          icon: 'error',
+        })
+      }
+    }
+  }
+
   const formatDate = (dateString) => {
     if (!dateString) return '-'
     const date = new Date(dateString)
@@ -167,38 +207,6 @@ export default function Dashboard() {
         </nav>
 
         <div className="container py-4">
-          {/* 歡迎區域 */}
-          <div className="row mb-4">
-            <div className="col-12">
-              <div className="card border-0 shadow-sm">
-                <div
-                  className="card-body bg-gradient"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  }}
-                >
-                  <div className="row align-items-center">
-                    <div className="col-md-8">
-                      <h2 className="text-white mb-2">歡迎回來！</h2>
-                      <p className="text-white-50 mb-0">
-                        您好，{auth.userData?.name || auth?.userData?.email}
-                        ，這是您的時間管理儀表板
-                      </p>
-                    </div>
-                    <div className="col-md-4 text-end">
-                      <div className="text-white">
-                        <div className="fs-4 fw-bold">
-                          {statistics.totalLogs}
-                        </div>
-                        <div className="small">總記錄數</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* 統計卡片 */}
           <div className="row mb-4">
@@ -248,7 +256,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* 時間戳記錄表格 */}
+          {/* 時間戳記錄手風琴 */}
           <div className="row">
             <div className="col-12">
               <div className="card border-0 shadow-sm">
@@ -293,73 +301,98 @@ export default function Dashboard() {
                       </div>
                     </div>
                   ) : (
-                    <div className="table-responsive">
-                      <table className="table table-hover mb-0">
-                        <thead className="table-light">
-                          <tr>
-                            <th>活動名稱</th>
-                            <th>描述</th>
-                            <th>開始時間</th>
-                            <th>結束時間</th>
-                            <th>持續時間</th>
-                            <th>步驟數</th>
-                            <th>操作</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {timeLogs.map((log) => (
-                            <tr key={log.id}>
-                              <td>
-                                <div className="fw-semibold">{log.title}</div>
-                              </td>
-                              <td>
-                                <div className="text-muted small">
-                                  {log.description}
-                                </div>
-                              </td>
-                              <td>
-                                <div className="small">
-                                  {formatDate(log.startTime)}
-                                </div>
-                              </td>
-                              <td>
-                                <div className="small">
-                                  {formatDate(log.endTime)}
-                                </div>
-                              </td>
-                              <td>
+                    <Accordion className="border-0">
+                      {timeLogs.map((log, index) => (
+                        <Accordion.Item key={log.id} eventKey={index.toString()}>
+                          <Accordion.Header>
+                            <div className="d-flex justify-content-between align-items-center w-100 me-3">
+                              <div>
+                                <h6 className="mb-0 fw-semibold">{log.title}</h6>
+                                <small className="text-muted">{log.description}</small>
+                              </div>
+                              <div className="d-flex gap-2">
                                 <span className="badge bg-info">
-                                  {log.duration
-                                    ? `${log.duration} 小時`
-                                    : '進行中'}
+                                  {log.duration ? `${log.duration} 小時` : '進行中'}
                                 </span>
-                              </td>
-                              <td>
                                 <span className="badge bg-secondary">
                                   {log.steps.length} 步驟
                                 </span>
-                              </td>
-                              <td>
-                                <div className="btn-group btn-group-sm">
-                                  <button
-                                    className="btn btn-outline-primary"
-                                    title="編輯"
-                                  >
-                                    <i className="bi bi-pencil"></i>
-                                  </button>
-                                  <button
-                                    className="btn btn-outline-danger"
-                                    title="刪除"
-                                  >
-                                    <i className="bi bi-trash"></i>
-                                  </button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                              </div>
+                            </div>
+                          </Accordion.Header>
+                          <Accordion.Body>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <h6>📅 時間資訊</h6>
+                                <ul className="list-unstyled">
+                                  <li><strong>開始時間:</strong> {formatDate(log.startTime)}</li>
+                                  <li><strong>結束時間:</strong> {formatDate(log.endTime)}</li>
+                                  <li><strong>持續時間:</strong>
+                                    <span className="badge bg-info ms-2">
+                                      {log.duration ? `${log.duration} 小時` : '進行中'}
+                                    </span>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div className="col-md-6">
+                                <h6>📋 詳細步驟</h6>
+                                {log.steps && log.steps.length > 0 ? (
+                                  <div className="list-group list-group-flush">
+                                    {log.steps.map((step, stepIndex) => (
+                                      <div key={stepIndex} className="list-group-item px-0 py-2">
+                                        <div className="d-flex justify-content-between align-items-start">
+                                          <div>
+                                            <strong>{step.name}</strong>
+                                            {step.description && (
+                                              <div className="small text-muted">{step.description}</div>
+                                            )}
+                                          </div>
+                                          <div className="text-end">
+                                            <div className="small text-muted">
+                                              {formatDate(step.startTime)}
+                                            </div>
+                                            {step.endTime && (
+                                              <div className="small text-muted">
+                                                至 {formatDate(step.endTime)}
+                                              </div>
+                                            )}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <p className="text-muted">尚無詳細步驟記錄</p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="mt-3 pt-3 border-top">
+                              <div className="btn-group btn-group-sm">
+                                <button
+                                  className="btn btn-outline-primary"
+                                  title="編輯"
+                                >
+                                  <i className="bi bi-pencil"></i> 編輯
+                                </button>
+                                <button
+                                  className="btn btn-outline-danger"
+                                  title="刪除"
+                                  onClick={() => handleDeleteTimeLog(log.id, log.title)}
+                                >
+                                  <i className="bi bi-trash"></i> 刪除
+                                </button>
+                                <button
+                                  className="btn btn-outline-info"
+                                  title="查看詳情"
+                                >
+                                  <i className="bi bi-eye"></i> 分析
+                                </button>
+                              </div>
+                            </div>
+                          </Accordion.Body>
+                        </Accordion.Item>
+                      ))}
+                    </Accordion>
                   )}
                 </div>
               </div>
