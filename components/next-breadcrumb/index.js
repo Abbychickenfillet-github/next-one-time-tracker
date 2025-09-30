@@ -4,10 +4,12 @@ import { usePathname } from 'next/navigation'
 import { useCallback } from 'react'
 import Link from 'next/link'
 import { BiHome } from 'react-icons/bi'
+import { Breadcrumb } from 'react-bootstrap'
+import ClockIcon from '@/components/clock-icon'
 // 中文路徑對照陣列，到configs/index.js中設定
 import { pathsLocaleMap } from '@/config/client.config'
 // 額外樣式檔案
-import styles from './next-breadcrumb.module.css'
+import styles from '@/styles/next-breadcrumb.module.scss'
 
 /**
  * NextBreadCrumb 搭配 useRouter 動態產生的麵包屑元件(breadcrumb)
@@ -15,13 +17,13 @@ import styles from './next-breadcrumb.module.css'
  * @component
  * @param {object} props
  * @param {boolean} [props.omitRoot=false] omit root node(home)
- * @param {JSX.Element} [props.homeIcon=<BiHome />]
+ * @param {JSX.Element} [props.homeIcon=<ClockIcon />]
  * @param {boolean} [props.isHomeIcon=false] with home icon
  * @returns {JSX.Element}
  */
 export default function NextBreadCrumb({
   omitRoot = false,
-  homeIcon = <BiHome />,
+  homeIcon = <ClockIcon />,
   isHomeIcon = false,
 }) {
   // 得到目前的網址的路徑
@@ -43,43 +45,47 @@ export default function NextBreadCrumb({
       return pathsLocaleMap[path] || path
     })
 
-    // 3. 加上dom元素，套用bs5樣式
-    const pathsDisplay = pathsLocale.map((v, i, array) => {
-      // 第一個 與 數字類型(例如id)的最後結尾要忽略, 首頁不需要(首頁樣式要在render時獨立處理)
-      if (i === 0 || v === '') return ''
+    // 3. 產生 Breadcrumb.Item 元素
+    const breadcrumbItems = []
 
-      // 最後一個
-      if (i === array.length - 1) {
-        return (
-          <li key={i} aria-current="page">
+    // 首頁項目
+    if (!omitRoot) {
+      breadcrumbItems.push(
+        <Breadcrumb.Item key="home" href="/">
+          {!isHomeIcon ? (pathsLocaleMap['home'] || '首頁') : homeIcon}
+        </Breadcrumb.Item>
+      )
+    }
+
+    // 其他路徑項目
+    pathsLocale.forEach((v, i) => {
+      if (i === 0 || v === '') return // 跳過空字串和第一個元素
+
+      if (i === pathsLocale.length - 1) {
+        // 最後一個項目（當前頁面）
+        breadcrumbItems.push(
+          <Breadcrumb.Item key={i} active>
             {v}
-          </li>
+          </Breadcrumb.Item>
+        )
+      } else {
+        // 中間項目（可點擊連結）
+        breadcrumbItems.push(
+          <Breadcrumb.Item key={i} href={paths.slice(0, i + 1).join('/')}>
+            {v}
+          </Breadcrumb.Item>
         )
       }
-
-      // 其它中間樣式
-      return (
-        <li key={i}>
-          <Link href={paths.slice(0, i + 1).join('/')}>{v}</Link>
-        </li>
-      )
     })
 
-    return pathsDisplay
-  }, [pathname])
+    return breadcrumbItems
+  }, [pathname, omitRoot, isHomeIcon, homeIcon])
 
   return (
     <nav aria-label="breadcrumb" style={{ lineHeight: '32px' }}>
-      <ul className={styles['breadcrumb']}>
-        {!omitRoot && (
-          <li>
-            <Link href="/">
-              {!isHomeIcon ? pathsLocaleMap['home'] : homeIcon}
-            </Link>
-          </li>
-        )}
+      <Breadcrumb className={styles['breadcrumb']}>
         {getPathFormatLocale()}
-      </ul>
+      </Breadcrumb>
     </nav>
   )
 }

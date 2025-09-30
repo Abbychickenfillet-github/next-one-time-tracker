@@ -1,5 +1,24 @@
-// 主題切換按鈕 - 全域樣式
-// 適用於所有頁面的主題切換功能
+// ========================================
+// 🎨 主題切換按鈕樣式 (theme-toggle.scss)
+// ========================================
+//
+// 📋 檔案作用：
+// - 專門負責主題切換按鈕的樣式設計
+// - 包含 .theme-toggle 和 .theme-button 的樣式
+// - 提供響應式設計支援
+//
+// 🔄 與 theme-system.scss 的差異：
+// - theme-toggle.scss：只負責切換按鈕的 UI 樣式
+// - theme-system.scss：負責整個應用程式的主題變數和全域樣式
+//
+// 📍 使用狀況：
+// - 目前未被直接導入使用
+// - 主題切換功能使用 components/theme-toggle/theme-toggle.module.css
+// - 此檔案可能是備用或舊版本
+//
+// 🎯 建議：
+// - 如果不再使用，可以考慮刪除
+// - 或者整合到 theme-system.scss 中統一管理
 
 .theme-toggle {
   position: fixed;
@@ -25,27 +44,30 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  
+  @media screen and (max-width: 768px) {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
   &.green {
     background: linear-gradient(45deg, #20b2aa, #17a085);
     color: white;
-    
+
     &:hover {
       background: linear-gradient(45deg, #17a085, #0d7377);
       transform: scale(1.05);
     }
   }
-  
+
   &.pink {
     background: linear-gradient(45deg, #ff6b9d, #ff8fab);
     color: white;
-    
+
     &:hover {
       background: linear-gradient(45deg, #ff1744, #e91e63);
       transform: scale(1.05);
     }
   }
-  
+
   &.active {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     transform: scale(1.1);
@@ -60,12 +82,9 @@
     gap: 8px;
     padding: 4px;
   }
-  
+
   .theme-button {
     padding: 6px 12px;
     font-size: 11px;
   }
 }
-
-
-
