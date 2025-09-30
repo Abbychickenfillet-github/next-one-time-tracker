@@ -1,4 +1,4 @@
-:global(.breadcrumb) {
+.breadcrumb {
   padding: 6px 10px !important;
   list-style: none !important;
   background-color: transparent !important;
@@ -8,13 +8,13 @@
   backdrop-filter: none !important;
   border: none !important;
 
-  :global(.breadcrumb-item) {
+  .breadcrumb-item {
     font-size: 11px !important;
     color: var(--breadcrumb-text, #333) !important;
     font-weight: 400 !important;
     letter-spacing: 2px !important;
 
-    + :global(.breadcrumb-item)::before {
+    + .breadcrumb-item::before {
       padding: 4px !important;
       color: var(--breadcrumb-text, #333) !important;
       content: '/\00a0' !important;
@@ -22,7 +22,7 @@
       font-size: 11px !important;
     }
 
-    :global(a) {
+    a {
       color: var(--breadcrumb-text, #0275d8) !important;
       text-decoration: none !important;
       transition: all 0.3s ease;
@@ -39,7 +39,7 @@
       }
     }
 
-    &:global(.active) {
+    &.active {
       color: var(--breadcrumb-text, #333) !important;
       font-size: 14px !important;
       font-weight: 500 !important;
@@ -49,16 +49,16 @@
 }
 
 /* Green Theme 專用樣式 */
-:root[data-theme="green"] :global(.breadcrumb) {
+:root[data-theme="green"] .breadcrumb {
   background: transparent;
   border: none;
   box-shadow: none;
 
-  :global(.breadcrumb-item) {
+  .breadcrumb-item {
     color: #0dcaf0 !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
 
-    :global(a) {
+    a {
       color: #0dcaf0 !important;
 
       &:hover {
@@ -71,16 +71,16 @@
 }
 
 /* Pink Theme 專用樣式 */
-:root[data-theme="pink"] :global(.breadcrumb) {
+:root[data-theme="pink"] .breadcrumb {
   background: transparent;
   border: none;
   box-shadow: none;
 
-  :global(.breadcrumb-item) {
+  .breadcrumb-item {
     color: #ff6b9d !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
 
-    :global(a) {
+    a {
       color: #ff6b9d !important;
 
       &:hover {
@@ -94,15 +94,15 @@
 
 /* RWD 響應式設計 */
 @media (max-width: 768px) {
-  :global(.breadcrumb) {
+  .breadcrumb {
     padding: 5px 8px;
     font-size: 11px;
     margin-bottom: 12px;
 
-    :global(.breadcrumb-item) {
+    .breadcrumb-item {
       font-size: 11px !important;
 
-      :global(a) {
+      a {
         padding: 1px 3px !important;
         font-size: 11px !important;
       }
@@ -111,15 +111,15 @@
 }
 
 @media (max-width: 576px) {
-  :global(.breadcrumb) {
+  .breadcrumb {
     padding: 4px 6px;
     font-size: 11px;
     margin-bottom: 8px;
 
-    :global(.breadcrumb-item) {
-      font-size: 8px !important;
+    .breadcrumb-item {
+      font-size: 11px !important;
 
-      :global(a) {
+      a {
         padding: 1px 2px !important;
         font-size: 11px !important;
       }
