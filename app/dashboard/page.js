@@ -207,7 +207,6 @@ export default function Dashboard() {
         </nav>
 
         <div className="container py-4">
-
           {/* 統計卡片 */}
           <div className="row mb-4">
             <div className="col-md-3 mb-3">
@@ -303,16 +302,25 @@ export default function Dashboard() {
                   ) : (
                     <Accordion className="border-0">
                       {timeLogs.map((log, index) => (
-                        <Accordion.Item key={log.id} eventKey={index.toString()}>
+                        <Accordion.Item
+                          key={log.id}
+                          eventKey={index.toString()}
+                        >
                           <Accordion.Header>
                             <div className="d-flex justify-content-between align-items-center w-100 me-3">
                               <div>
-                                <h6 className="mb-0 fw-semibold">{log.title}</h6>
-                                <small className="text-muted">{log.description}</small>
+                                <h6 className="mb-0 fw-semibold">
+                                  {log.title}
+                                </h6>
+                                <small className="text-muted">
+                                  {log.description}
+                                </small>
                               </div>
                               <div className="d-flex gap-2">
                                 <span className="badge bg-info">
-                                  {log.duration ? `${log.duration} 小時` : '進行中'}
+                                  {log.duration
+                                    ? `${log.duration} 小時`
+                                    : '進行中'}
                                 </span>
                                 <span className="badge bg-secondary">
                                   {log.steps.length} 步驟
@@ -325,11 +333,20 @@ export default function Dashboard() {
                               <div className="col-md-6">
                                 <h6>📅 時間資訊</h6>
                                 <ul className="list-unstyled">
-                                  <li><strong>開始時間:</strong> {formatDate(log.startTime)}</li>
-                                  <li><strong>結束時間:</strong> {formatDate(log.endTime)}</li>
-                                  <li><strong>持續時間:</strong>
+                                  <li>
+                                    <strong>開始時間:</strong>{' '}
+                                    {formatDate(log.startTime)}
+                                  </li>
+                                  <li>
+                                    <strong>結束時間:</strong>{' '}
+                                    {formatDate(log.endTime)}
+                                  </li>
+                                  <li>
+                                    <strong>持續時間:</strong>
                                     <span className="badge bg-info ms-2">
-                                      {log.duration ? `${log.duration} 小時` : '進行中'}
+                                      {log.duration
+                                        ? `${log.duration} 小時`
+                                        : '進行中'}
                                     </span>
                                   </li>
                                 </ul>
@@ -339,12 +356,17 @@ export default function Dashboard() {
                                 {log.steps && log.steps.length > 0 ? (
                                   <div className="list-group list-group-flush">
                                     {log.steps.map((step, stepIndex) => (
-                                      <div key={stepIndex} className="list-group-item px-0 py-2">
+                                      <div
+                                        key={stepIndex}
+                                        className="list-group-item px-0 py-2"
+                                      >
                                         <div className="d-flex justify-content-between align-items-start">
                                           <div>
                                             <strong>{step.name}</strong>
                                             {step.description && (
-                                              <div className="small text-muted">{step.description}</div>
+                                              <div className="small text-muted">
+                                                {step.description}
+                                              </div>
                                             )}
                                           </div>
                                           <div className="text-end">
@@ -377,7 +399,9 @@ export default function Dashboard() {
                                 <button
                                   className="btn btn-outline-danger"
                                   title="刪除"
-                                  onClick={() => handleDeleteTimeLog(log.id, log.title)}
+                                  onClick={() =>
+                                    handleDeleteTimeLog(log.id, log.title)
+                                  }
                                 >
                                   <i className="bi bi-trash"></i> 刪除
                                 </button>

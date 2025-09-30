@@ -7,14 +7,13 @@ import Link from 'next/link'
 import ThemeToggle from '@/components/theme-toggle'
 
 export default function TopNavbar() {
-
   return (
     <Navbar
       expand="lg"
       className="topnav-bootstrap"
       style={{
         backgroundColor: 'var(--navbar-bg, #333)',
-        position: 'relative'
+        position: 'relative',
       }}
     >
       <Container fluid>
