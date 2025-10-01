@@ -5,8 +5,10 @@ import { Navbar, Nav, Container } from 'react-bootstrap'
 import { FaBars } from 'react-icons/fa6'
 import Link from 'next/link'
 import ThemeToggle from '@/components/theme-toggle'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function TopNavbar() {
+  const { isAuth } = useAuth()
   return (
     <Navbar
       expand="lg"
@@ -38,7 +40,7 @@ export default function TopNavbar() {
             </Nav.Link>
             <Nav.Link
               as={Link}
-              href="/about  "
+              href="/about"
               className="nav-link-custom"
               style={{ color: 'var(--text-primary, #f2f2f2)' }}
             >
@@ -46,20 +48,32 @@ export default function TopNavbar() {
             </Nav.Link>
             <Nav.Link
               as={Link}
-              href="/user/register"
+              href="/dashboard"
               className="nav-link-custom"
               style={{ color: 'var(--text-primary, #f2f2f2)' }}
             >
-              註冊
+              儀表板
             </Nav.Link>
-            <Nav.Link
-              as={Link}
-              href="/user/login"
-              className="nav-link-custom"
-              style={{ color: 'var(--text-primary, #f2f2f2)' }}
-            >
-              登入
-            </Nav.Link>
+            {!isAuth && (
+              <>
+                <Nav.Link
+                  as={Link}
+                  href="/user/register"
+                  className="nav-link-custom"
+                  style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                >
+                  註冊
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  href="/user/login"
+                  className="nav-link-custom"
+                  style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                >
+                  登入
+                </Nav.Link>
+              </>
+            )}
           </Nav>
         </Navbar.Collapse>
 

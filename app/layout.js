@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'animate.css'
 
 import Header from '@/components/timelog/Header'
+import Footer from '@/components/footer'
 
 // RootLayout 元件 - 定義整個應用程式的根布局結構
 export default function RootLayout({ children }) {
@@ -27,6 +28,8 @@ export default function RootLayout({ children }) {
             </Suspense>
           </Providers>
         </Suspense>
+        {/* Footer 元件 */}
+        <Footer />
       </body>
     </html>
   )

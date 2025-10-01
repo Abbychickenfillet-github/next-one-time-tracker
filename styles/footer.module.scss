@@ -1,0 +1,403 @@
+// Footer 樣式
+.footer {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem 0 1rem;
+  margin-top: auto;
+  position: relative;
+  overflow: hidden;
+
+  // 背景裝飾
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      radial-gradient(
+        circle at 20% 80%,
+        rgba(120, 119, 198, 0.3) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 20%,
+        rgba(255, 119, 198, 0.3) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 40% 40%,
+        rgba(120, 219, 255, 0.2) 0%,
+        transparent 50%
+      );
+    pointer-events: none;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    text-align: center;
+  }
+}
+
+// 左側區域
+.leftSection {
+  .signature {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .signatureIcon {
+    font-size: 1.5rem;
+    animation: wiggle 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+  }
+
+  .signatureText {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .engineerName {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    letter-spacing: 0.5px;
+  }
+
+  .engineerTitle {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9);
+    font-style: italic;
+  }
+
+  .copyright {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.9;
+    font-weight: 500;
+  }
+
+  .description {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin: 0;
+  }
+}
+
+// 右側區域
+.rightSection {
+  text-align: right;
+
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+}
+
+.contactInfo {
+  margin-bottom: 1rem;
+
+  .contactTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: #fff;
+  }
+
+  .contactSubtitle {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin: 0;
+  }
+}
+
+// 社交連結區域
+.socialLinks {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  // Instagram 特殊樣式
+  &:nth-child(1):hover {
+    background: linear-gradient(
+      45deg,
+      #f09433 0%,
+      #e6683c 25%,
+      #dc2743 50%,
+      #cc2366 75%,
+      #bc1888 100%
+    );
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  // GitHub 特殊樣式
+  &:nth-child(2):hover {
+    background: linear-gradient(45deg, #24292e, #586069);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  // Email 特殊樣式
+  &.emailLink:hover {
+    background: linear-gradient(45deg, #4285f4, #34a853);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+// 圖示樣式
+.instagramIcon,
+.githubIcon,
+.emailIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.socialText {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+// 底部裝飾線
+.decorativeLine {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 25%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.3) 75%,
+    transparent 100%
+  );
+  border-radius: 1px;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 1px;
+  }
+}
+
+// 響應式設計
+@media (max-width: 768px) {
+  .footer {
+    padding: 1.5rem 0 1rem;
+  }
+
+  .content {
+    gap: 1rem;
+  }
+
+  .socialLinks {
+    gap: 0.75rem;
+  }
+
+  .socialLink {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .instagramIcon,
+  .emailIcon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 1rem 0;
+  }
+
+  .container {
+    padding: 0 0.75rem;
+  }
+
+  .socialLink {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    min-width: 120px;
+    justify-content: center;
+  }
+
+  .leftSection {
+    .signature {
+      padding: 0.5rem;
+      gap: 0.5rem;
+    }
+
+    .signatureIcon {
+      font-size: 1.2rem;
+    }
+
+    .engineerName {
+      font-size: 0.9rem;
+    }
+
+    .engineerTitle {
+      font-size: 0.7rem;
+    }
+
+    .copyright {
+      font-size: 0.8rem;
+    }
+
+    .description {
+      font-size: 0.75rem;
+    }
+  }
+
+  .contactInfo {
+    .contactTitle {
+      font-size: 1rem;
+    }
+
+    .contactSubtitle {
+      font-size: 0.8rem;
+    }
+  }
+}
+
+// 動畫效果
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-5deg) scale(1.05);
+  }
+  75% {
+    transform: rotate(5deg) scale(1.05);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    text-shadow:
+      0 0 20px rgba(255, 255, 255, 0.6),
+      0 0 30px rgba(255, 255, 255, 0.4);
+  }
+}
+
+.footer {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.engineerName {
+  animation: glow 3s ease-in-out infinite;
+}
+
+// 深色主題支援
+@media (prefers-color-scheme: dark) {
+  .footer {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+  }
+}
+
+// 高對比度模式
+@media (prefers-contrast: high) {
+  .footer {
+    background: #000;
+    border-top: 2px solid #fff;
+  }
+
+  .socialLink {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #fff;
+  }
+}
