@@ -8,7 +8,8 @@ import ThemeToggle from '@/components/theme-toggle'
 import { useAuth } from '@/hooks/use-auth'
 
 export default function TopNavbar() {
-  const { isAuth } = useAuth()
+  const auth = useAuth()
+  const isAuth = auth?.isAuth || false
   return (
     <Navbar
       expand="lg"

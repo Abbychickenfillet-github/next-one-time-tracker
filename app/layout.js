@@ -15,21 +15,21 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head />
       <body>
-        {/* 頂部導航欄 */}
-        <TopNavbar />
-        {/* TimeLog 專用的 Header 元件 (已整合 Breadcrumb) */}
-        <Header />
         <Suspense>
           {/* 全域 Context Providers 包裝器 */}
           <Providers>
+            {/* 頂部導航欄 */}
+            <TopNavbar />
+            {/* TimeLog 專用的 Header 元件 (已整合 Breadcrumb) */}
+            <Header />
             <Suspense>
               {/* 頁面內容 - 這裡會渲染各個頁面的 children */}
               {children}
             </Suspense>
+            {/* Footer 元件 */}
+            <Footer />
           </Providers>
         </Suspense>
-        {/* Footer 元件 */}
-        <Footer />
       </body>
     </html>
   )
