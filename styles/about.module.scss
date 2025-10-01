@@ -95,81 +95,78 @@
 // 像素風裝飾圖示
 .pixelIcons {
   position: fixed;
-//   top: 50%;
   z-index: 10;
   pointer-events: none;
+}
 
-  // 右側化學藥水
-  &::before {
-    content: '🧪';
-    position: fixed;
-    right: 20%; // 預設值，會被媒體查詢覆蓋
-    top: 35%;
-    font-size: 40px;
-    filter: drop-shadow(0 0 10px rgba(123, 75, 91, 0.8));
-    animation: float-right 3s ease-in-out infinite;
+// 右側化學藥水
+.chemicalIcon {
+  position: fixed;
+  right: 20%; // 預設值，會被媒體查詢覆蓋
+  top: 35%;
+  font-size: 40px;
+  filter: drop-shadow(0 0 10px rgba(123, 75, 91, 0.8));
+  animation: float-right 3s ease-in-out infinite;
+}
+
+// 左側剪刀
+.scissorIcon {
+  position: fixed;
+  left: 20%; // 預設值，會被媒體查詢覆蓋
+  top: 35%;
+  font-size: 35px;
+  filter: drop-shadow(0 0 10px rgba(13, 202, 240, 0.8));
+  animation: float-left 3s ease-in-out infinite;
+}
+
+// 響應式斷點設定
+// 576px-767px: 容器最大寬度 540px
+@media (min-width: 576px) and (max-width: 767px) {
+  .chemicalIcon {
+    right: calc((100% - 540px) / 2);
   }
-
-  // 左側剪刀
-  &::after {
-    content: '✂️';
-    position: fixed;
-    left: 20%; // 預設值，會被媒體查詢覆蓋
-    top: 35%;
-    font-size: 35px;
-    filter: drop-shadow(0 0 10px rgba(13, 202, 240, 0.8));
-    animation: float-left 3s ease-in-out infinite;
+  .scissorIcon {
+    left: calc((100% - 540px) / 2);
   }
+}
 
-  // 響應式斷點設定
-  // 576px-767px: 容器最大寬度 540px
-  @media (min-width: 576px) and (max-width: 767px) {
-    &::before {
-      right: calc((100% - 540px) / 2);
-    }
-    &::after {
-      left: calc((100% - 540px) / 2);
-    }
+// 768px-991px: 容器最大寬度 720px
+@media (min-width: 768px) and (max-width: 991px) {
+  .chemicalIcon {
+    right: calc((100% - 720px) / 2);
   }
-
-  // 768px-991px: 容器最大寬度 720px
-  @media (min-width: 768px) and (max-width: 991px) {
-    &::before {
-      right: calc((100% - 720px) / 2);
-    }
-    &::after {
-      left: calc((100% - 720px) / 2);
-    }
+  .scissorIcon {
+    left: calc((100% - 720px) / 2);
   }
+}
 
-  // 992px-1199px: 容器最大寬度 960px
-  @media (min-width: 992px) and (max-width: 1199px) {
-    &::before {
-      right: calc((100% - 960px) / 2);
-    }
-    &::after {
-      left: calc((100% - 960px) / 2);
-    }
+// 992px-1199px: 容器最大寬度 960px
+@media (min-width: 992px) and (max-width: 1199px) {
+  .chemicalIcon {
+    right: calc((100% - 960px) / 2);
   }
-
-  // 1200px-1399px: 容器最大寬度 1140px
-  @media (min-width: 1200px) and (max-width: 1399px) {
-    &::before {
-      right: calc((100% - 1140px) / 2);
-    }
-    &::after {
-      left: calc((100% - 1140px) / 2);
-    }
+  .scissorIcon {
+    left: calc((100% - 960px) / 2);
   }
+}
 
-  // 1400px及以上: 容器最大寬度 1320px
-  @media (min-width: 1400px) {
-    &::before {
-      right: calc((100% - 1320px) / 2);
-    }
-    &::after {
-      left: calc((100% - 1320px) / 2);
-    }
+// 1200px-1399px: 容器最大寬度 1140px
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .chemicalIcon {
+    right: calc((100% - 1140px) / 2);
+  }
+  .scissorIcon {
+    left: calc((100% - 1140px) / 2);
+  }
+}
+
+// 1400px及以上: 容器最大寬度 1320px
+@media (min-width: 1400px) {
+  .chemicalIcon {
+    right: calc((100% - 1320px) / 2);
+  }
+  .scissorIcon {
+    left: calc((100% - 1320px) / 2);
   }
 }
 
