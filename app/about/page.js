@@ -4,7 +4,10 @@ export default function About() {
   return (
     <div className={`container py-5 ${styles.aboutPage}`}>
       {/* 像素風裝飾圖示 */}
-      <div className={styles.pixelIcons}></div>
+      <div className={styles.pixelIcons}>
+        <span className={styles.chemicalIcon}>🧪</span>
+        <span className={styles.scissorIcon}>✂️</span>
+      </div>
 
       <div className="row justify-content-center">
         <div className="col-lg-8">
