@@ -1,162 +1,221 @@
 .card1 {
-    border: 0.5px dashed #b25f5f32;
-    background: linear-gradient(135deg, rgba(255, 107, 157, 0.8), rgba(255, 139, 171, 0.6)), url('/blue-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: #ffffff;
+  border: 0.5px dashed #b25f5f32;
+  background:
+    linear-gradient(135deg, rgba(255, 107, 157, 0.8), rgba(255, 139, 171, 0.6)),
+    url('/blue-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #ffffff;
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 20px rgba(255, 255, 255, 0.6),
+    0 0 30px rgba(255, 255, 255, 0.4),
+    0 0 40px rgba(255, 255, 255, 0.2);
+
+  .card-title {
+    color: #ffffff !important;
     text-shadow:
-        0 0 10px rgba(255, 255, 255, 0.8),
-        0 0 20px rgba(255, 255, 255, 0.6),
-        0 0 30px rgba(255, 255, 255, 0.4),
-        0 0 40px rgba(255, 255, 255, 0.2);
+      0 0 15px rgba(255, 255, 255, 0.9),
+      0 0 25px rgba(255, 255, 255, 0.7),
+      0 0 35px rgba(255, 255, 255, 0.5),
+      0 0 45px rgba(255, 255, 255, 0.3),
+      0 0 55px rgba(255, 255, 255, 0.1);
+    animation: glow-pulse 2s ease-in-out infinite alternate;
+  }
 
-    .card-title {
-        color: #ffffff !important;
-        text-shadow:
-            0 0 15px rgba(255, 255, 255, 0.9),
-            0 0 25px rgba(255, 255, 255, 0.7),
-            0 0 35px rgba(255, 255, 255, 0.5),
-            0 0 45px rgba(255, 255, 255, 0.3),
-            0 0 55px rgba(255, 255, 255, 0.1);
-        animation: glow-pulse 2s ease-in-out infinite alternate;
-    }
-
-    .card-text {
-        color: #ffffff !important;
-        text-shadow:
-            0 0 8px rgba(255, 255, 255, 0.7),
-            0 0 16px rgba(255, 255, 255, 0.5),
-            0 0 24px rgba(255, 255, 255, 0.3),
-            0 0 32px rgba(255, 255, 255, 0.1);
-    }
+  .card-text {
+    color: #ffffff !important;
+    text-shadow:
+      0 0 8px rgba(255, 255, 255, 0.7),
+      0 0 16px rgba(255, 255, 255, 0.5),
+      0 0 24px rgba(255, 255, 255, 0.3),
+      0 0 32px rgba(255, 255, 255, 0.1);
+  }
 }
 
 @keyframes glow-pulse {
-    from {
-        text-shadow:
-            0 0 15px rgba(255, 255, 255, 0.9),
-            0 0 25px rgba(255, 255, 255, 0.7),
-            0 0 35px rgba(255, 255, 255, 0.5),
-            0 0 45px rgba(255, 255, 255, 0.3),
-            0 0 55px rgba(255, 255, 255, 0.1);
-    }
-    to {
-        text-shadow:
-            0 0 20px rgba(255, 255, 255, 1),
-            0 0 30px rgba(255, 255, 255, 0.8),
-            0 0 40px rgba(255, 255, 255, 0.6),
-            0 0 50px rgba(255, 255, 255, 0.4),
-            0 0 60px rgba(255, 255, 255, 0.2);
-    }
+  from {
+    text-shadow:
+      0 0 15px rgba(255, 255, 255, 0.9),
+      0 0 25px rgba(255, 255, 255, 0.7),
+      0 0 35px rgba(255, 255, 255, 0.5),
+      0 0 45px rgba(255, 255, 255, 0.3),
+      0 0 55px rgba(255, 255, 255, 0.1);
+  }
+  to {
+    text-shadow:
+      0 0 20px rgba(255, 255, 255, 1),
+      0 0 30px rgba(255, 255, 255, 0.8),
+      0 0 40px rgba(255, 255, 255, 0.6),
+      0 0 50px rgba(255, 255, 255, 0.4),
+      0 0 60px rgba(255, 255, 255, 0.2);
+  }
 }
 
 // 左下角背景圖片
 .aboutPage {
-    position: relative;
-    min-height: 100vh;
+  position: relative;
+  min-height: 100vh;
 
-    &::before {
-        content: '';
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100vw; // 延伸到整個視窗寬度
-        height: 50vh; // 延伸到視窗高度的一半
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(64, 64, 64, 0.2));
-        opacity: 0.6;
-        z-index: -1;
-        // 不規則邊緣設計 - 延伸到右邊底部
-        clip-path: polygon(
-            0% 100%,
-            0% 40%,
-            20% 30%,
-            40% 15%,
-            60% 25%,
-            80% 10%,
-            100% 20%,
-            100% 100%
-        );
-        // 黑色光暈效果
-        box-shadow:
-            0 0 40px rgba(0, 0, 0, 0.6),
-            0 0 80px rgba(0, 0, 0, 0.4),
-            0 0 120px rgba(0, 0, 0, 0.3),
-            0 0 160px rgba(0, 0, 0, 0.2);
-    }
+  &::before {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw; // 延伸到整個視窗寬度
+    height: 50vh; // 延伸到視窗高度的一半
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.3),
+      rgba(64, 64, 64, 0.2)
+    );
+    opacity: 0.6;
+    z-index: -1;
+    // 不規則邊緣設計 - 延伸到右邊底部
+    clip-path: polygon(
+      0% 100%,
+      0% 40%,
+      20% 30%,
+      40% 15%,
+      60% 25%,
+      80% 10%,
+      100% 20%,
+      100% 100%
+    );
+    // 黑色光暈效果
+    box-shadow:
+      0 0 40px rgba(0, 0, 0, 0.6),
+      0 0 80px rgba(0, 0, 0, 0.4),
+      0 0 120px rgba(0, 0, 0, 0.3),
+      0 0 160px rgba(0, 0, 0, 0.2);
+  }
 }
 
 // 像素風裝飾圖示
 .pixelIcons {
+  position: fixed;
+//   top: 50%;
+  z-index: 10;
+  pointer-events: none;
+
+  // 右側化學藥水
+  &::before {
+    content: '🧪';
     position: fixed;
-    top: 50%;
-    // transform: translateY(-50%);
-    z-index: 10;
-    pointer-events: none;
+    right: 20%; // 預設值，會被媒體查詢覆蓋
+    top: 35%;
+    font-size: 40px;
+    filter: drop-shadow(0 0 10px rgba(123, 75, 91, 0.8));
+    animation: float-right 3s ease-in-out infinite;
+  }
 
-    // 右側化學藥水
+  // 左側剪刀
+  &::after {
+    content: '✂️';
+    position: fixed;
+    left: 20%; // 預設值，會被媒體查詢覆蓋
+    top: 35%;
+    font-size: 35px;
+    filter: drop-shadow(0 0 10px rgba(13, 202, 240, 0.8));
+    animation: float-left 3s ease-in-out infinite;
+  }
+
+  // 響應式斷點設定
+  // 576px-767px: 容器最大寬度 540px
+  @media (min-width: 576px) and (max-width: 767px) {
     &::before {
-        content: '🧪';
-        position: fixed;
-        right: 20px; // 對稱在右邊框線上
-        top: 35%;
-        font-size: 40px;
-        filter: drop-shadow(0 0 10px rgba(123, 75, 91, 0.8));
-        animation: float-left 3s ease-in-out infinite;
+      right: calc((100% - 540px) / 2);
     }
-
-    // 左側剪刀
     &::after {
-        content: '✂️';
-        position: fixed;
-        left: 20px;
-        top: 35%;
-        font-size: 35px;
-        filter: drop-shadow(0 0 10px rgba(13, 202, 240, 0.8));
-        animation: float-right 3s ease-in-out infinite;
+      left: calc((100% - 540px) / 2);
     }
+  }
+
+  // 768px-991px: 容器最大寬度 720px
+  @media (min-width: 768px) and (max-width: 991px) {
+    &::before {
+      right: calc((100% - 720px) / 2);
+    }
+    &::after {
+      left: calc((100% - 720px) / 2);
+    }
+  }
+
+  // 992px-1199px: 容器最大寬度 960px
+  @media (min-width: 992px) and (max-width: 1199px) {
+    &::before {
+      right: calc((100% - 960px) / 2);
+    }
+    &::after {
+      left: calc((100% - 960px) / 2);
+    }
+  }
+
+  // 1200px-1399px: 容器最大寬度 1140px
+  @media (min-width: 1200px) and (max-width: 1399px) {
+    &::before {
+      right: calc((100% - 1140px) / 2);
+    }
+    &::after {
+      left: calc((100% - 1140px) / 2);
+    }
+  }
+
+  // 1400px及以上: 容器最大寬度 1320px
+  @media (min-width: 1400px) {
+    &::before {
+      right: calc((100% - 1320px) / 2);
+    }
+    &::after {
+      left: calc((100% - 1320px) / 2);
+    }
+  }
 }
 
 // 時鐘圖示已移至 components/clock-icon
 
 // 浮動動畫
 @keyframes float-left {
-    0%, 100% {
-        transform: translateY(0px) rotate(0deg);
-        filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.8));
-    }
-    50% {
-        transform: translateY(-10px) rotate(5deg);
-        filter: drop-shadow(0 0 15px rgba(255, 107, 157, 1));
-    }
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+    filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.8));
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+    filter: drop-shadow(0 0 15px rgba(255, 107, 157, 1));
+  }
 }
 
 @keyframes float-right {
-    0%, 100% {
-        transform: translateY(0px) rotate(0deg);
-        filter: drop-shadow(0 0 10px rgba(13, 202, 240, 0.8));
-    }
-    50% {
-        transform: translateY(-8px) rotate(-3deg);
-        filter: drop-shadow(0 0 15px rgba(13, 202, 240, 1));
-    }
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+    filter: drop-shadow(0 0 10px rgba(13, 202, 240, 0.8));
+  }
+  50% {
+    transform: translateY(-8px) rotate(-3deg);
+    filter: drop-shadow(0 0 15px rgba(13, 202, 240, 1));
+  }
 }
 
 // tick-tock 動畫已移至 components/clock-icon
 
 // 響應式設計
-@media screen and (max-width: 768px) {
-    .pixelIcons {
-        &::before {
-            left: calc(50% + 200px); // 小螢幕調整位置
-            font-size: 30px;
-        }
+// @media screen and (max-width: 768px) {
+//     .pixelIcons {
+//         &::before {
+//             left: calc(50% + 200px); // 小螢幕調整位置
+//             font-size: 30px;
+//         }
 
-        &::after {
-            left: calc(50% - 200px); // 小螢幕調整位置
-            font-size: 25px;
-        }
-    }
+//         &::after {
+//             left: calc(50% - 200px); // 小螢幕調整位置
+//             font-size: 25px;
+//         }
+//     }
 
-    // clockIcon 已移至 components/clock-icon
-}
+// clockIcon 已移至 components/clock-icon
+// }
+// 小螢幕響應式設計已整合到上面的媒體查詢中
