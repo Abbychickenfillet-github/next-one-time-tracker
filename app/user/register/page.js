@@ -583,7 +583,13 @@ export default function RegisterPage() {
                 </div>
                 <div className="mb-5">
                   <GlowingText
-                    text="TimeLog & Analysis"
+                    text="TimeLog &"
+                    className="text-white display-3 fw-bold"
+                  />
+                </div>
+                <div className="mb-5">
+                  <GlowingText
+                    text="Analysis"
                     className="text-white display-3 fw-bold"
                   />
                 </div>
