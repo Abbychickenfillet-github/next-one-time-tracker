@@ -26,8 +26,7 @@
 }
 
 // 響應式斷點設定
-// 576px-767px: 容器最大寬度 540px
-@media (min-width: 576px) and (max-width: 767px) {
+@media (min-width: 576px) {
   .chemicalIcon {
     right: calc((100% - 540px) / 2);
   }
@@ -36,8 +35,7 @@
   }
 }
 
-// 768px-991px: 容器最大寬度 720px
-@media (min-width: 768px) and (max-width: 991px) {
+@media (min-width: 768px) {
   .chemicalIcon {
     right: calc((100% - 720px) / 2);
   }
@@ -46,8 +44,7 @@
   }
 }
 
-// 992px-1199px: 容器最大寬度 960px
-@media (min-width: 992px) and (max-width: 1199px) {
+@media (min-width: 992px) {
   .chemicalIcon {
     right: calc((100% - 960px) / 2);
   }
@@ -56,8 +53,7 @@
   }
 }
 
-// 1200px-1399px: 容器最大寬度 1140px
-@media (min-width: 1200px) and (max-width: 1399px) {
+@media (min-width: 1200px) {
   .chemicalIcon {
     right: calc((100% - 1140px) / 2);
   }
@@ -66,7 +62,6 @@
   }
 }
 
-// 1400px及以上: 容器最大寬度 1320px
 @media (min-width: 1400px) {
   .chemicalIcon {
     right: calc((100% - 1320px) / 2);
