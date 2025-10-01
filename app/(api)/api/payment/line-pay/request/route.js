@@ -27,6 +27,7 @@ export async function GET(request) {
 
   // 取得資料
   const data = await requestPayment(amount)
+  console.log(data)
 
   // 如果是開發環境，顯示部落格列表
   if (isDev) console.log(data)

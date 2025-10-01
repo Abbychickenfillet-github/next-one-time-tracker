@@ -27,61 +27,111 @@ export default function About() {
 
           <div className="card mb-4">
             <div className="card-body">
-              <h2 className="card-title">💇‍♀️ 離子燙藥水燙直步驟</h2>
-              <ol className="list-group list-group-numbered">
-                <li className="list-group-item">
-                  <div className="d-flex justify-content-between align-items-start">
-                    <div>
-                      <strong>噴濕頭髮</strong>
-                      <br />
-                      <small className="text-muted">目的：讓毛鱗片打開</small>
-                    </div>
-                    <small className="text-muted">⏱️ 2-3分鐘</small>
-                  </div>
-                </li>
-                <li className="list-group-item">
-                  <div className="d-flex justify-content-between align-items-start">
-                    <div>
-                      <strong>上第一劑</strong>
-                      <br />
-                      <small className="text-muted">
-                        從最捲的地方開始上(例如接近頭皮的地方)逐步按下計時器的分圈，用尖尾梳將一縷髮絲纏繞7圈，拉一下停7秒放開，看有沒有回彈回去看看捲度的效果，有沒有觀察是否軟化，7圈至少5圈沒有回彈、6-7圈是比較鬆彈的話，就至少有80%軟化成功，此時會再停留3分鐘左右。
-                      </small>
-                    </div>
-                    <small className="text-muted">⏱️ 15-20分鐘</small>
-                  </div>
-                </li>
-                <li className="list-group-item">
-                  <div className="d-flex justify-content-between align-items-start">
-                    <div>
-                      <strong>吹乾</strong>
-                      <br />
-                      <small className="text-muted">
-                        用平板夾的時候，應該注意要髮片與頭皮切線成90度，才不會扁蹋(髮中髮尾諾曼用另外的配方)
-                      </small>
-                    </div>
-                    <small className="text-muted">⏱️ 10-15分鐘</small>
-                  </div>
-                </li>
-                <li className="list-group-item">
-                  <div className="d-flex justify-content-between align-items-start">
-                    <div>
-                      <strong>用洗髮精洗頭</strong>
-                    </div>
-                    <small className="text-muted">⏱️ 5-8分鐘</small>
-                  </div>
-                </li>
-                <li className="list-group-item">
-                  <div className="d-flex justify-content-between align-items-start">
-                    <div>
-                      <strong>上第二劑</strong>
-                      <br />
-                      <small className="text-muted">停留10-15分鐘</small>
-                    </div>
-                    <small className="text-muted">⏱️ 10-15分鐘</small>
-                  </div>
-                </li>
-              </ol>
+              <h2 className="card-title">💇‍♀️ 離子燙藥水燙直步驟 Demo</h2>
+              <div className="table-responsive">
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>步驟</th>
+                      <th>開始時間</th>
+                      <th>結束時間</th>
+                      <th>耗時</th>
+                      <th>說明</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <strong>噴濕頭髮</strong>
+                      </td>
+                      <td>10:00:00</td>
+                      <td>10:02:15</td>
+                      <td>2分15秒</td>
+                      <td>目的：讓毛鱗片打開</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>上第一劑 - 髮根區</strong>
+                      </td>
+                      <td>10:02:15</td>
+                      <td>10:08:30</td>
+                      <td>6分15秒</td>
+                      <td>從最捲的地方開始，用尖尾梳測試軟化程度</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>上第一劑 - 髮中區</strong>
+                      </td>
+                      <td>10:08:30</td>
+                      <td>10:14:45</td>
+                      <td>6分15秒</td>
+                      <td>逐步上藥水，測試7圈回彈效果</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>上第一劑 - 髮尾區</strong>
+                      </td>
+                      <td>10:14:45</td>
+                      <td>10:20:00</td>
+                      <td>5分15秒</td>
+                      <td>髮尾用較弱藥水，停留3分鐘</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>用洗髮精洗頭</strong>
+                      </td>
+                      <td>10:20:00</td>
+                      <td>10:25:30</td>
+                      <td>5分30秒</td>
+                      <td>徹底清潔第一劑殘留</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>吹乾頭髮</strong>
+                      </td>
+                      <td>10:25:30</td>
+                      <td>10:35:00</td>
+                      <td>9分30秒</td>
+                      <td>完全吹乾，準備上第二劑</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>上第二劑</strong>
+                      </td>
+                      <td>10:35:00</td>
+                      <td>10:42:20</td>
+                      <td>7分20秒</td>
+                      <td>乳狀第二劑，讓頭髮充分吸收藥水</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>等待吸收</strong>
+                      </td>
+                      <td>10:42:20</td>
+                      <td>10:47:20</td>
+                      <td>5分00秒</td>
+                      <td>讓第二劑充分滲透，濃稠度適中</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>完成</strong>
+                      </td>
+                      <td>10:47:20</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>整個流程完成</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-3">
+                <small className="text-muted">
+                  <strong>總耗時：</strong>約 47 分鐘
+                  <br />
+                  <strong>注意：</strong>
+                  第二劑建議使用乳狀或霜狀，有重量更可以將頭髮往下帶
+                </small>
+              </div>
             </div>
           </div>
 

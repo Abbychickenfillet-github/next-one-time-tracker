@@ -8,6 +8,19 @@ $link-hover-color: darken($link-color, 10%);
 
 @import 'bootstrap/scss/bootstrap';
 
+// 彩虹文字動畫
+@keyframes rainbow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .nav-item .nav-link{
     color: black;
     &:hover{

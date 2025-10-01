@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 // 樣式已移至全域 globals.scss
 import Swal from 'sweetalert2'
-import Image from 'next/image'
+// import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/use-auth'
@@ -107,8 +107,8 @@ export default function LogIn() {
             {/* 左側歡迎區域 */}
             <div className="col-lg-7 col-md-12 mb-5 mb-lg-0">
               <div className="text-center text-lg-start position-relative m-0">
-                {/* 背景圖片 */}
-                <Image
+                {/* 背景圖片 - 先不放因為會導致畫面有點雜亂*/}
+                {/* <Image
                   src="/7-Reasons-To-Keep-Jade-Plant-At-Your-Entrance.jpg"
                   alt="背景圖片"
                   fill
@@ -119,7 +119,7 @@ export default function LogIn() {
                     borderRadius: '15px',
                     minHeight: '100vh',
                   }}
-                />
+                /> */}
 
                 <div className="mb-5">
                   <GlowingText

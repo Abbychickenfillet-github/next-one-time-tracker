@@ -152,7 +152,7 @@ export default function TimeLogClient() {
         type: 'step',
         title: desc,
         description: desc,
-        text: `📍 ${desc} | ${now.toLocaleString()}`,
+        text: `${desc} | ${now.toLocaleString()}`,
         startTime: now,
         endTime: null,
         ended: false,
@@ -277,7 +277,20 @@ export default function TimeLogClient() {
         {/* 活動名稱輸入框 */}
         <label
           htmlFor="titleInput"
-          className="form-label fw-bold text-dark mb-2 text-center animate__animated animate__fadeInDown animate__delay-1s"
+          className="animate__animated animate__fadeInDown animate__delay-1s text-center"
+          style={{
+            display: 'block',
+            fontWeight: 'bold',
+            // color: '#333',
+            margin: '20px auto',
+            fontSize: '25px',
+            background:
+              'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #54a0ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            textShadow: '0 0 10px rgba(255, 255, 255, 0.5)',
+          }}
         >
           📝 活動名稱
         </label>
