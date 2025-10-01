@@ -251,8 +251,8 @@ export default function RegisterPage() {
           confirmButtonColor: '#3085d6',
         })
 
-        // 使用 window.location 進行頁面跳轉
-        window.location.href = '/user'
+        // 使用 window.location 進行頁面跳轉到登入頁面
+        window.location.href = '/user/login'
       } else {
         await Swal.fire({
           title: '註冊失敗',

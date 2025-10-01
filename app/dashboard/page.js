@@ -29,11 +29,11 @@ export default function Dashboard() {
       user: user,
     })
 
-    // 暫時註解掉自動跳轉，讓你可以測試 dashboard
-    // if (auth.hasChecked && !isAuth) {
-    //   console.log('❌ 未認證，跳轉到登入頁面')
-    //   router.replace('/user/login')
-    // }
+    // 如果認證檢查完成且未登入，跳轉到登入頁面
+    if (auth.hasChecked && !isAuth) {
+      console.log('❌ 未認證，跳轉到登入頁面')
+      router.replace('/user/login')
+    }
   }, [auth, isAuth, router, user])
 
   // 獲取真實的時間戳記錄數據
@@ -169,10 +169,10 @@ export default function Dashboard() {
     )
   }
 
-  // 暫時註解掉認證檢查，讓你可以測試 dashboard
-  // if (!isAuth) {
-  //   return null
-  // }
+  // 如果未登入，不顯示內容
+  if (!isAuth) {
+    return null
+  }
 
   return (
     <>
