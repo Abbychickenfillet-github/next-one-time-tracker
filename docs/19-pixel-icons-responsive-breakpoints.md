@@ -184,6 +184,279 @@ git checkout -- .
 - `app/about/page.js` - 頁面組件
 - `components/clock-icon/` - 時鐘圖示組件（已分離）
 
-## 更新日期
+不使用 `::before` 和 `::after` 的替代方案：
 
-2024年12月 - 初始版本
+## 方案 1：使用實際的 HTML 元素
+
+```jsx
+// app/about/page.js
+export default function About() {
+  return (
+    <div className={`container py-5 ${styles.aboutPage}`}>
+      {/* 像素風裝飾圖示 */}
+      <div className={styles.pixelIcons}>
+        <span className={styles.chemicalIcon}>🧪</span>
+        <span className={styles.scissorIcon}>✂️</span>
+      </div>
+
+      {/* 其他內容 */}
+      <div className="row justify-content-center">
+        {/* ... */}
+      </div>
+    </div>
+  )
+}
+```
+
+```scss
+// styles/about.module.scss
+.pixelIcons {
+  position: fixed;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.chemicalIcon {
+  position: fixed;
+  right: 20%;
+  top: 35%;
+  font-size: 40px;
+  filter: drop-shadow(0 0 10px rgba(123, 75, 91, 0.8));
+  animation: float-right 3s ease-in-out infinite;
+}
+
+.scissorIcon {
+  position: fixed;
+  left: 20%;
+  top: 35%;
+  font-size: 35px;
+  filter: drop-shadow(0 0 10px rgba(13, 202, 240, 0.8));
+  animation: float-left 3s ease-in-out infinite;
+}
+```
+
+## 方案 2：使用 React 組件
+
+```jsx
+// components/DecorativeIcons.jsx
+export default function DecorativeIcons() {
+  return (
+    <>
+      <span className="chemical-icon">🧪</span>
+      <span className="scissor-icon">✂️</span>
+    </>
+  )
+}
+```
+
+```jsx
+// app/about/page.js
+import DecorativeIcons from '@/components/DecorativeIcons'
+
+export default function About() {
+  return (
+    <div className={`container py-5 ${styles.aboutPage}`}>
+      <DecorativeIcons />
+      {/* 其他內容 */}
+    </div>
+  )
+}
+```
+
+## 方案 3：使用 CSS Grid 或 Flexbox
+
+```jsx
+// app/about/page.js
+export default function About() {
+  return (
+    <div className={`container py-5 ${styles.aboutPage}`}>
+      <div className={styles.iconContainer}>
+        <span className={styles.leftIcon}>✂️</span>
+        <div className={styles.contentArea}>
+          {/* 主要內容 */}
+        </div>
+        <span className={styles.rightIcon}>🧪</span>
+      </div>
+    </div>
+  )
+}
+```
+
+```scss
+// styles/about.module.scss
+.iconContainer {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 20px;
+  min-height: 100vh;
+}
+
+.leftIcon, .rightIcon {
+  font-size: 40px;
+  position: sticky;
+  top: 35%;
+}
+
+.leftIcon {
+  filter: drop-shadow(0 0 10px rgba(13, 202, 240, 0.8));
+  animation: float-left 3s ease-in-out infinite;
+}
+
+.rightIcon {
+  filter: drop-shadow(0 0 10px rgba(123, 75, 91, 0.8));
+  animation: float-right 3s ease-in-out infinite;
+}
+```
+
+## 方案 4：使用絕對定位的 div
+
+```jsx
+// app/about/page.js
+export default function About() {
+  return (
+    <div className={`container py-5 ${styles.aboutPage}`}>
+      {/* 裝飾圖示 */}
+      <div className={styles.chemicalIcon}>🧪</div>
+      <div className={styles.scissorIcon}>✂️</div>
+
+      {/* 其他內容 */}
+      <div className="row justify-content-center">
+        {/* ... */}
+      </div>
+    </div>
+  )
+}
+```
+
+```scss
+// styles/about.module.scss
+.chemicalIcon, .scissorIcon {
+  position: fixed;
+  top: 35%;
+  z-index: 10;
+  pointer-events: none;
+  font-size: 40px;
+}
+
+.chemicalIcon {
+  right: 20%;
+  filter: drop-shadow(0 0 10px rgba(123, 75, 91, 0.8));
+  animation: float-right 3s ease-in-out infinite;
+}
+
+.scissorIcon {
+  left: 20%;
+  filter: drop-shadow(0 0 10px rgba(13, 202, 240, 0.8));
+  animation: float-left 3s ease-in-out infinite;
+}
+```
+
+## 方案 5：使用背景圖片
+
+```scss
+// styles/about.module.scss
+.aboutPage {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: 35%;
+    left: 20%;
+    width: 40px;
+    height: 40px;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">✂️</text></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 10;
+    pointer-events: none;
+    animation: float-left 3s ease-in-out infinite;
+  }
+
+  &::after {
+    content: '';
+    position: fixed;
+    top: 35%;
+    right: 20%;
+    width: 40px;
+    height: 40px;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🧪</text></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 10;
+    pointer-events: none;
+    animation: float-right 3s ease-in-out infinite;
+  }
+}
+```
+
+## 各方案比較
+
+| 方案 | 優點 | 缺點 | 適用場景 |
+|------|------|------|----------|
+| **HTML 元素** | 簡單直接，易於控制 | 增加 DOM 節點 | 簡單裝飾 |
+| **React 組件** | 可重用，邏輯清晰 | 需要額外組件 | 複雜邏輯 |
+| **CSS Grid** | 佈局靈活，響應式好 | 可能影響主佈局 | 複雜佈局 |
+| **絕對定位** | 不影響主佈局 | 需要手動調整位置 | 固定位置裝飾 |
+| **背景圖片** | 不增加 DOM 節點 | 難以動態控制 | 靜態裝飾 |
+
+## 推薦方案
+
+建議使用方案 1（HTML 元素），因為：
+- 簡單直接
+- 易於維護
+- 不影響主佈局
+- 響應式友好
+- 可保留現有動畫
+
+需要我幫你實作哪個方案？
+
+改用具名元素取代 `::before` 和 `::after`。
+
+
+[3 tools called]
+
+## 修改完成
+
+### 修改內容
+
+**HTML 結構**：
+```jsx
+// 原本
+<div className={styles.pixelIcons}></div>
+
+// 現在
+<div className={styles.pixelIcons}>
+  <span className={styles.chemicalIcon}>🧪</span>
+  <span className={styles.scissorIcon}>✂️</span>
+</div>
+```
+
+**CSS 樣式**：
+```scss
+// 原本使用偽元素
+&::before { content: '🧪'; }
+&::after { content: '✂️'; }
+
+// 現在使用具名類別
+.chemicalIcon { /* 化學藥水樣式 */ }
+.scissorIcon { /* 剪刀樣式 */ }
+```
+
+### 優點
+
+1. 語義更清楚：`chemicalIcon`、`scissorIcon`
+2. 易於維護：可直接修改 HTML
+3. 調試方便：開發者工具中可見
+4. 響應式保留：媒體查詢不變
+5. 動畫保留：浮動動畫不變
+
+### 測試
+
+- 化學藥水在右側
+- 剪刀在左側
+- 響應式斷點正常
+- 浮動動畫正常
+
+若不滿意，可執行 `git checkout -- .` 還原所有變更。
