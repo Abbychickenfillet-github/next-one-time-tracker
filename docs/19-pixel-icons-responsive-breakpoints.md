@@ -200,9 +200,7 @@ export default function About() {
       </div>
 
       {/* 其他內容 */}
-      <div className="row justify-content-center">
-        {/* ... */}
-      </div>
+      <div className="row justify-content-center">{/* ... */}</div>
     </div>
   )
 }
@@ -272,9 +270,7 @@ export default function About() {
     <div className={`container py-5 ${styles.aboutPage}`}>
       <div className={styles.iconContainer}>
         <span className={styles.leftIcon}>✂️</span>
-        <div className={styles.contentArea}>
-          {/* 主要內容 */}
-        </div>
+        <div className={styles.contentArea}>{/* 主要內容 */}</div>
         <span className={styles.rightIcon}>🧪</span>
       </div>
     </div>
@@ -292,7 +288,8 @@ export default function About() {
   min-height: 100vh;
 }
 
-.leftIcon, .rightIcon {
+.leftIcon,
+.rightIcon {
   font-size: 40px;
   position: sticky;
   top: 35%;
@@ -321,9 +318,7 @@ export default function About() {
       <div className={styles.scissorIcon}>✂️</div>
 
       {/* 其他內容 */}
-      <div className="row justify-content-center">
-        {/* ... */}
-      </div>
+      <div className="row justify-content-center">{/* ... */}</div>
     </div>
   )
 }
@@ -331,7 +326,8 @@ export default function About() {
 
 ```scss
 // styles/about.module.scss
-.chemicalIcon, .scissorIcon {
+.chemicalIcon,
+.scissorIcon {
   position: fixed;
   top: 35%;
   z-index: 10;
@@ -393,17 +389,18 @@ export default function About() {
 
 ## 各方案比較
 
-| 方案 | 優點 | 缺點 | 適用場景 |
-|------|------|------|----------|
-| **HTML 元素** | 簡單直接，易於控制 | 增加 DOM 節點 | 簡單裝飾 |
-| **React 組件** | 可重用，邏輯清晰 | 需要額外組件 | 複雜邏輯 |
-| **CSS Grid** | 佈局靈活，響應式好 | 可能影響主佈局 | 複雜佈局 |
-| **絕對定位** | 不影響主佈局 | 需要手動調整位置 | 固定位置裝飾 |
-| **背景圖片** | 不增加 DOM 節點 | 難以動態控制 | 靜態裝飾 |
+| 方案           | 優點               | 缺點             | 適用場景     |
+| -------------- | ------------------ | ---------------- | ------------ |
+| **HTML 元素**  | 簡單直接，易於控制 | 增加 DOM 節點    | 簡單裝飾     |
+| **React 組件** | 可重用，邏輯清晰   | 需要額外組件     | 複雜邏輯     |
+| **CSS Grid**   | 佈局靈活，響應式好 | 可能影響主佈局   | 複雜佈局     |
+| **絕對定位**   | 不影響主佈局       | 需要手動調整位置 | 固定位置裝飾 |
+| **背景圖片**   | 不增加 DOM 節點    | 難以動態控制     | 靜態裝飾     |
 
 ## 推薦方案
 
 建議使用方案 1（HTML 元素），因為：
+
 - 簡單直接
 - 易於維護
 - 不影響主佈局
@@ -414,7 +411,6 @@ export default function About() {
 
 改用具名元素取代 `::before` 和 `::after`。
 
-
 [3 tools called]
 
 ## 修改完成
@@ -422,6 +418,7 @@ export default function About() {
 ### 修改內容
 
 **HTML 結構**：
+
 ```jsx
 // 原本
 <div className={styles.pixelIcons}></div>
@@ -434,14 +431,23 @@ export default function About() {
 ```
 
 **CSS 樣式**：
+
 ```scss
 // 原本使用偽元素
-&::before { content: '🧪'; }
-&::after { content: '✂️'; }
+&::before {
+  content: '🧪';
+}
+&::after {
+  content: '✂️';
+}
 
 // 現在使用具名類別
-.chemicalIcon { /* 化學藥水樣式 */ }
-.scissorIcon { /* 剪刀樣式 */ }
+.chemicalIcon {
+  /* 化學藥水樣式 */
+}
+.scissorIcon {
+  /* 剪刀樣式 */
+}
 ```
 
 ### 優點
