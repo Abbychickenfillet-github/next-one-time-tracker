@@ -254,6 +254,20 @@ export const useTimeLogStore = create(
           lastStepTime: null,
         }),
 
+      // 清除 localStorage 中的資料
+      clearStorage: () => {
+        localStorage.removeItem('timelog-storage')
+        set({
+          title: '',
+          desc: '',
+          startTime: null,
+          endTime: null,
+          steps: [],
+          currentTime: null,
+          lastStepTime: null,
+        })
+      },
+
       // 計算已進行時間（分鐘）
       getElapsedMinutes: () => {
         const state = get() // get() 函數：獲取當前 store 的完整狀態
@@ -282,11 +296,12 @@ export const useTimeLogStore = create(
       partialize: (state) => ({
         // partialize 函數：選擇要持久化的狀態，過濾掉不需要的狀態
         // 只持久化這些狀態，不包含 currentTime 和 isClient
+        // 只有當活動已結束時才持久化 steps，避免覆蓋主頁的已儲存資料
         title: state.title,
         desc: state.desc,
         startTime: state.startTime,
         endTime: state.endTime,
-        steps: state.steps,
+        steps: state.endTime ? state.steps : [], // 只有活動結束時才保存 steps
         lastStepTime: state.lastStepTime,
       }),
       onRehydrateStorage: () => (state) => {

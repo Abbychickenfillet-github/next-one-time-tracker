@@ -1,0 +1,452 @@
+[1mdiff --git a/components/timelog/TimeLogClient.tsx b/components/timelog/TimeLogClient.tsx[m
+[1mindex 6149bf8..e809ef6 100644[m
+[1m--- a/components/timelog/TimeLogClient.tsx[m
+[1m+++ b/components/timelog/TimeLogClient.tsx[m
+[36m@@ -1,8 +1,7 @@[m
+ 'use client'[m
+ import React from 'react'[m
+[31m-import { useEffect, useRef } from 'react'[m
+[32m+[m[32mimport { useState, useEffect, useRef } from 'react'[m
+ import { useAuth } from '@/hooks/use-auth'[m
+[31m-import { useTimeLogStore } from '@/stores/useTimeLogStore'[m
+ import VoiceInput from './VoiceInput'[m
+ [m
+ export default function TimeLogClient() {[m
+[36m@@ -10,37 +9,21 @@[m [mexport default function TimeLogClient() {[m
+   const { user: authUser, isAuth } = useAuth()[m
+   const user: any = authUser || null[m
+ [m
+[31m-  // ===== Zustand 狀態管理 =====[m
+[31m-  const {[m
+[31m-    // 狀態[m
+[31m-    title,[m
+[31m-    desc,[m
+[31m-    startTime,[m
+[31m-    endTime,[m
+[31m-    steps,[m
+[31m-    currentTime,[m
+[31m-    isClient,[m
+[31m-    // Actions[m
+[31m-    setClient,[m
+[31m-    updateCurrentTime,[m
+[31m-    setTitle,[m
+[31m-    setDesc,[m
+[31m-    startActivity,[m
+[31m-    endActivity,[m
+[31m-    addStep,[m
+[31m-    endSubStep,[m
+[31m-    handleVoiceResult,[m
+[31m-    saveToDB,[m
+[31m-    getElapsedMinutes,[m
+[31m-    getActivityStatus,[m
+[31m-  } = useTimeLogStore()[m
+[31m-[m
+[32m+[m[32m  // ===== 狀態管理 =====[m
+[32m+[m[32m  const [title, setTitle] = useState('') // 活動名稱 (對應: 活動名稱輸入框)[m
+[32m+[m[32m  const [desc, setDesc] = useState('') // 階段描述 (對應: 記錄活動階段輸入框)[m
+[32m+[m[32m  const [startTime, setStartTime] = useState<Date | null>(null) // 活動開始時間 (對應: 開始按鈕)[m
+[32m+[m[32m  const [endTime, setEndTime] = useState<Date | null>(null) // 活動結束時間 (對應: 結束按鈕)[m
+[32m+[m[32m  const [steps, setSteps] = useState<any[]>([]) // 步驟列表 (對應: 活動記錄列表)[m
+[32m+[m[32m  const [currentTime, setCurrentTime] = useState<Date | null>(null) // 目前時間 (對應: 目前時間顯示)[m
+[32m+[m[32m  const [isClient, setIsClient] = useState(false) // 客戶端渲染標記[m
+[32m+[m[32m  const [, setLastStepTime] = useState<Date | null>(null) // 最後步驟時間[m
+   const stepListRef = useRef<HTMLOListElement | null>(null) // 步驟列表的 DOM 引用[m
+ [m
+   // ===== 客戶端渲染標記 =====[m
+   useEffect(() => {[m
+[31m-    setClient(true)[m
+[31m-  }, [setClient])[m
+[32m+[m[32m    setIsClient(true)[m
+[32m+[m[32m  }, [])[m
+ [m
+   // ===== 即時時間更新 =====[m
+   // 對應: 目前時間顯示 (每秒更新一次)[m
+[36m@@ -48,43 +31,179 @@[m [mexport default function TimeLogClient() {[m
+     if (!isClient) return[m
+ [m
+     // 立即設定初始時間[m
+[31m-    updateCurrentTime()[m
+[32m+[m[32m    setCurrentTime(new Date())[m
+ [m
+     const timer = setInterval(() => {[m
+[31m-      updateCurrentTime()[m
+[32m+[m[32m      setCurrentTime(new Date())[m
+     }, 1000)[m
+ [m
+     return () => clearInterval(timer)[m
+[31m-  }, [isClient, updateCurrentTime])[m
+[32m+[m[32m  }, [isClient])[m
+ [m
+   // ===== 開始活動 =====[m
+   // 對應: Start 按鈕 (綠色按鈕)[m
+   const handleStart = () => {[m
+[31m-    startActivity()[m
+[32m+[m[32m    if (!title.trim()) return alert('請先輸入活動名稱')[m
+[32m+[m[32m    if (startTime && !endTime) return alert('活動尚未結束')[m
+[32m+[m
+[32m+[m[32m    const now = new Date()[m
+[32m+[m[32m    setStartTime(now) // 設定活動開始時間[m
+[32m+[m[32m    setLastStepTime(now) // 設定最後步驟時間[m
+[32m+[m[32m    setEndTime(null) // 清除結束時間[m
+[32m+[m
+[32m+[m[32m    // 在步驟列表中加入開始記錄[m
+[32m+[m[32m    setSteps((prev) => [[m
+[32m+[m[32m      ...prev,[m
+[32m+[m[32m      {[m
+[32m+[m[32m        type: 'start',[m
+[32m+[m[32m        text: `✅ 開始：${title} | ${now.toLocaleString()}`,[m
+[32m+[m[32m        startTime: now,[m
+[32m+[m[32m        endTime: now,[m
+[32m+[m[32m        ended: true, // 開始步驟預設為已結束[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ])[m
+   }[m
+ [m
+   // ===== 儲存到資料庫 =====[m
+   // 對應: 儲存活動資訊到資料庫按鈕 (藍色按鈕)[m
+   const handleSaveToDB = async () => {[m
+[31m-    await saveToDB(user, isAuth)[m
+[32m+[m[32m    if (!title.trim()) return alert('請先輸入活動名稱')[m
+[32m+[m[32m    if (!startTime) return alert('活動尚未開始')[m
+[32m+[m[32m    if (!endTime) return alert('活動尚未結束')[m
+[32m+[m
+[32m+[m[32m    // 檢查是否已登入[m
+[32m+[m[32m    if (!isAuth) {[m
+[32m+[m[32m      alert('請先登入才能儲存到資料庫')[m
+[32m+[m[32m      return[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    try {[m
+[32m+[m[32m      // 儲存主活動到 TimeLog 資料表[m
+[32m+[m[32m      const timeLogRes = await fetch('/api/timelog', {[m
+[32m+[m[32m        method: 'POST',[m
+[32m+[m[32m        headers: { 'Content-Type': 'application/json' },[m
+[32m+[m[32m        body: JSON.stringify({[m
+[32m+[m[32m          title,[m
+[32m+[m[32m          startTime,[m
+[32m+[m[32m          endTime,[m
+[32m+[m[32m          userId: user?.id || null, // 加入用戶 ID[m
+[32m+[m[32m        }),[m
+[32m+[m[32m      })[m
+[32m+[m
+[32m+[m[32m      if (!timeLogRes.ok) throw new Error('Failed to save TimeLog')[m
+[32m+[m[32m      const timeLogResult = await timeLogRes.json()[m
+[32m+[m
+[32m+[m[32m      if (timeLogResult.status !== 'success') {[m
+[32m+[m[32m        throw new Error(timeLogResult.message || 'Failed to save TimeLog')[m
+[32m+[m[32m      }[m
+[32m+[m
+[32m+[m[32m      const newLog = timeLogResult.data[m
+[32m+[m[32m      console.log('✅ TimeLog 創建成功:', newLog)[m
+[32m+[m
+[32m+[m[32m      // 儲存所有步驟到 Step 資料表[m
+[32m+[m[32m      for (const step of steps) {[m
+[32m+[m[32m        if (step.type === 'step') {[m
+[32m+[m[32m          // 只儲存實際的步驟，不儲存 start/end 記錄[m
+[32m+[m[32m          const stepRes = await fetch('/api/step', {[m
+[32m+[m[32m            method: 'POST',[m
+[32m+[m[32m            headers: { 'Content-Type': 'application/json' },[m
+[32m+[m[32m            body: JSON.stringify({[m
+[32m+[m[32m              timeLogId: newLog.id, // 關聯到主活動[m
+[32m+[m[32m              title: step.title || step.text,[m
+[32m+[m[32m              description: step.description || step.text,[m
+[32m+[m[32m              startTime: step.startTime || new Date(),[m
+[32m+[m[32m              endTime: step.endTime,[m
+[32m+[m[32m            }),[m
+[32m+[m[32m          })[m
+[32m+[m
+[32m+[m[32m          if (!stepRes.ok) throw new Error('Failed to save step')[m
+[32m+[m
+[32m+[m[32m          const stepResult = await stepRes.json()[m
+[32m+[m[32m          if (stepResult.status !== 'success') {[m
+[32m+[m[32m            throw new Error(stepResult.message || 'Failed to save step')[m
+[32m+[m[32m          }[m
+[32m+[m
+[32m+[m[32m          console.log('✅ Step 創建成功:', stepResult.data)[m
+[32m+[m[32m        }[m
+[32m+[m[32m      }[m
+[32m+[m
+[32m+[m[32m      console.log('✅ 成功儲存所有資料')[m
+[32m+[m[32m      alert('已儲存到資料庫')[m
+[32m+[m[32m    } catch (err) {[m
+[32m+[m[32m      console.error('❌ 儲存錯誤:', err)[m
+[32m+[m[32m      alert('儲存失敗，請檢查伺服器')[m
+[32m+[m[32m    }[m
+   }[m
+ [m
+   // ===== 新增階段步驟 =====[m
+   // 對應: 記錄時間點按鈕 (藍色按鈕)[m
+   const handleAddStep = () => {[m
+[31m-    addStep()[m
+[32m+[m[32m    if (!desc.trim()) return alert('請輸入階段描述')[m
+[32m+[m[32m    if (!startTime) return alert('請先開始活動')[m
+[32m+[m[32m    if (endTime) return alert('活動已結束')[m
+[32m+[m
+[32m+[m[32m    const now = new Date()[m
+[32m+[m[32m    setLastStepTime(now) // 更新最後步驟時間[m
+[32m+[m
+[32m+[m[32m    // 在步驟列表中加入新的階段記錄[m
+[32m+[m[32m    setSteps((prev) => [[m
+[32m+[m[32m      ...prev,[m
+[32m+[m[32m      {[m
+[32m+[m[32m        type: 'step',[m
+[32m+[m[32m        title: desc,[m
+[32m+[m[32m        description: desc,[m
+[32m+[m[32m        text: `${desc} | ${now.toLocaleString()}`,[m
+[32m+[m[32m        startTime: now,[m
+[32m+[m[32m        endTime: null,[m
+[32m+[m[32m        ended: false,[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ])[m
+[32m+[m
+[32m+[m[32m    setDesc('') // 清空描述輸入框[m
+   }[m
+ [m
+   // ===== 結束子步驟 =====[m
+   // 對應: 步驟列表中的「結束」按鈕 (紅色按鈕)[m
+   const handleEndSubStep = (index: number) => {[m
+[31m-    endSubStep(index)[m
+[32m+[m[32m    const now = new Date()[m
+[32m+[m[32m    setSteps((prev) =>[m
+[32m+[m[32m      prev.map((step, i) =>[m
+[32m+[m[32m        i === index[m
+[32m+[m[32m          ? {[m
+[32m+[m[32m              ...step,[m
+[32m+[m[32m              ended: true, // 標記為已結束[m
+[32m+[m[32m              endTime: now, // 記錄結束時間[m
+[32m+[m[32m              text: step.text + ` (結束於: ${now.toLocaleTimeString()})`,[m
+[32m+[m[32m              description:[m
+[32m+[m[32m                step.description + ` (結束於: ${now.toLocaleTimeString()})`,[m
+[32m+[m[32m            }[m
+[32m+[m[32m          : step[m
+[32m+[m[32m      )[m
+[32m+[m[32m    )[m
+   }[m
+ [m
+   // ===== 結束活動 =====[m
+   // 對應: End 按鈕 (紅色按鈕)[m
+   const handleEnd = () => {[m
+[31m-    endActivity()[m
+[32m+[m[32m    if (!startTime) return alert('請先開始活動')[m
+[32m+[m[32m    if (endTime) return alert('活動已結束')[m
+[32m+[m
+[32m+[m[32m    const now = new Date()[m
+[32m+[m[32m    setEndTime(now) // 設定活動結束時間[m
+[32m+[m
+[32m+[m[32m    // 在步驟列表中加入結束記錄[m
+[32m+[m[32m    setSteps((prev) => [[m
+[32m+[m[32m      ...prev,[m
+[32m+[m[32m      {[m
+[32m+[m[32m        type: 'end',[m
+[32m+[m[32m        title: `結束：${title}`,[m
+[32m+[m[32m        description: `活動結束：${title}`,[m
+[32m+[m[32m        text: `🏁 結束：${title} | ${now.toLocaleString()}`,[m
+[32m+[m[32m        startTime: now,[m
+[32m+[m[32m        endTime: now,[m
+[32m+[m[32m        ended: true, // 結束步驟預設為已結束[m
+[32m+[m[32m      },[m
+[32m+[m[32m    ])[m
+   }[m
+ [m
+   // ===== 鍵盤快捷鍵 =====[m
+[36m@@ -97,8 +216,8 @@[m [mexport default function TimeLogClient() {[m
+ [m
+   // ===== 語音輸入處理 =====[m
+   // 對應: 語音輸入元件[m
+[31m-  const handleVoiceResultWrapper = (text: string) => {[m
+[31m-    handleVoiceResult(text) // 將語音識別結果填入描述輸入框[m
+[32m+[m[32m  const handleVoiceResult = (text: string) => {[m
+[32m+[m[32m    setDesc(text) // 將語音識別結果填入描述輸入框[m
+   }[m
+ [m
+   return ([m
+[36m@@ -138,7 +257,7 @@[m [mexport default function TimeLogClient() {[m
+       )}[m
+ [m
+       {/* ===== 語音輸入元件 ===== */}[m
+[31m-      <VoiceInput onResult={handleVoiceResultWrapper} />[m
+[32m+[m[32m      <VoiceInput onResult={handleVoiceResult} />[m
+ [m
+       {/* ===== 主要控制區域 ===== */}[m
+       <div className="mb-4">[m
+[36m@@ -215,17 +334,13 @@[m [mexport default function TimeLogClient() {[m
+             </div>[m
+             <div>[m
+               <span[m
+[31m-                className={`badge ${[m
+[31m-                  !isClient[m
+[31m-                    ? 'bg-secondary'[m
+[31m-                    : getActivityStatus() === '進行中'[m
+[31m-                      ? 'bg-success'[m
+[31m-                      : getActivityStatus() === '已結束'[m
+[31m-                        ? 'bg-danger'[m
+[31m-                        : 'bg-secondary'[m
+[31m-                }`}[m
+[32m+[m[32m                className={`badge ${startTime && !endTime ? 'bg-success' : endTime ? 'bg-danger' : 'bg-secondary'}`}[m
+               >[m
+[31m-                {!isClient ? '載入中...' : getActivityStatus()}[m
+[32m+[m[32m                {startTime && !endTime[m
+[32m+[m[32m                  ? '進行中'[m
+[32m+[m[32m                  : endTime[m
+[32m+[m[32m                    ? '已結束'[m
+[32m+[m[32m                    : '準備中'}[m
+               </span>[m
+             </div>[m
+           </div>[m
+[36m@@ -235,24 +350,22 @@[m [mexport default function TimeLogClient() {[m
+             <div className="row text-center">[m
+               <div className="col-4">[m
+                 <small className="text-muted">開始時間</small>[m
+[31m-                <div className="fw-bold">[m
+[31m-                  {startTime instanceof Date[m
+[31m-                    ? startTime.toLocaleTimeString()[m
+[31m-                    : '未開始'}[m
+[31m-                </div>[m
+[32m+[m[32m                <div className="fw-bold">{startTime.toLocaleTimeString()}</div>[m
+               </div>[m
+               <div className="col-4">[m
+                 <small className="text-muted">已進行</small>[m
+                 <div className="fw-bold text-primary">[m
+[31m-                  {getElapsedMinutes()} 分鐘[m
+[32m+[m[32m                  {endTime[m
+[32m+[m[32m                    ? `${Math.floor((endTime.getTime() - startTime.getTime()) / 1000 / 60)} 分鐘`[m
+[32m+[m[32m                    : currentTime[m
+[32m+[m[32m                      ? `${Math.floor((currentTime.getTime() - startTime.getTime()) / 1000 / 60)} 分鐘`[m
+[32m+[m[32m                      : '計算中...'}[m
+                 </div>[m
+               </div>[m
+               <div className="col-4">[m
+                 <small className="text-muted">結束時間</small>[m
+                 <div className="fw-bold">[m
+[31m-                  {endTime instanceof Date[m
+[31m-                    ? endTime.toLocaleTimeString()[m
+[31m-                    : '進行中...'}[m
+[32m+[m[32m                  {endTime ? endTime.toLocaleTimeString() : '進行中...'}[m
+                 </div>[m
+               </div>[m
+             </div>[m
+[36m@@ -262,20 +375,20 @@[m [mexport default function TimeLogClient() {[m
+         <div className="d-flex gap-2">[m
+           {/* 開始 */}[m
+           <button[m
+[31m-            className={`btn flex-grow-1 ${getActivityStatus() === '進行中' ? 'btn-outline-success' : 'btn-success'}`}[m
+[32m+[m[32m            className={`btn flex-grow-1 ${startTime && !endTime ? 'btn-outline-success' : 'btn-success'}`}[m
+             onClick={handleStart}[m
+[31m-            disabled={getActivityStatus() === '進行中'}[m
+[32m+[m[32m            disabled={!!(startTime && !endTime)}[m
+             aria-label="開始記錄時間"[m
+           >[m
+[31m-            {getActivityStatus() === '進行中' ? '⏸️ 進行中' : '▶️ Start'}[m
+[32m+[m[32m            {startTime && !endTime ? '⏸️ 進行中' : '▶️ Start'}[m
+           </button>[m
+           <button[m
+[31m-            className={`btn flex-grow-1 ${getActivityStatus() === '已結束' ? 'btn-outline-danger' : 'btn-danger'}`}[m
+[32m+[m[32m            className={`btn flex-grow-1 ${endTime ? 'btn-outline-danger' : 'btn-danger'}`}[m
+             onClick={handleEnd}[m
+[31m-            disabled={!startTime || getActivityStatus() === '已結束'}[m
+[32m+[m[32m            disabled={!startTime || !!endTime}[m
+             aria-label="結束記錄時間"[m
+           >[m
+[31m-            {getActivityStatus() === '已結束' ? '已結束' : '⏹️ End'}[m
+[32m+[m[32m            {endTime ? '✅ 已結束' : '⏹️ End'}[m
+           </button>[m
+         </div>[m
+       </div>[m
+[36m@@ -288,16 +401,16 @@[m [mexport default function TimeLogClient() {[m
+         >[m
+           📝 記錄活動階段[m
+         </label>[m
+[31m-        <div className="d-flex gap-2 flex-wrap">[m
+[32m+[m[32m        <div className="d-flex gap-2">[m
+           <input[m
+             type="text"[m
+             id="stepDescription"[m
+[31m-            className="form-control flex-grow-1"[m
+[32m+[m[32m            className="form-control"[m
+             placeholder="描述當前階段 (按 Enter 快速記錄時間點)"[m
+             value={desc}[m
+             onChange={(e) => setDesc(e.target.value)}[m
+             onKeyDown={handleKeyDown}[m
+[31m-            disabled={!startTime || getActivityStatus() === '已結束'}[m
+[32m+[m[32m            disabled={!startTime || !!endTime}[m
+             aria-label="階段描述輸入框"[m
+             style={{[m
+               backgroundColor: 'white',[m
+[36m@@ -308,8 +421,7 @@[m [mexport default function TimeLogClient() {[m
+               color: '#212529',[m
+               boxShadow: '0 2px 4px rgba(0,0,0,0.1)',[m
+               transition: 'all 0.3s ease',[m
+[31m-              opacity: !startTime || getActivityStatus() === '已結束' ? 0.6 : 1,[m
+[31m-              minWidth: '200px',[m
+[32m+[m[32m              opacity: !startTime || !!endTime ? 0.6 : 1,[m
+             }}[m
+             onFocus={(e) => {[m
+               if (!e.target.disabled) {[m
+[36m@@ -327,13 +439,9 @@[m [mexport default function TimeLogClient() {[m
+             id="voiceBtn"[m
+             className="btn btn-outline-info"[m
+             type="button"[m
+[31m-            disabled={!startTime || getActivityStatus() === '已結束'}[m
+[32m+[m[32m            disabled={!startTime || !!endTime}[m
+             title="語音輸入功能"[m
+             aria-label="語音輸入功能"[m
+[31m-            style={{[m
+[31m-              whiteSpace: 'nowrap',[m
+[31m-              minWidth: 'fit-content',[m
+[31m-            }}[m
+           >[m
+             🎤 語音[m
+           </button>[m
+[36m@@ -341,14 +449,8 @@[m [mexport default function TimeLogClient() {[m
+             className="btn btn-primary"[m
+             type="button"[m
+             onClick={handleAddStep}[m
+[31m-            disabled={[m
+[31m-              !startTime || getActivityStatus() === '已結束' || !desc.trim()[m
+[31m-            }[m
+[32m+[m[32m            disabled={!startTime || !!endTime || !desc.trim()}[m
+             aria-label="記錄時間點"[m
+[31m-            style={{[m
+[31m-              whiteSpace: 'nowrap',[m
+[31m-              minWidth: 'fit-content',[m
+[31m-            }}[m
+           >[m
+             ⏱️ 記錄時間點[m
+           </button>[m
+[36m@@ -366,7 +468,7 @@[m [mexport default function TimeLogClient() {[m
+           ref={stepListRef}[m
+           aria-label="活動記錄列表"[m
+         >[m
+[31m-          {steps.map((step: any, i: number) => ([m
+[32m+[m[32m          {steps.map((step, i) => ([m
+             <li[m
+               key={i}[m
+               className={`list-group-item d-flex justify-content-between align-items-center ${[m
+[1mdiff --git a/package-lock.json b/package-lock.json[m
+[1mindex 8531d99..9838ef9 100644[m
+[1m--- a/package-lock.json[m
+[1m+++ b/package-lock.json[m
+[36m@@ -70,8 +70,7 @@[m
+         "swr-devtools": "^1.3.2",[m
+         "winston": "^3.17.0",[m
+         "winston-daily-rotate-file": "^5.0.0",[m
+[31m-        "zod": "^3.24.2",[m
+[31m-        "zustand": "^5.0.8"[m
+[32m+[m[32m        "zod": "^3.24.2"[m
+       },[m
+       "devDependencies": {[m
+         "@types/node": "^22",[m
+[36m@@ -13502,35 +13501,6 @@[m
+       "funding": {[m
+         "url": "https://github.com/sponsors/colinhacks"[m
+       }[m
+[31m-    },[m
+[31m-    "node_modules/zustand": {[m
+[31m-      "version": "5.0.8",[m
+[31m-      "resolved": "https://registry.npmjs.org/zustand/-/zustand-5.0.8.tgz",[m
+[31m-      "integrity": "sha512-gyPKpIaxY9XcO2vSMrLbiER7QMAMGOQZVRdJ6Zi782jkbzZygq5GI9nG8g+sMgitRtndwaBSl7uiqC49o1SSiw==",[m
+[31m-      "license": "MIT",[m
+[31m-      "engines": {[m
+[31m-        "node": ">=12.20.0"[m
+[31m-      },[m
+[31m-      "peerDependencies": 
