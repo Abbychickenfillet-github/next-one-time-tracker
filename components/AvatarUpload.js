@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+// eslint-disable-next-line no-unused-vars
 import { useAuth } from '@/hooks/use-auth'
 
 export default function AvatarUpload({ onUploadSuccess }) {
-  const auth = useAuth()
+  //   const auth = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 

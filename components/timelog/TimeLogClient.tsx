@@ -273,7 +273,11 @@ export default function TimeLogClient() {
             disabled={!isClient ? false : getActivityStatus() === '進行中'}
             aria-label="開始記錄時間"
           >
-            {!isClient ? '載入中...' : getActivityStatus() === '進行中' ? '⏸️ 進行中' : '▶️ Start'}
+            {!isClient
+              ? '載入中...'
+              : getActivityStatus() === '進行中'
+                ? '⏸️ 進行中'
+                : '▶️ Start'}
           </button>
           <button
             className={`btn flex-grow-1 ${
@@ -284,10 +288,17 @@ export default function TimeLogClient() {
                   : 'btn-danger'
             }`}
             onClick={handleEnd}
-            disabled={!startTime || (!isClient ? false : getActivityStatus() === '已結束')}
+            disabled={
+              !startTime ||
+              (!isClient ? false : getActivityStatus() === '已結束')
+            }
             aria-label="結束記錄時間"
           >
-            {!isClient ? '載入中...' : getActivityStatus() === '已結束' ? '已結束' : '⏹️ End'}
+            {!isClient
+              ? '載入中...'
+              : getActivityStatus() === '已結束'
+                ? '已結束'
+                : '⏹️ End'}
           </button>
         </div>
       </div>
