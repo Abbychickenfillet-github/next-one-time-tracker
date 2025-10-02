@@ -70,14 +70,13 @@ TimeLog & Analysis Platform 是一個全端時間管理應用程式，旨在幫�
 - **框架**: Next.js API Routes
 - **資料庫**: PostgreSQL 16
 - **ORM**: Prisma 6.7.0
-- **認證**: Iron Session, JWT, Firebase Auth
+- **認證**: JWT
 - **支付**: LINE Pay, ECPay
 
 ### 開發工具
 
 - **語言**: TypeScript, JavaScript
 - **代碼品質**: ESLint, Prettier
-- **測試**: Jest, Supertest
 - **部署**: Vercel, Docker
 - **版本控制**: Git
 
@@ -141,8 +140,8 @@ TimeLog & Analysis Platform 是一個全端時間管理應用程式，旨在幫�
    LINE_PAY_CHANNEL_SECRET="your-line-pay-secret"
 
    CLOUDINARY_CLOUD_NAME=
-   CLOUDINARY_API_KEY=779211269881149
-   CLOUDINARY_API_SECRET=Or4EfMo8w_id02SUNIM08wXKxZw
+   CLOUDINARY_API_KEY=
+   CLOUDINARY_API_SECRET=
    ```
 
 4. **資料庫設定**
