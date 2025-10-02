@@ -8,7 +8,7 @@ const env = process.env.NODE_ENV || 'development'
 console.log('🔧 [DEBUG] server.config.js - env:', env)
 
 // 判斷是否為開發環境
-export const isDev = env === 'development'
+export const isDev = process.env.NODE_ENV === 'development'
 console.log('🔧 [DEBUG] server.config.js - isDev:', isDev)
 
 // baseUrl: 開發or營運環境的網址 - 含備援網域
