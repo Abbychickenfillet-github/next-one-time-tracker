@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import Head from 'next/head'
 import { Accordion } from 'react-bootstrap'
+import AvatarUpload from '@/components/AvatarUpload'
 
 export default function Dashboard() {
   const { auth, logout, user, isAuth } = useAuth()
@@ -245,11 +246,31 @@ export default function Dashboard() {
             <div className="col-md-3 mb-3">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body text-center">
-                  <div className="text-warning fs-2 mb-2">⚡</div>
-                  <h5 className="card-title">效率評分</h5>
-                  <p className="card-text fs-4 fw-bold text-warning">
-                    {statistics.efficiency}%
-                  </p>
+                  <div className="mb-3">
+                    <img
+                      src={user?.avatar || '/avatar/default-avatar.webp'}
+                      alt="用戶頭貼"
+                      className="rounded-circle shadow-sm"
+                      style={{
+                        width: '80px',
+                        height: '80px',
+                        objectFit: 'cover',
+                        border: '3px solid var(--accent-color, #0dcaf0)',
+                      }}
+                      onError={(e) => {
+                        e.target.src = '/avatar/default-avatar.webp'
+                      }}
+                    />
+                  </div>
+                  <h5 className="card-title">我的頭貼</h5>
+                  <div className="mt-3">
+                    <AvatarUpload
+                      onUploadSuccess={(avatarUrl) => {
+                        // 更新用戶狀態或重新載入頁面
+                        window.location.reload()
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

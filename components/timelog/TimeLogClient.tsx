@@ -262,20 +262,32 @@ export default function TimeLogClient() {
         <div className="d-flex gap-2">
           {/* 開始 */}
           <button
-            className={`btn flex-grow-1 ${getActivityStatus() === '進行中' ? 'btn-outline-success' : 'btn-success'}`}
+            className={`btn flex-grow-1 ${
+              !isClient
+                ? 'btn-outline-success'
+                : getActivityStatus() === '進行中'
+                  ? 'btn-outline-success'
+                  : 'btn-success'
+            }`}
             onClick={handleStart}
-            disabled={getActivityStatus() === '進行中'}
+            disabled={!isClient ? false : getActivityStatus() === '進行中'}
             aria-label="開始記錄時間"
           >
-            {getActivityStatus() === '進行中' ? '⏸️ 進行中' : '▶️ Start'}
+            {!isClient ? '載入中...' : getActivityStatus() === '進行中' ? '⏸️ 進行中' : '▶️ Start'}
           </button>
           <button
-            className={`btn flex-grow-1 ${getActivityStatus() === '已結束' ? 'btn-outline-danger' : 'btn-danger'}`}
+            className={`btn flex-grow-1 ${
+              !isClient
+                ? 'btn-outline-danger'
+                : getActivityStatus() === '已結束'
+                  ? 'btn-outline-danger'
+                  : 'btn-danger'
+            }`}
             onClick={handleEnd}
-            disabled={!startTime || getActivityStatus() === '已結束'}
+            disabled={!startTime || (!isClient ? false : getActivityStatus() === '已結束')}
             aria-label="結束記錄時間"
           >
-            {getActivityStatus() === '已結束' ? '已結束' : '⏹️ End'}
+            {!isClient ? '載入中...' : getActivityStatus() === '已結束' ? '已結束' : '⏹️ End'}
           </button>
         </div>
       </div>

@@ -77,6 +77,7 @@ export const pathsLocaleMap = {
   'update':'編輯',
   'delete':'刪除',
   'rsc': 'RSC伺服器元件',
+  'combination': '登入跟註冊組合頁',
 }
 
 // 以下是console.log的前綴上色用法

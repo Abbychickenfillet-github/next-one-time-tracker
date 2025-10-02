@@ -65,7 +65,7 @@ export default function TopNavbar() {
 
   const handleDashboardClick = (e) => {
     if (!isAuth) {
-      e.preventDefault()
+      e.preventDefault() //這邊避免直接點擊後就跳轉到儀表板
       Swal.fire({
         title: '🔒 需要登入',
         text: '請先登入才能訪問儀表板',

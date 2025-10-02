@@ -7,8 +7,12 @@ import { useAuth } from '@/hooks/use-auth'
 import Link from 'next/link'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import Image from 'next/image'
-import { isDev, apiURL } from '@/config/client.config'
+import { isDev } from '@/config/client.config'
+
+// 導入新的組件
+import LinePayButton from '@/components/line-pay/LinePayButton'
+import OrderForm from '@/components/line-pay/OrderForm'
+import OrderSummary from '@/components/line-pay/OrderSummary'
 // 載入loading元件 (未使用)
 // import CssLoader from '@/components/css-loader'
 
@@ -23,6 +27,9 @@ export default function LinePayPage() {
   const [price, setPrice] = useState(100)
   const [quantity, setQuantity] = useState(2)
 
+  // 計算總價
+  const totalAmount = quantity * price
+
   // confirm回來用的，在記錄確認之後，line-pay回傳訊息與代碼，例如 (未使用)
   // {returnCode: '1172', returnMessage: 'Existing same orderId.'}
   // const [result, setResult] = useState({
@@ -36,50 +43,32 @@ export default function LinePayPage() {
 
   if (isDev) console.log('transactionId', searchParams.get('transactionId'))
 
-  // 導向至LINE Pay付款頁面
-  const goLinePay = async () => {
-    // 檢查是否已登入
-    if (!isAuth) {
-      toast.error('請先登入以保留訂單資訊')
-      return
+  // 處理訂單變更的回調函數
+  const handlePriceChange = (newPrice) => {
+    setPrice(newPrice)
+  }
+
+  const handleQuantityChange = (newQuantity) => {
+    setQuantity(newQuantity)
+  }
+
+  // 付款前的驗證
+  const handleBeforePayment = () => {
+    if (totalAmount <= 0) {
+      toast.error('請輸入有效的金額')
+      return false
     }
+    return true
+  }
 
-    // 先連到API路由，取得LINE Pay付款網址
-    console.log(`🚀 開始goLinePay函數請求`)
-    console.log(
-      '📡 請求 URL:',
-      `${apiURL}/payment/line-pay/request?amount=${quantity * price}`
-    )
-    console.log('🔧 apiURL 值:', apiURL)
-    console.log('🔧 isDev 值:', isDev)
+  // 付款成功回調
+  const handlePaymentSuccess = (data) => {
+    console.log('付款準備完成:', data)
+  }
 
-    const res = await fetch(
-      `${apiURL}/payment/line-pay/request?amount=${quantity * price}`,
-      {
-        method: 'GET',
-        // 讓fetch能夠傳送cookie
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      }
-    )
-
-    const resData = await res.json()
-
-    console.log('🔍 API 回應:', resData)
-    console.log('📊 回應狀態:', res.status)
-
-    if (resData.status === 'success') {
-      if (window.confirm('確認要導向至LINE Pay進行付款?')) {
-        //導向至LINE Pay付款頁面
-        window.location.href = resData.data.paymentUrl
-      }
-    } else {
-      console.error('❌ 付款請求失敗:', resData)
-      toast.error(`要求付款網址失敗: ${resData.message || '未知錯誤'}`)
-    }
+  // 付款失敗回調
+  const handlePaymentError = (error) => {
+    console.error('付款處理失敗:', error)
   }
 
   // 確認交易，處理伺服器通知line pay已確認付款，為必要流程 (未使用)
@@ -131,54 +120,7 @@ export default function LinePayPage() {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [searchParams])
 
-  const orderDisplay = (
-    <>
-      <h2>購買商品清單</h2>
-      <div>
-        商品名稱和ID都是在後端路由直接設定範例用，這裡只有價格會變動。目前成功回應頁已改為callback路由。
-        <br />
-        數量:
-        <input
-          type="number"
-          name="quantity"
-          value={quantity === 0 ? '' : quantity}
-          onChange={(e) => {
-            setQuantity(Number(e.target.value))
-          }}
-        />
-        單價:
-        <input
-          type="number"
-          name="price"
-          value={price === 0 ? '' : price}
-          onChange={(e) => {
-            setPrice(Number(e.target.value))
-          }}
-        />
-      </div>
-      <hr />
-      <br />
-      總價: {quantity * price}
-      <br />
-      {/* 圖檔都在public/line-pay資料夾 */}
-      <Image
-        alt=""
-        src="/line-pay/LINE-Pay(h)_W85_n.png"
-        width={85}
-        height={25}
-      />
-      <button
-        onClick={goLinePay}
-        disabled={!isAuth}
-        style={{
-          opacity: !isAuth ? 0.5 : 1,
-          cursor: !isAuth ? 'not-allowed' : 'pointer',
-        }}
-      >
-        {isAuth ? '前往付款' : '請先登入'}
-      </button>
-    </>
-  )
+  // 不再需要這個本地組件了，因為我們已經分離成獨立組件
 
   // const _confirmOrder = (
   //   <>
@@ -208,17 +150,49 @@ export default function LinePayPage() {
 
   return (
     <>
-      <h1>Line Pay測試</h1>
-      <p>
-        本功能需要會員登入才能使用，會用到後端伺服器的session機制，這是為了付完款後返回後，需要訂單的金額作最後確認用的。
-      </p>
-      <p>
-        會員登入狀態: {isAuth ? `已登入 - ${user?.name || '用戶'}` : '未登入'}
-        <br />
-        {!isAuth && <Link href="/user">連至會員登入頁</Link>}
-      </p>
-      <hr />
-      {orderDisplay}
+      <div className="line-pay-page">
+        <header className="page-header">
+          <h1>Line Pay測試</h1>
+          <p>
+            本功能需要會員登入才能使用，會用到後端伺服器的session機制，這是為了付完款後返回後，需要訂單的金額作最後確認用的。
+          </p>
+          <div className="login-link">
+            {isAuth ? (
+              <Link href="/dashboard">前往儀表板</Link>
+            ) : (
+              <Link href="/user/login">連至會員登入頁</Link>
+            )}
+          </div>
+        </header>
+
+        <main className="page-content">
+          <section className="auth-section">
+            <OrderSummary authInfo={{ isAuth, user }} />
+          </section>
+
+          <section className="order-section">
+            <h2>購買商品清單</h2>
+            <OrderForm
+              initialPrice={price}
+              initialQuantity={quantity}
+              onPriceChange={handlePriceChange}
+              onQuantityChange={handleQuantityChange}
+              disabled={false}
+            />
+
+            <div className="payment-section">
+              <LinePayButton
+                isAuth={isAuth}
+                totalAmount={totalAmount}
+                onBeforePayment={handleBeforePayment}
+                onPaymentSuccess={handlePaymentSuccess}
+                onPaymentError={handlePaymentError}
+              />
+            </div>
+          </section>
+        </main>
+      </div>
+
       {/* 土司訊息視窗用 */}
       <ToastContainer />
     </>

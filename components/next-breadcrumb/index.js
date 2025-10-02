@@ -1,9 +1,6 @@
 'use client'
-// migrate to app router
 import { usePathname } from 'next/navigation'
 import { useCallback } from 'react'
-import Link from 'next/link'
-import { BiHome } from 'react-icons/bi'
 import { Breadcrumb } from 'react-bootstrap'
 import ClockIcon from '@/components/clock-icon'
 // 中文路徑對照陣列，到configs/index.js中設定
@@ -11,19 +8,27 @@ import { pathsLocaleMap } from '@/config/client.config'
 // 額外樣式檔案
 import '@/styles/next-breadcrumb.scss'
 
+// 已註解未使用的 imports:
+// import Link from 'next/link'
+// import { BiHome } from 'react-icons/bi'
+
 /**
- * NextBreadCrumb 搭配 useRouter 動態產生的麵包屑元件(breadcrumb)
+ * NextBreadCrumb 動態產生的麵包屑元件
+ *
+ * 使用位置：
+ * - UnifiedNavbar.js (首頁和 Timelog 頁面)
+ * - components/timelog/Header.tsx
  *
  * @component
  * @param {object} props
- * @param {boolean} [props.omitRoot=false] omit root node(home)
- * @param {JSX.Element} [props.homeIcon=<ClockIcon />]
- * @param {boolean} [props.isHomeIcon=false] with home icon
+ * @param {boolean} [props.omitRoot=false] omit root node(home) - 目前未使用
+ * @param {JSX.Element} [props.homeIcon=<ClockIcon />] - 目前未使用
+ * @param {boolean} [props.isHomeIcon=false] with home icon - 在首頁使用
  * @returns {JSX.Element}
  */
 export default function NextBreadCrumb({
-  omitRoot = false,
-  homeIcon = <ClockIcon />,
+  omitRoot = false, // 目前未使用
+  homeIcon = <ClockIcon />, // 目前未使用
   isHomeIcon = false,
 }) {
   // 得到目前的網址的路徑
@@ -81,10 +86,21 @@ export default function NextBreadCrumb({
     return breadcrumbItems
   }, [pathname, omitRoot, isHomeIcon, homeIcon])
 
+  // 檢查是否為首頁，首頁顯示小鬧鐘圖標
+  const isHomePage = pathname === '/'
+
   return (
     <nav aria-label="breadcrumb" style={{ lineHeight: '32px' }}>
       <Breadcrumb className="breadcrumb">
-        {getPathFormatLocale()}
+        {isHomePage ? (
+          // 首頁顯示小鬧鐘圖標
+          <Breadcrumb.Item active>
+            <ClockIcon />
+          </Breadcrumb.Item>
+        ) : (
+          // 其他頁面顯示完整路徑
+          getPathFormatLocale()
+        )}
       </Breadcrumb>
     </nav>
   )
