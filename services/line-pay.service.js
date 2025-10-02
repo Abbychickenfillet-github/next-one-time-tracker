@@ -35,8 +35,7 @@ const linePayConfig = {
 // Line Pay API 基礎 URL - 使用 v2 API
 const LINE_PAY_API_URL = 'https://sandbox-api-pay.line.me'
 
-// Zeabur 環境配置
-const isZeabur = process.env.ZEABUR || process.env.VERCEL || false
+// 環境配置 (已移除未使用的變數)
 
 // 手動實作 Line Pay API 呼叫函式
 const createLinePayRequest = async (endpoint, method, body = null) => {
@@ -117,9 +116,13 @@ const redirectUrls = {
 
 console.log('🔧 [DEBUG] redirectUrls 設定:', redirectUrls)
 
-// Zeabur 環境的額外配置
-if (isZeabur) {
-  console.log('🚀 運行在 Zeabur 環境，使用 IP 白名單保護')
+// 環境配置說明
+if (isDev) {
+  console.log(
+    '🚀 運行在開發環境 (npm run dev)，使用 LINE Pay 測試環境 IP 白名單'
+  )
+} else {
+  console.log('🚀 運行在生產環境 (npm start)，使用 LINE Pay 正式環境 IP 白名單')
 }
 // 回應line-pay交易網址到前端，由前端導向line pay付款頁面
 // 資料格式參考 https://enylin.github.io/line-pay-merchant/api-reference/request.html#example
@@ -166,9 +169,9 @@ export const requestPayment = async (amount) => {
     ],
     options: { display: { locale: 'zh_TW' } },
     redirectUrls: {
-      confirmUrl: 'http://localhost:3001/line-pay/callback',
-      cancelUrl: 'http://localhost:3001/line-pay/cancel',
-    }, // 設定重新導向與失敗導向的網址
+      confirmUrl: redirectUrls.confirmUrl,
+      cancelUrl: redirectUrls.cancelUrl,
+    }, // 使用動態配置的網址
   }
 
   console.log('📋 訂單資料:', order)

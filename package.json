@@ -10,7 +10,7 @@
     "start": "next start -p 3001",
     "lint": "npx eslint .",
     "install-only": "npm install --ignore-scripts",
-    "postinstall": "prisma generate && prisma db push --force-reset && prisma db seed",
+    "postinstall": "prisma generate && prisma migrate deploy",
     "seed": "prisma generate && prisma db push --force-reset && prisma db seed",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --force-exit --detectOpenHandles"
   },
