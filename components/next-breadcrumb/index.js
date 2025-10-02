@@ -6,7 +6,7 @@ import ClockIcon from '@/components/clock-icon'
 // 中文路徑對照陣列，到configs/index.js中設定
 import { pathsLocaleMap } from '@/config/client.config'
 // 額外樣式檔案
-import '@/styles/next-breadcrumb.scss'
+// import '@/styles/next-breadcrumb.scss' // 檔案不存在，已註解
 
 // 已註解未使用的 imports:
 // import Link from 'next/link'

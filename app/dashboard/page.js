@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import Head from 'next/head'
+import Image from 'next/image'
 import { Accordion } from 'react-bootstrap'
 import AvatarUpload from '@/components/AvatarUpload'
 
@@ -247,14 +248,13 @@ export default function Dashboard() {
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body text-center">
                   <div className="mb-3">
-                    <img
+                    <Image
                       src={user?.avatar || '/avatar/default-avatar.webp'}
                       alt="用戶頭貼"
+                      width={80}
+                      height={80}
                       className="rounded-circle shadow-sm"
                       style={{
-                        width: '80px',
-                        height: '80px',
-                        objectFit: 'cover',
                         border: '3px solid var(--accent-color, #0dcaf0)',
                       }}
                       onError={(e) => {
@@ -265,7 +265,7 @@ export default function Dashboard() {
                   <h5 className="card-title">我的頭貼</h5>
                   <div className="mt-3">
                     <AvatarUpload
-                      onUploadSuccess={(avatarUrl) => {
+                      onUploadSuccess={() => {
                         // 更新用戶狀態或重新載入頁面
                         window.location.reload()
                       }}
