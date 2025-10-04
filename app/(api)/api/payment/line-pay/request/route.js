@@ -1,4 +1,4 @@
-// 說明：處理金流串接的路由
+// 說明：處理金流串接的路由 (Line Pay v3)
 import { NextResponse as res } from 'next/server'
 // 導入服務層的類別
 import { requestPayment } from '@/services/line-pay.service'
@@ -25,18 +25,21 @@ export async function GET(request) {
     return errorResponse(res, { message: '缺少金額' })
   }
 
-  // 取得資料
+  // 取得資料 (使用 Line Pay v3)
+  console.log('🚀 [Line Pay v3] 開始處理付款請求，金額:', amount)
   const data = await requestPayment(amount)
-  console.log(data)
+  console.log('🔍 [Line Pay v3] requestPayment 回應:', data)
 
-  // 如果是開發環境，顯示部落格列表
-  if (isDev) console.log(data)
+  // 如果是開發環境，顯示詳細資料
+  if (isDev) console.log('🔧 [Line Pay v3] 開發環境詳細資料:', data)
 
   // API回應
   if (data.status === 'success') {
+    console.log('✅ [Line Pay v3] 付款請求成功')
     return successResponse(res, data?.payload)
   } else {
-    const error = { message: data?.message }
+    const error = { message: data?.message || '付款請求失敗' }
+    console.error('❌ [Line Pay v3] 付款請求失敗:', error)
     return errorResponse(res, error)
   }
 }
