@@ -440,10 +440,10 @@ export default function UnifiedNavbar() {
                     </div>
                   </Dropdown.Header>
 
-                  {/* 個人資料連結 */}
+                  {/* LinePay連結 */}
                   <Dropdown.Item
                     as={Link}
-                    href="/user/profile"
+                    href="/line-pay"
                     className="d-flex align-items-center gap-2 text-light py-2"
                     style={{
                       borderRadius: '8px',
@@ -458,7 +458,7 @@ export default function UnifiedNavbar() {
                     }}
                   >
                     <FaCog className="text-info" />
-                    個人設定
+                    LinePay
                   </Dropdown.Item>
 
                   {/* 分隔線 */}

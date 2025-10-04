@@ -77,30 +77,42 @@ export default function LinePayButton({
         }
       )
 
-      const resData = await res.json()
+      // 處理回應
+      let resData
+      try {
+        resData = await res.json()
+      } catch (parseError) {
+        console.error('❌ JSON 解析失敗:', parseError)
+        const responseText = await res.text()
+        console.error('❌ 原始回應:', responseText)
+        toast.error('付款服務回應格式錯誤')
+        return
+      }
 
       console.log('🔍 API 回應:', resData)
       console.log('📊 回應狀態:', res.status)
 
-      if (resData.status === 'success') {
-        if (window.confirm('確認要導向至LINE Pay進行付款?')) {
-          // 執行付款成功回調（在導向之前）
-          if (onPaymentSuccess) {
-            onPaymentSuccess(resData.data)
-          }
-
-          //導向至LINE Pay付款頁面
-          window.location.href = resData.data.paymentUrl
-        }
-      } else {
+      if (!res.ok || resData.status !== 'success') {
         console.error('❌ 付款請求失敗:', resData)
-        const errorMessage = resData.message || '未知錯誤'
+        const errorMessage = resData.message || resData.error || '未知錯誤'
         toast.error(`要求付款網址失敗: ${errorMessage}`)
 
         // 執行付款失敗回調
         if (onPaymentError) {
           onPaymentError(resData)
         }
+        return
+      }
+
+      // 成功時的處理
+      if (window.confirm('確認要導向至LINE Pay進行付款?')) {
+        // 執行付款成功回調（在導向之前）
+        if (onPaymentSuccess) {
+          onPaymentSuccess(resData.data)
+        }
+
+        //導向至LINE Pay付款頁面
+        window.location.href = resData.data.paymentUrl
       }
     } catch (error) {
       console.error('❌ 付款處理過程發生錯誤:', error)
