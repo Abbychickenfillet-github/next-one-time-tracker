@@ -1,5 +1,5 @@
 // Line Pay v3 API服务层 (使用fetch方式)
-import { getSession, setSession, deleteSession } from '../lib/iron-session'
+import { setSession } from '../lib/iron-session'
 import { serverConfig } from '../config/server.config.js'
 import { isDev } from '../lib/utils.js'
 
@@ -236,9 +236,8 @@ function generateProductId() {
   return `PROD_${Date.now()}_${Math.random().toString(36).substr(2, 9).toUpperCase()}`
 }
 
-export default {
+const linePayService = {
   requestPayment,
 }
 
-
-
+export default linePayService
