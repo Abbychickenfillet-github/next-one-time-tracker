@@ -162,8 +162,8 @@ export default function DebugLinePay() {
         <h3>📋 使用说明</h3>
         <ul>
           <li>输入要测试的金额（默认100台币）</li>
-          <li>点击"测试调试API"使用专门的调试端点</li>
-          <li>点击"测试原始API"测试标准的付款API</li>
+          <li>点击&ldquo;测试调试API&rdquo;使用专门的调试端点</li>
+          <li>点击&ldquo;测试原始API&rdquo;测试标准的付款API</li>
           <li>查看浏览器控制台的详细日志</li>
           <li>成功时应该看到Line Pay付款URL</li>
           <li>失败时会看到具体的错误信息</li>
@@ -192,6 +192,3 @@ export default function DebugLinePay() {
     </div>
   )
 }
-
-
-
