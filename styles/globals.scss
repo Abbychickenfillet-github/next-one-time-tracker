@@ -1,7 +1,7 @@
 // 自定義 bootstrap 的 SCSS 變數
 $primary: #583163;
 $secondary: #ffc107;
-$body-bg: #f5f5f5;
+$body-bg: transparent; // 改為透明，讓背景可以顯示
 $body-color: #212529;
 $link-color: #6a1b9a;
 $link-hover-color: darken($link-color, 10%);
@@ -44,8 +44,12 @@ $link-hover-color: darken($link-color, 10%);
   --form-border: rgba(13, 202, 240, 0.3);
   --button-bg: linear-gradient(45deg, #0dcaf0, #0aa2c0);
   --button-hover: linear-gradient(45deg, #0aa2c0, #087990);
+  --button-text: #ffffff;
+  --button-shadow: 0 2px 8px rgba(13, 202, 240, 0.3);
   --glow-color: #0dcaf0;
   --navbar-bg: rgba(0, 0, 0, 0.9);
+  --icon-color: #ffffff;
+  --icon-hover: #5fcce2;
   // 麵包屑功能已移除
   --info-color: #0dcaf0;
   --white-accent: rgba(255, 255, 255, 0.1);
@@ -70,8 +74,12 @@ $link-hover-color: darken($link-color, 10%);
   --form-border: rgba(255, 107, 157, 0.5);
   --button-bg: linear-gradient(45deg, #ff6b9d, #ff8fab);
   --button-hover: linear-gradient(45deg, #ff1744, #e91e63);
+  --button-text: #ffffff;
+  --button-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
   --glow-color: #ff6b9d;
   --navbar-bg: rgba(0, 0, 0, 0.9);
+  --icon-color: #ffffff;
+  --icon-hover: #ff8fab;
   // 麵包屑功能已移除
   --pink-primary: #ff6b9d;
   --pink-secondary: #ff8fab;
@@ -90,23 +98,20 @@ $link-hover-color: darken($link-color, 10%);
   --text-secondary: #3d2a6a;
   --form-bg: rgba(255, 255, 255, 0.95);
   --form-border: rgba(123, 95, 177, 0.4);
-  --button-bg: linear-gradient(
-    45deg,
-    #7b5fb1,
-    #6b4fa1,
-    #ede0ff,
-    #d4c0ff,
-    #c0a0ff
-  );
+  --button-bg: linear-gradient(45deg, #7b5fb1, #6b4fa1);
   --button-hover: linear-gradient(45deg, #6b4fa1, #5b3f91);
+  --button-text: #ffffff;
+  --button-shadow: 0 2px 8px rgba(123, 95, 177, 0.3);
   --glow-color: #7b5fb1;
   --navbar-bg: rgba(26, 15, 15, 0.95);
+  --icon-color: #ffffff;
+  --icon-hover: #d4c0ff;
 }
 
 // 方案四：溫暖奶茶色
 :root[data-theme='warm-tea'] {
   --primary-bg: linear-gradient(135deg, #c4965c, #b88744);
-  --secondary-bg: linear-gradient(135deg, #f6ca85, #e8d4c0, #ad7e48);
+  --secondary-bg: linear-gradient(135deg, #f6ca85, #eaad71, #ad7e48);
   --accent-color: #b88744;
   --accent-hover: #a67c3a;
   --text-primary: #2d1f0d;
@@ -115,8 +120,12 @@ $link-hover-color: darken($link-color, 10%);
   --form-border: rgba(184, 135, 68, 0.4);
   --button-bg: linear-gradient(45deg, #b88744, #a67c3a);
   --button-hover: linear-gradient(45deg, #a67c3a, #946b30);
+  --button-text: #ffffff;
+  --button-shadow: 0 2px 8px rgba(184, 135, 68, 0.3);
   --glow-color: #b88744;
   --navbar-bg: rgba(26, 15, 15, 0.95);
+  --icon-color: #ffffff; // 圖示顏色 - 白色
+  --icon-hover: #f6ca85; // 圖示懸停顏色
 }
 
 // 方案五：深綠色模糊漸變背景 (類似圖片效果)
@@ -147,8 +156,12 @@ $link-hover-color: darken($link-color, 10%);
   --form-border: rgba(32, 201, 151, 0.4);
   --button-bg: linear-gradient(45deg, #20c997, #1ba085);
   --button-hover: linear-gradient(45deg, #1ba085, #16806d);
+  --button-text: #ffffff;
+  --button-shadow: 0 2px 8px rgba(32, 201, 151, 0.3);
   --glow-color: #a2ac82; /* 淺橄欖綠色發光 */
   --navbar-bg: rgba(26, 15, 15, 0.95);
+  --icon-color: #ffffff;
+  --icon-hover: #a2ac82;
 }
 
 // 方案六：Sand Barbie 風格 (70% Pink + 30% Black)
@@ -181,8 +194,12 @@ $link-hover-color: darken($link-color, 10%);
   --form-border: rgba(255, 107, 157, 0.3);
   --button-bg: linear-gradient(45deg, #ff6b9d, #ff8fab);
   --button-hover: linear-gradient(45deg, #ff1744, #e91e63);
+  --button-text: #ffffff;
+  --button-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
   --glow-color: #ff6b9d;
   --navbar-bg: rgba(0, 0, 0, 0.9);
+  --icon-color: #ffffff;
+  --icon-hover: #ff8fab;
 }
 // ========================================
 // 🎯 全域樣式
@@ -215,6 +232,13 @@ main {
   max-width: 100%; // 確保不超出容器
   box-sizing: border-box; // 包含 padding 在寬度計算內
   min-height: 100vh; // 使用完整視窗高度
+  background: var(
+    --secondary-bg
+  ); // 使用 background 而不是 background-color，若使用background-color會覆蓋主題背景導致背景只有100vh
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
 // 自定義 main 的滾動條樣式 - 強制貼邊
@@ -251,7 +275,7 @@ main::-webkit-scrollbar-corner {
   background-attachment: fixed; // 讓背景固定，不隨滾動移動
   display: flex;
   flex-direction: column;
-  min-height: 100%; // 讓內容可以超出 main 的高度，觸發滾動
+  min-height: 100vh; // 確保至少覆蓋整個視窗高度
   transition: all 0.5s ease;
   width: 100%; // 佔滿 main 的寬度
   max-width: 100%; // 確保不超出容器寬度
@@ -327,6 +351,54 @@ main::-webkit-scrollbar-corner {
   display: none !important;
 }
 
+// 確保所有主題的容器不覆蓋背景
+.gradient-bg .container,
+.gradient-bg .container-fluid {
+  background: transparent !important;
+}
+
+// 確保所有主題的子元素不覆蓋背景
+.gradient-bg > * {
+  background: transparent !important;
+}
+
+// ========================================
+// 🎨 圖示樣式 - 整合到主題系統
+// ========================================
+
+// 通用圖示樣式
+.email-icon,
+.eye-icon,
+.form-icon {
+  color: var(--icon-color, #ffffff);
+  transition: color 0.3s ease;
+}
+
+.email-icon:hover,
+.eye-icon:hover,
+.form-icon:hover {
+  color: var(--icon-hover, var(--accent-color));
+}
+
+// ========================================
+// 🎨 按鈕樣式 - 整合到主題系統
+// ========================================
+
+// 主題按鈕樣式
+.theme-button {
+  background: var(--button-bg) !important;
+  color: var(--button-text) !important;
+  border: none !important;
+  box-shadow: var(--button-shadow) !important;
+  transition: all 0.3s ease !important;
+}
+
+.theme-button:hover {
+  background: var(--button-hover) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--button-shadow) !important;
+}
+
 // Mint 主題時確保容器不覆蓋背景
 :root[data-theme='mint'] .gradient-bg .container {
   background: transparent !important;
@@ -346,7 +418,12 @@ body {
 // 登入註冊頁面專用樣式
 .gradient-bg {
   min-height: 100vh !important;
+  height: auto !important; /* 讓高度自動擴展到內容 */
   overflow: visible !important; /* 讓內容可見，不隱藏滾動條 */
+  background: var(--secondary-bg) !important; /* 強制使用背景 */
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
 }
 
 // Pink 主題時隱藏左側歡迎區域的背景圖片
