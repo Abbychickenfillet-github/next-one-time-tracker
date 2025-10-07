@@ -35,8 +35,8 @@ $link-hover-color: darken($link-color, 10%);
 // 藍綠色主題 (Bootstrap bg-info 風格) - 黑底白字 + info 色
 :root[data-theme='green'] {
   --primary-bg: linear-gradient(135deg, #1a1a1a, #2d2d2d, #0a0a0a);
-  --secondary-bg: linear-gradient(135deg, #0dcaf0, #0aa2c0);
-  --accent-color: #0dcaf0;
+  --secondary-bg: linear-gradient(135deg, #4d8691, #0aa2c0);
+  --accent-color: #5fcce2;
   --accent-hover: #0aa2c0;
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.9);
@@ -80,22 +80,192 @@ $link-hover-color: darken($link-color, 10%);
   --black-base: #1a1a1a;
 }
 
+// 方案三：柔和薰衣草
+:root[data-theme='lavender'] {
+  --primary-bg: linear-gradient(135deg, #ede0ff, #d4c0ff, #c0a0ff);
+  --secondary-bg: linear-gradient(135deg, #683cc0, #8b6fc1);
+  --accent-color: #7b5fb1;
+  --accent-hover: #6b4fa1;
+  --text-primary: #2d1f5a;
+  --text-secondary: #3d2a6a;
+  --form-bg: rgba(255, 255, 255, 0.95);
+  --form-border: rgba(123, 95, 177, 0.4);
+  --button-bg: linear-gradient(
+    45deg,
+    #7b5fb1,
+    #6b4fa1,
+    #ede0ff,
+    #d4c0ff,
+    #c0a0ff
+  );
+  --button-hover: linear-gradient(45deg, #6b4fa1, #5b3f91);
+  --glow-color: #7b5fb1;
+  --navbar-bg: rgba(26, 15, 15, 0.95);
+}
+
+// 方案四：溫暖奶茶色
+:root[data-theme='warm-tea'] {
+  --primary-bg: linear-gradient(135deg, #c4965c, #b88744);
+  --secondary-bg: linear-gradient(135deg, #f6ca85, #e8d4c0, #ad7e48);
+  --accent-color: #b88744;
+  --accent-hover: #a67c3a;
+  --text-primary: #2d1f0d;
+  --text-secondary: #3d2a1a;
+  --form-bg: rgba(255, 255, 255, 0.95);
+  --form-border: rgba(184, 135, 68, 0.4);
+  --button-bg: linear-gradient(45deg, #b88744, #a67c3a);
+  --button-hover: linear-gradient(45deg, #a67c3a, #946b30);
+  --glow-color: #b88744;
+  --navbar-bg: rgba(26, 15, 15, 0.95);
+}
+
+// 方案五：深綠色模糊漸變背景 (類似圖片效果)
+:root[data-theme='mint'] {
+  --primary-bg: linear-gradient(135deg, #0a1a0a, #1a2e1a, #0d1f0d);
+  --secondary-bg:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(0, 100, 50, 0.4) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(0, 80, 40, 0.3) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 40% 60%,
+      rgba(0, 120, 60, 0.5) 0%,
+      transparent 60%
+    ),
+    linear-gradient(135deg, #0a1a0a, #1a2e1a, #0d1f0d);
+  --accent-color: #20c997;
+  --accent-hover: #1ba085;
+  --text-primary: #a2ac82; /* 淺橄欖綠色文字 */
+  --text-secondary: rgba(162, 172, 130, 0.8); /* 淺橄欖綠色半透明 */
+  --form-bg: rgba(255, 255, 255, 0.1);
+  --form-border: rgba(32, 201, 151, 0.4);
+  --button-bg: linear-gradient(45deg, #20c997, #1ba085);
+  --button-hover: linear-gradient(45deg, #1ba085, #16806d);
+  --glow-color: #a2ac82; /* 淺橄欖綠色發光 */
+  --navbar-bg: rgba(26, 15, 15, 0.95);
+}
+
+// 方案六：Sand Barbie 風格 (70% Pink + 30% Black)
+:root[data-theme='sand-barbie'] {
+  --primary-bg:
+    linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(26, 10, 26, 0.8)),
+    url('/linear-gradient-bg1.jpg');
+  --secondary-bg:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 107, 157, 0.4) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(255, 139, 171, 0.3) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 40% 60%,
+      rgba(233, 30, 99, 0.5) 0%,
+      transparent 60%
+    ),
+    linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(26, 10, 26, 0.8));
+  --accent-color: #ff6b9d;
+  --accent-hover: #ff1744;
+  --text-primary: #ff6b9d;
+  --text-secondary: rgba(255, 107, 157, 0.8);
+  --form-bg: rgba(255, 107, 157, 0.1);
+  --form-border: rgba(255, 107, 157, 0.3);
+  --button-bg: linear-gradient(45deg, #ff6b9d, #ff8fab);
+  --button-hover: linear-gradient(45deg, #ff1744, #e91e63);
+  --glow-color: #ff6b9d;
+  --navbar-bg: rgba(0, 0, 0, 0.9);
+}
 // ========================================
 // 🎯 全域樣式
 // ========================================
 
-.gradient-bg {
-  position: relative;
-  background: var(--primary-bg);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center bottom;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  transition: all 0.5s ease;
+// 主容器 - 使用 flexbox 實現 sticky footer
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; // 只防止橫向滾動
+  overflow-y: auto; // 允許垂直滾動
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+// 主內容區域樣式 - 讓 main 有自己的滾動條
+main {
+  display: flex;
+  flex-direction: column;
+  flex: 1; // 佔滿剩餘空間
+  overflow-y: auto; // 讓 main 有自己的垂直滾動條
+  overflow-x: hidden; // 確保沒有橫向滾動條
+  position: relative; // 讓滾動條可以絕對定位
+  padding: 0; // 移除所有留白
+  max-width: 100%; // 確保不超出容器
+  box-sizing: border-box; // 包含 padding 在寬度計算內
+  min-height: 100vh; // 使用完整視窗高度
+}
+
+// 自定義 main 的滾動條樣式 - 強制貼邊
+main::-webkit-scrollbar {
+  width: 10px;
+}
+
+main::-webkit-scrollbar-track {
+  background: transparent; // 隱藏軌道
+}
+
+main::-webkit-scrollbar-thumb {
+  background: var(--accent-color, #5fcce2);
+  border-radius: 3px;
+  border: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+main::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-hover, #0aa2c0);
+}
+
+// 如果還是不夠貼邊，使用這個強制方法
+main::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.gradient-bg {
+  position: relative;
+  background: var(--secondary-bg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center; // 改為置中，確保所有螢幕尺寸都完整顯示
+  background-attachment: fixed; // 讓背景固定，不隨滾動移動
+  display: flex;
+  flex-direction: column;
+  min-height: 100%; // 讓內容可以超出 main 的高度，觸發滾動
+  transition: all 0.5s ease;
+  width: 100%; // 佔滿 main 的寬度
+  max-width: 100%; // 確保不超出容器寬度
+  box-sizing: border-box; // 包含邊框在寬度計算內
+  overflow: visible; // 不隱藏溢出內容，讓 main 處理滾動
+
+  // 響應式設計 - 確保小螢幕時背景完整顯示
+  @media (max-width: 768px) {
+    background-size: cover;
+    background-position: center center;
+    background-attachment: scroll; // 小螢幕時不使用 fixed，避免性能問題
+  }
+}
+// 移除這個，我們用更好的方法
 // Pink 主題專用背景設定
 :root[data-theme='pink'] .gradient-bg {
   background-repeat: repeat;
@@ -106,6 +276,77 @@ $link-hover-color: darken($link-color, 10%);
 // Pink 主題時隱藏植物背景圖
 :root[data-theme='pink'] .gradient-bg img {
   display: none !important;
+}
+
+// Mint 主題專用背景設定 (深綠色模糊漸變)
+:root[data-theme='mint'] .gradient-bg {
+  background: var(--secondary-bg) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  filter: blur(0.5px); /* 輕微模糊效果 */
+  animation: mintFloat 20s ease-in-out infinite; /* 流動動畫 */
+}
+
+// Mint 主題流動動畫
+@keyframes mintFloat {
+  0%,
+  100% {
+    background-position:
+      0% 0%,
+      100% 100%,
+      50% 50%,
+      0% 0%;
+  }
+  25% {
+    background-position:
+      20% 20%,
+      80% 80%,
+      60% 40%,
+      10% 10%;
+  }
+  50% {
+    background-position:
+      40% 40%,
+      60% 60%,
+      40% 60%,
+      20% 20%;
+  }
+  75% {
+    background-position:
+      60% 20%,
+      40% 80%,
+      60% 40%,
+      30% 10%;
+  }
+}
+
+// Mint 主題時隱藏左側歡迎區域的背景圖片
+:root[data-theme='mint'] .left img {
+  display: none !important;
+}
+
+// Mint 主題時確保容器不覆蓋背景
+:root[data-theme='mint'] .gradient-bg .container {
+  background: transparent !important;
+}
+
+// Mint 主題時確保所有子元素不覆蓋背景
+:root[data-theme='mint'] .gradient-bg > * {
+  background: transparent !important;
+}
+
+// 確保登入註冊頁面不滾動 - 但允許 main 滾動
+body {
+  overflow-x: hidden; /* 只防止橫向滾動 */
+  overflow-y: auto; /* 允許垂直滾動 */
+}
+
+// 登入註冊頁面專用樣式
+.gradient-bg {
+  min-height: 100vh !important;
+  overflow: visible !important; /* 讓內容可見，不隱藏滾動條 */
 }
 
 // Pink 主題時隱藏左側歡迎區域的背景圖片
@@ -264,6 +505,63 @@ $link-hover-color: darken($link-color, 10%);
   }
 }
 
+// 針對深色主題的導航欄文字顏色調整
+:root[data-theme='sand-barbie'] .topnav-bootstrap {
+  .nav-link-custom {
+    color: #ffffff !important;
+
+    &:hover {
+      color: #ffffff !important;
+    }
+
+    &.active {
+      color: #ffffff !important;
+    }
+  }
+}
+
+:root[data-theme='mint'] .topnav-bootstrap {
+  .nav-link-custom {
+    color: #ffffff !important;
+
+    &:hover {
+      color: #ffffff !important;
+    }
+
+    &.active {
+      color: #ffffff !important;
+    }
+  }
+}
+
+:root[data-theme='warm-tea'] .topnav-bootstrap {
+  .nav-link-custom {
+    color: #ffffff !important;
+
+    &:hover {
+      color: #ffffff !important;
+    }
+
+    &.active {
+      color: #ffffff !important;
+    }
+  }
+}
+
+:root[data-theme='lavender'] .topnav-bootstrap {
+  .nav-link-custom {
+    color: #ffffff !important;
+
+    &:hover {
+      color: #ffffff !important;
+    }
+
+    &.active {
+      color: #ffffff !important;
+    }
+  }
+}
+
 // 響應式設計
 @media screen and (max-width: 991px) {
   .topnav-bootstrap {
@@ -364,25 +662,6 @@ $link-hover-color: darken($link-color, 10%);
 // ========================================
 // 📱 響應式設計
 // ========================================
-
-@media screen and (max-width: 768px) {
-  .gradient-bg {
-    animation: none; /* 在行動裝置上停用動畫以提升性能 */
-  }
-
-  .cloud-effect {
-    animation: none;
-  }
-
-  .glow-text {
-    animation: none;
-  }
-
-  .theme-button {
-    padding: 6px 12px;
-    font-size: 11px;
-  }
-}
 
 .theme-button {
   padding: 8px 16px;
@@ -493,6 +772,62 @@ $link-hover-color: darken($link-color, 10%);
 .themeToggle .btn.themeButton.pink:hover {
   background: linear-gradient(45deg, #ff1744, #e91e63) !important;
   box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+  transform: translateY(-2px);
+  color: white !important;
+}
+
+/* Sand Barbie 主題按鈕 */
+.themeToggle .btn.themeButton.sand-barbie {
+  background: linear-gradient(45deg, #ff6b9d, #ff8fab) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+.themeToggle .btn.themeButton.sand-barbie:hover {
+  background: linear-gradient(45deg, #ff8fab, #ffb3d1) !important;
+  box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+  transform: translateY(-2px);
+  color: white !important;
+}
+
+/* Mint 主題按鈕 */
+.themeToggle .btn.themeButton.mint {
+  background: linear-gradient(45deg, #4ecdc4, #45b7aa) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+.themeToggle .btn.themeButton.mint:hover {
+  background: linear-gradient(45deg, #45b7aa, #3da89a) !important;
+  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+  transform: translateY(-2px);
+  color: white !important;
+}
+
+/* Warm Tea 主題按鈕 */
+.themeToggle .btn.themeButton.warm-tea {
+  background: linear-gradient(45deg, #d4a574, #c4965c) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+}
+
+.themeToggle .btn.themeButton.warm-tea:hover {
+  background: linear-gradient(45deg, #c4965c, #b88744) !important;
+  box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+  transform: translateY(-2px);
+  color: white !important;
+}
+
+/* Lavender 主題按鈕 */
+.themeToggle .btn.themeButton.lavender {
+  background: linear-gradient(45deg, #9b7fd1, #8b6fc1) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(155, 127, 209, 0.3);
+}
+
+.themeToggle .btn.themeButton.lavender:hover {
+  background: linear-gradient(45deg, #8b6fc1, #7b5fb1) !important;
+  box-shadow: 0 6px 20px rgba(155, 127, 209, 0.4);
   transform: translateY(-2px);
   color: white !important;
 }

@@ -31,6 +31,7 @@ export default function TimeLogClient() {
     endSubStep,
     handleVoiceResult,
     saveToDB,
+    clearStorage,
     getElapsedMinutes,
     getActivityStatus,
   } = useTimeLogStore()
@@ -67,6 +68,15 @@ export default function TimeLogClient() {
   // 對應: 儲存活動資訊到資料庫按鈕 (藍色按鈕)
   const handleSaveToDB = async () => {
     await saveToDB(user, isAuth)
+  }
+
+  // ===== 清除 localStorage =====
+  // 對應: 清除活動記錄按鈕
+  const handleClearStorage = () => {
+    if (confirm('確定要清除所有活動記錄嗎？此操作無法復原。')) {
+      clearStorage()
+      alert('已清除所有活動記錄')
+    }
   }
 
   // ===== 新增階段步驟 =====
@@ -124,7 +134,7 @@ export default function TimeLogClient() {
               <strong>👤 訪客模式</strong>
               <br />
               <small className="text-muted">
-                您可以測試時間記錄功能，但需要登入才能儲存到資料庫
+                您可以測試時間記錄功能，但需要登入才能儲存到資料庫。否則只能在本地端儲存。可以按清除活動紀錄刪除訪客模式當前紀錄。
               </small>
             </div>
             <div>
@@ -142,66 +152,137 @@ export default function TimeLogClient() {
 
       {/* ===== 主要控制區域 ===== */}
       <div className="mb-4">
-        {/* 儲存到資料庫按鈕 */}
-        <button
-          className={`btn mb-4 ${isAuth ? 'btn-info' : 'btn-outline-secondary'}`}
-          onClick={handleSaveToDB}
-          disabled={!isAuth}
-          title={isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'}
-          aria-label={
-            isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'
-          }
-        >
-          {isAuth ? '💾 儲存活動資訊到資料庫' : '🔒 請先登入才能儲存'}
-        </button>
+        {/* 儲存和清除按鈕 */}
+        <div className="row mb-4">
+          <div className="col-12 col-md-6">
+            <button
+              className={`btn w-100 ${isAuth ? 'btn-info' : 'btn-outline-secondary'}`}
+              onClick={handleSaveToDB}
+              disabled={!isAuth}
+              title={
+                isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'
+              }
+              aria-label={
+                isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'
+              }
+            >
+              {isAuth ? '💾 儲存活動資訊到資料庫' : '🔒 請先登入才能儲存'}
+            </button>
+          </div>
+          <div className="col-12 col-md-6 mt-2 mt-md-0">
+            <button
+              className="btn btn-outline-warning w-100"
+              onClick={handleClearStorage}
+              title="清除所有活動記錄"
+              aria-label="清除所有活動記錄"
+            >
+              🗑️ 清除本頁活動記錄
+            </button>
+          </div>
+        </div>
 
-        {/* 活動名稱輸入框 */}
-        <label
-          htmlFor="titleInput"
-          className="animate__animated animate__fadeInDown animate__delay-1s text-center"
-          style={{
-            display: 'block',
-            fontWeight: 'bold',
-            // color: '#333',
-            margin: '20px auto',
-            fontSize: '25px',
-            background:
-              'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #54a0ff)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            textShadow: '0 0 10px rgba(255, 255, 255, 0.5)',
-          }}
-        >
-          📝 活動名稱
-        </label>
-        <input
-          type="text"
-          id="titleInput"
-          className="form-control mb-2 animate__animated animate__fadeInUp animate__delay-2s"
-          placeholder="輸入活動大名"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          aria-label="活動名稱輸入框"
-          style={{
-            backgroundColor: 'white',
-            border: '2px solid #dee2e6',
-            borderRadius: '8px',
-            padding: '12px 16px',
-            fontSize: '16px',
-            color: '#212529',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            transition: 'all 0.3s ease',
-          }}
-          onFocus={(e) => {
-            e.target.style.borderColor = '#0d6efd'
-            e.target.style.boxShadow = '0 0 0 0.2rem rgba(13, 110, 253, 0.25)'
-          }}
-          onBlur={(e) => {
-            e.target.style.borderColor = '#dee2e6'
-            e.target.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
-          }}
-        />
+        {/* 活動名稱輸入框和開始/結束按鈕在同一行 */}
+        <div className="row d-md-flex align-items-center">
+          {/* 活動名稱標題 */}
+          <div className="col-12 col-md-3 mb-3 mb-md-0">
+            <label
+              htmlFor="titleInput"
+              className="animate__animated animate__fadeInDown animate__delay-1s text-center d-block"
+              style={{
+                fontWeight: 'bold',
+                margin: '0 auto',
+                fontSize: '25px',
+                background:
+                  'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #54a0ff)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textShadow: '0 0 10px rgba(255, 255, 255, 0.5)',
+              }}
+            >
+              📝 活動名稱
+            </label>
+          </div>
+
+          {/* 活動名稱輸入框 */}
+          <div className="col-12 col-md-4 mb-3 mb-md-0">
+            <input
+              type="text"
+              id="titleInput"
+              className="form-control animate__animated animate__fadeInUp animate__delay-2s"
+              placeholder="輸入活動大名"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              aria-label="活動名稱輸入框"
+              style={{
+                backgroundColor: 'white',
+                border: '2px solid #dee2e6',
+                borderRadius: '8px',
+                padding: '12px 16px',
+                fontSize: '16px',
+                color: '#212529',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                transition: 'all 0.3s ease',
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = '#0d6efd'
+                e.target.style.boxShadow =
+                  '0 0 0 0.2rem rgba(13, 110, 253, 0.25)'
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = '#dee2e6'
+                e.target.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'
+              }}
+            />
+          </div>
+
+          {/* 開始/結束按鈕 */}
+          <div className="col-12 col-md-5">
+            <div className="d-flex gap-2">
+              {/* 開始 */}
+              <button
+                className={`btn flex-grow-1 ${
+                  !isClient
+                    ? 'btn-outline-success'
+                    : getActivityStatus() === '進行中'
+                      ? 'btn-outline-success'
+                      : 'btn-success'
+                }`}
+                onClick={handleStart}
+                disabled={!isClient ? false : getActivityStatus() === '進行中'}
+                aria-label="開始記錄時間"
+              >
+                {!isClient
+                  ? '載入中...'
+                  : getActivityStatus() === '進行中'
+                    ? '⏸️ 進行中'
+                    : '▶️ Start'}
+              </button>
+              <button
+                className={`btn flex-grow-1 ${
+                  !isClient
+                    ? 'btn-outline-danger'
+                    : getActivityStatus() === '已結束'
+                      ? 'btn-outline-danger'
+                      : 'btn-danger'
+                }`}
+                onClick={handleEnd}
+                disabled={
+                  !startTime ||
+                  (!isClient ? false : getActivityStatus() === '已結束')
+                }
+                aria-label="結束記錄時間"
+              >
+                {!isClient
+                  ? '載入中...'
+                  : getActivityStatus() === '已結束'
+                    ? '已結束'
+                    : '⏹️ End'}
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* 狀態指示器 */}
         <div className="mb-3">
           <div className="d-flex justify-content-between align-items-center mb-2">
@@ -257,49 +338,6 @@ export default function TimeLogClient() {
               </div>
             </div>
           )}
-        </div>
-
-        <div className="d-flex gap-2">
-          {/* 開始 */}
-          <button
-            className={`btn flex-grow-1 ${
-              !isClient
-                ? 'btn-outline-success'
-                : getActivityStatus() === '進行中'
-                  ? 'btn-outline-success'
-                  : 'btn-success'
-            }`}
-            onClick={handleStart}
-            disabled={!isClient ? false : getActivityStatus() === '進行中'}
-            aria-label="開始記錄時間"
-          >
-            {!isClient
-              ? '載入中...'
-              : getActivityStatus() === '進行中'
-                ? '⏸️ 進行中'
-                : '▶️ Start'}
-          </button>
-          <button
-            className={`btn flex-grow-1 ${
-              !isClient
-                ? 'btn-outline-danger'
-                : getActivityStatus() === '已結束'
-                  ? 'btn-outline-danger'
-                  : 'btn-danger'
-            }`}
-            onClick={handleEnd}
-            disabled={
-              !startTime ||
-              (!isClient ? false : getActivityStatus() === '已結束')
-            }
-            aria-label="結束記錄時間"
-          >
-            {!isClient
-              ? '載入中...'
-              : getActivityStatus() === '已結束'
-                ? '已結束'
-                : '⏹️ End'}
-          </button>
         </div>
       </div>
 

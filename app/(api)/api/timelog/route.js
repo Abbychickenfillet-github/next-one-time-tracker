@@ -179,3 +179,22 @@ export async function GET() {
     return errorResponse(res, errorMsg)
   }
 }
+// 幫我寫一個刪除的API
+export async function DELETE(request, { params }) {
+  try {
+    const { id } = await params.id
+    const timeLog = await prisma.timeLog.delete({
+      where: { id },
+    })
+
+    if (isDev) {
+      console.log('✅ 時間戳記錄已成功刪除:', timeLog)
+    }
+
+    return successResponse(res, { message: '時間戳記錄已成功刪除' })
+  } catch (error) {
+    console.error('刪除時間戳記錄失敗:', error)
+    const errorMsg = { message: '刪除時間戳記錄失敗' }
+    return errorResponse(res, errorMsg)
+  }
+}

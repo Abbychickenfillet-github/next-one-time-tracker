@@ -1,11 +1,12 @@
-// Footer 樣式
+// Footer 樣式 - Sticky Footer
 .footer {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 2rem 0 1rem;
-  margin-top: auto;
+  padding: 1.5rem 0 1rem;
+  margin-top: auto; // 讓 footer 自動推到最底部
   position: relative;
   overflow: hidden;
+  flex-shrink: 0; // 防止 footer 被壓縮
 
   // 背景裝飾
   &::before {
@@ -75,6 +76,10 @@
       background: rgba(255, 255, 255, 0.15);
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+    @media (max-width: 768px) {
+      padding: 0.5rem;
+      gap: 0.5rem;
     }
   }
 

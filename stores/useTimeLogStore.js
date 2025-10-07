@@ -81,7 +81,7 @@ export const useTimeLogStore = create(
           type: 'end',
           title: `結束：${state.title}`,
           description: `活動結束：${state.title}`,
-          text: `🏁 結束：${state.title} | ${now.toLocaleString()}`,
+          text: `結束：${state.title} | ${now.toLocaleString()}`,
           startTime: now,
           endTime: now,
           ended: true,
