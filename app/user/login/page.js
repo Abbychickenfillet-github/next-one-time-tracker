@@ -172,7 +172,7 @@ export default function LogIn() {
 
             {/* 右側登入表單 */}
             <div className="col-lg-5 col-md-8 col-sm-12 mx-auto">
-              <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25">
+              <div className="bg-transparent backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25">
                 {/* 頁籤切換 */}
                 <div className="d-flex justify-content-center mb-4">
                   <div className="btn-group" role="group">
@@ -241,7 +241,6 @@ export default function LogIn() {
                           <MdOutlineEmail
                             className="position-absolute top-50 end-0 translate-middle-y me-3 email-icon"
                             size={20}
-                            style={{ color: '#E0B0FF' }}
                           />
                         </div>
                       </div>
@@ -316,10 +315,10 @@ export default function LogIn() {
                             {showpassword ? (
                               <AiOutlineEyeInvisible
                                 size={20}
-                                color="#E0B0FF"
+                                className="eye-icon"
                               />
                             ) : (
-                              <AiOutlineEye size={20} color="#E0B0FF" />
+                              <AiOutlineEye size={20} className="eye-icon" />
                             )}
                           </button>
                         </div>
@@ -372,15 +371,10 @@ export default function LogIn() {
                         </Link>
 
                         <button
-                          className="btn btn-primary fw-semibold px-4 py-2"
+                          className="btn theme-button fw-semibold px-4 py-2"
                           type="submit"
                           style={{
-                            background:
-                              'linear-gradient(45deg, #805AF5, #E0B0FF)',
-                            border: 'none',
                             borderRadius: '8px',
-                            boxShadow: '0 2px 8px rgba(128, 90, 245, 0.3)',
-                            transition: 'all 0.3s ease',
                             fontSize: '16px',
                           }}
                         >

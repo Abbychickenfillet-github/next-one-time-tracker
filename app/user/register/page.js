@@ -371,9 +371,9 @@ export default function RegisterPage() {
                   style={{ background: 'none', border: 'none' }}
                 >
                   {showpassword ? (
-                    <AiOutlineEyeInvisible size={20} color="#E0B0FF" />
+                    <AiOutlineEyeInvisible size={20} className="eye-icon" />
                   ) : (
-                    <AiOutlineEye size={20} color="#E0B0FF" />
+                    <AiOutlineEye size={20} className="eye-icon" />
                   )}
                 </button>
               </div>
@@ -605,7 +605,7 @@ export default function RegisterPage() {
 
             {/* 右側註冊表單 */}
             <div className="col-lg-5 col-md-8 col-sm-12">
-              <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25">
+              <div className="bg-transparent backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25">
                 {/* 頁籤切換 */}
                 <div className="d-flex justify-content-center mb-4">
                   <div className="btn-group" role="group">
@@ -707,12 +707,9 @@ export default function RegisterPage() {
                     {currentStep < totalSteps ? (
                       <button
                         type="button"
-                        className="btn btn-primary px-4 py-2"
+                        className="btn theme-button px-4 py-2"
                         onClick={handleNext}
                         style={{
-                          background:
-                            'linear-gradient(45deg, #805AF5, #E0B0FF)',
-                          border: 'none',
                           borderRadius: '12px',
                         }}
                       >
@@ -721,11 +718,8 @@ export default function RegisterPage() {
                     ) : (
                       <button
                         type="submit"
-                        className="btn btn-primary px-4 py-2"
+                        className="btn theme-button px-4 py-2"
                         style={{
-                          background:
-                            'linear-gradient(45deg, #805AF5, #E0B0FF)',
-                          border: 'none',
                           borderRadius: '12px',
                         }}
                       >
