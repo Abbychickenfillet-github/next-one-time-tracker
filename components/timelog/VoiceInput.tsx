@@ -7,6 +7,13 @@ export default function VoiceInput({
   onResult: (text: string) => void
 }) {
   useEffect(() => {
+    // window as any 是 TypeScript 的類型斷言
+    // 告訴 TypeScript："把 window 當作 any 類型處理"
+    // 為什麼需要？
+    // 1. window 物件沒有 SpeechRecognition 屬性
+    // 2. 這是瀏覽器實驗性 API
+    // 3. TypeScript 不知道這個屬性存在
+    // 在純 JavaScript 中不需要 as any，直接寫 window.SpeechRecognition 即可
     const Recognition =
       (window as any).SpeechRecognition ||
       (window as any).webkitSpeechRecognition

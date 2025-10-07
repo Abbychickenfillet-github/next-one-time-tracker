@@ -38,13 +38,25 @@ export default function Dashboard() {
     }
   }, [auth, isAuth, router, user])
 
+  // 初始化 Bootstrap dropdown
+  useEffect(() => {
+    // 確保 Bootstrap JavaScript 已載入
+    if (typeof window !== 'undefined' && window.bootstrap) {
+      // 初始化所有 dropdown
+      const dropdownElementList = document.querySelectorAll('.dropdown-toggle')
+      dropdownElementList.forEach(
+        (dropdownToggleEl) => new window.bootstrap.Dropdown(dropdownToggleEl)
+      )
+    }
+  }, [])
+
   // 獲取真實的時間戳記錄數據
   useEffect(() => {
     if (isAuth) {
       fetchTimeLogs()
     }
   }, [isAuth])
-
+  // 前端是從哪一句code帶使用者id給後端的？而是透過 JWT Token 的方式：
   const fetchTimeLogs = async () => {
     try {
       setIsLoading(true)
@@ -54,7 +66,7 @@ export default function Dashboard() {
 
       const response = await fetch('/api/timelogs', {
         method: 'GET',
-        credentials: 'include',
+        credentials: 'include', // ← 關鍵！這會自動帶上 Cookie
         headers: {
           'Content-Type': 'application/json',
         },
@@ -117,20 +129,35 @@ export default function Dashboard() {
 
     if (result.isConfirmed) {
       try {
-        // 這裡可以加入實際的刪除 API 呼叫
-        console.log('刪除時間戳記錄:', logId)
-
-        // 暫時顯示成功訊息
-        Swal.fire({
-          title: '刪除成功',
-          text: '時間戳記錄已成功刪除',
-          icon: 'success',
-          timer: 2000,
-          showConfirmButton: false,
+        const response = await fetch(`/api/timelog/${logId}`, {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         })
 
-        // 重新載入資料
-        await fetchTimeLogs()
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        const result = await response.json()
+        console.log('刪除時間戳記錄:', result)
+
+        if (result.status === 'success') {
+          Swal.fire({
+            title: '刪除成功',
+            text: '時間戳記錄已成功刪除',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false,
+          })
+
+          // 重新載入資料
+          await fetchTimeLogs()
+        } else {
+          throw new Error(result.message || '刪除時間戳記錄失敗')
+        }
       } catch (error) {
         console.error('刪除失敗:', error)
         Swal.fire({
@@ -193,13 +220,14 @@ export default function Dashboard() {
                   className="btn btn-outline-light dropdown-toggle"
                   type="button"
                   data-bs-toggle="dropdown"
+                  aria-expanded="false"
                 >
                   👤 {user?.email || '用戶'}
                 </button>
-                <ul className="dropdown-menu">
+                <ul className="dropdown-menu dropdown-menu-end">
                   <li>
                     <button className="dropdown-item" onClick={handleLogout}>
-                      登出
+                      🚪 登出
                     </button>
                   </li>
                 </ul>
@@ -249,7 +277,7 @@ export default function Dashboard() {
                 <div className="card-body text-center">
                   <div className="mb-3">
                     <Image
-                      src={user?.avatar || '/avatar/default-avatar.webp'}
+                      src={user?.avatar || '/avatar/pokemon2.png'}
                       alt="用戶頭貼"
                       width={80}
                       height={80}
@@ -258,9 +286,25 @@ export default function Dashboard() {
                         border: '3px solid var(--accent-color, #0dcaf0)',
                       }}
                       onError={(e) => {
-                        e.target.src = '/avatar/default-avatar.webp'
+                        // 如果頭像載入失敗，使用 SVG 圖標
+                        e.target.style.display = 'none'
+                        e.target.nextSibling.style.display = 'block'
                       }}
                     />
+                    <div
+                      className="rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                      style={{
+                        width: '80px',
+                        height: '80px',
+                        border: '3px solid var(--accent-color, #0dcaf0)',
+                        backgroundColor: 'var(--accent-color, #0dcaf0)',
+                        color: 'white',
+                        fontSize: '2rem',
+                        display: 'none',
+                      }}
+                    >
+                      👤
+                    </div>
                   </div>
                   <h5 className="card-title">我的頭貼</h5>
                   <div className="mt-3">

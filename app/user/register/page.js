@@ -552,16 +552,16 @@ export default function RegisterPage() {
       {/* <Header /> */}
       {/* 我想要做一個按鈕來切換主題顏色 */}
 
-      <div className="gradient-bg min-vh-100">
-        {/* 雲海效果 - 只在 Pink 主題時顯示 */}
+      <div className="gradient-bg">
+        {/* 雲海效果 - 根據當前主題顯示 */}
         <div className="cloud-effect"></div>
 
-        <div className="container position-relative h-100">
+        <div className="container-fluid position-relative h-100">
           <div className="row h-100 align-items-center justify-content-center">
             {/* 左側歡迎區域 */}
-            <div className="col-lg-7 col-md-12 mb-5 mb-lg-0">
-              <div className="text-center text-lg-start position-relative m-0">
-                {/* 背景圖片 */}
+            <div className="col-lg-7 col-md-12 mb-5 mb-lg-0 h-100">
+              <div className="text-center text-lg-start position-relative m-0 h-100 d-flex flex-column justify-content-center">
+                {/* 背景圖片 - 限制高度 */}
                 <Image
                   src="/7-Reasons-To-Keep-Jade-Plant-At-Your-Entrance.jpg"
                   alt="背景圖片"
@@ -571,7 +571,8 @@ export default function RegisterPage() {
                     opacity: 0.3,
                     zIndex: -1,
                     borderRadius: '15px',
-                    minHeight: '100vh',
+                    height: '100%' /* 改為填滿容器高度 */,
+                    maxHeight: '100vh' /* 限制最大高度 */,
                   }}
                 />
 

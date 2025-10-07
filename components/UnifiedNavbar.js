@@ -20,13 +20,21 @@ import { useAuth } from '@/hooks/use-auth'
 import Swal from 'sweetalert2'
 import OffcanvasNav from '@/components/timelog/OffcanvasNav'
 // import NextBreadCrumb from '@/components/next-breadcrumb' // 已移除麵包屑功能
-import styles from '@/components/timelog/Header.module.css'
+// import styles from '@/components/timelog/Header.module.css'
 
 export default function UnifiedNavbar() {
   const auth = useAuth()
   const isAuth = auth?.isAuth || false
   const user = auth?.user || null
   const logout = auth?.logout
+
+  // 調試信息
+  console.log('🔍 UnifiedNavbar 認證狀態:', {
+    isAuth,
+    user: user?.name || user?.email || '無用戶資料',
+    hasUser: !!user,
+    authObject: auth,
+  })
   const router = useRouter()
   const pathname = usePathname()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
@@ -371,15 +379,20 @@ export default function UnifiedNavbar() {
           {/* Breadcrumb 功能已移除 */}
 
           {/* 右側：功能按鈕 */}
-          <div className="d-flex align-items-center gap-2">
-            {/* 側邊欄按鈕 - 所有頁面都顯示 */}
+          <div className="d-flex align-items-center gap-2 position-relative">
+            {/* 側邊欄按鈕 - 所有頁面都顯示，支援 RWD */}
             <button
-              className={`btn btn-outline-light btn-sm d-flex align-items-center gap-2 ${styles.headerButton}`}
+              className="btn btn-outline-light btn-sm d-flex align-items-center gap-1 gap-md-2"
               onClick={() => setShowOffcanvas(true)}
               aria-label="開啟側邊欄"
+              style={{
+                minWidth: 'fit-content',
+                transition: 'all 0.3s ease',
+              }}
             >
               <i className="bi bi-list"></i>
-              <span className="d-none d-md-inline">開啟側邊</span>
+              {/* RWD 文字顯示：小螢幕顯示"側邊"，中螢幕顯示"開啟側邊" */}
+              <span className="d-none d-sm-inline">側邊</span>
             </button>
 
             {/* 主題切換 */}

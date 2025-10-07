@@ -98,15 +98,15 @@ export default function LogIn() {
       <Head>
         <title>登入</title>
       </Head>
-      <div className="gradient-bg min-vh-100">
-        {/* 雲海效果 - 只在 Pink 主題時顯示 */}
+      <div className="gradient-bg">
+        {/* 雲海效果 - 根據當前主題顯示 */}
         <div className="cloud-effect"></div>
 
-        <div className="container position-relative h-100">
+        <div className="container-fluid position-relative h-100">
           <div className="row h-100 align-items-center justify-content-center">
             {/* 左側歡迎區域 */}
-            <div className="col-lg-7 col-md-12 mb-5 mb-lg-0">
-              <div className="text-center text-lg-start position-relative m-0">
+            <div className="col-lg-7 col-md-12 col-sm-12 mb-5 mb-lg-0 h-100">
+              <div className="text-center text-lg-start position-relative m-0 h-100 d-flex flex-column justify-content-center">
                 {/* 背景圖片 - 先不放因為會導致畫面有點雜亂*/}
                 {/* <Image
                   src="/7-Reasons-To-Keep-Jade-Plant-At-Your-Entrance.jpg"
@@ -121,26 +121,26 @@ export default function LogIn() {
                   }}
                 /> */}
 
-                <div className="mb-5">
+                <div className="mb-5 mx-auto">
                   <GlowingText
                     text="登入"
                     className="text-white display-4 fw-bold mb-4"
                   />
                 </div>
-                <div className="mb-5">
+                {/* <div className="mb-5">
                   <GlowingText
                     text="成為時間分析師"
                     className="text-white display-3 fw-bold"
                   />
-                </div>
+                </div> */}
 
-                <p className="text-white-50 fs-6 mb-4">
+                <p className="text-white-50 fs-6 mb-4 mx-auto">
                   智能分析你的時間使用，提升工作效率
                 </p>
 
                 {/* 功能特色 */}
                 <div className="mb-4">
-                  <div className="d-flex flex-wrap gap-4 mb-3">
+                  <div className="d-flex flex-wrap gap-4 mb-3 justify-content-center">
                     <div className="d-flex align-items-center gap-2">
                       <i className="bi bi-clock-history text-white fs-4"></i>
                       <span className="text-white-50">智能追蹤</span>
@@ -171,7 +171,7 @@ export default function LogIn() {
             </div>
 
             {/* 右側登入表單 */}
-            <div className="col-lg-5 col-md-8 col-sm-12">
+            <div className="col-lg-5 col-md-8 col-sm-12 mx-auto">
               <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25">
                 {/* 頁籤切換 */}
                 <div className="d-flex justify-content-center mb-4">
@@ -239,7 +239,7 @@ export default function LogIn() {
                             }}
                           />
                           <MdOutlineEmail
-                            className="position-absolute top-50 end-0 translate-middle-y me-3"
+                            className="position-absolute top-50 end-0 translate-middle-y me-3 email-icon"
                             size={20}
                             style={{ color: '#E0B0FF' }}
                           />
