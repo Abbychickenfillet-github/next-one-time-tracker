@@ -43,7 +43,6 @@ TimeLog & Analysis Platform 是一個全端時間管理應用程式，旨在幫�
 
 ### 👤 用戶管理
 
-- 多種登入方式（Email、Google、LINE）
 - 個人資料管理
 - 偏好設定
 - 數據匯出功能
@@ -54,13 +53,6 @@ TimeLog & Analysis Platform 是一個全端時間管理應用程式，旨在幫�
 - 購物車管理
 - 訂單處理
 - 支付整合（LINE Pay、ECPay）
-
-### 📝 部落格系統
-
-- 文章發布和管理
-- 分類和標籤系統
-- 評論功能
-- 搜尋功能
 
 ## 🛠️ 技術棧
 
@@ -78,14 +70,13 @@ TimeLog & Analysis Platform 是一個全端時間管理應用程式，旨在幫�
 - **框架**: Next.js API Routes
 - **資料庫**: PostgreSQL 16
 - **ORM**: Prisma 6.7.0
-- **認證**: Iron Session, JWT, Firebase Auth
+- **認證**: JWT
 - **支付**: LINE Pay, ECPay
 
 ### 開發工具
 
 - **語言**: TypeScript, JavaScript
 - **代碼品質**: ESLint, Prettier
-- **測試**: Jest, Supertest
 - **部署**: Vercel, Docker
 - **版本控制**: Git
 
@@ -125,16 +116,32 @@ TimeLog & Analysis Platform 是一個全端時間管理應用程式，旨在幫�
    DATABASE_URL="postgresql://postgres:password@localhost:5432/timelog_db"
 
    # 認證
-   NEXTAUTH_SECRET="your-secret-key"
-   NEXTAUTH_URL="http://localhost:3001"
-
+   NODE_ENV=development
+   NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
    # LINE Login
    LINE_LOGIN_CHANNEL_ID="your-channel-id"
    LINE_LOGIN_CHANNEL_SECRET="your-channel-secret"
 
+   # PostgreSQL 資料庫的主機位址
+   DB_HOST=localhost
+   # PostgreSQL 資料庫的連接埠
+   DB_PORT=5432
+   # PostgreSQL 資料庫的名稱
+   DB_NAME=timelog_db
+   # PostgreSQL 資料庫的密碼
+   DB_PASSWORD=abc123
+   # PostgreSQL 資料庫的使用者名稱
+   DB_USER=postgres
+   # Prisma 使用的 PostgreSQL 資料庫連接字串 (開發環境)
+   DATABASE_URL="postgresql://postgres:abc123@localhost:5432/timelog_db"
+   
    # 支付
    LINE_PAY_CHANNEL_ID="your-line-pay-channel-id"
    LINE_PAY_CHANNEL_SECRET="your-line-pay-secret"
+
+   CLOUDINARY_CLOUD_NAME=
+   CLOUDINARY_API_KEY=
+   CLOUDINARY_API_SECRET=
    ```
 
 4. **資料庫設定**
