@@ -21,6 +21,7 @@ import Swal from 'sweetalert2'
 import OffcanvasNav from '@/components/timelog/OffcanvasNav'
 // import NextBreadCrumb from '@/components/next-breadcrumb' // 已移除麵包屑功能
 // import styles from '@/components/timelog/Header.module.css'
+import { BsList } from 'react-icons/bs'
 
 export default function UnifiedNavbar() {
   const auth = useAuth()
@@ -137,243 +138,122 @@ export default function UnifiedNavbar() {
               />
             </Link>
 
-            {pathname === '/' ? (
-              // 主頁的標題 + NavLink
-              <>
-                <div className="d-flex flex-column">
-                  <span className="fw-bold fs-4 mb-0 text-white">TimeLog</span>
-                  <span className="fw-normal fs-6 opacity-75 text-white">
-                    Analysis
-                  </span>
-                </div>
+            {/* 統一顯示：標題 + 導航連結（所有頁面） */}
+            <div className="d-flex flex-column">
+              <span className="fw-bold fs-4 mb-0 text-white">TimeLog</span>
+              <span className="fw-normal fs-6 opacity-75 text-white">
+                Analysis
+              </span>
+            </div>
 
-                {/* 主頁的導航連結 */}
-                <Navbar.Toggle
-                  aria-controls="basic-navbar-nav-home"
-                  className="border-0 me-3"
-                  style={{ color: 'var(--accent-color, #0dcaf0)' }}
+            <Navbar.Toggle
+              aria-controls="basic-navbar-nav"
+              className="border-0 me-3"
+              style={{ color: 'var(--accent-color, #0dcaf0)' }}
+            >
+              <FaBars />
+            </Navbar.Toggle>
+
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto d-flex align-items-center">
+                <Nav.Link
+                  as={Link}
+                  href="/"
+                  className="nav-link-custom"
+                  style={{ color: 'var(--text-primary, #f2f2f2)' }}
                 >
-                  <FaBars />
-                </Navbar.Toggle>
-
-                <Navbar.Collapse id="basic-navbar-nav-home">
-                  <Nav className="me-auto d-flex align-items-center">
-                    <Nav.Link
-                      as={Link}
-                      href="/about"
-                      className="nav-link-custom"
-                      style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                  首頁
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  href="/about"
+                  className="nav-link-custom"
+                  style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                >
+                  為什麼有這個網頁
+                </Nav.Link>
+                <OverlayTrigger
+                  placement="bottom"
+                  overlay={
+                    <Tooltip
+                      id="dashboard-tooltip-unified"
+                      style={{
+                        backgroundColor: 'var(--tooltip-bg, #2d3748)',
+                        color: 'var(--tooltip-text, #ffffff)',
+                        border: '1px solid var(--tooltip-border, #4a5568)',
+                        borderRadius: '8px',
+                        fontSize: '0.8rem',
+                        padding: '0.5rem 0.75rem',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                      }}
                     >
-                      為什麼有這個網頁
-                    </Nav.Link>
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip
-                          id="dashboard-tooltip-home"
+                      {!isAuth
+                        ? '🔒 請先登入才能訪問儀表板'
+                        : '📊 查看您的時間記錄和分析'}
+                    </Tooltip>
+                  }
+                >
+                  <Nav.Link
+                    as={Link}
+                    href="/dashboard"
+                    className="nav-link-custom"
+                    style={{
+                      color: 'var(--text-primary, #f2f2f2)',
+                      cursor: !isAuth ? 'help' : 'pointer',
+                      opacity: !isAuth ? 0.7 : 1,
+                      transition: 'all 0.3s ease',
+                    }}
+                    onClick={handleDashboardClick}
+                    onMouseEnter={(e) => {
+                      if (!isAuth) {
+                        e.target.style.color = 'var(--warning-color, #ffc107)'
+                        e.target.style.transform = 'scale(1.05)'
+                      } else {
+                        e.target.style.color = 'var(--accent-color, #0dcaf0)'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.color = 'var(--text-primary, #f2f2f2)'
+                      e.target.style.transform = 'scale(1)'
+                    }}
+                  >
+                    <span className="d-flex align-items-center gap-1">
+                      📊 儀表板
+                      {!isAuth && (
+                        <span
                           style={{
-                            backgroundColor: 'var(--tooltip-bg, #2d3748)',
-                            color: 'var(--tooltip-text, #ffffff)',
-                            border: '1px solid var(--tooltip-border, #4a5568)',
-                            borderRadius: '8px',
-                            fontSize: '0.8rem',
-                            padding: '0.5rem 0.75rem',
-                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                            fontSize: '0.7rem',
+                            color: 'var(--warning-color, #ffc107)',
                           }}
                         >
-                          {!isAuth
-                            ? '🔒 請先登入才能訪問儀表板'
-                            : '📊 查看您的時間記錄和分析'}
-                        </Tooltip>
-                      }
-                    >
-                      <Nav.Link
-                        as={Link}
-                        href="/dashboard"
-                        className="nav-link-custom"
-                        style={{
-                          color: 'var(--text-primary, #f2f2f2)',
-                          cursor: !isAuth ? 'help' : 'pointer',
-                          opacity: !isAuth ? 0.7 : 1,
-                          transition: 'all 0.3s ease',
-                        }}
-                        onClick={handleDashboardClick}
-                        onMouseEnter={(e) => {
-                          if (!isAuth) {
-                            e.target.style.color =
-                              'var(--warning-color, #ffc107)'
-                            e.target.style.transform = 'scale(1.05)'
-                          } else {
-                            e.target.style.color =
-                              'var(--accent-color, #0dcaf0)'
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.color = 'var(--text-primary, #f2f2f2)'
-                          e.target.style.transform = 'scale(1)'
-                        }}
-                      >
-                        <span className="d-flex align-items-center gap-1">
-                          📊 儀表板
-                          {!isAuth && (
-                            <span
-                              style={{
-                                fontSize: '0.7rem',
-                                color: 'var(--warning-color, #ffc107)',
-                              }}
-                            >
-                              🔒
-                            </span>
-                          )}
+                          🔒
                         </span>
-                      </Nav.Link>
-                    </OverlayTrigger>
-                    {!isAuth && (
-                      <>
-                        <Nav.Link
-                          as={Link}
-                          href="/user/register"
-                          className="nav-link-custom"
-                          style={{ color: 'var(--text-primary, #f2f2f2)' }}
-                        >
-                          註冊
-                        </Nav.Link>
-                        <Nav.Link
-                          as={Link}
-                          href="/user/login"
-                          className="nav-link-custom"
-                          style={{ color: 'var(--text-primary, #f2f2f2)' }}
-                        >
-                          登入
-                        </Nav.Link>
-                      </>
-                    )}
-                  </Nav>
-                </Navbar.Collapse>
-              </>
-            ) : isTimeLogPage ? (
-              // TimeLog 頁面的標題
-              <div className="d-flex flex-column">
-                <span className="fw-bold fs-4 mb-0 text-white">TimeLog</span>
-                <span className="fw-normal fs-6 opacity-75 text-white">
-                  Analysis
-                </span>
-              </div>
-            ) : (
-              // 其他頁面的導航連結
-              <>
-                <Navbar.Toggle
-                  aria-controls="basic-navbar-nav"
-                  className="border-0 me-3"
-                  style={{ color: 'var(--accent-color, #0dcaf0)' }}
-                >
-                  <FaBars />
-                </Navbar.Toggle>
-
-                <Navbar.Collapse id="basic-navbar-nav">
-                  <Nav className="me-auto d-flex align-items-center">
+                      )}
+                    </span>
+                  </Nav.Link>
+                </OverlayTrigger>
+                {!isAuth && (
+                  <>
                     <Nav.Link
                       as={Link}
-                      href="/"
+                      href="/user/register"
                       className="nav-link-custom"
                       style={{ color: 'var(--text-primary, #f2f2f2)' }}
                     >
-                      首頁
+                      註冊
                     </Nav.Link>
                     <Nav.Link
                       as={Link}
-                      href="/about"
+                      href="/user/login"
                       className="nav-link-custom"
                       style={{ color: 'var(--text-primary, #f2f2f2)' }}
                     >
-                      為什麼有這個網頁
+                      登入
                     </Nav.Link>
-                    <OverlayTrigger
-                      placement="bottom"
-                      overlay={
-                        <Tooltip
-                          id="dashboard-tooltip"
-                          style={{
-                            backgroundColor: 'var(--tooltip-bg, #2d3748)',
-                            color: 'var(--tooltip-text, #ffffff)',
-                            border: '1px solid var(--tooltip-border, #4a5568)',
-                            borderRadius: '8px',
-                            fontSize: '0.8rem',
-                            padding: '0.5rem 0.75rem',
-                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-                          }}
-                        >
-                          {!isAuth
-                            ? '🔒 請先登入才能訪問儀表板'
-                            : '📊 查看您的時間記錄和分析'}
-                        </Tooltip>
-                      }
-                    >
-                      <Nav.Link
-                        as={Link}
-                        href="/dashboard"
-                        className="nav-link-custom"
-                        style={{
-                          color: 'var(--text-primary, #f2f2f2)',
-                          cursor: !isAuth ? 'help' : 'pointer',
-                          opacity: !isAuth ? 0.7 : 1,
-                          transition: 'all 0.3s ease',
-                        }}
-                        onClick={handleDashboardClick}
-                        onMouseEnter={(e) => {
-                          if (!isAuth) {
-                            e.target.style.color =
-                              'var(--warning-color, #ffc107)'
-                            e.target.style.transform = 'scale(1.05)'
-                          } else {
-                            e.target.style.color =
-                              'var(--accent-color, #0dcaf0)'
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.color = 'var(--text-primary, #f2f2f2)'
-                          e.target.style.transform = 'scale(1)'
-                        }}
-                      >
-                        <span className="d-flex align-items-center gap-1">
-                          📊 儀表板
-                          {!isAuth && (
-                            <span
-                              style={{
-                                fontSize: '0.7rem',
-                                color: 'var(--warning-color, #ffc107)',
-                              }}
-                            >
-                              🔒
-                            </span>
-                          )}
-                        </span>
-                      </Nav.Link>
-                    </OverlayTrigger>
-                    {!isAuth && (
-                      <>
-                        <Nav.Link
-                          as={Link}
-                          href="/user/register"
-                          className="nav-link-custom"
-                          style={{ color: 'var(--text-primary, #f2f2f2)' }}
-                        >
-                          註冊
-                        </Nav.Link>
-                        <Nav.Link
-                          as={Link}
-                          href="/user/login"
-                          className="nav-link-custom"
-                          style={{ color: 'var(--text-primary, #f2f2f2)' }}
-                        >
-                          登入
-                        </Nav.Link>
-                      </>
-                    )}
-                  </Nav>
-                </Navbar.Collapse>
-              </>
-            )}
+                  </>
+                )}
+              </Nav>
+            </Navbar.Collapse>
           </div>
 
           {/* Breadcrumb 功能已移除 */}
@@ -382,17 +262,21 @@ export default function UnifiedNavbar() {
           <div className="d-flex align-items-center gap-2 position-relative">
             {/* 側邊欄按鈕 - 所有頁面都顯示，支援 RWD */}
             <button
-              className="btn btn-outline-light btn-sm d-flex align-items-center gap-1 gap-md-2"
+              className="btn btn-light btn-sm d-inline-flex align-items-center justify-content-center gap-2 px-2"
               onClick={() => setShowOffcanvas(true)}
               aria-label="開啟側邊欄"
               style={{
                 minWidth: 'fit-content',
                 transition: 'all 0.3s ease',
+                lineHeight: 1.2,
+                paddingInline: '8px',
               }}
             >
-              <i className="bi bi-list"></i>
+              <BsList />
               {/* RWD 文字顯示：小螢幕顯示"側邊"，中螢幕顯示"開啟側邊" */}
-              <span className="d-none d-sm-inline">側邊</span>
+              <span className="d-none d-sm-inline d-inline-flex align-items-center justify-content-center">
+                側邊
+              </span>
             </button>
 
             {/* 主題切換 */}
