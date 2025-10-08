@@ -172,6 +172,14 @@ export default function UnifiedNavbar() {
                 >
                   為什麼有這個網頁
                 </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  href="/subscription"
+                  className="nav-link-custom"
+                  style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                >
+                  訂閱
+                </Nav.Link>
                 <OverlayTrigger
                   placement="bottom"
                   overlay={
@@ -337,10 +345,10 @@ export default function UnifiedNavbar() {
                     </div>
                   </Dropdown.Header>
 
-                  {/* LinePay連結 */}
+                  {/* 訂閱服務連結 */}
                   <Dropdown.Item
                     as={Link}
-                    href="/line-pay"
+                    href="/subscription"
                     className="d-flex align-items-center gap-2 text-light py-2"
                     style={{
                       borderRadius: '8px',
@@ -355,7 +363,7 @@ export default function UnifiedNavbar() {
                     }}
                   >
                     <FaCog className="text-info" />
-                    LinePay
+                    訂閱服務
                   </Dropdown.Item>
 
                   {/* 分隔線 */}

@@ -1,5 +1,6 @@
 // 產生uuid用和hash字串用
 import * as crypto from 'crypto'
+import axios from 'axios'
 // 移除 line-pay-merchant 依賴，改用手動實作
 // import { createLinePayClient } from 'line-pay-merchant'
 // 導入session函式
@@ -32,7 +33,7 @@ const linePayConfig = {
   env: process.env.NODE_ENV,
 }
 
-// Line Pay API 基礎 URL - 使用 v2 API
+// Line Pay API 基礎 URL - 使用 v3 API
 const LINE_PAY_API_URL = 'https://sandbox-api-pay.line.me'
 
 // 環境配置 (已移除未使用的變數)
@@ -42,11 +43,11 @@ const createLinePayRequest = async (endpoint, method, body = null) => {
   const url = `${LINE_PAY_API_URL}${endpoint}`
   const nonce = crypto.randomBytes(16).toString('hex')
 
-  // 建立簽名 - 修正簽名演算法
+  // 建立簽名 - LINE Pay v3 API 簽名演算法
   const requestBody = body ? JSON.stringify(body) : ''
   const signature = crypto
     .createHmac('sha256', linePayConfig.channelSecretKey)
-    .update(linePayConfig.channelSecretKey + nonce + requestBody)
+    .update(linePayConfig.channelSecretKey + endpoint + requestBody + nonce)
     .digest('base64')
 
   const headers = {
@@ -83,20 +84,20 @@ const createLinePayRequest = async (endpoint, method, body = null) => {
         : 0,
     })
 
-    const response = await fetch(url, options)
-    const data = await response.json()
+    const response = await axios({
+      method,
+      url,
+      headers,
+      data: body,
+    })
 
     console.log('📥 LINE Pay API 回應:', {
       status: response.status,
       statusText: response.statusText,
-      data,
+      data: response.data,
     })
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-    }
-
-    return { body: data, comments: {} }
+    return { body: response.data, comments: {} }
   } catch (error) {
     console.error('❌ LINE Pay API 錯誤:', error)
     throw new Error(`Line Pay API 呼叫失敗: ${error.message}`)
@@ -127,7 +128,9 @@ if (isDev) {
 // 回應line-pay交易網址到前端，由前端導向line pay付款頁面
 // 資料格式參考 https://enylin.github.io/line-pay-merchant/api-reference/request.html#example
 // 只需要總金額，其它都是範例資料，可以依照需求修改
-export const requestPayment = async (amount) => {
+export const requestPayment = async (amount, options = {}) => {
+  // 支援新的參數格式
+  const { orderId, currency = 'TWD', packages } = options
   // 使用目前最新的v3版本的API，以下是資料的說明:
   // https://pay.line.me/jp/developers/apis/onlineApis?locale=zh_TW
 
@@ -149,10 +152,11 @@ export const requestPayment = async (amount) => {
 
   // 要傳送給line pay的訂單資訊
   const order = {
-    orderId: '20250929001',
-    currency: 'TWD',
+    orderId:
+      orderId || `ORDER-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
+    currency: currency,
     amount: amount,
-    packages: [
+    packages: packages || [
       {
         id: crypto.randomBytes(5).toString('hex'),
         amount: amount,
@@ -183,9 +187,9 @@ export const requestPayment = async (amount) => {
   })
 
   try {
-    // 向line pay傳送的訂單資料 - 使用 v2 API
+    // 向line pay傳送的訂單資料 - 使用 v3 API
     const linePayResponse = await createLinePayRequest(
-      '/v2/payments/request',
+      '/v3/payments/request',
       'POST',
       order
     )
@@ -258,9 +262,9 @@ export const confirmPayment = async (transactionId) => {
   const amount = reservation?.amount
 
   try {
-    // 最後確認交易 - 使用 v2 API
+    // 最後確認交易 - 使用 v3 API
     const linePayResponse = await createLinePayRequest(
-      `/v2/payments/${transactionId}/confirm`,
+      `/v3/payments/${transactionId}/confirm`,
       'POST',
       {
         currency: 'TWD',
@@ -289,7 +293,7 @@ export const confirmPayment = async (transactionId) => {
 export const checkPaymentStatus = async (transactionId) => {
   try {
     const linePayResponse = await createLinePayRequest(
-      `/v2/payments/authorizations/${transactionId}`,
+      `/v3/payments/authorizations/${transactionId}`,
       'GET'
     )
 

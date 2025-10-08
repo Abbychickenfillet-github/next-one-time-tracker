@@ -121,10 +121,8 @@ export const useUserUpdateProfile = () => {
 }
 
 export const useUserUpdateAvatar = () => {
-  const url = isDev
-    ? `${apiURL}/users/me/avatar`
-    : // 如果要改用vercel blob雲端上傳頭像的話，要改用以下的url
-      `${apiURL}/users/me/cloud-avatar`
+  // cloud-avatar 路由已移除，統一走本地 avatar 上傳 API
+  const url = `${apiURL}/users/me/avatar`
   const { trigger, isMutating, isError } = useMutation(url, 'POST')
   // POST方法時，要利用updateAvatar(data)來更新會員頭像
   const updateAvatar = async (data = {}) => {
@@ -178,6 +176,7 @@ export const useAuthLogin = () => {
     // trigger 函數會發送 POST 請求到 /auth/local/login
     // 並自動處理 loading 和 error 狀態
     return await trigger({ data: data })
+    // 總結：trigger 的參數是「物件」，其中 data 是「要送出的 body」。你給它什麼（JSON 物件或 FormData），就會用那個作為 POST/PUT 的請求內容。
   }
 
   return { login, isMutating, isError }

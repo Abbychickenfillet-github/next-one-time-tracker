@@ -13,12 +13,14 @@ export const useTimeLogStore = create(
       // ===== 狀態 =====
       title: '', // 活動名稱
       desc: '', // 階段描述
+      memo: '', // 活動備註/反思
       startTime: null, // 活動開始時間
       endTime: null, // 活動結束時間
       steps: [], // 步驟列表
       currentTime: null, // 目前時間
       isClient: false, // 客戶端渲染標記
       lastStepTime: null, // 最後步驟時間
+      titleHistory: [], // 活動名稱歷史，用於下拉選單
 
       // ===== Actions =====
 
@@ -33,6 +35,12 @@ export const useTimeLogStore = create(
 
       // 設定階段描述
       setDesc: (desc) => set({ desc }), // set() 函數：更新 desc 狀態為傳入的值
+
+      // 設定活動備註
+      setMemo: (memo) => set({ memo }), // set() 函數：更新 memo 狀態為傳入的值
+
+      // 設定活動名稱歷史
+      setTitleHistory: (titleHistory) => set({ titleHistory }), // set() 函數：更新 titleHistory 狀態為傳入的值
 
       // 開始活動
       startActivity: () => {

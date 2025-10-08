@@ -610,8 +610,8 @@ export default function CombinationPage() {
                     handleFormFocus('register')
                   }
                 }}
-                role="button"
-                tabIndex={0}
+                role="button" // 告訴輔助技術這是按鈕
+                tabIndex={0} // 允許鍵盤聚焦
               >
                 <div className="text-center mb-4">
                   <h3 className="text-white fw-bold">註冊新帳號</h3>
@@ -748,8 +748,8 @@ export default function CombinationPage() {
                     handleFormFocus('login')
                   }
                 }}
-                role="button"
-                tabIndex={0}
+                role="button" // 告訴輔助技術這是按鈕
+                tabIndex={0} // 允許鍵盤聚焦
               >
                 <div className="text-center mb-4">
                   <h3 className="text-white fw-bold">登入帳號</h3>

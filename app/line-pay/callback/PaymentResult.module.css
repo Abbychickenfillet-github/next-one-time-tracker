@@ -1,0 +1,195 @@
+.paymentResultPage {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.resultContainer {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.resultIcon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.resultIcon.success {
+  color: #00c300;
+}
+
+.resultIcon.error {
+  color: #ff4444;
+}
+
+.resultIcon.cancel {
+  color: #ffa500;
+}
+
+.resultIcon.loading {
+  color: #666;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.resultTitle {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.resultTitle.success {
+  color: #00c300;
+}
+
+.resultTitle.error {
+  color: #ff4444;
+}
+
+.resultTitle.cancel {
+  color: #ffa500;
+}
+
+.resultTitle.loading {
+  color: #666;
+}
+
+.resultMessage {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.paymentDetails {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.paymentDetails h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.paymentDetails p {
+  margin: 8px 0;
+  color: #555;
+}
+
+.successNote {
+  color: #00c300 !important;
+  font-weight: 600;
+}
+
+.authStatus {
+  background: #e9ecef;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 30px;
+}
+
+.authStatus p {
+  margin: 0 0 10px 0;
+  color: #666;
+}
+
+.loginLink {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+}
+
+.resultActions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.backButton,
+.newPaymentButton {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.backButton {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.backButton:hover {
+  background: #e5e5e5;
+  transform: translateY(-1px);
+}
+
+.newPaymentButton {
+  background: linear-gradient(135deg, #00c300 0%, #00a000 100%);
+  color: white;
+}
+
+.newPaymentButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(0, 195, 0, 0.3);
+}
+
+.loadingMessage {
+  text-align: center;
+  color: #666;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  .resultContainer {
+    padding: 30px 20px;
+    margin: 10px;
+  }
+
+  .resultIcon {
+    font-size: 60px;
+  }
+
+  .resultTitle {
+    font-size: 24px;
+  }
+
+  .resultActions {
+    flex-direction: column;
+  }
+
+  .backButton,
+  .newPaymentButton {
+    width: 100%;
+  }
+}

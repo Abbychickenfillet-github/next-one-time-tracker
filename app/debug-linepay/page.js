@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { toast } from 'react-toastify'
+import '@/styles/LinePayPage.css'
+import axios from '@/lib/line-pay-axios'
 
 export default function DebugLinePay() {
   const [isLoading, setIsLoading] = useState(false)
@@ -13,16 +15,10 @@ export default function DebugLinePay() {
     try {
       console.log('🧪 [DEBUG] 开始测试 Line Pay v3...')
 
-      const response = await fetch('/api/debug/linepay-test', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ amount: testAmount }),
+      const response = await axios.post('/debug/linepay-test', {
+        amount: testAmount,
       })
-
-      const data = await response.json()
+      const data = response.data
 
       console.log('🧪 [DEBUG] Line Pay 测试响应:', data)
 
@@ -47,19 +43,10 @@ export default function DebugLinePay() {
     try {
       console.log('🧪 [DEBUG] 测试原始 API...')
 
-      const response = await fetch(
-        `/api/payment/line-pay/request?amount=${testAmount}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-        }
-      )
-
-      const data = await response.json()
+      const response = await axios.get('/payment/line-pay/request', {
+        params: { amount: testAmount },
+      })
+      const data = response.data
 
       console.log('🧪 [DEBUG] 原始 API 响应:', data)
 
