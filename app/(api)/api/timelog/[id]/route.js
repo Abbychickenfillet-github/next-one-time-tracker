@@ -62,3 +62,4 @@ export async function DELETE(request, { params }) {
     return errorResponse(res, errorMsg)
   }
 }
+
