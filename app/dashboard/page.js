@@ -21,7 +21,6 @@ export default function Dashboard() {
   })
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [result, setResult] = useState(null)
 
   // 檢查認證狀態
   useEffect(() => {
