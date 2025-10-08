@@ -12,6 +12,8 @@ export default function Dashboard() {
   const { auth, logout, user, isAuth } = useAuth()
   const router = useRouter()
   const [timeLogs, setTimeLogs] = useState([])
+  // eslint-disable-next-line no-unused-vars
+  const [result, setResult] = useState(undefined)
   const [statistics, setStatistics] = useState({
     totalLogs: 0,
     totalDuration: 0,
