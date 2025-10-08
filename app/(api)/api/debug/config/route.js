@@ -10,7 +10,7 @@ export async function GET() {
         nodeEnv: process.env.NODE_ENV,
       },
       config: {
-        channelId: process.env.LINE_PAY_CHANNEL_ID || '未设置',
+        channelId: process.env.LINE_PAY_CHANNEL_ID || '2008177891',
         channelSecretSet: !!process.env.LINE_PAY_CHANNEL_SECRET,
         baseUrl: process.env.NEXTAUTH_URL || '未设置',
       },

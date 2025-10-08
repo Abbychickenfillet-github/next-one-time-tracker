@@ -1,200 +1,203 @@
 'use client'
 
 import { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
-// import { useRouter } from 'next/navigation' // 未使用
-import { useAuth } from '@/hooks/use-auth'
-import Link from 'next/link'
-import { toast, ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { isDev } from '@/config/client.config'
+import axios from '@/lib/line-pay-axios'
+import '@/styles/LinePayPage.css'
 
-// 導入新的組件
-import LinePayButton from '@/components/line-pay/LinePayButton'
-import OrderForm from '@/components/line-pay/OrderForm'
-import OrderSummary from '@/components/line-pay/OrderSummary'
-// 載入loading元件 (未使用)
-// import CssLoader from '@/components/css-loader'
+function LinePayPage() {
+  const [formData, setFormData] = useState({
+    amount: '',
+    orderId: '',
+    currency: 'TWD',
+    subscriptionType: 'monthly',
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [paymentUrl, setPaymentUrl] = useState('')
 
-export default function LinePayPage() {
-  // 檢查是否登入
-  const { isAuth, user } = useAuth()
-
-  // 從line-pay回來後要進行loading，確認交易需要一小段時間 (未使用)
-  // const [loading, setLoading] = useState(false)
-
-  // 商品用狀態
-  const [price, setPrice] = useState(100)
-  const [quantity, setQuantity] = useState(2)
-
-  // 計算總價
-  const totalAmount = quantity * price
-
-  // confirm回來用的，在記錄確認之後，line-pay回傳訊息與代碼，例如 (未使用)
-  // {returnCode: '1172', returnMessage: 'Existing same orderId.'}
-  // const [result, setResult] = useState({
-  //   returnCode: '',
-  //   returnMessage: '',
-  // })
-
-  // 取得網址參數，例如: ?transactionId=xxxxxx
-  const searchParams = useSearchParams()
-  // const router = useRouter() // 未使用
-
-  if (isDev) console.log('transactionId', searchParams.get('transactionId'))
-
-  // 處理訂單變更的回調函數
-  const handlePriceChange = (newPrice) => {
-    setPrice(newPrice)
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
   }
 
-  const handleQuantityChange = (newQuantity) => {
-    setQuantity(newQuantity)
-  }
+  const handleSubmit = async (e) => {
+    console.log('🎯 handleSubmit 被調用')
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setPaymentUrl('')
 
-  // 付款前的驗證
-  const handleBeforePayment = () => {
-    if (totalAmount <= 0) {
-      toast.error('請輸入有效的金額')
-      return false
+    try {
+      console.log('📋 表單資料:', formData)
+
+      const subscriptionPlans = {
+        monthly: { name: '月費方案', price: 299, duration: '1個月' },
+        quarterly: { name: '季費方案', price: 799, duration: '3個月' },
+        yearly: { name: '年費方案', price: 2999, duration: '12個月' },
+      }
+
+      const selectedPlan = subscriptionPlans[formData.subscriptionType]
+      const finalAmount = formData.amount || selectedPlan.price
+
+      console.log('💰 選擇的方案:', selectedPlan)
+      console.log('💰 最終金額:', finalAmount)
+
+      const paymentData = {
+        amount: Number(finalAmount),
+        orderId: formData.orderId,
+        currency: formData.currency,
+        packages: [
+          {
+            id: 'subscription',
+            amount: Number(finalAmount),
+            name: selectedPlan.name,
+            products: [
+              {
+                name: `訂閱服務 - ${selectedPlan.name}`,
+                quantity: 1,
+                price: Number(finalAmount),
+              },
+            ],
+          },
+        ],
+      }
+
+      console.log('🚀 發送付款請求:', paymentData)
+
+      const response = await axios.post(
+        '/payment/line-pay/request',
+        paymentData
+      )
+
+      console.log('✅ 付款請求回應:', response.data)
+
+      if (
+        response.data.status === 'success' &&
+        (response.data.payload?.paymentUrl || response.data.data?.paymentUrl)
+      ) {
+        const paymentUrl =
+          response.data.payload?.paymentUrl || response.data.data?.paymentUrl
+        console.log('🎯 付款 URL:', paymentUrl)
+        setPaymentUrl(paymentUrl)
+        // Auto redirect to LINE Pay
+        window.location.href = paymentUrl
+      } else {
+        console.error('❌ 付款請求失敗:', response.data)
+        setError('Failed to create payment request')
+      }
+    } catch (err) {
+      console.error('❌ LINE Pay 付款請求錯誤:', err)
+      console.error('❌ 錯誤詳情:', {
+        // Axios 錯誤訊息
+        axiosMessage: err.message,
+        // HTTP 狀態碼
+        httpStatus: err.response?.status,
+        httpStatusText: err.response?.statusText,
+        // 後端回傳的錯誤資料
+        backendData: err.response?.data,
+        // 後端的錯誤訊息
+        backendMessage: err.response?.data?.message,
+        // 後端的 payload（如果有的話）
+        backendPayload: err.response?.data?.payload,
+      })
+
+      // 優先顯示後端的錯誤訊息，其次是 Axios 錯誤訊息
+      const errorMessage =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.message ||
+        'Payment request failed'
+      setError(errorMessage)
+    } finally {
+      setLoading(false)
     }
-    return true
   }
-
-  // 付款成功回調
-  const handlePaymentSuccess = (data) => {
-    console.log('付款準備完成:', data)
-  }
-
-  // 付款失敗回調
-  const handlePaymentError = (error) => {
-    console.error('付款處理失敗:', error)
-  }
-
-  // 確認交易，處理伺服器通知line pay已確認付款，為必要流程 (未使用)
-  // const _handleConfirm = async (transactionId) => {
-  //   const res = await fetch(
-  //     `${apiURL}/payment/line-pay/confirm?transactionId=${transactionId}`,
-  //     {
-  //       method: 'GET',
-  //       // 讓fetch能夠傳送cookie
-  //       credentials: 'include',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Accept: 'application/json',
-  //       },
-  //     }
-  //   )
-
-  //   const resData = await res.json()
-  //   console.log(resData)
-
-  //   if (resData.status === 'success') {
-  //     // 呈現結果
-  //     setResult(resData.data)
-  //     // 顯示成功訊息
-  //     toast.success('付款成功')
-  //   } else {
-  //     toast.error('付款失敗')
-  //   }
-
-  //   // 關閉loading動畫
-  //   setTimeout(() => {
-  //     // 關閉loading動畫
-  //     setLoading(false)
-  //     // 導向至訂單頁
-  //     router.replace('/line-pay')
-  //   }, 3000)
-  // }
-
-  // confirm回來用的
-  // useEffect(() => {
-  //   if (searchParams?.get('transactionId') && searchParams?.get('orderId')) {
-  //     // 出現loading動畫
-  //     setLoading(true)
-  //     // 向server發送確認交易api
-  //     handleConfirm(searchParams.get('transactionId'))
-  //   } else {
-  //     setLoading(false)
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [searchParams])
-
-  // 不再需要這個本地組件了，因為我們已經分離成獨立組件
-
-  // const _confirmOrder = (
-  //   <>
-  //     <h2>最後付款確認結果(returnCode=0000 代表成功): </h2>
-  //     <p>{JSON.stringify(result)}</p>
-  //     <p>
-  //       <button
-  //         onClick={() => {
-  //           window.location.href = '/line-pay'
-  //         }}
-  //       >
-  //         重新測試
-  //       </button>
-  //     </p>
-  //   </>
-  // )
-
-  // if (loading)
-  //   return (
-  //     <>
-  //       {/* <RotatingLines eight={40} width={40} /> */}
-  //       <CssLoader />
-  //       載入中，請稍後...
-  //       <ToastContainer />
-  //     </>
-  //   )
 
   return (
-    <>
-      <div className="line-pay-page">
-        <header className="page-header">
-          <h1>Line Pay測試</h1>
-          <p>
-            本功能需要會員登入才能使用，會用到後端伺服器的session機制，這是為了付完款後返回後，需要訂單的金額作最後確認用的。
-          </p>
-          <div className="login-link">
-            {isAuth ? (
-              <Link href="/dashboard">前往儀表板</Link>
-            ) : (
-              <Link href="/user/login">連至會員登入頁</Link>
-            )}
+    <div className="linepay-page">
+      <div className="linepay-container">
+        <h1>訂閱服務付款</h1>
+        <p className="subscription-description">
+          選擇您的訂閱方案，享受專業服務
+        </p>
+
+        <form onSubmit={handleSubmit} className="payment-form">
+          <div className="form-group">
+            <label htmlFor="subscriptionType">訂閱方案</label>
+            <select
+              id="subscriptionType"
+              name="subscriptionType"
+              value={formData.subscriptionType}
+              onChange={handleInputChange}
+            >
+              <option value="monthly">月費方案 - NT$299/月</option>
+              <option value="quarterly">季費方案 - NT$799/季 (省 NT$98)</option>
+              <option value="yearly">年費方案 - NT$2,999/年 (省 NT$589)</option>
+            </select>
           </div>
-        </header>
 
-        <main className="page-content">
-          <section className="auth-section">
-            <OrderSummary authInfo={{ isAuth, user }} />
-          </section>
-
-          <section className="order-section">
-            <h2>購買商品清單</h2>
-            <OrderForm
-              initialPrice={price}
-              initialQuantity={quantity}
-              onPriceChange={handlePriceChange}
-              onQuantityChange={handleQuantityChange}
-              disabled={false}
+          <div className="form-group">
+            <label htmlFor="orderId">訂單編號</label>
+            <input
+              type="text"
+              id="orderId"
+              name="orderId"
+              value={formData.orderId}
+              onChange={handleInputChange}
+              placeholder="例如: SUB-2024-001"
+              required
             />
+          </div>
 
-            <div className="payment-section">
-              <LinePayButton
-                isAuth={isAuth}
-                totalAmount={totalAmount}
-                onBeforePayment={handleBeforePayment}
-                onPaymentSuccess={handlePaymentSuccess}
-                onPaymentError={handlePaymentError}
-              />
-            </div>
-          </section>
-        </main>
+          <div className="form-group">
+            <label htmlFor="amount">自訂金額 (選填)</label>
+            <input
+              type="number"
+              id="amount"
+              name="amount"
+              value={formData.amount}
+              onChange={handleInputChange}
+              placeholder="留空使用方案預設價格"
+              min="1"
+            />
+            <small className="form-help">留空將使用選擇方案的預設價格</small>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="currency">幣別</label>
+            <select
+              id="currency"
+              name="currency"
+              value={formData.currency}
+              onChange={handleInputChange}
+            >
+              <option value="TWD">TWD (新台幣)</option>
+              <option value="USD">USD (美元)</option>
+              <option value="JPY">JPY (日圓)</option>
+            </select>
+          </div>
+
+          <button type="submit" className="pay-button" disabled={loading}>
+            {loading ? '處理中...' : '開始訂閱並付款'}
+          </button>
+        </form>
+
+        {error && <div className="error-message">{error}</div>}
+
+        {paymentUrl && (
+          <div className="payment-url">
+            <p>付款連結已生成，正在跳轉...</p>
+            <a href={paymentUrl} target="_blank" rel="noopener noreferrer">
+              手動開啟 LINE Pay
+            </a>
+          </div>
+        )}
       </div>
-
-      {/* 土司訊息視窗用 */}
-      <ToastContainer />
-    </>
+    </div>
   )
 }
+
+export default LinePayPage

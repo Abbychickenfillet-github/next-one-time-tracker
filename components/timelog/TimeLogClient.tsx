@@ -289,8 +289,10 @@ export default function TimeLogClient() {
             <div>
               <span className="badge bg-secondary me-2">目前時間</span>
               <span className="fw-bold">
-                {isClient && currentTime
-                  ? currentTime.toLocaleTimeString()
+                {isClient
+                  ? currentTime
+                    ? currentTime.toLocaleTimeString()
+                    : '載入中...'
                   : '載入中...'}
               </span>
             </div>
@@ -349,11 +351,11 @@ export default function TimeLogClient() {
         >
           📝 記錄活動階段
         </label>
-        <div className="d-flex gap-2 flex-wrap">
+        <div className="d-flex gap-2 flex-wrap justify-content-center">
           <input
             type="text"
             id="stepDescription"
-            className="form-control flex-grow-1"
+            className="form-control col-md-6"
             placeholder="描述當前階段 (按 Enter 快速記錄時間點)"
             value={desc}
             onChange={(e) => setDesc(e.target.value)}

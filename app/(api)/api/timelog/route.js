@@ -67,6 +67,7 @@ export async function POST(request) {
         startTime: new Date(body.startTime),
         endTime: body.endTime ? new Date(body.endTime) : null,
         userId: userId,
+        memo: body.memo || null, // 新增備註欄位支援
       },
       include: {
         user: {
@@ -97,6 +98,7 @@ export async function POST(request) {
       startTime: timeLog.startTime,
       endTime: timeLog.endTime,
       userId: timeLog.userId,
+      memo: timeLog.memo, // 回傳備註欄位
       user: timeLog.user,
     })
   } catch (error) {
@@ -162,6 +164,7 @@ export async function GET() {
         title: log.title,
         startTime: log.startTime,
         endTime: log.endTime,
+        memo: log.memo, // 在 GET 回應中也包含備註
         duration: log.endTime
           ? Math.round(
               ((new Date(log.endTime) - new Date(log.startTime)) /

@@ -91,7 +91,14 @@ $link-hover-color: darken($link-color, 10%);
 // 方案三：柔和薰衣草
 :root[data-theme='lavender'] {
   --primary-bg: linear-gradient(135deg, #ede0ff, #d4c0ff, #c0a0ff);
-  --secondary-bg: linear-gradient(135deg, #683cc0, #8b6fc1);
+  --secondary-bg: linear-gradient(
+    105deg,
+    #d466e5 0%,
+    #ce93d8 35%,
+    #ab47bc 60%,
+    #7b1fa2 80%,
+    #4a148c 100%
+  );
   --accent-color: #7b5fb1;
   --accent-hover: #6b4fa1;
   --text-primary: #2d1f5a;
@@ -237,7 +244,7 @@ main {
   ); // 使用 background 而不是 background-color，若使用background-color會覆蓋主題背景導致背景只有100vh
   background-size: cover;
   background-position: center center;
-  background-attachment: fixed;
+  // background-attachment: fixed;
   background-repeat: no-repeat;
 }
 
@@ -272,7 +279,7 @@ main::-webkit-scrollbar-corner {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center; // 改為置中，確保所有螢幕尺寸都完整顯示
-  background-attachment: fixed; // 讓背景固定，不隨滾動移動
+  background-attachment: scroll; // 統一為 scroll，避免某些瀏覽器固定背景導致漸層不明顯
   display: flex;
   flex-direction: column;
   min-height: 100vh; // 確保至少覆蓋整個視窗高度
@@ -415,15 +422,8 @@ body {
   overflow-y: auto; /* 允許垂直滾動 */
 }
 
-// 登入註冊頁面專用樣式
-.gradient-bg {
-  min-height: 100vh !important;
-  height: auto !important; /* 讓高度自動擴展到內容 */
-  overflow: visible !important; /* 讓內容可見，不隱藏滾動條 */
-  background: var(--secondary-bg) !important; /* 強制使用背景 */
-  background-size: cover !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
+:root[data-theme='pink'] .left img {
+  display: none !important;
 }
 
 // Pink 主題時隱藏左側歡迎區域的背景圖片

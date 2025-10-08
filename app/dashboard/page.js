@@ -21,6 +21,7 @@ export default function Dashboard() {
   })
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [result, setResult] = useState(null)
 
   // 檢查認證狀態
   useEffect(() => {
@@ -179,6 +180,30 @@ export default function Dashboard() {
       hour: '2-digit',
       minute: '2-digit',
     })
+  }
+  const analyzeTimeLog = async (log) => {
+    const payload = {
+      activities: [
+        {
+          id: log.id,
+          type: 'timelog',
+          label: log.title,
+          timestamp: log.startTime,
+          endTime: log.endTime,
+        },
+      ],
+    }
+    const response = await fetch(`/api/ai/analyze-activities`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+    const data = await response.json()
+    if (data?.status !== 'success') throw new Error(data?.message || '分析失敗')
+    setResult(data?.data)
   }
 
   if (!auth.hasChecked || isLoading) {
@@ -473,6 +498,7 @@ export default function Dashboard() {
                                 <button
                                   className="btn btn-outline-info"
                                   title="查看詳情"
+                                  onClick={() => analyzeTimeLog(log)}
                                 >
                                   <i className="bi bi-eye"></i> 分析
                                 </button>
