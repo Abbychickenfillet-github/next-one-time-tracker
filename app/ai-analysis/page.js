@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { Container, Row, Col, Card, Button, Alert, Form } from 'react-bootstrap'
 
 export default function AIAnalysisPage() {
-  const { isAuth, handleCheckAuth, user } = useAuth()
+  const { isAuth, handleCheckAuth } = useAuth()
   const [activitiesJson, setActivitiesJson] = useState(
     JSON.stringify(
       [
@@ -229,7 +229,16 @@ export default function AIAnalysisPage() {
                         key={log.id}
                         className={`card mb-2 ${isSelected(log.id) ? 'border-primary' : ''}`}
                         style={{ cursor: 'pointer' }}
+                        role="button"
+                        tabIndex={0}
                         onClick={() => toggleSelection(log.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            toggleSelection(log.id)
+                          }
+                        }}
+                        aria-label={`選擇記錄 ${log.label || log.id}`}
                       >
                         <div className="card-body py-2">
                           <div className="d-flex align-items-center">
