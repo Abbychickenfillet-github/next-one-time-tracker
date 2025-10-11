@@ -1,15 +1,17 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
+import { useLoader } from '@/hooks/use-loader'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import Head from 'next/head'
 import Image from 'next/image'
-import { Accordion } from 'react-bootstrap'
+import { Accordion, Col } from 'react-bootstrap'
 import AvatarUpload from '@/components/AvatarUpload'
 
 export default function Dashboard() {
   const { auth, logout, user, isAuth } = useAuth()
+  const { showLoader, hideLoader } = useLoader()
   const router = useRouter()
   const [timeLogs, setTimeLogs] = useState([])
   // eslint-disable-next-line no-unused-vars
@@ -58,6 +60,15 @@ export default function Dashboard() {
       fetchTimeLogs()
     }
   }, [isAuth])
+
+  // 當頁面載入時顯示全域 loader
+  useEffect(() => {
+    showLoader()
+    // 當認證檢查完成且已登入時隱藏 loader
+    if (auth.hasChecked && isAuth) {
+      hideLoader()
+    }
+  }, [auth.hasChecked, isAuth, showLoader, hideLoader])
   // 前端是從哪一句code帶使用者id給後端的？而是透過 JWT Token 的方式：
   const fetchTimeLogs = async () => {
     try {
@@ -180,7 +191,21 @@ export default function Dashboard() {
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
+      second: '2-digit',
     })
+  }
+
+  // 計算時間差
+  const calculateTimeGap = (endTime, nextStartTime) => {
+    if (!endTime || !nextStartTime) return null
+    const gap = new Date(nextStartTime) - new Date(endTime)
+    const seconds = Math.floor(gap / 1000)
+    const minutes = Math.floor(seconds / 60)
+    const hours = Math.floor(minutes / 60)
+
+    if (seconds < 60) return `${seconds}秒`
+    if (minutes < 60) return `${minutes}分`
+    return `${hours}小時${minutes % 60}分`
   }
   const analyzeTimeLog = async (log) => {
     const payload = {
@@ -208,20 +233,7 @@ export default function Dashboard() {
   }
 
   if (!auth.hasChecked || isLoading) {
-    return (
-      <div className="min-vh-100 d-flex align-items-center justify-content-center">
-        <div className="text-center">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">載入中...</span>
-          </div>
-          <p className="mt-3">載入中...</p>
-          <p className="small text-muted">
-            認證狀態: {auth.hasChecked ? '已檢查' : '檢查中'} | 登入狀態:{' '}
-            {isAuth ? '已登入' : '未登入'}
-          </p>
-        </div>
-      </div>
-    )
+    return null // 使用全域 loader，不需要本地載入狀態
   }
 
   // 如果未登入，不顯示內容
@@ -421,7 +433,7 @@ export default function Dashboard() {
                           </Accordion.Header>
                           <Accordion.Body>
                             <div className="row">
-                              <div className="col-md-6">
+                              <Col md={4}>
                                 <h6>📅 時間資訊</h6>
                                 <ul className="list-unstyled">
                                   <li>
@@ -441,43 +453,54 @@ export default function Dashboard() {
                                     </span>
                                   </li>
                                 </ul>
-                              </div>
-                              <div className="col-md-6">
+                              </Col>
+                              <Col md={8}>
                                 <h6>📋 詳細步驟</h6>
                                 {log.steps && log.steps.length > 0 ? (
                                   <div className="list-group list-group-flush">
                                     {log.steps.map((step, stepIndex) => (
-                                      <div
-                                        key={stepIndex}
-                                        className="list-group-item px-0 py-2"
-                                      >
-                                        <div className="d-flex justify-content-between align-items-start">
-                                          <div>
-                                            <strong>{step.name}</strong>
-                                            {step.description && (
-                                              <div className="small text-muted">
-                                                {step.description}
-                                              </div>
-                                            )}
-                                          </div>
-                                          <div className="text-end">
-                                            <div className="small text-muted">
-                                              {formatDate(step.startTime)}
+                                      <React.Fragment key={stepIndex}>
+                                        <div className="list-group-item px-0 py-2">
+                                          <div className="d-flex justify-content-between align-items-start">
+                                            <div>
+                                              <strong>{step.name}</strong>
+                                              {step.description && (
+                                                <div className="small text-muted">
+                                                  {step.description}
+                                                </div>
+                                              )}
                                             </div>
-                                            {step.endTime && (
+                                            <div className="text-end">
                                               <div className="small text-muted">
-                                                至 {formatDate(step.endTime)}
+                                                {formatDate(step.startTime)}
                                               </div>
-                                            )}
+                                              {step.endTime && (
+                                                <div className="small text-muted">
+                                                  至 {formatDate(step.endTime)}
+                                                </div>
+                                              )}
+                                            </div>
                                           </div>
                                         </div>
-                                      </div>
+                                        {stepIndex < log.steps.length - 1 && (
+                                          <div className="text-center py-2 text-muted small border-0">
+                                            <span className="mx-2">▶</span>
+                                            <span className="badge bg-light text-dark">
+                                              {calculateTimeGap(
+                                                step.endTime,
+                                                log.steps[stepIndex + 1]
+                                                  .startTime
+                                              )}
+                                            </span>
+                                          </div>
+                                        )}
+                                      </React.Fragment>
                                     ))}
                                   </div>
                                 ) : (
                                   <p className="text-muted">尚無詳細步驟記錄</p>
                                 )}
-                              </div>
+                              </Col>
                             </div>
                             <div className="mt-3 pt-3 border-top">
                               <div className="btn-group btn-group-sm">
