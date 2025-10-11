@@ -26,6 +26,14 @@ export async function GET() {
     console.log('🔍 session?.payload:', session?.payload)
     console.log('🔍 session?.payload?.userId:', session?.payload?.userId)
 
+    // 額外的除錯資訊
+    if (session?.payload) {
+      console.log('🔍 payload 類型:', typeof session.payload)
+      console.log('🔍 payload 鍵值:', Object.keys(session.payload))
+      console.log('🔍 userId 值:', session.payload.userId)
+      console.log('🔍 userId 類型:', typeof session.payload.userId)
+    }
+
     // ========================================
     // ✅ 3. 驗證用戶身份
     // ========================================
@@ -36,7 +44,7 @@ export async function GET() {
     }
 
     // ========================================
-    // 🆔 4. 取得用戶 ID
+    // 🆔 4. 取得用戶 ID (注意：JWT 使用 userId，資料庫使用 user_id)
     // ========================================
     const userId = session?.payload?.userId
     console.log('取得用戶 ID:', userId)
@@ -44,9 +52,11 @@ export async function GET() {
     // ========================================
     // 📊 5. 查詢用戶的時間戳記錄
     // ========================================
+    console.log('🔍 準備查詢資料庫，userId:', userId, '類型:', typeof userId)
+
     const timeLogs = await prisma.timeLog.findMany({
       where: {
-        userId: userId,
+        userId: userId, // userId 對應資料庫的 user_id 欄位
       },
       include: {
         steps: true, // 包含相關的步驟
@@ -62,6 +72,11 @@ export async function GET() {
         startTime: 'desc', // 按開始時間降序排列
       },
     })
+
+    console.log('🔍 查詢結果:', timeLogs.length, '筆記錄')
+    if (timeLogs.length > 0) {
+      console.log('🔍 第一筆記錄:', JSON.stringify(timeLogs[0], null, 2))
+    }
 
     // ========================================
     // 📈 6. 計算統計數據
@@ -88,7 +103,7 @@ export async function GET() {
     )
 
     // ========================================
-    // 📤 7. 回傳 API 回應
+    // 📤 7. 回傳 API 回應給前端
     // ========================================
     const responseData = {
       timeLogs: timeLogs.map((log) => ({

@@ -82,26 +82,6 @@ export default function UnifiedNavbar() {
     }
   }
 
-  const handleDashboardClick = (e) => {
-    if (!isAuth) {
-      e.preventDefault()
-      Swal.fire({
-        title: '🔒 需要登入',
-        text: '請先登入才能訪問儀表板',
-        icon: 'info',
-        confirmButtonText: '前往登入',
-        confirmButtonColor: '#0dcaf0',
-        showCancelButton: true,
-        cancelButtonText: '取消',
-        cancelButtonColor: '#6c757d',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          router.push('/user/login')
-        }
-      })
-    }
-  }
-
   return (
     <>
       {/* 側邊導航 - 所有頁面都可用 */}
@@ -158,11 +138,19 @@ export default function UnifiedNavbar() {
               <Nav className="me-auto d-flex align-items-center">
                 <Nav.Link
                   as={Link}
+                  href="/intro"
+                  className="nav-link-custom"
+                  style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                >
+                  使用介紹
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
                   href="/"
                   className="nav-link-custom"
                   style={{ color: 'var(--text-primary, #f2f2f2)' }}
                 >
-                  首頁
+                  時間紀錄
                 </Nav.Link>
                 <Nav.Link
                   as={Link}
@@ -172,74 +160,8 @@ export default function UnifiedNavbar() {
                 >
                   為什麼有這個網頁
                 </Nav.Link>
-                <Nav.Link
-                  as={Link}
-                  href="/subscription"
-                  className="nav-link-custom"
-                  style={{ color: 'var(--text-primary, #f2f2f2)' }}
-                >
-                  訂閱
-                </Nav.Link>
-                <OverlayTrigger
-                  placement="bottom"
-                  overlay={
-                    <Tooltip
-                      id="dashboard-tooltip-unified"
-                      style={{
-                        backgroundColor: 'var(--tooltip-bg, #2d3748)',
-                        color: 'var(--tooltip-text, #ffffff)',
-                        border: '1px solid var(--tooltip-border, #4a5568)',
-                        borderRadius: '8px',
-                        fontSize: '0.8rem',
-                        padding: '0.5rem 0.75rem',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-                      }}
-                    >
-                      {!isAuth
-                        ? '🔒 請先登入才能訪問儀表板'
-                        : '📊 查看您的時間記錄和分析'}
-                    </Tooltip>
-                  }
-                >
-                  <Nav.Link
-                    as={Link}
-                    href="/dashboard"
-                    className="nav-link-custom"
-                    style={{
-                      color: 'var(--text-primary, #f2f2f2)',
-                      cursor: !isAuth ? 'help' : 'pointer',
-                      opacity: !isAuth ? 0.7 : 1,
-                      transition: 'all 0.3s ease',
-                    }}
-                    onClick={handleDashboardClick}
-                    onMouseEnter={(e) => {
-                      if (!isAuth) {
-                        e.target.style.color = 'var(--warning-color, #ffc107)'
-                        e.target.style.transform = 'scale(1.05)'
-                      } else {
-                        e.target.style.color = 'var(--accent-color, #0dcaf0)'
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.color = 'var(--text-primary, #f2f2f2)'
-                      e.target.style.transform = 'scale(1)'
-                    }}
-                  >
-                    <span className="d-flex align-items-center gap-1">
-                      📊 儀表板
-                      {!isAuth && (
-                        <span
-                          style={{
-                            fontSize: '0.7rem',
-                            color: 'var(--warning-color, #ffc107)',
-                          }}
-                        >
-                          🔒
-                        </span>
-                      )}
-                    </span>
-                  </Nav.Link>
-                </OverlayTrigger>
+
+                {/* 未登入用戶顯示註冊和登入連結 */}
                 {!isAuth && (
                   <>
                     <Nav.Link
@@ -250,16 +172,121 @@ export default function UnifiedNavbar() {
                     >
                       註冊
                     </Nav.Link>
-                    <Nav.Link
-                      as={Link}
-                      href="/user/login"
-                      className="nav-link-custom"
-                      style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                    <OverlayTrigger
+                      placement="bottom"
+                      overlay={
+                        <Tooltip
+                          id="login-tooltip"
+                          style={{
+                            backgroundColor: 'var(--tooltip-bg, #2d3748)',
+                            color: 'var(--tooltip-text, #ffffff)',
+                            border: '1px solid var(--tooltip-border, #4a5568)',
+                            borderRadius: '8px',
+                            fontSize: '0.8rem',
+                            padding: '0.75rem 1rem',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                            maxWidth: '280px',
+                            textAlign: 'justify',
+                            lineHeight: '1.4',
+                          }}
+                        >
+                          <div>
+                            <div
+                              style={{
+                                fontWeight: 'bold',
+                                marginBottom: '0.5rem',
+                              }}
+                            >
+                              🔑 登入後即可享受完整功能
+                            </div>
+                            <div>
+                              • <strong>訂閱服務</strong>：解鎖進階功能與專業
+                              工具
+                            </div>
+                            <div>
+                              • <strong>儀表板</strong>：管理您的時間記錄與數據
+                              分析
+                            </div>
+                            <div>
+                              • <strong>個人化設定</strong>：自訂您的使用體驗
+                            </div>
+                          </div>
+                        </Tooltip>
+                      }
                     >
-                      登入
-                    </Nav.Link>
+                      <Nav.Link
+                        as={Link}
+                        href="/user/login"
+                        className="nav-link-custom"
+                        style={{
+                          color: 'var(--text-primary, #f2f2f2)',
+                          cursor: 'help',
+                          transition: 'all 0.3s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.color = 'var(--accent-color, #0dcaf0)'
+                          e.target.style.transform = 'scale(1.05)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.color = 'var(--text-primary, #f2f2f2)'
+                          e.target.style.transform = 'scale(1)'
+                        }}
+                      >
+                        登入
+                      </Nav.Link>
+                    </OverlayTrigger>
                   </>
                 )}
+
+                {/* 已登入用戶顯示訂閱連結 */}
+                {isAuth && (
+                  <Nav.Link
+                    as={Link}
+                    href="/subscription"
+                    className="nav-link-custom"
+                    style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                  >
+                    訂閱
+                  </Nav.Link>
+                )}
+
+                {/* 儀表板按鈕 - 所有用戶都能看到 */}
+                <Nav.Link
+                  as={Link}
+                  href={isAuth ? '/dashboard' : '#'}
+                  className="nav-link-custom"
+                  style={{
+                    color: 'var(--text-primary, #f2f2f2)',
+                    cursor: !isAuth ? 'not-allowed' : 'pointer',
+                    opacity: !isAuth ? 0.5 : 1,
+                    transition: 'all 0.3s ease',
+                  }}
+                  onClick={!isAuth ? (e) => e.preventDefault() : undefined}
+                  onMouseEnter={(e) => {
+                    if (!isAuth) {
+                      e.target.style.color = 'var(--warning-color, #ffc107)'
+                    } else {
+                      e.target.style.color = 'var(--accent-color, #0dcaf0)'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = 'var(--text-primary, #f2f2f2)'
+                  }}
+                >
+                  <span className="d-flex align-items-center gap-1">
+                    📊 儀表板
+                    {!isAuth && (
+                      <span
+                        style={{
+                          fontSize: '0.7rem',
+                          color: 'var(--warning-color, #ffc107)',
+                        }}
+                      >
+                        🔒
+                      </span>
+                    )}
+                  </span>
+                </Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </div>
