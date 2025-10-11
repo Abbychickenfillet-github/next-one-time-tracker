@@ -54,6 +54,7 @@ $link-hover-color: darken($link-color, 10%);
   --info-color: #0dcaf0;
   --white-accent: rgba(255, 255, 255, 0.1);
   --black-base: #1a1a1a;
+  --welcome-bg-image: url('/green-theme-bg.jpg');
 }
 
 // 粉紅色主題 (Pink Cloud) - 粉字黑底 + 白色 + 紫色
@@ -86,6 +87,7 @@ $link-hover-color: darken($link-color, 10%);
   --white-accent: rgba(255, 255, 255, 0.1);
   --purple-accent: #9c27b0;
   --black-base: #1a1a1a;
+  --welcome-bg-image: url('/linear-gradient-bg1.jpg');
 }
 
 // 方案三：柔和薰衣草
@@ -109,10 +111,11 @@ $link-hover-color: darken($link-color, 10%);
   --button-hover: linear-gradient(45deg, #6b4fa1, #5b3f91);
   --button-text: #ffffff;
   --button-shadow: 0 2px 8px rgba(123, 95, 177, 0.3);
-  --glow-color: #7b5fb1;
+  --glow-color: #c0c0c0;
   --navbar-bg: rgba(26, 15, 15, 0.95);
   --icon-color: #ffffff;
   --icon-hover: #d4c0ff;
+  --welcome-bg-image: url('/Purple-Lavender-PNG.jpg');
 }
 
 // 方案四：溫暖奶茶色
@@ -129,10 +132,12 @@ $link-hover-color: darken($link-color, 10%);
   --button-hover: linear-gradient(45deg, #a67c3a, #946b30);
   --button-text: #ffffff;
   --button-shadow: 0 2px 8px rgba(184, 135, 68, 0.3);
-  --glow-color: #b88744;
+  --glow-color: #c0c0c0; // 銀色發光，更適合奶茶色主題
+  --glow-color-alt: #8b4513; // 深棕色備選方案
   --navbar-bg: rgba(26, 15, 15, 0.95);
   --icon-color: #ffffff; // 圖示顏色 - 白色
   --icon-hover: #f6ca85; // 圖示懸停顏色
+  --welcome-bg-image: url('/R02665_Hot_Thai_Milk_Tea.jpg');
 }
 
 // 方案五：深綠色模糊漸變背景 (類似圖片效果)
@@ -169,6 +174,7 @@ $link-hover-color: darken($link-color, 10%);
   --navbar-bg: rgba(26, 15, 15, 0.95);
   --icon-color: #ffffff;
   --icon-hover: #a2ac82;
+  --welcome-bg-image: url('/7-Reasons-To-Keep-Jade-Plant-At-Your-Entrance.jpg');
 }
 
 // 方案六：Sand Barbie 風格 (70% Pink + 30% Black)
@@ -207,6 +213,7 @@ $link-hover-color: darken($link-color, 10%);
   --navbar-bg: rgba(0, 0, 0, 0.9);
   --icon-color: #ffffff;
   --icon-hover: #ff8fab;
+  --welcome-bg-image: url('/linear-gradient-bg1.jpg');
 }
 // ========================================
 // 🎯 全域樣式

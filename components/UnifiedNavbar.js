@@ -256,9 +256,9 @@ export default function UnifiedNavbar() {
                   href={isAuth ? '/dashboard' : '#'}
                   className="nav-link-custom"
                   style={{
-                    color: 'var(--text-primary, #f2f2f2)',
+                    color: !isAuth ? 'var(--navbar-bg, #343a40)' : '#f2f2f2', // 未登入時與navbar背景同色（隱藏）
                     cursor: !isAuth ? 'not-allowed' : 'pointer',
-                    opacity: !isAuth ? 0.5 : 1,
+                    opacity: !isAuth ? 1 : 1,
                     transition: 'all 0.3s ease',
                   }}
                   onClick={!isAuth ? (e) => e.preventDefault() : undefined}
@@ -270,7 +270,9 @@ export default function UnifiedNavbar() {
                     }
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.color = 'var(--text-primary, #f2f2f2)'
+                    e.target.style.color = !isAuth
+                      ? 'var(--navbar-bg, #343a40)'
+                      : '#f2f2f2' // 未登入時回到隱藏狀態
                   }}
                 >
                   <span className="d-flex align-items-center gap-1">

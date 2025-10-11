@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
+import GlowingText from '../../components/glowing-text/glowing-text'
 
 export default function ThemeDemo() {
   const [systemTheme, setSystemTheme] = useState('')
@@ -53,6 +54,11 @@ export default function ThemeDemo() {
         {/* 主要內容區域 */}
         <div className="main-content">
           <h1 className="title">純 CSS 自動主題切換測試</h1>
+
+          {/* 發光文字測試 */}
+          <div className="glowing-text-demo mb-4">
+            <GlowingText text="發光文字測試" />
+          </div>
 
           <div className="description">
             <p>
