@@ -8,6 +8,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Accordion, Col } from 'react-bootstrap'
 import AvatarUpload from '@/components/AvatarUpload'
+import TimeLogClient from '@/components/timelog/TimeLogClient'
+import AIAnalysisSection from '@/components/ai-analysis/AIAnalysisSection'
 
 export default function Dashboard() {
   const { auth, logout, user, isAuth } = useAuth()
@@ -16,6 +18,7 @@ export default function Dashboard() {
   const [timeLogs, setTimeLogs] = useState([])
   // eslint-disable-next-line no-unused-vars
   const [result, setResult] = useState(undefined)
+  // eslint-disable-next-line no-unused-vars
   const [statistics, setStatistics] = useState({
     totalLogs: 0,
     totalDuration: 0,
@@ -277,7 +280,7 @@ export default function Dashboard() {
         <div className="container py-4">
           {/* 統計卡片 */}
           <div className="row mb-4">
-            <div className="col-md-3 mb-3">
+            {/* <div className="col-md-3 mb-3">
               <div className="card border-0 shadow-sm h-100">
                 <div className="card-body text-center">
                   <div className="text-primary fs-2 mb-2">📈</div>
@@ -309,53 +312,8 @@ export default function Dashboard() {
                   </p>
                 </div>
               </div>
-            </div>
-            <div className="col-md-3 mb-3">
-              <div className="card border-0 shadow-sm h-100">
-                <div className="card-body text-center">
-                  <div className="mb-3">
-                    <Image
-                      src={user?.avatar || '/avatar/pokemon2.png'}
-                      alt="用戶頭貼"
-                      width={80}
-                      height={80}
-                      className="rounded-circle shadow-sm"
-                      style={{
-                        border: '3px solid var(--accent-color, #0dcaf0)',
-                      }}
-                      onError={(e) => {
-                        // 如果頭像載入失敗，使用 SVG 圖標
-                        e.target.style.display = 'none'
-                        e.target.nextSibling.style.display = 'block'
-                      }}
-                    />
-                    <div
-                      className="rounded-circle shadow-sm d-flex align-items-center justify-content-center"
-                      style={{
-                        width: '80px',
-                        height: '80px',
-                        border: '3px solid var(--accent-color, #0dcaf0)',
-                        backgroundColor: 'var(--accent-color, #0dcaf0)',
-                        color: 'white',
-                        fontSize: '2rem',
-                        display: 'none',
-                      }}
-                    >
-                      👤
-                    </div>
-                  </div>
-                  <h5 className="card-title">我的頭貼</h5>
-                  <div className="mt-3">
-                    <AvatarUpload
-                      onUploadSuccess={() => {
-                        // 更新用戶狀態或重新載入頁面
-                        window.location.reload()
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            </div> */}
+            <TimeLogClient />
           </div>
 
           {/* 時間戳記錄手風琴 */}
@@ -397,9 +355,9 @@ export default function Dashboard() {
                       <div className="text-muted">
                         <i className="bi bi-clock-history fs-1"></i>
                         <p className="mt-3">尚無時間戳記錄</p>
-                        <button className="btn btn-primary">
-                          開始記錄時間
-                        </button>
+                        <p className="small">
+                          使用上方的時間記錄工具開始記錄您的活動
+                        </p>
                       </div>
                     </div>
                   ) : (
@@ -538,6 +496,13 @@ export default function Dashboard() {
             </div>
           </div>
 
+          {/* AI 分析區域 */}
+          <div className="row mt-4">
+            <div className="col-12">
+              <AIAnalysisSection />
+            </div>
+          </div>
+
           {/* 認證資訊卡片 (開發環境) */}
           {process.env.NODE_ENV === 'development' && (
             <div className="row mt-4">
@@ -548,7 +513,49 @@ export default function Dashboard() {
                   </div>
                   <div className="card-body">
                     <div className="row">
-                      <div className="col-md-6">
+                      {/* 頭貼區域 */}
+                      <div className="col-md-3 text-center mb-3">
+                        <div className="mb-3">
+                          <Image
+                            src={user?.avatar || '/avatar/pokemon2.png'}
+                            alt="用戶頭貼"
+                            width={80}
+                            height={80}
+                            className="rounded-circle shadow-sm"
+                            style={{
+                              border: '3px solid var(--accent-color, #0dcaf0)',
+                            }}
+                            onError={(e) => {
+                              // 如果頭像載入失敗，使用 SVG 圖標
+                              e.target.style.display = 'none'
+                              e.target.nextSibling.style.display = 'block'
+                            }}
+                          />
+                          <div
+                            className="rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                            style={{
+                              width: '80px',
+                              height: '80px',
+                              border: '3px solid var(--accent-color, #0dcaf0)',
+                              backgroundColor: 'var(--accent-color, #0dcaf0)',
+                              color: 'white',
+                              fontSize: '2rem',
+                              display: 'none',
+                            }}
+                          >
+                            👤
+                          </div>
+                        </div>
+                        <h6 className="mb-2">我的頭貼</h6>
+                        <AvatarUpload
+                          onUploadSuccess={() => {
+                            // 更新用戶狀態或重新載入頁面
+                            window.location.reload()
+                          }}
+                        />
+                      </div>
+
+                      <div className="col-md-4">
                         <h6>🔐 JWT Token 資訊:</h6>
                         <ul className="list-unstyled small">
                           <li>
@@ -566,7 +573,7 @@ export default function Dashboard() {
                           </li>
                         </ul>
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-md-5">
                         <h6>🍪 Cookie 資訊:</h6>
                         <ul className="list-unstyled small">
                           <li>

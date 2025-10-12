@@ -10,18 +10,22 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 })
 
-function buildPrompt(activities) {
+function buildPrompt(activities, customPrompt = null) {
   const activitiesJson = JSON.stringify(activities)
 
-  return (
-    'You are a salon service analyst. Given a list of user activities, ' +
-    'focus on hair-straightening sessions (type: "hair_straightening" or words that mean straight-perm in Chinese such as "燙直"). ' +
-    'Compute the time difference between the first and second straightening sessions if both exist. ' +
-    'Then analyze why the effect might differ between the two visits (skill, product, hair condition, aftercare, humidity, timing, etc.). ' +
-    'Return a concise report of different hair texture and effect between the two experiment. ' +
-    'Activities JSON: ' +
-    activitiesJson
-  )
+  let basePrompt =
+    'You are a time management and productivity analyst. Given a list of user activities, analyze their time usage patterns and provide insights.'
+
+  if (customPrompt) {
+    // 如果用戶提供了自定義提示詞，使用它作為主要分析指令
+    basePrompt = customPrompt
+  } else {
+    // 預設分析提示詞
+    basePrompt +=
+      ' Focus on time efficiency, productivity patterns, and provide actionable recommendations for improvement.'
+  }
+
+  return basePrompt + '\n\nActivities JSON: ' + activitiesJson
 }
 
 export async function POST(request) {
@@ -71,7 +75,8 @@ export async function POST(request) {
       }
     }
 
-    const prompt = buildPrompt(activities)
+    const customPrompt = body?.customPrompt
+    const prompt = buildPrompt(activities, customPrompt)
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
