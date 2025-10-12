@@ -29,13 +29,7 @@ export default function UnifiedNavbar() {
   const user = auth?.user || null
   const logout = auth?.logout
 
-  // 調試信息
-  console.log('🔍 UnifiedNavbar 認證狀態:', {
-    isAuth,
-    user: user?.name || user?.email || '無用戶資料',
-    hasUser: !!user,
-    authObject: auth,
-  })
+  // 調試信息 - 已移除，避免打包時產生大量日誌
   const router = useRouter()
   const pathname = usePathname()
   const [isLoggingOut, setIsLoggingOut] = useState(false)

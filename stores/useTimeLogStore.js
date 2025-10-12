@@ -7,7 +7,7 @@ import { persist } from 'zustand/middleware' // 導入持久化中間件，用�
 export const useTimeLogStore = create(
   // create() 函數：創建一個新的 Zustand store
   persist(
-    // persist() 函數：包裝 store 以添加持久化功能，自動保存到 localStorage
+    // persist() 函數是中間件：包裹 store 以添加持久化功能，自動保存到 localStorage
     (set, get) => ({
       // set 函數：用於更新狀態；get 函數：用於獲取當前狀態
       // ===== 狀態 =====
