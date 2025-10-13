@@ -236,7 +236,7 @@ export default function IntroPage() {
                   </Row>
                   <div className="text-center mt-4">
                     <div className={styles.solutionBox}>
-                      <h5 className="text-primary">✨ TimeLog 的解決方案</h5>
+                      <h5 className="text-white">✨ TimeLog 的解決方案</h5>
                       <p className="mb-0">
                         精確到秒 + 多步驟管理 + 數據分析 + 雲端同步
                       </p>

@@ -1,0 +1,21 @@
+.nav-link-arrow {
+  position: relative !important;
+  overflow: visible !important;
+
+  &::after {
+    content: '→' !important;
+    margin-left: 0.5rem !important;
+    opacity: 0 !important;
+    transition: all 0.3s ease !important;
+    transform: translateX(-5px) !important;
+    display: inline !important;
+    white-space: nowrap !important;
+    width: auto !important;
+    min-width: 1rem !important;
+  }
+
+  &:hover::after {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+  }
+}

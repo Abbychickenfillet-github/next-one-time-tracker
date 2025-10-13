@@ -22,6 +22,7 @@ import OffcanvasNav from '@/components/timelog/OffcanvasNav'
 // import NextBreadCrumb from '@/components/next-breadcrumb' // 已移除麵包屑功能
 // import styles from '@/components/timelog/Header.module.css'
 import { BsList } from 'react-icons/bs'
+import styles from '@/styles/nav-link-arrow.module.scss'
 
 export default function UnifiedNavbar() {
   const auth = useAuth()
@@ -133,24 +134,21 @@ export default function UnifiedNavbar() {
                 <Nav.Link
                   as={Link}
                   href="/intro"
-                  className="nav-link-custom"
-                  style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                  className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                 >
                   使用介紹
                 </Nav.Link>
                 <Nav.Link
                   as={Link}
                   href="/"
-                  className="nav-link-custom"
-                  style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                  className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                 >
-                  時間紀錄
+                  可試用時間紀錄
                 </Nav.Link>
                 <Nav.Link
                   as={Link}
                   href="/about"
-                  className="nav-link-custom"
-                  style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                  className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                 >
                   為什麼有這個網頁
                 </Nav.Link>
@@ -161,8 +159,7 @@ export default function UnifiedNavbar() {
                     <Nav.Link
                       as={Link}
                       href="/user/register"
-                      className="nav-link-custom"
-                      style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                      className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                     >
                       註冊
                     </Nav.Link>
@@ -211,20 +208,8 @@ export default function UnifiedNavbar() {
                       <Nav.Link
                         as={Link}
                         href="/user/login"
-                        className="nav-link-custom"
-                        style={{
-                          color: 'var(--text-primary, #f2f2f2)',
-                          cursor: 'help',
-                          transition: 'all 0.3s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.color = 'var(--accent-color, #0dcaf0)'
-                          e.target.style.transform = 'scale(1.05)'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.color = 'var(--text-primary, #f2f2f2)'
-                          e.target.style.transform = 'scale(1)'
-                        }}
+                        className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
+                        style={{ cursor: 'help' }}
                       >
                         登入
                       </Nav.Link>
@@ -237,8 +222,7 @@ export default function UnifiedNavbar() {
                   <Nav.Link
                     as={Link}
                     href="/subscription"
-                    className="nav-link-custom"
-                    style={{ color: 'var(--text-primary, #f2f2f2)' }}
+                    className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                   >
                     訂閱
                   </Nav.Link>
@@ -248,26 +232,12 @@ export default function UnifiedNavbar() {
                 <Nav.Link
                   as={Link}
                   href={isAuth ? '/dashboard' : '#'}
-                  className="nav-link-custom"
+                  className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                   style={{
-                    color: !isAuth ? 'var(--navbar-bg, #343a40)' : '#f2f2f2', // 未登入時與navbar背景同色（隱藏）
+                    color: !isAuth ? 'var(--navbar-bg, #343a40)' : undefined, // 未登入時與navbar背景同色（隱藏）
                     cursor: !isAuth ? 'not-allowed' : 'pointer',
-                    opacity: !isAuth ? 1 : 1,
-                    transition: 'all 0.3s ease',
                   }}
                   onClick={!isAuth ? (e) => e.preventDefault() : undefined}
-                  onMouseEnter={(e) => {
-                    if (!isAuth) {
-                      e.target.style.color = 'var(--warning-color, #ffc107)'
-                    } else {
-                      e.target.style.color = 'var(--accent-color, #0dcaf0)'
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = !isAuth
-                      ? 'var(--navbar-bg, #343a40)'
-                      : '#f2f2f2' // 未登入時回到隱藏狀態
-                  }}
                 >
                   <span className="d-flex align-items-center gap-1">
                     📊 儀表板
