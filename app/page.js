@@ -1,9 +1,8 @@
-import TimeLogClient from '@/components/timelog/TimeLogClient'
-
+import IntroPage from '@/app/intro/page'
 export default function HomePage() {
   return (
     <>
-      <TimeLogClient />
+      <IntroPage />
     </>
   )
 }

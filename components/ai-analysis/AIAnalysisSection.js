@@ -6,13 +6,13 @@ import { Card, Button, Alert, Form, Row, Col } from 'react-bootstrap'
 export default function AIAnalysisSection() {
   const { isAuth } = useAuth()
   const [userTimeLogs, setUserTimeLogs] = useState([])
-  const [selectedItems, setSelectedItems] = useState(new Set())
+  const [selectedItems, setSelectedItems] = useState(new Set()) //selectedItems 是 React state，存放使用者選中的 TimeLog id
+
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const [error, setError] = useState('')
   const [loadingUserData, setLoadingUserData] = useState(false)
   const [customPrompt, setCustomPrompt] = useState('')
-  const [manualInput, setManualInput] = useState('')
 
   // 獲取用戶的時間記錄
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function AIAnalysisSection() {
       setLoadingUserData(true)
       const response = await fetch('/api/timelogs', {
         method: 'GET',
-        credentials: 'include',
+        credentials: 'include', // ← 關鍵！這會自動帶上 Cookie
         headers: {
           'Content-Type': 'application/json',
         },
@@ -46,7 +46,7 @@ export default function AIAnalysisSection() {
       setLoadingUserData(false)
     }
   }
-
+  // toggleSelection的id怎麼對應得到是 資料表的id他不會混淆嗎
   const toggleSelection = (id) => {
     setSelectedItems((prev) => {
       const newSet = new Set(prev)
@@ -55,7 +55,7 @@ export default function AIAnalysisSection() {
       return newSet
     })
   }
-
+  // 說明 selectedItems 的來源與 toggleSelection 的 id 對應關係：
   const isSelected = (id) => selectedItems.has(id)
 
   const analyzeSelected = async () => {
@@ -99,10 +99,6 @@ export default function AIAnalysisSection() {
       let combinedPrompt = ''
       if (customPrompt.trim()) {
         combinedPrompt += customPrompt.trim()
-      }
-      if (manualInput.trim()) {
-        if (combinedPrompt) combinedPrompt += '\n\n'
-        combinedPrompt += '用戶提供的額外資訊：\n' + manualInput.trim()
       }
 
       if (combinedPrompt) {
@@ -178,6 +174,7 @@ export default function AIAnalysisSection() {
                     className="mb-3"
                     style={{ maxHeight: '300px', overflowY: 'auto' }}
                   >
+                    {/* // 在渲染時，每個 TimeLog 記錄都會有： */}
                     {userTimeLogs.map((log) => (
                       <div
                         key={log.id}
@@ -230,20 +227,6 @@ export default function AIAnalysisSection() {
                   placeholder="例如：請分析我的工作效率，並提供改進建議..."
                 />
               </Form.Group>
-
-              <div className="mb-3">
-                <h6 className="text-muted">📝 手動輸入分析內容</h6>
-                <Form.Group className="mb-3">
-                  <Form.Label>任意文字內容 (可選)</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={4}
-                    value={manualInput}
-                    onChange={(e) => setManualInput(e.target.value)}
-                    placeholder="輸入任何你想分析的內容，例如：我今天做了什麼、我的工作習慣、我的時間分配問題等..."
-                  />
-                </Form.Group>
-              </div>
 
               <Button
                 variant="primary"
