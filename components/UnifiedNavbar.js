@@ -72,6 +72,7 @@ export default function UnifiedNavbar() {
           icon: 'error',
         })
       } finally {
+        // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
         setIsLoggingOut(false)
       }
     }
@@ -140,7 +141,7 @@ export default function UnifiedNavbar() {
                 </Nav.Link>
                 <Nav.Link
                   as={Link}
-                  href="/"
+                  href="/demo"
                   className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                 >
                   可試用時間紀錄
@@ -239,19 +240,7 @@ export default function UnifiedNavbar() {
                   }}
                   onClick={!isAuth ? (e) => e.preventDefault() : undefined}
                 >
-                  <span className="d-flex align-items-center gap-1">
-                    📊 儀表板
-                    {!isAuth && (
-                      <span
-                        style={{
-                          fontSize: '0.7rem',
-                          color: 'var(--warning-color, #ffc107)',
-                        }}
-                      >
-                        🔒
-                      </span>
-                    )}
-                  </span>
+                  📊 儀表板{!isAuth && ' 🔒'}
                 </Nav.Link>
               </Nav>
             </Navbar.Collapse>

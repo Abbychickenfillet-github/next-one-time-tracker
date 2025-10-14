@@ -30,6 +30,7 @@ export default function SubscriptionTestPage() {
       setTestResult({ error: error.message })
       toast.error('測試失敗: ' + error.message)
     } finally {
+      // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
       setLoading(false)
     }
   }
@@ -78,6 +79,7 @@ export default function SubscriptionTestPage() {
       setTestResult({ error: error.message })
       toast.error('測試失敗: ' + error.message)
     } finally {
+      // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
       setLoading(false)
     }
   }

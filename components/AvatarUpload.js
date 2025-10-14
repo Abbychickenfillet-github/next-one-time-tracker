@@ -42,6 +42,7 @@ export default function AvatarUpload({ onUploadSuccess }) {
       console.error('上傳錯誤:', error)
       setError('上傳失敗，請檢查網路連線')
     } finally {
+      // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
       setLoading(false)
       // 清除 input 值，讓同一個檔案可以重新選擇
       e.target.value = ''

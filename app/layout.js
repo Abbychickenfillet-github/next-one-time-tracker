@@ -1,5 +1,6 @@
 'use client'
 import { Suspense } from 'react'
+// - Suspense 邊界處理非同步載入
 import Script from 'next/script'
 import { Providers } from './providers'
 import UnifiedNavbar from '@/components/UnifiedNavbar'

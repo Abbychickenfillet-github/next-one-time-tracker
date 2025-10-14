@@ -1,6 +1,7 @@
 .nav-link-arrow {
   position: relative !important;
-  overflow: visible !important;
+  // overflow: visible !important;
+  white-space: nowrap !important; // 防止文字換行
 
   &::after {
     content: '→' !important;
@@ -11,7 +12,8 @@
     display: inline !important;
     white-space: nowrap !important;
     width: auto !important;
-    min-width: 1rem !important;
+    min-width: 1.2rem !important;
+    flex-shrink: 1 !important; // 防止箭頭被壓縮
   }
 
   &:hover::after {

@@ -117,6 +117,11 @@ export const useTimeLogStore = create(
           alert('活動已結束')
           return
         }
+        // 檢查步驟數量限制
+        if (state.steps.length >= 100) {
+          alert('每個活動最多只能有100個步驟')
+          return
+        }
 
         const now = new Date()
         const newStep = {
@@ -193,15 +198,31 @@ export const useTimeLogStore = create(
         }
 
         try {
+          // 檢查用戶儲存限制（使用 session 中的 userId）
+          const limitRes = await fetch('/api/timelog/check-limit', {
+            method: 'GET',
+            credentials: 'include', // 包含 cookies
+          })
+          const limitResult = await limitRes.json()
+
+          if (limitResult.status !== 'success') {
+            throw new Error(limitResult.message || '檢查限制失敗')
+          }
+
+          if (!limitResult.data.canSave) {
+            alert(`儲存失敗：${limitResult.data.message}`)
+            return
+          }
           // 儲存主活動到 TimeLog 資料表
           const timeLogRes = await fetch('/api/timelog', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include', // 包含 cookies，讓伺服器能從 session 取得 userId
             body: JSON.stringify({
               title: state.title,
               startTime: state.startTime,
               endTime: state.endTime,
-              userId: user?.id || null,
+              memo: state.memo || null, // 新增備註欄位
             }),
           })
 

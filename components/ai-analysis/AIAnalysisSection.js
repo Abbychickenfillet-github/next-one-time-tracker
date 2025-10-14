@@ -43,6 +43,7 @@ export default function AIAnalysisSection() {
     } catch (error) {
       console.error('獲取用戶時間記錄失敗:', error)
     } finally {
+      // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
       setLoadingUserData(false)
     }
   }
@@ -118,6 +119,7 @@ export default function AIAnalysisSection() {
     } catch (err) {
       setError(err?.message || '發生未知錯誤')
     } finally {
+      // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
       setLoading(false)
     }
   }

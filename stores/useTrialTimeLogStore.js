@@ -41,81 +41,180 @@ export const useTrialTimeLogStore = create(
 
       // 開始活動
       startActivity: () => {
+        const state = get() // get() 函數：獲取當前 store 的完整狀態
+        if (!state.title.trim()) {
+          alert('請先輸入活動名稱')
+          return
+        }
+        if (state.startTime && !state.endTime) {
+          alert('活動尚未結束')
+          return
+        }
+
         const now = new Date()
-        set({
+        const newStep = {
+          type: 'start',
+          text: `✅ 開始：${state.title} | ${now.toLocaleString()}`,
           startTime: now,
-          endTime: null,
+          endTime: now,
+          ended: true,
+        }
+
+        set({
+          // set() 函數：批量更新多個狀態，合併到現有狀態中
+          startTime: now,
           lastStepTime: now,
-          steps: [],
+          endTime: null,
+          steps: [...state.steps, newStep], // 展開運算符：將新步驟添加到現有步驟陣列中
         })
       },
 
       // 結束活動
       endActivity: () => {
-        set({ endTime: new Date() })
+        const state = get() // get() 函數：獲取當前 store 的完整狀態
+        if (!state.startTime) {
+          alert('請先開始活動')
+          return
+        }
+        if (state.endTime) {
+          alert('活動已結束')
+          return
+        }
+
+        const now = new Date()
+        const newStep = {
+          type: 'end',
+          title: `結束：${state.title}`,
+          description: `活動結束：${state.title}`,
+          text: `結束：${state.title} | ${now.toLocaleString()}`,
+          startTime: now,
+          endTime: now,
+          ended: true,
+        }
+
+        set({
+          // set() 函數：批量更新多個狀態，合併到現有狀態中
+          endTime: now,
+          steps: [...state.steps, newStep], // 展開運算符：將新步驟添加到現有步驟陣列中
+        })
       },
 
       // 新增階段步驟
       addStep: () => {
-        const state = get()
+        const state = get() // get() 函數：獲取當前 store 的完整狀態
+        if (!state.desc.trim()) {
+          alert('請輸入階段描述')
+          return
+        }
+        if (!state.startTime) {
+          alert('請先開始活動')
+          return
+        }
+        if (state.endTime) {
+          alert('活動已結束')
+          return
+        }
+        // 檢查步驟數量限制
+        if (state.steps.length >= 100) {
+          alert('每個活動最多只能有100個步驟')
+          return
+        }
+
         const now = new Date()
         const newStep = {
-          name: `步驟 ${state.steps.length + 1}`,
-          description: '',
+          type: 'step',
+          title: state.desc,
+          description: state.desc,
+          text: `${state.desc} | ${now.toLocaleString()}`,
           startTime: now,
           endTime: null,
+          ended: false,
         }
+
         set({
-          steps: [...state.steps, newStep],
+          // set() 函數：批量更新多個狀態，合併到現有狀態中
           lastStepTime: now,
+          steps: [...state.steps, newStep], // 展開運算符：將新步驟添加到現有步驟陣列中
+          desc: '', // 清空描述輸入框
         })
       },
 
       // 結束子步驟
       endSubStep: (index) => {
-        const state = get()
-        const updatedSteps = state.steps.map((step, i) =>
-          i === index ? { ...step, endTime: new Date() } : step
-        )
-        set({ steps: updatedSteps })
+        const state = get() // get() 函數：獲取當前 store 的完整狀態
+        const now = new Date()
+
+        set({
+          // set() 函數：批量更新多個狀態，合併到現有狀態中
+          steps: state.steps.map(
+            (
+              step,
+              i // map() 函數：遍歷步驟陣列，返回新陣列
+            ) =>
+              i === index // 條件判斷：如果索引匹配
+                ? {
+                    ...step, // 展開運算符：複製原步驟的所有屬性
+                    ended: true,
+                    endTime: now,
+                    text: step.text + ` (結束於: ${now.toLocaleTimeString()})`,
+                    description:
+                      step.description +
+                      ` (結束於: ${now.toLocaleTimeString()})`,
+                  }
+                : step // 如果不匹配，返回原步驟不變
+          ),
+        })
       },
 
       // 語音輸入處理
-      handleVoiceResult: (result) => {
-        if (result.title) set({ title: result.title })
-        if (result.desc) set({ desc: result.desc })
+      handleVoiceResult: (text) => {
+        set({ desc: text }) // set() 函數：更新 desc 狀態為語音識別結果
       },
 
-      // 清除 localStorage
-      clearStorage: () => {
+      // 重置狀態
+      reset: () =>
         set({
+          // set() 函數：批量重置所有狀態為初始值
           title: '',
           desc: '',
-          memo: '',
           startTime: null,
           endTime: null,
           steps: [],
           currentTime: null,
-          isClient: false,
           lastStepTime: null,
-          titleHistory: [],
+        }),
+
+      // 清除 localStorage 中的資料
+      clearStorage: () => {
+        localStorage.removeItem('trial-timelog-storage')
+        set({
+          title: '',
+          desc: '',
+          startTime: null,
+          endTime: null,
+          steps: [],
+          currentTime: null,
+          lastStepTime: null,
         })
       },
 
       // 計算已進行時間（分鐘）
       getElapsedMinutes: () => {
-        const state = get()
+        const state = get() // get() 函數：獲取當前 store 的完整狀態
         if (!state.startTime) return 0
+
         const endTime = state.endTime || state.currentTime
         if (!endTime) return 0
+
         return Math.floor(
+          // Math.floor() 函數：向下取整，計算分鐘數
           (endTime.getTime() - state.startTime.getTime()) / 1000 / 60
         )
       },
 
       // 獲取活動狀態
       getActivityStatus: () => {
-        const state = get()
+        const state = get() // get() 函數：獲取當前 store 的完整狀態
         if (state.startTime && !state.endTime) return '進行中'
         if (state.endTime) return '已結束'
         return '準備中'
@@ -123,7 +222,7 @@ export const useTrialTimeLogStore = create(
     }),
     {
       // persist() 中間件的配置選項
-      name: 'trial-timelog-storage', // 試用版專用 localStorage key
+      name: 'trial-timelog-storage', // name 屬性：指定 localStorage 中儲存的 key 名稱
       partialize: (state) => ({
         // partialize 函數：選擇要持久化的狀態，過濾掉不需要的狀態
         // 只持久化這些狀態，不包含 currentTime 和 isClient
@@ -164,5 +263,5 @@ export const useTrialTimeLogStore = create(
         }
       },
     }
-  )
-)
+  ) // persist() 函數結束
+) // create() 函數結束

@@ -1,14 +1,12 @@
 // 說明：處理金流串接的路由 (Line Pay v3)
-import prisma from '@/lib/prisma.js'
 import { NextResponse as res } from 'next/server'
 // 導入服務層的類別
 import { requestPayment } from '@/services/line-pay.service'
 // 導入回應函式
 import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
-// 暫時註解掉 Prisma 導入以測試 API 路由
-// import prisma from '@/lib/prisma.js'
-// 導入 IP 白名單檢查 - 暫時註解掉
-// import { linePayIPMiddleware } from '@/lib/ip-whitelist.js'
+// 導入 JWT 認證
+import { decrypt } from '@/lib/jwt-session'
+import { cookies } from 'next/headers'
 
 // 處理金流串接的路由 GET /api/payment/line-pay/request
 export async function GET(request) {
@@ -49,13 +47,7 @@ export async function GET(request) {
 
 // 處理訂閱服務的 POST 請求
 export async function POST(request) {
-  // IP 白名單檢查（僅在生產環境啟用）- 暫時註解掉
-  // if (process.env.NODE_ENV === 'production') {
-  //   const ipCheckResult = linePayIPMiddleware(request)
-  //   if (ipCheckResult) {
-  //     return ipCheckResult // 返回 403 Forbidden
-  //   }
-  // }
+  //前端傳來的東西會這樣放
 
   try {
     // 取得請求資料
@@ -65,6 +57,22 @@ export async function POST(request) {
     // 驗證必要參數
     if (!amount || !orderId) {
       return errorResponse(res, { message: '缺少必要參數：amount 和 orderId' })
+    }
+
+    // 從 JWT session 取得 userId
+    const cookie = (await cookies()).get('ACCESS_TOKEN')?.value
+    console.log('🍪 從 Cookie 取得的 ACCESS_TOKEN:', cookie ? '存在' : '不存在')
+
+    const session = await decrypt(cookie)
+    console.log('🔐 解密後的 session:', session ? '成功' : '失敗')
+    console.log('🔐 session 詳細內容:', session)
+
+    const userId = session?.payload?.userId
+    console.log('👤 取得用戶 ID:', userId)
+
+    if (!userId) {
+      console.error('❌ 未登入或授權失敗')
+      return errorResponse(res, { message: '未登入或授權失敗' })
     }
 
     console.log('🚀 [Line Pay v3] 開始處理訂閱付款請求:', {
@@ -80,7 +88,8 @@ export async function POST(request) {
       currency,
       packages,
     })
-
+    console.log('data', data)
+    console.log('')
     console.log('🔍 [Line Pay v3] 訂閱付款請求回應:', data)
 
     // 如果是開發環境，顯示詳細資料
@@ -89,34 +98,28 @@ export async function POST(request) {
     // API回應
     if (data.status === 'success') {
       console.log('✅ [Line Pay v3] 訂閱付款請求成功')
+      // 我應該要印出來的是data還是response？
+      // 印出完整的後端回應給前端
+      console.log('📤 後端回應給前端的完整資料:', {
+        status: 'success',
+        payload: data?.payload,
+        data: data?.data,
+        paymentUrl: data?.payload?.paymentUrl || data?.data?.paymentUrl,
+        transactionId:
+          data?.payload?.transactionId || data?.data?.transactionId,
+      })
 
-      // 存儲訂單到資料庫
-      try {
-        const paymentOrder = await prisma.paymentOrder.create({
-          data: {
-            orderId,
-            amount,
-            currency,
-            status: 'PENDING',
-            packages: packages,
-            redirectUrls: {
-              confirmUrl: 'http://localhost:3001/line-pay/callback',
-              cancelUrl: 'http://localhost:3001/line-pay/cancel',
-            },
-            paymentUrl: data.payload?.paymentUrl || data.data?.paymentUrl,
-            transactionId:
-              data.payload?.transactionId || data.data?.transactionId,
-            paymentAccessToken:
-              data.payload?.paymentAccessToken || data.data?.paymentAccessToken,
-          },
-        })
-        console.log('💾 訂單已存儲到資料庫:', paymentOrder.id)
-      } catch (dbError) {
-        console.error('❌ 存儲訂單到資料庫失敗:', dbError)
-        // 不中斷流程，繼續返回成功回應
-      }
+      // 不在此時存儲訂單到資料庫，應該等到 callback 確認付款後才存儲
+      // 只回傳付款 URL 給前端進行跳轉
 
-      return successResponse(res, data?.payload)
+      return successResponse(res, {
+        paymentUrl: data?.payload?.paymentUrl || data?.data?.paymentUrl,
+        transactionId: String(
+          data?.payload?.transactionId || data?.data?.transactionId
+        ), // 轉為字串避免 Prisma 錯誤
+        orderId,
+        status: 'PENDING',
+      })
     } else {
       const error = { message: data?.message || '訂閱付款請求失敗' }
       console.error('❌ [Line Pay v3] 訂閱付款請求失敗:', error)

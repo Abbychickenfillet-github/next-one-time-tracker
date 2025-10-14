@@ -4,19 +4,9 @@ import { NextResponse } from 'next/server'
 import { confirmPayment } from '@/services/line-pay.service.js'
 // 導入回應函式
 import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
-// 導入 IP 白名單檢查 - 暫時註解掉
-// import { linePayIPMiddleware } from '@/lib/ip-whitelist.js'
 import prisma from '@/lib/prisma.js'
 
 export async function GET(request) {
-  // IP 白名單檢查（僅在生產環境啟用）- 暫時註解掉
-  // if (process.env.NODE_ENV === 'production') {
-  //   const ipCheckResult = linePayIPMiddleware(request)
-  //   if (ipCheckResult) {
-  //     return ipCheckResult // 返回 403 Forbidden
-  //   }
-  // }
-
   // 取得查詢參數，與設定預設值
   const searchParams = request.nextUrl.searchParams
   const transactionId = searchParams.get('transactionId') || ''
@@ -33,18 +23,63 @@ export async function GET(request) {
 
   // API回應
   if (data.status === 'success') {
-    // 更新資料庫中的訂單狀態
+    // 更新資料庫中的訂單狀態並處理訂閱
     try {
-      const confirmData = data.payload || data.data
+      const now = new Date()
+
+      // 計算到期時間（下個月同一天）
+      const dueAt = new Date(now)
+      dueAt.setMonth(dueAt.getMonth() + 1)
+
       const updatedOrder = await prisma.paymentOrder.update({
         where: { transactionId },
         data: {
           status: 'SUCCESS',
-          returnCode: confirmData?.returnCode,
-          returnMessage: confirmData?.returnMessage,
+          paidAt: now,
+          dueAt: dueAt,
+          subscriptionStatus: 'ACTIVE',
+          isCurrent: true,
+        },
+        include: {
+          // include: {...} 是 Prisma 查詢時一併載入關聯資料（這裡把關聯的 user 一起選回，且只挑 user_id、email）。
+          user: {
+            select: {
+              user_id: true,
+              email: true,
+            },
+          },
         },
       })
+
       console.log('💾 訂單狀態已更新為成功:', updatedOrder.id)
+
+      // 如果訂單有關聯用戶，更新用戶的付費狀態
+      if (updatedOrder.userId) {
+        await prisma.user.update({
+          where: { user_id: updatedOrder.userId },
+          data: {
+            paid: true,
+            paid_date: now,
+            due_date: dueAt,
+            level: 1, // 設為付費用戶
+          },
+        })
+
+        // 將該用戶的其他訂單設為非當前訂閱
+        await prisma.paymentOrder.updateMany({
+          where: {
+            userId: updatedOrder.userId,
+            transactionId: { not: transactionId },
+            isCurrent: true,
+          },
+          data: {
+            isCurrent: false,
+            subscriptionStatus: 'EXPIRED',
+          },
+        })
+
+        console.log('✅ 用戶付費狀態已更新:', updatedOrder.user?.email)
+      }
     } catch (dbError) {
       console.error('❌ 更新訂單狀態失敗:', dbError)
       // 不中斷流程，繼續返回成功回應
@@ -54,13 +89,11 @@ export async function GET(request) {
   } else {
     // 更新資料庫中的訂單狀態為失敗
     try {
-      const confirmData = data.payload || data.data
       await prisma.paymentOrder.update({
         where: { transactionId },
         data: {
           status: 'FAILED',
-          returnCode: confirmData?.returnCode,
-          returnMessage: confirmData?.returnMessage || data.message,
+          subscriptionStatus: 'CANCELLED',
         },
       })
       console.log('💾 訂單狀態已更新為失敗:', transactionId)

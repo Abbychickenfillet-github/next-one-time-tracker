@@ -48,3 +48,4 @@ localhost.pem
 pnpm-lock.yaml
 /logs
 /testing/
+/tests/

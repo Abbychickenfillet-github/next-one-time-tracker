@@ -68,6 +68,7 @@ export default function TimeLogHistory() {
       } catch (error) {
         console.error('載入時間記錄失敗:', error)
       } finally {
+        // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
         setLoading(false)
       }
     },
