@@ -21,24 +21,19 @@ export default function SubscriptionPage() {
   const subscriptionPlans = {
     monthly: {
       name: '月費方案',
-      price: 299,
+      price: 99,
       duration: '1個月',
-      description: '適合短期使用',
-      features: ['基本功能', '客服支援', '資料備份'],
-    },
-    quarterly: {
-      name: '季費方案',
-      price: 799,
-      duration: '3個月',
-      description: '省 NT$98',
-      features: ['基本功能', '客服支援', '資料備份', '優先處理'],
-    },
-    yearly: {
-      name: '年費方案',
-      price: 3000,
-      duration: '12個月',
-      description: '省 NT$588',
-      features: ['基本功能', '客服支援', '資料備份', '優先處理', '專屬客服'],
+      description: '已付費用戶',
+      features: [
+        '✅ 解鎖多裝置同步',
+        '✅ 無限制記錄數量 (最多50筆)',
+        '✅ 雲端資料庫儲存',
+        '✅ 資料永久保存',
+        '✅ 基礎統計分析',
+        '📱 手機、平板、電腦同步',
+        '🚦 每小時100次 API 呼叫',
+        '🚦 每天500次資料庫查詢',
+      ],
     },
   }
 
@@ -48,6 +43,11 @@ export default function SubscriptionPage() {
   const handleSubscribe = async () => {
     if (!isAuth) {
       toast.error('請先登入才能訂閱')
+      return
+    }
+
+    if (!selectedPlanData) {
+      toast.error('請選擇訂閱方案')
       return
     }
 
@@ -100,9 +100,16 @@ export default function SubscriptionPage() {
         throw new Error(data.message || '付款請求失敗')
       }
     } catch (error) {
-      console.error('訂閱付款失敗:', error)
+      console.error('❌ 訂閱付款失敗:', error)
+      console.error('❌ 錯誤詳情:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+      })
       toast.error(error.message || '付款處理失敗，請稍後再試')
     } finally {
+      // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
       setLoading(false)
     }
   }
@@ -177,26 +184,30 @@ export default function SubscriptionPage() {
           ))}
         </div>
 
-        <div className={styles.selectedPlanSummary}>
-          <h3>選擇的方案</h3>
-          <div className={styles.summaryContent}>
-            <div className={styles.planInfo}>
-              <h4>{selectedPlanData.name}</h4>
-              <p className={styles.planDuration}>{selectedPlanData.duration}</p>
-            </div>
-            <div className={styles.planPrice}>
-              <span className={styles.totalPrice}>
-                NT${selectedPlanData.price}
-              </span>
+        {selectedPlanData && (
+          <div className={styles.selectedPlanSummary}>
+            <h3>選擇的方案</h3>
+            <div className={styles.summaryContent}>
+              <div className={styles.planInfo}>
+                <h4>{selectedPlanData.name}</h4>
+                <p className={styles.planDuration}>
+                  {selectedPlanData.duration}
+                </p>
+              </div>
+              <div className={styles.planPrice}>
+                <span className={styles.totalPrice}>
+                  NT${selectedPlanData.price}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className={styles.paymentSection}>
           <button
             className={styles.subscribeBtn}
             onClick={handleSubscribe}
-            disabled={loading || redirecting || !isAuth}
+            disabled={loading || redirecting || !isAuth || !selectedPlanData}
           >
             {loading
               ? '處理中...'

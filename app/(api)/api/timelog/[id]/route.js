@@ -51,6 +51,18 @@ export async function DELETE(request, { params }) {
       where: { id: parseInt(id) },
     })
 
+    // ========================================
+    // 🔢 6. 更新用戶的 current_log_count（刪除一筆記錄 -1）
+    // ========================================
+    await prisma.user.update({
+      where: { user_id: userId },
+      data: {
+        current_log_count: {
+          decrement: 1, // Prisma 的原子操作，避免併發問題
+        },
+      },
+    })
+
     if (isDev) {
       console.log('✅ 時間戳記錄已成功刪除:', timeLog)
     }

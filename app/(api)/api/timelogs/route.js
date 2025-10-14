@@ -3,6 +3,7 @@ import { decrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
 import prisma from '@/lib/prisma.js'
 import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { checkRateLimit } from '@/lib/rate-limit.js'
 
 // ========================================
 // 📊 獲取用戶時間戳記錄 API: GET /api/timelogs
@@ -50,7 +51,51 @@ export async function GET() {
     console.log('取得用戶 ID:', userId)
 
     // ========================================
-    // 📊 5. 查詢用戶的時間戳記錄
+    // 🚦 5. 檢查速率限制
+    // ========================================
+    // 先查詢用戶等級
+    const user = await prisma.user.findUnique({
+      where: { user_id: parseInt(userId) },
+      select: { level: true },
+    })
+
+    if (!user) {
+      const error = { message: '用戶不存在' }
+      return errorResponse(res, error)
+    }
+
+    // 檢查 API 呼叫速率限制
+    const rateLimitResult = checkRateLimit(userId, user.level, 'api')
+
+    if (!rateLimitResult.allowed) {
+      const resetTime = new Date(rateLimitResult.resetTime)
+      console.log('🚦 timelogs API 速率限制觸發:', {
+        userId,
+        level: user.level,
+        limit: rateLimitResult.limit,
+        resetTime: resetTime.toISOString(),
+      })
+
+      return res.json(
+        {
+          status: 'error',
+          message: `請求過於頻繁，請在 ${resetTime.toLocaleString()} 後再試`,
+          resetTime: resetTime.toISOString(),
+          limit: rateLimitResult.limit,
+        },
+        { status: 429 }
+      )
+    }
+
+    console.log('✅ timelogs API 速率限制檢查通過:', {
+      userId,
+      level: user.level,
+      remaining: rateLimitResult.remaining,
+      limit: rateLimitResult.limit,
+    })
+
+    // ========================================
+    // 📊 6. 查詢用戶的時間戳記錄
     // ========================================
     console.log('🔍 準備查詢資料庫，userId:', userId, '類型:', typeof userId)
 
@@ -79,7 +124,7 @@ export async function GET() {
     }
 
     // ========================================
-    // 📈 6. 計算統計數據
+    // 📈 7. 計算統計數據
     // ========================================
     const totalLogs = timeLogs.length
     const totalDuration = timeLogs.reduce((total, log) => {
@@ -103,7 +148,7 @@ export async function GET() {
     )
 
     // ========================================
-    // 📤 7. 回傳 API 回應給前端
+    // 📤 8. 回傳 API 回應給前端
     // ========================================
     const responseData = {
       timeLogs: timeLogs.map((log) => ({

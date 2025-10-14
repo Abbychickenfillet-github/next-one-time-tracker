@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { Carousel, Card, Button, Container, Row, Col } from 'react-bootstrap'
+import Link from 'next/link'
 import {
   FaClock,
   FaCloud,
@@ -61,6 +62,8 @@ export default function IntroPage() {
         '基礎時間記錄',
         '7 天資料保存',
         '⚠️ 無法多裝置同步',
+        '🚦 每小時30次 API 呼叫',
+        '🚦 每天100次資料庫查詢',
       ],
       buttonText: '立即體驗',
       buttonVariant: 'outline-primary',
@@ -71,11 +74,13 @@ export default function IntroPage() {
       period: '每月',
       features: [
         '✅ 解鎖多裝置同步',
-        '✅ 無限制記錄數量',
+        '✅ 50筆記錄數量',
         '✅ 雲端資料庫儲存',
         '✅ 資料永久保存',
         '✅ 基礎統計分析',
         '📱 手機、平板、電腦同步',
+        '🚦 每小時100次 API 呼叫',
+        '🚦 每天500次資料庫查詢',
       ],
       buttonText: '開始訂閱',
       buttonVariant: 'primary',
@@ -93,8 +98,9 @@ export default function IntroPage() {
         '資料匯出功能',
         '優先客戶支援',
       ],
-      buttonText: '升級專業版',
-      buttonVariant: 'success',
+      buttonText: '即將推出',
+      buttonVariant: 'secondary',
+      disabled: true,
     },
   ]
 
@@ -149,7 +155,13 @@ export default function IntroPage() {
                   分析，讓你的時間管理更智能、更高效。
                 </p>
                 <div className={styles.heroButtons}>
-                  <Button variant="primary" size="lg" className="me-3">
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    className="me-3"
+                    as={Link}
+                    href="/demo"
+                  >
                     立即開始記錄
                   </Button>
                   <Button variant="outline-light" size="lg">
@@ -309,6 +321,7 @@ export default function IntroPage() {
                       variant={plan.buttonVariant}
                       size="lg"
                       className="w-100 mt-4"
+                      disabled={plan.disabled}
                     >
                       {plan.buttonText}
                     </Button>

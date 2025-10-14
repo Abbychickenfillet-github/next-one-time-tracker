@@ -3,7 +3,7 @@ import { decrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
 import prisma from '@/lib/prisma.js'
 import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
-
+import { checkRateLimit } from '@/lib/rate-limit.js'
 // ========================================
 // 📊 創建時間戳記錄 API: POST /api/timelog
 // ========================================
@@ -59,7 +59,51 @@ export async function POST(request) {
     console.log('timelog API執行時，取得用戶 ID:', userId)
 
     // ========================================
-    // 📊 6. 創建時間戳記錄
+    // 🚦 6. 檢查速率限制
+    // ========================================
+    // 先查詢用戶等級
+    const user = await prisma.user.findUnique({
+      where: { user_id: parseInt(userId) },
+      select: { level: true },
+    })
+
+    if (!user) {
+      const error = { message: '用戶不存在' }
+      return errorResponse(res, error)
+    }
+
+    // 檢查 API 呼叫速率限制
+    const rateLimitResult = checkRateLimit(userId, user.level, 'api')
+
+    if (!rateLimitResult.allowed) {
+      const resetTime = new Date(rateLimitResult.resetTime)
+      console.log('🚦 API 速率限制觸發:', {
+        userId,
+        level: user.level,
+        limit: rateLimitResult.limit,
+        resetTime: resetTime.toISOString(),
+      })
+
+      return res.json(
+        {
+          status: 'error',
+          message: `請求過於頻繁，請在 ${resetTime.toLocaleString()} 後再試`,
+          resetTime: resetTime.toISOString(),
+          limit: rateLimitResult.limit,
+        },
+        { status: 429 }
+      )
+    }
+
+    console.log('✅ API 速率限制檢查通過:', {
+      userId,
+      level: user.level,
+      remaining: rateLimitResult.remaining,
+      limit: rateLimitResult.limit,
+    })
+
+    // ========================================
+    // 📊 7. 創建時間戳記錄並更新用戶的 current_log_count
     // ========================================
     const timeLog = await prisma.timeLog.create({
       data: {
@@ -80,7 +124,19 @@ export async function POST(request) {
     })
 
     // ========================================
-    // 📤 7. 回傳 API 回應
+    // 🔢 8. 更新用戶的 current_log_count（新增一筆記錄 +1）
+    // ========================================
+    await prisma.user.update({
+      where: { user_id: userId },
+      data: {
+        current_log_count: {
+          increment: 1, // Prisma 的原子操作，避免併發問題
+        },
+      },
+    })
+
+    // ========================================
+    // 📤 9. 回傳 API 回應
     // ========================================
     if (isDev) {
       console.log('✅ 時間戳記錄創建成功:', {

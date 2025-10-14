@@ -3,7 +3,11 @@ import { cookies } from 'next/headers'
 import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
 import { decrypt } from '@/lib/jwt-session'
 import prisma from '@/lib/prisma.js'
+// → 假如第一次import prisma, global.prisma 不存在
+// → 創建 new PrismaClient()
+// → 儲存到 global.prisma
 import { GoogleGenAI } from '@google/genai'
+import { checkRateLimit } from '@/lib/rate-limit.js'
 
 // The client gets the API key from the environment variable `GEMINI_API_KEY`.
 const ai = new GoogleGenAI({
@@ -42,6 +46,49 @@ export async function POST(request) {
       if (!userId) {
         throw new Error('未登入或授權失敗，無法讀取使用者資料')
       }
+
+      // ========================================
+      // 🚦 檢查速率限制
+      // ========================================
+      // 先查詢用戶等級
+      const user = await prisma.user.findUnique({
+        where: { user_id: parseInt(userId) },
+        select: { level: true },
+      })
+
+      if (!user) {
+        throw new Error('用戶不存在')
+      }
+
+      // 檢查 API 呼叫速率限制
+      const rateLimitResult = checkRateLimit(userId, user.level, 'api')
+
+      if (!rateLimitResult.allowed) {
+        const resetTime = new Date(rateLimitResult.resetTime)
+        console.log('🚦 AI 分析 API 速率限制觸發:', {
+          userId,
+          level: user.level,
+          limit: rateLimitResult.limit,
+          resetTime: resetTime.toISOString(),
+        })
+
+        return res.json(
+          {
+            status: 'error',
+            message: `AI 分析請求過於頻繁，請在 ${resetTime.toLocaleString()} 後再試`,
+            resetTime: resetTime.toISOString(),
+            limit: rateLimitResult.limit,
+          },
+          { status: 429 }
+        )
+      }
+
+      console.log('✅ AI 分析 API 速率限制檢查通過:', {
+        userId,
+        level: user.level,
+        remaining: rateLimitResult.remaining,
+        limit: rateLimitResult.limit,
+      })
 
       // Load user's timelogs and steps
       const timeLogs = await prisma.timeLog.findMany({

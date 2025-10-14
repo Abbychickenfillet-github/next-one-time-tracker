@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useUserRegister } from '@/services/rest-client/use-user'
-
 // 樣式已移至全域 theme-system.scss
 import Swal from 'sweetalert2'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 // import { MdOutlineEmail } from 'react-icons/md'
@@ -13,11 +11,10 @@ import { useAuth } from '@/hooks/use-auth'
 // import MyFooter from '@/components/layout/default-layout/my-footer'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import Head from 'next/head'
-import GlowingText from '@/components/glowing-text/glowing-text'
-import ThemeDecoration from '@/components/theme-decoration'
+
 // import axios from 'axios' // 已移除，改用 useUserRegister hook
 // import { apiBaseUrl } from '@/configs/index.js'
-
+import { Col } from 'react-bootstrap'
 export default function RegisterPage() {
   const { register } = useUserRegister()
   const [showpassword, setShowpassword] = useState(false)
@@ -557,57 +554,17 @@ export default function RegisterPage() {
         {/* 雲海效果 - 根據當前主題顯示 */}
         <div className="cloud-effect"></div>
 
-        <div className="container-fluid position-relative h-100">
-          <div className="row h-100 align-items-center justify-content-center">
+        <div className="container-fluid position-relative">
+          <div className="row mt-5 align-items-center justify-content-center">
             {/* 左側歡迎區域 */}
-            <div className="col-lg-7 col-md-12 mb-5 mb-lg-0 h-100 d-flex align-items-center justify-content-end">
-              <div className="text-center text-lg-end position-relative m-0 d-flex flex-column justify-content-center">
-                {/* 背景圖片 - 限制高度 */}
-                <Image
-                  src="/7-Reasons-To-Keep-Jade-Plant-At-Your-Entrance.jpg"
-                  alt="背景圖片"
-                  fill
-                  style={{
-                    objectFit: 'cover',
-                    opacity: 0.3,
-                    zIndex: -1,
-                    borderRadius: '15px',
-                    height: '100%' /* 改為填滿容器高度 */,
-                    maxHeight: '100vh' /* 限制最大高度 */,
-                  }}
-                />
-
-                <div className="mb-5">
-                  <GlowingText
-                    text="Welcome to"
-                    className="text-white display-4 fw-bold mb-4"
-                  />
-                </div>
-                <div className="mb-5">
-                  <GlowingText
-                    text="TimeLog &"
-                    className="text-white display-3 fw-bold"
-                  />
-                </div>
-                <div className="mb-5">
-                  <GlowingText
-                    text="Analysis"
-                    className="text-white display-3 fw-bold"
-                  />
-                </div>
-                <p className="text-center text-white-50 fs-5 mb-4">
-                  加入我們，開始成為時間管理大師
-                </p>
-                <p className="text-center text-white-50 fs-6">
-                  智能分析你的時間使用，提升工作效率
-                </p>
-                {/* 主題裝飾圖示 */}
-                <ThemeDecoration />
-              </div>
-            </div>
 
             {/* 右側註冊表單 */}
-            <div className="col-lg-5 col-md-8 col-sm-12 d-flex align-items-center justify-content-start">
+            <Col
+              lg={8}
+              md={9}
+              sm={10}
+              className="d-flex align-items-center justify-content-center"
+            >
               <div className="bg-transparent backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25 w-75">
                 {/* 頁籤切換 */}
                 <div className="d-flex justify-content-center mb-4">
@@ -743,7 +700,7 @@ export default function RegisterPage() {
                   </Link>
                 </div>
               </div>
-            </div>
+            </Col>
           </div>
         </div>
       </div>

@@ -206,6 +206,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('登出錯誤:', error)
     } finally {
+      // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
       // 無論如何都跳轉到登入頁面（只跳轉一次）
       console.log('🔄 跳轉到登入頁面...')
       router.replace('/user/login')

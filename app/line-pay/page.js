@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import axios from '@/lib/line-pay-axios'
+import { useAuth } from '@/hooks/use-auth'
 import '@/styles/LinePayPage.css'
 
 function LinePayPage() {
+  const { isAuth } = useAuth()
   const [formData, setFormData] = useState({
     amount: '',
     orderId: '',
@@ -26,6 +28,13 @@ function LinePayPage() {
   const handleSubmit = async (e) => {
     console.log('🎯 handleSubmit 被調用')
     e.preventDefault()
+
+    // 檢查登入狀態
+    if (!isAuth) {
+      setError('請先登入才能進行付款')
+      return
+    }
+
     setLoading(true)
     setError('')
     setPaymentUrl('')
@@ -34,9 +43,7 @@ function LinePayPage() {
       console.log('📋 表單資料:', formData)
 
       const subscriptionPlans = {
-        monthly: { name: '月費方案', price: 299, duration: '1個月' },
-        quarterly: { name: '季費方案', price: 799, duration: '3個月' },
-        yearly: { name: '年費方案', price: 2999, duration: '12個月' },
+        monthly: { name: '月費方案', price: 99, duration: '1個月' },
       }
 
       const selectedPlan = subscriptionPlans[formData.subscriptionType]
@@ -57,7 +64,7 @@ function LinePayPage() {
             products: [
               {
                 name: `訂閱服務 - ${selectedPlan.name}`,
-                quantity: 1,
+                quantity: 1, // 移除
                 price: Number(finalAmount),
               },
             ],
@@ -69,7 +76,7 @@ function LinePayPage() {
 
       const response = await axios.post(
         '/payment/line-pay/request',
-        paymentData
+        paymentData //帶入paymentData物件
       )
 
       console.log('✅ 付款請求回應:', response.data)
@@ -81,6 +88,7 @@ function LinePayPage() {
         const paymentUrl =
           response.data.payload?.paymentUrl || response.data.data?.paymentUrl
         console.log('🎯 付款 URL:', paymentUrl)
+        console.log('response.data', response.data)
         setPaymentUrl(paymentUrl)
         // Auto redirect to LINE Pay
         window.location.href = paymentUrl
@@ -112,6 +120,7 @@ function LinePayPage() {
         'Payment request failed'
       setError(errorMessage)
     } finally {
+      // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
       setLoading(false)
     }
   }
@@ -133,7 +142,7 @@ function LinePayPage() {
               value={formData.subscriptionType}
               onChange={handleInputChange}
             >
-              <option value="monthly">月費方案 - NT$299/月</option>
+              <option value="monthly">月費方案 - NT$99/月</option>
               <option value="quarterly">季費方案 - NT$799/季 (省 NT$98)</option>
               <option value="yearly">年費方案 - NT$2,999/年 (省 NT$589)</option>
             </select>

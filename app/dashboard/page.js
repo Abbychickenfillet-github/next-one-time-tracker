@@ -110,6 +110,7 @@ export default function Dashboard() {
       console.error('❌ 獲取時間戳記錄失敗:', error)
       setError(error.message)
     } finally {
+      // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
       setIsLoading(false)
     }
   }

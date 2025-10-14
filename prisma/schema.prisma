@@ -98,7 +98,14 @@ model User {
   birthdate       DateTime?
   gender          String?
   avatar          String?
-  level           Int            @default(0)
+  level           Int            @default(0) // 0: 未付費, 1: 已付費
+  current_log_count Int          @default(0) @map("current_log_count") // 當前活動記錄數量，用於快速檢查限制
+
+  // 付費狀態欄位
+  paid            Boolean        @default(false) // 是否已付費
+  paid_date       DateTime?      @map("paid_date") // 最近一次付款時間
+  due_date        DateTime?      @map("due_date") // 付費到期時間
+
   valid           Boolean        @default(true)
   createdAt       DateTime       @default(now()) @map("created_at")
   googleUid       String?        @unique @map("google_uid")
@@ -111,6 +118,7 @@ model User {
   steps           Step[]
   timeLogs        TimeLog[]
   paymentOrders   PaymentOrder[]
+  // subscriptions 已合併到 PaymentOrder 表中
 }
 
 model PaymentOrder {
@@ -121,16 +129,18 @@ model PaymentOrder {
   currency        String    @default("TWD") // 貨幣
   status          String    @default("PENDING") // 支付狀態: PENDING, SUCCESS, FAILED, CANCELLED
 
-  // LINE Pay 相關資訊
-  transactionId   String?   @unique @map("transaction_id") // LINE Pay 交易 ID
-  paymentUrl      String?   @map("payment_url") // LINE Pay 支付跳轉 URL
-  returnCode      String?   @map("return_code") // LINE Pay API 返回碼
-  returnMessage   String?   @map("return_message") // LINE Pay API 返回訊息
-  paymentAccessToken String? @map("payment_access_token") // LINE Pay 支付存取權杖
+  // LINE Pay 相關資訊（簡化版）
+  transactionId   String?   @unique @map("transaction_id") // LINE Pay 交易 ID（必要，用於確認付款）
 
   // 訂單詳情
   packages        Json      // 訂單商品詳情，以 JSON 格式存儲
   redirectUrls    Json?     @map("redirect_urls") // 重定向 URL 設定
+
+  // 訂閱相關欄位（合併自 Subscription 表）
+  paidAt          DateTime? @map("paid_at") // 付款時間
+  dueAt           DateTime? @map("due_at") // 到期時間（自動計算：下個月同一天）
+  subscriptionStatus String? @default("ACTIVE") @map("subscription_status") // 訂閱狀態: ACTIVE, EXPIRED, CANCELLED
+  isCurrent       Boolean   @default(true) @map("is_current") // 是否為當前有效訂閱
 
   // 時間戳
   createdAt       DateTime  @default(now()) @map("created_at")
@@ -138,4 +148,10 @@ model PaymentOrder {
 
   // 關聯
   user            User?     @relation(fields: [userId], references: [user_id], onDelete: SetNull)
+
+  @@index([userId, isCurrent]) // 索引：用戶ID + 是否當前訂閱
+  @@index([dueAt]) // 索引：到期時間，用於查詢過期訂閱
 }
+
+// Subscription 表已合併到 PaymentOrder 表中
+// 現在 PaymentOrder 同時處理付款和訂閱功能

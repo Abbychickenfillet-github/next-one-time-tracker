@@ -119,9 +119,7 @@ console.log('🔧 [DEBUG] redirectUrls 設定:', redirectUrls)
 
 // 環境配置說明
 if (isDev) {
-  console.log(
-    '🚀 運行在開發環境 (npm run dev)，使用 LINE Pay 測試環境 IP 白名單'
-  )
+  console.log('🚀 運行在開發環境 (npm run dev)')
 } else {
   console.log('🚀 運行在生產環境 (npm start)，使用 LINE Pay 正式環境 IP 白名單')
 }
@@ -129,8 +127,15 @@ if (isDev) {
 // 資料格式參考 https://enylin.github.io/line-pay-merchant/api-reference/request.html#example
 // 只需要總金額，其它都是範例資料，可以依照需求修改
 export const requestPayment = async (amount, options = {}) => {
-  // 支援新的參數格式
+  // 這個函式 建立付款請求
+  // 參數：
+  // - amount: 付款金額
+  // - options: { orderId, currency, packages }
+
+  // 1. 建立訂單資料
+  // 從 options 中解構出參數，如果沒有則使用預設值
   const { orderId, currency = 'TWD', packages } = options
+
   // 使用目前最新的v3版本的API，以下是資料的說明:
   // https://pay.line.me/jp/developers/apis/onlineApis?locale=zh_TW
 
@@ -154,7 +159,7 @@ export const requestPayment = async (amount, options = {}) => {
   const order = {
     orderId:
       orderId || `ORDER-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
-    currency: currency,
+    currency: currency, // 使用解構出來的 currency，預設為 'TWD'
     amount: amount,
     packages: packages || [
       {

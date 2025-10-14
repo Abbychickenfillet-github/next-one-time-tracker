@@ -6,7 +6,7 @@ $body-color: #212529;
 $link-color: #6a1b9a;
 $link-hover-color: darken($link-color, 10%);
 
-@import 'bootstrap/scss/bootstrap';
+// @import 'bootstrap/scss/bootstrap';
 
 // 彩虹文字動畫
 @keyframes rainbow {
@@ -421,6 +421,52 @@ main::-webkit-scrollbar-corner {
 // Mint 主題時確保所有子元素不覆蓋背景
 :root[data-theme='mint'] .gradient-bg > * {
   background: transparent !important;
+}
+
+// ========================================
+// 🛡️ 防擠壓工具類別
+// ========================================
+
+// 防止元素被擠壓的最小尺寸
+.min-size-300 {
+  min-width: 300px !important;
+  min-height: 300px !important;
+}
+
+.min-size-400 {
+  min-width: 400px !important;
+  min-height: 400px !important;
+}
+
+.min-size-500 {
+  min-width: 500px !important;
+  min-height: 500px !important;
+}
+
+// Flexbox 防擠壓控制
+.flex-no-shrink {
+  flex-shrink: 0 !important;
+}
+
+.flex-shrink-1 {
+  flex-shrink: 1 !important;
+}
+
+.flex-grow-1 {
+  flex-grow: 1 !important;
+}
+
+// 響應式最小寬度
+@media (max-width: 768px) {
+  .min-size-responsive {
+    min-width: 280px !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .min-size-responsive {
+    min-width: 350px !important;
+  }
 }
 
 // 確保登入註冊頁面不滾動 - 但允許 main 滾動

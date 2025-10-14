@@ -13,6 +13,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { useLoader } from '@/hooks/use-loader'
 import Head from 'next/head'
 import GlowingText from '@/components/glowing-text/glowing-text'
+import { Col } from 'react-bootstrap'
 
 export default function LogIn() {
   const [showpassword, setShowpassword] = useState(false)
@@ -22,6 +23,7 @@ export default function LogIn() {
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({ error: ' ' })
   const { showLoader, hideLoader } = useLoader()
+  const [justLoggedIn, setJustLoggedIn] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -35,9 +37,10 @@ export default function LogIn() {
       // 只有在真正成功時才顯示成功訊息
       if (isAuth) {
         console.log('登入成功，auth 狀態:', auth)
+        setJustLoggedIn(true)
 
-        // 顯示詳細的登入成功訊息
-        Swal.fire({
+        // 顯示詳細的登入成功訊息，等待用戶關閉後再跳轉
+        await Swal.fire({
           title: '🎉 登入成功！',
           html: `
             <div style="text-align: left; font-size: 14px;">
@@ -59,6 +62,8 @@ export default function LogIn() {
           timerProgressBar: true,
           showConfirmButton: true,
         })
+
+        router.replace('/dashboard')
       }
     } catch (error) {
       console.error('登入失敗:', error)
@@ -73,7 +78,8 @@ export default function LogIn() {
         confirmButtonColor: '#dc3545',
       })
     } finally {
-      hideLoader() // 不管成功失敗都要關閉 loader
+      // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
+      hideLoader() // 不管成功失敗都要關閉 loader。不用寫$disconnect()因為由框架共同管理
     }
   }
 
@@ -86,13 +92,13 @@ export default function LogIn() {
 
     // 如果用戶已登入，重定向到儀表板
     console.log('Login 頁面 auth 狀態:', auth) // 加入 debug
-    if (isAuth) {
+    if (isAuth && !justLoggedIn) {
       // 使用 replace 而不是 push，避免歷史記錄問題
       router.replace('/dashboard')
       console.log('用戶已登入，跳轉到 dashboard')
       return
     }
-  }, [isAuth, auth?.hasChecked, router, auth])
+  }, [isAuth, auth?.hasChecked, router, auth, justLoggedIn])
   return (
     <>
       <Head>
@@ -102,11 +108,11 @@ export default function LogIn() {
         {/* 雲海效果 - 根據當前主題顯示 */}
         <div className="cloud-effect"></div>
 
-        <div className="container-fluid position-relative h-100">
-          <div className="row h-100 align-items-center justify-content-center">
+        <div className="container-fluid position-relative">
+          <div className="mt-5 row align-items-center justify-content-center">
             {/* 左側歡迎區域 */}
-            <div className="col-lg-7 col-md-12 col-sm-12 mb-5 mb-lg-0 h-100">
-              <div className="text-center text-lg-start position-relative m-0 h-100 d-flex flex-column justify-content-center">
+            <Col lg={7} className="mb-5 mb-lg-0">
+              <div className="text-center text-lg-start position-relative m-0 d-flex flex-column justify-content-center">
                 {/* 背景圖片 - 先不放因為會導致畫面有點雜亂*/}
                 {/* <Image
                   src="/7-Reasons-To-Keep-Jade-Plant-At-Your-Entrance.jpg"
@@ -168,10 +174,10 @@ export default function LogIn() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Col>
 
             {/* 右側登入表單 */}
-            <div className="col-lg-5 col-md-8 col-sm-12 mx-auto">
+            <Col lg={5} md={8} sm={12} className="mx-auto">
               <div className="bg-transparent backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25">
                 {/* 頁籤切換 */}
                 <div className="d-flex justify-content-center mb-4">
@@ -400,7 +406,7 @@ export default function LogIn() {
                   </div>
                 </form>
               </div>
-            </div>
+            </Col>
           </div>
         </div>
       </div>
