@@ -144,7 +144,7 @@ export default function UnifiedNavbar() {
                   href="/demo"
                   className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                 >
-                  可試用時間紀錄
+                  免註冊試用
                 </Nav.Link>
                 <Nav.Link
                   as={Link}
