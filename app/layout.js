@@ -21,21 +21,20 @@ export default function RootLayout({ children }) {
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
           strategy="afterInteractive"
         />
-        {/* 統一的導航欄 (整合 TopNavbar 和 Header) */}
-        <UnifiedNavbar />
 
-        {/* 主內容區域 - 使用 flex: 1 佔滿剩餘空間 */}
-        <main style={{ flex: 1 }}>
-          <Suspense>
-            {/* 全域 Context Providers 包裝器 */}
-            <Providers>
-              <Suspense>
-                {/* 頁面內容 - 這裡會渲染各個頁面的 children */}
-                {children}
-              </Suspense>
-            </Providers>
-          </Suspense>
-        </main>
+        {/* 全域 Context Providers 包裝器 */}
+        <Providers>
+          {/* 統一的導航欄 (整合 TopNavbar 和 Header) */}
+          <UnifiedNavbar />
+
+          {/* 主內容區域 - 使用 flex: 1 佔滿剩餘空間 */}
+          <main style={{ flex: 1 }}>
+            <Suspense>
+              {/* 頁面內容 - 這裡會渲染各個頁面的 children */}
+              {children}
+            </Suspense>
+          </main>
+        </Providers>
 
         {/* Footer 元件 */}
         <Footer />

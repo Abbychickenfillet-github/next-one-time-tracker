@@ -18,7 +18,7 @@ import { usePathname } from 'next/navigation'
 import ThemeToggle from '@/components/theme-toggle'
 import { useAuth } from '@/hooks/use-auth'
 import Swal from 'sweetalert2'
-import OffcanvasNav from '@/components/timelog/OffcanvasNav'
+import AIAgentSidebar from '@/components/AIAgentSidebar'
 // import NextBreadCrumb from '@/components/next-breadcrumb' // 已移除麵包屑功能
 // import styles from '@/components/timelog/Header.module.css'
 import { BsList } from 'react-icons/bs'
@@ -34,7 +34,7 @@ export default function UnifiedNavbar() {
   const router = useRouter()
   const pathname = usePathname()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
-  const [showOffcanvas, setShowOffcanvas] = useState(false)
+  const [showAIAgent, setShowAIAgent] = useState(false)
 
   // 判斷是否為 TimeLog 相關頁面（排除主頁）
   const isTimeLogPage = pathname?.includes('/timelog') && pathname !== '/'
@@ -80,11 +80,8 @@ export default function UnifiedNavbar() {
 
   return (
     <>
-      {/* 側邊導航 - 所有頁面都可用 */}
-      <OffcanvasNav
-        show={showOffcanvas}
-        onHide={() => setShowOffcanvas(false)}
-      />
+      {/* AI Agent 側邊欄 - 所有頁面都可用 */}
+      <AIAgentSidebar show={showAIAgent} onHide={() => setShowAIAgent(false)} />
 
       {/* 統一的導航欄 */}
       <Navbar
@@ -218,30 +215,25 @@ export default function UnifiedNavbar() {
                   </>
                 )}
 
-                {/* 已登入用戶顯示訂閱連結 */}
+                {/* 已登入用戶顯示訂閱和儀表板連結 */}
                 {isAuth && (
-                  <Nav.Link
-                    as={Link}
-                    href="/subscription"
-                    className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
-                  >
-                    訂閱
-                  </Nav.Link>
+                  <>
+                    <Nav.Link
+                      as={Link}
+                      href="/subscription"
+                      className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
+                    >
+                      訂閱
+                    </Nav.Link>
+                    <Nav.Link
+                      as={Link}
+                      href="/dashboard"
+                      className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
+                    >
+                      📊 儀表板
+                    </Nav.Link>
+                  </>
                 )}
-
-                {/* 儀表板按鈕 - 所有用戶都能看到 */}
-                <Nav.Link
-                  as={Link}
-                  href={isAuth ? '/dashboard' : '#'}
-                  className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
-                  style={{
-                    color: !isAuth ? 'var(--navbar-bg, #343a40)' : undefined, // 未登入時與navbar背景同色（隱藏）
-                    cursor: !isAuth ? 'not-allowed' : 'pointer',
-                  }}
-                  onClick={!isAuth ? (e) => e.preventDefault() : undefined}
-                >
-                  📊 儀表板{!isAuth && ' 🔒'}
-                </Nav.Link>
               </Nav>
             </Navbar.Collapse>
           </div>
@@ -250,11 +242,11 @@ export default function UnifiedNavbar() {
 
           {/* 右側：功能按鈕 */}
           <div className="d-flex align-items-center gap-2 position-relative">
-            {/* 側邊欄按鈕 - 所有頁面都顯示，支援 RWD */}
+            {/* AI Agent 按鈕 - 所有頁面都顯示，支援 RWD */}
             <button
               className="btn btn-light btn-sm d-inline-flex align-items-center justify-content-center gap-2 px-2"
-              onClick={() => setShowOffcanvas(true)}
-              aria-label="開啟側邊欄"
+              onClick={() => setShowAIAgent(true)}
+              aria-label="開啟 AI Agent"
               style={{
                 minWidth: 'fit-content',
                 transition: 'all 0.3s ease',
@@ -263,9 +255,9 @@ export default function UnifiedNavbar() {
               }}
             >
               <BsList />
-              {/* RWD 文字顯示：小螢幕顯示"側邊"，中螢幕顯示"開啟側邊" */}
+              {/* RWD 文字顯示：小螢幕顯示"AI"，中螢幕顯示"AI Agent" */}
               <span className="d-none d-sm-inline d-inline-flex align-items-center justify-content-center">
-                側邊
+                AI Agent
               </span>
             </button>
 
