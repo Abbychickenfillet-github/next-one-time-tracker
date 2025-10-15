@@ -148,7 +148,7 @@ export default function UnifiedNavbar() {
                   href="/about"
                   className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                 >
-                  為什麼有這個網頁
+                  開發原因
                 </Nav.Link>
 
                 {/* 未登入用戶顯示註冊和登入連結 */}

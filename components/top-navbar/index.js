@@ -118,7 +118,7 @@ export default function TopNavbar() {
               className="nav-link-custom"
               style={{ color: 'var(--text-primary, #f2f2f2)' }}
             >
-              為什麼有這個網頁
+              開發原因
             </Nav.Link>
             <OverlayTrigger
               placement="bottom"

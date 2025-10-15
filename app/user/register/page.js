@@ -550,7 +550,7 @@ export default function RegisterPage() {
       {/* <Header /> */}
       {/* 我想要做一個按鈕來切換主題顏色 */}
 
-      <div className="gradient-bg">
+      <div className="gradient-bg geometricShape">
         {/* 雲海效果 - 根據當前主題顯示 */}
         <div className="cloud-effect"></div>
 
@@ -565,7 +565,10 @@ export default function RegisterPage() {
               sm={10}
               className="d-flex align-items-center justify-content-center"
             >
-              <div className="bg-transparent backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25 w-75">
+              <div
+                className="bg-transparent backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25 w-75"
+                style={{ zIndex: 100 }}
+              >
                 {/* 頁籤切換 */}
                 <div className="d-flex justify-content-center mb-4">
                   <div className="btn-group" role="group">

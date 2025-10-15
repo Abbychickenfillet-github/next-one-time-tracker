@@ -104,11 +104,11 @@ export default function LogIn() {
       <Head>
         <title>登入</title>
       </Head>
-      <div className="gradient-bg">
+      <div className="gradient-bg ">
         {/* 雲海效果 - 根據當前主題顯示 */}
         <div className="cloud-effect"></div>
 
-        <div className="container-fluid position-relative">
+        <div className="container-fluid position-relative geometricShape">
           <div className="mt-5 row align-items-center justify-content-center">
             {/* 左側歡迎區域 */}
             <Col lg={7} className="mb-5 mb-lg-0">
@@ -178,7 +178,10 @@ export default function LogIn() {
 
             {/* 右側登入表單 */}
             <Col lg={5} md={8} sm={12} className="mx-auto">
-              <div className="bg-transparent backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25">
+              <div
+                className="bg-transparent backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25"
+                style={{ zIndex: 100 }}
+              >
                 {/* 頁籤切換 */}
                 <div className="d-flex justify-content-center mb-4">
                   <div className="btn-group" role="group">

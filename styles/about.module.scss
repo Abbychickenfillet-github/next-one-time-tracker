@@ -1,7 +1,13 @@
+.cardZindex {
+  z-index: 3;
+}
+.liHeight {
+  line-height: 2;
+}
 .card1 {
   border: 0.5px dashed #b25f5f32;
   background:
-    linear-gradient(135deg, rgba(255, 107, 157, 0.8), rgba(255, 139, 171, 0.6)),
+    linear-gradient(135deg, rgba(209, 137, 161, 0.8), rgba(184, 104, 127, 0.6)),
     url('/blue-bg.jpg');
   background-size: cover;
   background-position: center;
@@ -71,7 +77,7 @@
       rgba(64, 64, 64, 0.2)
     );
     opacity: 0.6;
-    z-index: -1;
+    z-index: 2;
     // 不規則邊緣設計 - 延伸到右邊底部
     clip-path: polygon(
       0% 100%,
