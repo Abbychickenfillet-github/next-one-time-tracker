@@ -1,11 +1,10 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Button } from 'react-bootstrap'
+import { Dropdown } from 'react-bootstrap'
 
 export default function ThemeToggle() {
   const [currentTheme, setCurrentTheme] = useState('sand-barbie')
-  const [isOpen, setIsOpen] = useState(false)
 
   // 使用 useCallback 優化主題切換函數，避免不必要的重新渲染
   const toggleTheme = useCallback((theme) => {
@@ -15,7 +14,6 @@ export default function ThemeToggle() {
       console.log(`🚀 設定在 HTML 根元素，屬性data-theme，屬性值${theme}`)
     }
     localStorage.setItem('theme', theme)
-    setIsOpen(false) // 切換主題後關閉選單
   }, [])
 
   useEffect(() => {
@@ -24,24 +22,6 @@ export default function ThemeToggle() {
     setCurrentTheme(savedTheme)
     document.documentElement.setAttribute('data-theme', savedTheme)
   }, [])
-
-  // 點擊外部關閉選單
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      const container = document.querySelector('.theme-toggle-container')
-      if (container && !container.contains(event.target)) {
-        setIsOpen(false)
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
 
   // 主題配置
   const themes = [
@@ -70,13 +50,16 @@ export default function ThemeToggle() {
     themes.find((theme) => theme.id === currentTheme) || themes[0]
 
   return (
-    <div className="theme-toggle-container position-relative">
-      {/* 主要按鈕 - 顯示當前主題 */}
-      <Button
+    <Dropdown className="theme-toggle-container" align="end">
+      {/* 添加 align="end" 屬性：
+這會讓下拉選單從右側對齊，避免超出右邊界
+Bootstrap 會自動調整下拉選單的位置 */}
+      <Dropdown.Toggle
         variant="outline-light"
         size="sm"
         className="d-flex align-items-center gap-2"
-        onClick={() => setIsOpen(!isOpen)}
+        title="選取主題"
+        aria-label="選取主題"
         style={{
           minWidth: 'fit-content',
           transition: 'all 0.3s ease',
@@ -84,70 +67,91 @@ export default function ThemeToggle() {
       >
         <span>{currentThemeData.icon}</span>
         <span className="d-none d-md-inline">{currentThemeData.name}</span>
-        <span
-          className={`ms-1 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-        >
-          ▼
-        </span>
-      </Button>
+      </Dropdown.Toggle>
 
-      {/* 點擊時顯示的主題選項 */}
-      {isOpen && (
-        <div
-          className="theme-options"
+      <Dropdown.Menu
+        className="border-0 shadow-lg"
+        style={{
+          backgroundColor: 'var(--dropdown-bg, #2d3748)',
+          borderRadius: '8px',
+          padding: '0.5rem',
+          minWidth: '180px',
+          maxHeight: '300px',
+          overflowY: 'auto',
+        }}
+      >
+        <style jsx>{`
+          .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+          }
+          .dropdown-item:focus {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+          }
+          .dropdown-item.active {
+            background-color: rgba(0, 123, 255, 0.2) !important;
+            color: white !important;
+          }
+        `}</style>
+        {/* 說明文字 - disabled item */}
+        <Dropdown.Header
+          className="text-center border-bottom border-secondary pb-2 mb-2"
           style={{
-            position: 'absolute',
-            top: '100%',
-            right: '0',
-            zIndex: 1000,
-            backgroundColor: 'var(--dropdown-bg, #2d3748)',
-            borderRadius: '8px',
-            padding: '0.5rem',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-            minWidth: '150px',
-            marginTop: '0.25rem',
-            animation: 'fadeIn 0.2s ease-in-out',
+            fontSize: '0.7rem',
+            fontWeight: '500',
+            color: 'rgba(255, 255, 255, 0.8)',
           }}
         >
-          {themes.map((theme) => (
-            <button
-              key={theme.id}
-              className={`btn btn-sm w-100 mb-1 d-flex align-items-center gap-2 ${
-                currentTheme === theme.id ? 'btn-primary' : 'btn-outline-light'
-              }`}
-              onClick={() => toggleTheme(theme.id)}
-              title={theme.title}
-              style={{
-                fontSize: '0.8rem',
-                justifyContent: 'flex-start',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <span>{theme.icon}</span>
-              <span>{theme.name}</span>
-            </button>
-          ))}
-        </div>
-      )}
+          🎨 選擇您喜歡的主題風格
+        </Dropdown.Header>
 
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .transition-transform {
-          transition: transform 0.2s ease;
-        }
-        .rotate-180 {
-          transform: rotate(180deg);
-        }
-      `}</style>
-    </div>
+        {themes.map((theme) => (
+          <Dropdown.Item
+            key={theme.id}
+            onClick={() => toggleTheme(theme.id)}
+            className={`d-flex text-white align-items-center gap-2 py-2 ${
+              currentTheme === theme.id ? 'active' : ''
+            }`}
+            style={{
+              fontSize: '0.8rem',
+              borderRadius: '6px',
+              marginBottom: '0.25rem',
+              backgroundColor: 'transparent',
+              border: 'none',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = 'transparent'
+            }}
+          >
+            <span>{theme.icon}</span>
+            <span>{theme.name}</span>
+            {currentTheme === theme.id && (
+              <span
+                className={`ms-auto ${currentTheme === theme.id ? 'text-success' : 'text-white'}`}
+              >
+                ✓
+              </span>
+            )}
+          </Dropdown.Item>
+        ))}
+
+        {/* 底部說明 */}
+        <Dropdown.Divider className="border-secondary my-2" />
+        <Dropdown.Header
+          className="text-center text-white"
+          style={{
+            fontSize: '0.65rem',
+            color: 'rgba(255, 255, 255, 0.6)',
+          }}
+        >
+          💡 主題會自動保存
+        </Dropdown.Header>
+      </Dropdown.Menu>
+    </Dropdown>
   )
 }

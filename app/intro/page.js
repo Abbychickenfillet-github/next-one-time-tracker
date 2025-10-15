@@ -107,33 +107,33 @@ export default function IntroPage() {
   const clearStorageSteps = [
     {
       step: 1,
-      title: '打開開發者模式',
-      description: 'Windows用戶 按下F12',
+      title: '開啟開發者工具',
+      description: '按 F12 鍵或右鍵選擇「檢查」開啟開發者工具',
     },
     {
       step: 2,
-      title: '進入應用程式頁籤',
-      description: '按下Application tab',
+      title: '切換到應用程式分頁',
+      description: '點擊頂部選單中的「Application」或「應用程式」分頁',
     },
     {
       step: 3,
-      title: '找到Storage',
-      description: '點擊「點擊Storage」',
+      title: '展開儲存空間選項',
+      description: '在左側面板找到並點擊「Storage」或「儲存空間」選項',
     },
     {
       step: 4,
-      title: '選擇Local Storage',
-      description: '選擇「Local Storage」',
+      title: '選擇本地儲存',
+      description: '展開「Local Storage」選項，點擊您的網站域名',
     },
     {
       step: 5,
-      title: '選取要刪除的項目',
-      description: '勾選「要刪除的項目」',
+      title: '選取要清除的資料',
+      description: '在右側面板中選擇要刪除的項目，或全選所有資料',
     },
     {
       step: 6,
-      title: '右鍵確認清除',
-      description: '點擊「清除資料」完成',
+      title: '執行清除操作',
+      description: '右鍵點擊選中的項目，選擇「Delete」或「刪除」完成清除',
     },
   ]
 
@@ -383,9 +383,9 @@ export default function IntroPage() {
       <section className={styles.clearStorageSection}>
         <Container>
           <div className="text-center mb-5">
-            <h2 className={styles.sectionTitle}>試用如何清除本地儲存？</h2>
+            <h2 className={styles.sectionTitle}>如何清除本地儲存資料？</h2>
             <p className={styles.sectionDescription}>
-              如果你想清除瀏覽器中的本地資料，請按照以下步驟操作
+              當您需要重新開始或清除試用資料時，可以按照以下步驟清除瀏覽器中的本地儲存
             </p>
           </div>
           <Row>
