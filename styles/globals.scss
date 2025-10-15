@@ -1,10 +1,13 @@
+// 導入 Sass 顏色模組
+@use 'sass:color';
+
 // 自定義 bootstrap 的 SCSS 變數
 $primary: #583163;
 $secondary: #ffc107;
 $body-bg: transparent; // 改為透明，讓背景可以顯示
 $body-color: #212529;
 $link-color: #6a1b9a;
-$link-hover-color: darken($link-color, 10%);
+$link-hover-color: color.adjust($link-color, $lightness: -10%);
 
 // 思源黑體字體設定
 :root {
@@ -130,14 +133,7 @@ body {
 // 方案三：柔和薰衣草
 :root[data-theme='lavender'] {
   --primary-bg: linear-gradient(135deg, #ede0ff, #d4c0ff, #c0a0ff);
-  --secondary-bg: linear-gradient(
-    105deg,
-    #d466e5 0%,
-    #ce93d8 35%,
-    #ab47bc 60%,
-    #7b1fa2 80%,
-    #4a148c 100%
-  );
+  --secondary-bg: linear-gradient(105deg, #d466e5 0%, #4a148c 100%);
   --accent-color: #7b5fb1;
   --accent-hover: #6b4fa1;
   --text-primary: #2d1f5a;
@@ -186,11 +182,7 @@ body {
       rgba(135, 219, 177, 0.753) 0%,
       transparent 60%
     ),
-    radial-gradient(
-      circle at 80% 80%,
-      rgb(11, 98, 54) 0%,
-      transparent 60%
-    ),
+    radial-gradient(circle at 80% 80%, rgb(11, 98, 54) 0%, transparent 60%),
     radial-gradient(
       circle at 40% 60%,
       rgba(7, 153, 80, 0.962) 0%,
@@ -1065,5 +1057,36 @@ body {
 
   .themeToggle .themeName {
     display: none; /* 隱藏文字，只顯示圖示 */
+  }
+}
+.geometricShape {
+  min-height: 100vh;
+
+  &::before {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw; // 延伸到整個視窗寬度
+    height: 30vh; // 減少高度，避免覆蓋表單
+    background: #9a6d94;
+    opacity: 0.6; // 降低透明度
+    z-index: 0; // 降低 z-index
+    // 從左下到右上的直線分割
+    clip-path: polygon(
+      0% 100%,
+      0% 80%,
+      20% 60%,
+      40% 40%,
+      60% 30%,
+      80% 20%,
+      100% 10%,
+      100% 100%
+    );
+    // 柔和光暈效果
+    box-shadow:
+      0 0 60px rgba(255, 182, 193, 0.4),
+      0 0 120px rgba(255, 105, 180, 0.3),
+      0 0 180px rgba(199, 21, 133, 0.2);
   }
 }

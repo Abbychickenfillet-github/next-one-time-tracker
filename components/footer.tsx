@@ -57,6 +57,27 @@ export default function Footer({ className = '' }: FooterProps) {
             <p className={styles.description}>時間記錄與分析平台</p>
           </div>
 
+          {/* 中間 - 法律頁面連結 */}
+          <div className={styles.middleSection}>
+            <div className={styles.legalLinks}>
+              <h4 className={styles.legalTitle}>網站資訊</h4>
+              <div className={styles.legalLinkGrid}>
+                <a href="/about" className={styles.legalLink}>
+                  💡 為什麼有這個網站
+                </a>
+                <a href="/terms" className={styles.legalLink}>
+                  📋 服務條款
+                </a>
+                <a href="/return-policy" className={styles.legalLink}>
+                  🔄 退換貨政策
+                </a>
+                <a href="/privacy-policy" className={styles.legalLink}>
+                  🔒 隱私權政策
+                </a>
+              </div>
+            </div>
+          </div>
+
           {/* 右側 - 聯絡方式 */}
           <div className={styles.rightSection}>
             <div className={styles.contactInfo}>

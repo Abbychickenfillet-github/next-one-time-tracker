@@ -11,27 +11,43 @@ export default function About() {
         <div className="col-lg-8">
           <h1 className="text-center mb-5">為什麼我需要創造這個網頁</h1>
 
-          <div className={`card ${styles.card1} mb-4`}>
+          <div className={`card ${styles.card1} mb-4 ${styles.cardZindex}`}>
             <div className="card-body">
-              <h2 className="card-title">🌍 為什麼需要這個網站？</h2>
+              <h2 className="card-title"> 為什麼需要這個網站？</h2>
               <p className="card-text">
                 在現代數位時代，我們習慣使用各種工具來管理時間，但你是否發現一個問題？
               </p>
               <div className="alert alert-warning">
                 <h5>🔍 現有工具的不足</h5>
                 <ul className="mb-0">
-                  <li>
+                  <li className={styles.liHeight}>
                     <strong>Google Calendar：</strong>
                     只能記錄事件，無法精確到秒的時間戳
                   </li>
-                  <li>
+                  <li className={styles.liHeight}>
                     <strong>手機計時器：</strong>功能單一，無法記錄多步驟流程
                   </li>
-                  <li>
+                  <li className={styles.liHeight}>
                     <strong>筆記軟體：</strong>缺乏時間追蹤和統計分析功能
                   </li>
-                  <li>
+                  <li className={styles.liHeight}>
                     <strong>專業軟體：</strong>過於複雜，不適合日常簡單任務
+                  </li>
+                  <li className={styles.liHeight}>
+                    <strong>低成本取代監視鏡頭分析行為：</strong>
+                    不需要昂貴的監控設備，只需要一個簡單的網頁就能精確記錄時間
+                  </li>
+                  <li className={styles.liHeight}>
+                    <strong>
+                      手機計時器雖然有鬧鐘功能，但是無法記錄確切的時間：
+                    </strong>
+                    手機計時器只能提醒，無法提供精確的時間戳記錄和歷史追蹤
+                  </li>
+                  <li className={styles.liHeight}>
+                    <strong>
+                      AI雖然可以直接分析事件，但是對於時間的概念會錯誤：
+                    </strong>
+                    AI可能對時間順序和持續時間產生誤判，人工記錄更準確可靠
                   </li>
                 </ul>
               </div>
@@ -56,9 +72,9 @@ export default function About() {
             </div>
           </div>
 
-          <div className={`card ${styles.card1} mb-4`}>
+          <div className={`card ${styles.card1} mb-4 ${styles.cardZindex}`}>
             <div className="card-body">
-              <h2 className="card-title">💡 靈感來源😊😊</h2>
+              <h2 className="card-title">💡 靈感😊</h2>
               <p className="card-text">
                 在自己操作燙直頭髮的時候，發現自己是粗硬髮質，要判斷第一劑在依照包裝上標準指示時間判斷軟化是不夠的！用尖尾梳將一縷髮絲纏繞7圈，拉一下停7秒放開，看有沒有回彈回去看看捲度的效果，有沒有觀察是否軟化，7圈至少5圈沒有回彈、6-7圈是比較鬆彈的話，就至少有80%軟化成功，此時會再停留3分鐘左右。
               </p>
@@ -71,7 +87,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="card mb-4">
+          <div className={`card mb-4 ${styles.cardZindex}`}>
             <div className="card-body">
               <h2 className="card-title">💇‍♀️ 離子燙藥水燙直步驟 Demo</h2>
               <div className="table-responsive">
@@ -102,7 +118,7 @@ export default function About() {
                       <td>10:02:15</td>
                       <td>10:08:30</td>
                       <td>6分15秒</td>
-                      <td>從最捲的地方開始，用尖尾梳測試軟化程度</td>
+                      <td>從最捲的地方開始</td>
                     </tr>
                     <tr>
                       <td>
@@ -120,7 +136,7 @@ export default function About() {
                       <td>10:14:45</td>
                       <td>10:20:00</td>
                       <td>5分15秒</td>
-                      <td>髮尾用較弱藥水，停留3分鐘</td>
+                      <td>髮尾用較弱藥水，用尖尾梳測試整頭軟化程度</td>
                     </tr>
                     <tr>
                       <td>
@@ -156,7 +172,7 @@ export default function About() {
                       <td>10:42:20</td>
                       <td>10:47:20</td>
                       <td>5分00秒</td>
-                      <td>讓第二劑充分滲透，濃稠度適中</td>
+                      <td>讓第二劑充分滲透，濃稠度適中。用途是定型</td>
                     </tr>
                     <tr>
                       <td>
@@ -181,7 +197,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="card mb-4">
+          <div className={`card mb-4 ${styles.cardZindex}`}>
             <div className="card-body">
               <h2 className="card-title">❓ Q&A</h2>
               <div className="accordion" id="faqAccordion">
@@ -259,7 +275,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="card mb-4">
+          <div className={`card mb-4 ${styles.cardZindex}`}>
             <div className="card-body">
               <h2 className="card-title">⏱️ 時間紀錄步驟</h2>
               <ul className="list-group list-group-flush">
@@ -280,7 +296,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="card mb-4">
+          <div className="card mb-4 ${styles.cardZindex}">
             <div className="card-body">
               <h2 className="card-title">🛠️ 工具清單</h2>
               <div className="row">
@@ -309,7 +325,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="card mb-4">
+          <div className={`card mb-4 ${styles.cardZindex}`}>
             <div className="card-body">
               <h2 className="card-title">💡 心得建議</h2>
               <div className="alert alert-info">
@@ -337,7 +353,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="card">
+          <div className={`card ${styles.cardZindex}`}>
             <div className="card-body">
               <h2 className="card-title">📅 燙髮紀錄</h2>
               <p>
