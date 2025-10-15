@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/use-auth'
 import Link from 'next/link'
@@ -10,7 +10,7 @@ import axios from '@/lib/line-pay-axios'
 import CssLoader from '@/components/css-loader'
 import styles from './PaymentResult.module.css'
 
-export default function PaymentResult() {
+function PaymentResultContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const { isAuth } = useAuth()
@@ -157,5 +157,13 @@ export default function PaymentResult() {
       {/* 土司訊息視窗用 */}
       <ToastContainer />
     </div>
+  )
+}
+
+export default function PaymentResult() {
+  return (
+    <Suspense fallback={<CssLoader />}>
+      <PaymentResultContent />
+    </Suspense>
   )
 }

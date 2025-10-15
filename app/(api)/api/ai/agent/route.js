@@ -15,6 +15,7 @@ const ai = new GoogleGenAI({
 const WEBSITE_DATA = {
   name: 'TimeLog & Analysis',
   description: '智能時間記錄與分析平台',
+  github: 'https://github.com/Abbychickenfillet-github/next-one-time-tracker', // 你的 GitHub 連結
   features: [
     {
       name: '時間記錄',
@@ -84,23 +85,75 @@ const WEBSITE_DATA = {
       description: '在儀表板查看統計數據，使用 AI 分析獲得洞察',
     },
   ],
+  // 新增：完整的網站架構和技術資訊
+  techStack: {
+    frontend: ['Next.js 15', 'React', 'Bootstrap', 'TypeScript'],
+    backend: ['Node.js', 'Prisma', 'PostgreSQL'],
+    ai: ['Google Gemini 2.5 Flash', 'OpenAI GPT-4'],
+    payment: ['綠界金流', 'Line Pay'],
+    auth: ['JWT', 'Iron Session', 'Google OAuth', 'Line Login'],
+  },
+  pages: [
+    { path: '/', name: '首頁', description: '時間記錄主頁面' },
+    { path: '/intro', name: '使用介紹', description: '網站功能介紹' },
+    { path: '/demo', name: '免註冊試用', description: '試用時間記錄功能' },
+    { path: '/about', name: '為什麼有這個網頁', description: '網站創建理念' },
+    { path: '/user/login', name: '登入', description: '用戶登入頁面' },
+    { path: '/user/register', name: '註冊', description: '用戶註冊頁面' },
+    { path: '/dashboard', name: '儀表板', description: '用戶數據分析儀表板' },
+    { path: '/subscription', name: '訂閱服務', description: '付費方案選擇' },
+    { path: '/timelog', name: '時間記錄', description: '記錄時間使用' },
+    { path: '/timelog/history', name: '歷史記錄', description: '查看過往記錄' },
+    {
+      path: '/timelog/ai-analysis',
+      name: 'AI 分析',
+      description: 'AI 時間分析',
+    },
+    { path: '/blog', name: '部落格', description: '相關文章和資訊' },
+    { path: '/product', name: '產品頁面', description: '商品展示' },
+    { path: '/cart', name: '購物車', description: '商品購買' },
+  ],
 }
 
-function buildSystemPrompt(userInfo = null) {
-  const basePrompt = `你是 TimeLog & Analysis 網站的 AI 助手。你的任務是幫助用戶了解網站功能、使用方法和方案選擇。
+function buildSystemPrompt(userInfo = null, websiteContent = null) {
+  let basePrompt = `你是 TimeLog & Analysis 網站的 AI 助手。你的任務是幫助用戶了解網站功能、使用方法和方案選擇。
 
 網站基本資訊：
 - 名稱：${WEBSITE_DATA.name}
 - 描述：${WEBSITE_DATA.description}
+- GitHub：${WEBSITE_DATA.github}
+
+技術架構：
+- 前端：${WEBSITE_DATA.techStack.frontend.join(', ')}
+- 後端：${WEBSITE_DATA.techStack.backend.join(', ')}
+- AI 技術：${WEBSITE_DATA.techStack.ai.join(', ')}
+- 支付系統：${WEBSITE_DATA.techStack.payment.join(', ')}
+- 認證系統：${WEBSITE_DATA.techStack.auth.join(', ')}
 
 主要功能：
-${WEBSITE_DATA.features.map((f) => `• ${f.name}: ${f.description}`).join('\n')}
+${WEBSITE_DATA.features.map((f) => `• ${f.name}: ${f.description} (${f.features.join(', ')})`).join('\n')}
 
 可用方案：
 ${WEBSITE_DATA.plans.map((p) => `• ${p.name} (${p.price}): ${p.features.join(', ')}`).join('\n')}
 
+網站頁面結構：
+${WEBSITE_DATA.pages.map((p) => `• ${p.path} - ${p.name}: ${p.description}`).join('\n')}
+
 使用步驟：
 ${WEBSITE_DATA.howToUse.map((s) => `${s.step}. ${s.title}: ${s.description}`).join('\n')}`
+
+  // 如果有網站內容，添加到提示詞中
+  if (websiteContent) {
+    basePrompt += `
+
+網站實際內容：
+- 專案資訊：${JSON.stringify(websiteContent.packageInfo, null, 2)}
+- README：${websiteContent.readme}
+- 組件數量：${websiteContent.components?.length || 0} 個
+- API 路由數量：${websiteContent.apiRoutes?.length || 0} 個
+- 頁面數量：${websiteContent.pages?.length || 0} 個
+- 樣式文件數量：${websiteContent.styles?.length || 0} 個`
+  }
 
   if (userInfo) {
     return (
@@ -187,8 +240,32 @@ export async function POST(request) {
       }
     }
 
+    // 讀取網站內容（如果用戶問到技術相關問題）
+    let websiteContent = null
+    if (
+      message.includes('技術') ||
+      message.includes('架構') ||
+      message.includes('代碼') ||
+      message.includes('實現') ||
+      message.includes('GitHub')
+    ) {
+      try {
+        const contentResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'}/api/website-content`
+        )
+        if (contentResponse.ok) {
+          const contentData = await contentResponse.json()
+          if (contentData.status === 'success') {
+            websiteContent = contentData.data
+          }
+        }
+      } catch (error) {
+        console.log('讀取網站內容失敗:', error.message)
+      }
+    }
+
     // 構建完整的提示詞
-    const systemPrompt = buildSystemPrompt(userInfo)
+    const systemPrompt = buildSystemPrompt(userInfo, websiteContent)
     const userPrompt = `用戶問題：${message}
 
 ${

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { serverURL } from '@/config/client.config'
@@ -17,7 +17,7 @@ const defaultProduct = {
   categoryId: 0,
 }
 
-export default function ProductIdPage() {
+function ProductIdContent() {
   const searchParams = useSearchParams()
   // data對應的是useGetProduct的data，預設值是undefined
   const [data, setData] = useState()
@@ -62,5 +62,13 @@ export default function ProductIdPage() {
       <p>價格: {product.price}</p>
       <p>說明: {product.info}</p>
     </>
+  )
+}
+
+export default function ProductIdPage() {
+  return (
+    <Suspense fallback={<div>載入中...</div>}>
+      <ProductIdContent />
+    </Suspense>
   )
 }

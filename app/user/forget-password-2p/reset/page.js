@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import {
   useAuthResetPasswordHash,
   useAuthCheckSecret,
@@ -14,7 +14,7 @@ import CssLoader from '@/components/css-loader'
 import { toast, ToastContainer } from 'react-toastify'
 import Link from 'next/link'
 
-export default function HashTokenPage() {
+function HashTokenContent() {
   const { resetPasswordHash, isMutating: isResetting } =
     useAuthResetPasswordHash()
   const { checkSecret } = useAuthCheckSecret()
@@ -133,5 +133,13 @@ export default function HashTokenPage() {
       {/* 土司訊息視窗用 */}
       <ToastContainer />
     </>
+  )
+}
+
+export default function HashTokenPage() {
+  return (
+    <Suspense fallback={<CssLoader />}>
+      <HashTokenContent />
+    </Suspense>
   )
 }
