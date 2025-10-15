@@ -41,29 +41,6 @@ model Step {
   user        User?     @relation(fields: [userId], references: [user_id], onDelete: Cascade)
 }
 
-model Brand {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  img      String?
-  info     String
-  products Product[]
-}
-
-model Category {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  parentId Int?      @map("parent_id")
-  products Product[]
-}
-
-model Favorite {
-  userId    Int     @map("user_id")
-  productId Int     @map("product_id")
-  product   Product @relation(fields: [productId], references: [id])
-  user      User    @relation(fields: [userId], references: [user_id])
-
-  @@id([userId, productId])
-}
 
 model Otp {
   id        Int      @id @default(autoincrement())
@@ -74,20 +51,6 @@ model Otp {
   expiredAt DateTime @map("expired_at")
 }
 
-model Product {
-  id         Int        @id @default(autoincrement())
-  name       String
-  sn         String     @unique
-  photos     String?
-  stock      Int        @default(0)
-  price      Int        @default(0)
-  info       String
-  brandId    Int        @map("brand_id")
-  categoryId Int        @map("category_id")
-  favorites  Favorite[]
-  brand      Brand      @relation(fields: [brandId], references: [id])
-  category   Category   @relation(fields: [categoryId], references: [id])
-}
 
 model User {
   user_id         Int            @id @default(autoincrement())
@@ -114,7 +77,6 @@ model User {
   refreshToken    String?
   iat             String?
   exp             String?
-  favorites       Favorite[]
   steps           Step[]
   timeLogs        TimeLog[]
   paymentOrders   PaymentOrder[]

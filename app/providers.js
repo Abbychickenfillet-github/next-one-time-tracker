@@ -8,8 +8,6 @@
 import { CartProvider } from '@/hooks/use-cart-state'
 //  載入認証用context
 import { AuthProvider } from '@/hooks/use-auth'
-//  載入商品搜尋條件context
-import { ProductProvider } from '@/services/rest-client/use-product'
 //  載入動畫context
 import { LoaderProvider } from '@/hooks/use-loader'
 // 自訂用載入動畫元件
@@ -29,10 +27,7 @@ export function Providers({ children }) {
         {/* 認證 Provider - 管理用戶登入狀態 */}
         <AuthProvider>
           {/* 購物車 Provider - 管理購物車狀態 */}
-          <CartProvider>
-            {/* 商品 Provider - 管理商品搜尋和狀態 */}
-            <ProductProvider>{children}</ProductProvider>
-          </CartProvider>
+          <CartProvider> {children} </CartProvider>
         </AuthProvider>
       </LoaderProvider>
     </SWRDevTools>
