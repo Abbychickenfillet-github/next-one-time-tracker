@@ -110,8 +110,6 @@ const WEBSITE_DATA = {
       description: 'AI 時間分析',
     },
     { path: '/blog', name: '部落格', description: '相關文章和資訊' },
-    { path: '/product', name: '產品頁面', description: '商品展示' },
-    { path: '/cart', name: '購物車', description: '商品購買' },
   ],
 }
 

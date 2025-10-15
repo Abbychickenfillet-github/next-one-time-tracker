@@ -23,18 +23,17 @@ export default function RootLayout({ children }) {
         />
 
         {/* 全域 Context Providers 包裝器 */}
-        <Providers>
-          {/* 統一的導航欄 (整合 TopNavbar 和 Header) */}
-          <UnifiedNavbar />
-
-          {/* 主內容區域 - 使用 flex: 1 佔滿剩餘空間 */}
-          <main style={{ flex: 1 }}>
-            <Suspense>
+        <Suspense>
+          <Providers>
+            {/* 統一的導航欄 (整合 TopNavbar 和 Header) */}
+            <UnifiedNavbar />
+            {/* 主內容區域 - 使用 flex: 1 佔滿剩餘空間 */}
+            <main style={{ flex: 1 }}>
               {/* 頁面內容 - 這裡會渲染各個頁面的 children */}
               {children}
-            </Suspense>
-          </main>
-        </Providers>
+            </main>
+          </Providers>
+        </Suspense>
 
         {/* Footer 元件 */}
         <Footer />
