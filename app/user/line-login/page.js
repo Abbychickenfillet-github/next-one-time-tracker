@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/use-auth'
 import LineLogo from '../_components/line-logo'
@@ -17,7 +17,7 @@ import 'react-toastify/dist/ReactToastify.css'
 // import { Oval } from 'react-loader-spinner'
 import CssLoader from '@/components/css-loader'
 
-export default function LineLoginPage() {
+function LineLoginContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const { isAuth, user, isLoading } = useAuth()
@@ -128,5 +128,13 @@ export default function LineLoginPage() {
       {/* 土司訊息視窗用 */}
       <ToastContainer />
     </>
+  )
+}
+
+export default function LineLoginPage() {
+  return (
+    <Suspense fallback={<CssLoader />}>
+      <LineLoginContent />
+    </Suspense>
   )
 }

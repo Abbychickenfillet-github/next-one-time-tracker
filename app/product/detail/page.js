@@ -4,9 +4,10 @@ import { useGetProduct } from '@/services/rest-client/use-product'
 // 這裡的useSearchParams是next的hook，用來取得網址參數
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { Suspense } from 'react'
 
 // 網址範例: /product/detail?productId=1
-export default function ProductDetailPage() {
+function ProductDetailContent() {
   // 取得網址參數，例如: ?productId=1
   const searchParams = useSearchParams()
   const productId = searchParams.get('productId')
@@ -30,5 +31,13 @@ export default function ProductDetailPage() {
       <p>價格: {product.price}</p>
       <p>說明: {product.info}</p>
     </>
+  )
+}
+
+export default function ProductDetailPage() {
+  return (
+    <Suspense fallback={<div>載入中...</div>}>
+      <ProductDetailContent />
+    </Suspense>
   )
 }
