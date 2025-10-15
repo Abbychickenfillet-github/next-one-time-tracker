@@ -33,7 +33,6 @@ export default function RegisterPage() {
     phone: '',
     birthdate: '',
     gender: '',
-    avatar: '',
     agree: false,
   })
 
@@ -234,7 +233,6 @@ export default function RegisterPage() {
           phone: '',
           birthdate: '',
           gender: '',
-          avatar: '',
           agree: false,
         })
 
@@ -448,7 +446,7 @@ export default function RegisterPage() {
 
             <div className="mb-3">
               <label htmlFor="birthdate" className="text-white fw-semibold">
-                生日
+                生日 <span className="text-white-50">(選填)</span>
               </label>
               <div className="">
                 <input
@@ -468,7 +466,7 @@ export default function RegisterPage() {
 
             <div className="mb-3">
               <label htmlFor="gender" className="text-white fw-semibold">
-                性別
+                性別 <span className="text-white-50">(選填)</span>
               </label>
               <select
                 id="gender"
@@ -481,30 +479,11 @@ export default function RegisterPage() {
                   color: 'white',
                 }}
               >
-                <option value="">請選擇</option>
+                <option value="">請選擇性別 (選填)</option>
                 <option value="female">女</option>
                 <option value="male">男</option>
                 <option value="undisclosed">不透漏</option>
               </select>
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="avatar" className="text-white fw-semibold">
-                頭像路徑
-              </label>
-              <input
-                type="text"
-                id="avatar"
-                name="avatar"
-                className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
-                value={user.avatar}
-                onChange={handleFieldChange}
-                placeholder="請輸入頭像路徑 (可選)"
-                style={{
-                  backdropFilter: 'blur(10px)',
-                  color: 'white',
-                }}
-              />
             </div>
 
             <div className="mb-3">
@@ -518,7 +497,30 @@ export default function RegisterPage() {
                   className="form-check-input"
                 />
                 <label htmlFor="agree" className="text-white form-check-label">
-                  我同意網站會員註冊條款
+                  我同意{' '}
+                  <a
+                    href="/terms"
+                    target="_blank"
+                    className="text-info text-decoration-underline"
+                  >
+                    服務條款
+                  </a>
+                  、{' '}
+                  <a
+                    href="/return-policy"
+                    target="_blank"
+                    className="text-info text-decoration-underline"
+                  >
+                    退換貨政策
+                  </a>
+                  、{' '}
+                  <a
+                    href="/privacy-policy"
+                    target="_blank"
+                    className="text-info text-decoration-underline"
+                  >
+                    隱私權政策
+                  </a>
                 </label>
               </div>
               {errors.agree && (
