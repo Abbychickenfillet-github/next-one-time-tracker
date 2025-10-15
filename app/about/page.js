@@ -9,8 +9,6 @@ export default function About() {
 
       <div className="row justify-content-center">
         <div className="col-lg-8">
-          <h1 className="text-center mb-5">為什麼我需要創造這個網頁</h1>
-
           <div className={`card ${styles.card1} mb-4 ${styles.cardZindex}`}>
             <div className="card-body">
               <h2 className="card-title"> 為什麼需要這個網站？</h2>
