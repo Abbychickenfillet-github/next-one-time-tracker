@@ -137,7 +137,7 @@ ${isAuth ? `👤 已登入為：${user?.name || user?.email || '用戶'}` : '�
       <Offcanvas.Header closeButton>
         <Offcanvas.Title className="d-flex align-items-center gap-2">
           <FaRobot className="text-primary" />
-          AI Agent
+          AI Chatbox
           {isAuth ? (
             <FaUser className="text-success" size={14} />
           ) : (

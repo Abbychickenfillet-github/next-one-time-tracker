@@ -6,7 +6,44 @@ $body-color: #212529;
 $link-color: #6a1b9a;
 $link-hover-color: darken($link-color, 10%);
 
-// @import 'bootstrap/scss/bootstrap';
+// 思源黑體字體設定
+:root {
+  // 定義 CSS 變數，供整個專案使用
+  --font-noto-sans-tc: 'Noto Sans TC', sans-serif;
+}
+
+// 全域字體設定
+body {
+  // 字體堆疊 (Font Stack) - 瀏覽器會按順序嘗試載入
+  font-family:
+    var(--font-noto-sans-tc),
+    // 1. 優先：思源黑體 (支援中文)
+    -apple-system,
+    // 2. 備用：蘋果系統字體 (macOS/iOS)
+    BlinkMacSystemFont,
+    // 3. 備用：蘋果系統字體 (舊版)
+    'Segoe UI',
+    // 4. 備用：Windows 系統字體
+    'Roboto',
+    // 5. 備用：Android 系統字體
+    'Oxygen',
+    // 6. 備用：KDE 系統字體
+    'Ubuntu',
+    // 7. 備用：Ubuntu 系統字體
+    'Cantarell',
+    // 8. 備用：GNOME 系統字體
+    'Fira Sans',
+    // 9. 備用：Firefox OS 字體
+    'Droid Sans',
+    // 10. 備用：舊版 Android 字體
+    'Helvetica Neue',
+    // 11. 備用：經典系統字體
+    sans-serif; // 12. 最後備用：無襯線字體
+
+  // 字體渲染優化
+  -webkit-font-smoothing: antialiased; // WebKit 瀏覽器字體平滑
+  -moz-osx-font-smoothing: grayscale; // Firefox 瀏覽器字體平滑
+}
 
 // 彩虹文字動畫
 @keyframes rainbow {
@@ -146,17 +183,17 @@ $link-hover-color: darken($link-color, 10%);
   --secondary-bg:
     radial-gradient(
       circle at 20% 20%,
-      rgba(0, 100, 50, 0.4) 0%,
+      rgba(135, 219, 177, 0.753) 0%,
       transparent 60%
     ),
     radial-gradient(
       circle at 80% 80%,
-      rgba(0, 80, 40, 0.3) 0%,
+      rgb(11, 98, 54) 0%,
       transparent 60%
     ),
     radial-gradient(
       circle at 40% 60%,
-      rgba(0, 120, 60, 0.5) 0%,
+      rgba(7, 153, 80, 0.962) 0%,
       transparent 60%
     ),
     linear-gradient(135deg, #0a1a0a, #1a2e1a, #0d1f0d);

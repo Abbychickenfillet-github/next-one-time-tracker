@@ -300,7 +300,7 @@ ${
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
-    console.error('AI Agent API Error:', error)
+    console.error('AI Chatbox API Error:', error)
     return errorResponse(res, error, 500)
   }
 }
@@ -308,7 +308,7 @@ ${
 export async function GET() {
   return res.json({
     status: 'success',
-    message: 'AI Agent API 運行中',
+    message: 'AI Chatbox API 運行中',
     features: WEBSITE_DATA.features.map((f) => f.name),
     plans: WEBSITE_DATA.plans.map((p) => p.name),
   })

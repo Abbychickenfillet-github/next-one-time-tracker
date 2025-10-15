@@ -80,7 +80,7 @@ export default function UnifiedNavbar() {
 
   return (
     <>
-      {/* AI Agent 側邊欄 - 所有頁面都可用 */}
+      {/* AI Chatbox 側邊欄 - 所有頁面都可用 */}
       <AIAgentSidebar show={showAIAgent} onHide={() => setShowAIAgent(false)} />
 
       {/* 統一的導航欄 */}
@@ -242,11 +242,11 @@ export default function UnifiedNavbar() {
 
           {/* 右側：功能按鈕 */}
           <div className="d-flex align-items-center gap-2 position-relative">
-            {/* AI Agent 按鈕 - 所有頁面都顯示，支援 RWD */}
+            {/* AI Chatbox 按鈕 - 所有頁面都顯示，支援 RWD */}
             <button
               className="btn btn-light btn-sm d-inline-flex align-items-center justify-content-center gap-2 px-2"
               onClick={() => setShowAIAgent(true)}
-              aria-label="開啟 AI Agent"
+              aria-label="開啟 AI Chatbox"
               style={{
                 minWidth: 'fit-content',
                 transition: 'all 0.3s ease',
@@ -255,9 +255,9 @@ export default function UnifiedNavbar() {
               }}
             >
               <BsList />
-              {/* RWD 文字顯示：小螢幕顯示"AI"，中螢幕顯示"AI Agent" */}
+              {/* RWD 文字顯示：小螢幕顯示"AI"，中螢幕顯示"AI Chatbox" */}
               <span className="d-none d-sm-inline d-inline-flex align-items-center justify-content-center">
-                AI Agent
+                AI Chatbox
               </span>
             </button>
 

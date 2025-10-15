@@ -7,15 +7,22 @@ import UnifiedNavbar from '@/components/UnifiedNavbar'
 import '@/styles/globals.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'animate.css'
-
+import { Noto_Sans_TC } from 'next/font/google'
 import Footer from '@/components/footer'
 
+// 思源黑體 - 支援繁體中文
+const notoSansTC = Noto_Sans_TC({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '700'],
+  display: 'swap',
+  variable: '--font-noto-sans-tc',
+})
 // RootLayout 元件 - 定義整個應用程式的根布局結構
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="zh-tw">
       <head />
-      <body>
+      <body className={`${notoSansTC.variable} ${notoSansTC.className}`}>
         {/* Bootstrap JavaScript - 使用 Next.js Script 組件 */}
         <Script
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
