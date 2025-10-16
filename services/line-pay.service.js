@@ -259,12 +259,53 @@ export const confirmPayment = async (transactionId) => {
   const session = await getSession('LINE_PAY')
   const reservation = session?.reservation
 
-  if (!reservation || !reservation?.amount) {
-    return { status: 'error', message: '沒有已記錄的付款資料' }
+  // 如果沒有 session 資料，嘗試從資料庫查詢現有訂單
+  let amount = null
+  if (reservation && reservation?.amount) {
+    amount = reservation.amount
+  } else {
+    // 嘗試從資料庫查詢現有訂單的金額
+    try {
+      const { PrismaClient } = require('@prisma/client')
+      const prisma = new PrismaClient()
+
+      const existingOrder = await prisma.paymentOrder.findUnique({
+        where: { transactionId },
+        select: { amount: true, status: true },
+      })
+
+      if (existingOrder) {
+        amount = existingOrder.amount
+        console.log('📋 從資料庫取得訂單金額:', amount)
+
+        // 如果訂單已經是 SUCCESS 狀態，直接返回成功
+        if (existingOrder.status === 'SUCCESS') {
+          console.log('✅ 訂單已經是成功狀態，跳過重複確認')
+          return {
+            status: 'success',
+            payload: {
+              returnCode: '0000',
+              returnMessage: 'Transaction already confirmed',
+              info: {
+                transactionId: transactionId,
+                orderId:
+                  existingOrder.orderId ||
+                  `SUB-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+              },
+            },
+          }
+        }
+      }
+
+      await prisma.$disconnect()
+    } catch (dbError) {
+      console.error('❌ 查詢資料庫失敗:', dbError)
+    }
   }
 
-  // 從session得到交易金額
-  const amount = reservation?.amount
+  if (!amount) {
+    return { status: 'error', message: '沒有已記錄的付款資料' }
+  }
 
   try {
     // 最後確認交易 - 使用 v3 API

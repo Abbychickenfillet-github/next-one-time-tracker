@@ -10,6 +10,19 @@ import axios from '@/lib/line-pay-axios'
 import CssLoader from '@/components/css-loader'
 import styles from './PaymentResult.module.css'
 
+// 訂閱狀態的初始結構
+const initSubscriptionStatus = {
+  isActive: false,
+  isCurrent: false,
+  orderId: '',
+  paidAt: null,
+  dueAt: null,
+  daysLeft: 0,
+  amount: 0,
+  currency: 'TWD',
+  message: '',
+}
+
 function PaymentResultContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -21,6 +34,84 @@ function PaymentResultContent() {
     returnCode: '',
     returnMessage: '',
   })
+  const [subscriptionStatus, setSubscriptionStatus] = useState(
+    initSubscriptionStatus
+  )
+  const [subscriptionLoading, setSubscriptionLoading] = useState(true)
+  const [hasProcessedPayment, setHasProcessedPayment] = useState(false)
+
+  // 獲取用戶訂閱狀態
+  const fetchSubscriptionStatus = useCallback(async () => {
+    if (!isAuth) {
+      setSubscriptionLoading(false)
+      return
+    }
+
+    console.log('🚀 開始獲取訂閱狀態...')
+    try {
+      const response = await axios.get('/user/subscription-status')
+      const result = response.data
+      console.log('✅ 訂閱狀態 API 回應:', result)
+
+      if (result.status === 'success') {
+        setSubscriptionStatus(result.data)
+      } else {
+        console.error('❌ 獲取訂閱狀態失敗:', result.message)
+        setSubscriptionStatus(initSubscriptionStatus)
+      }
+    } catch (error) {
+      console.error('❌ 獲取訂閱狀態失敗:', error)
+      setSubscriptionStatus(initSubscriptionStatus)
+    } finally {
+      setSubscriptionLoading(false)
+    }
+  }, [isAuth])
+
+  // 智能判斷付款狀態（基於訂閱狀態）
+  const determinePaymentStatus = useCallback(
+    (orderId) => {
+      console.log('🔍 智能判斷付款狀態...')
+      console.log('📋 訂閱狀態:', subscriptionStatus)
+      console.log('🆔 當前訂單ID:', orderId)
+
+      // 如果用戶有有效訂閱，無論訂單ID是否匹配，都認為付款成功
+      if (subscriptionStatus.isActive) {
+        console.log('✅ 基於訂閱狀態判斷：付款成功（用戶有有效訂閱）')
+        return {
+          status: 'success',
+          message: `付款成功！訂單編號: ${subscriptionStatus.orderId || orderId}`,
+          result: {
+            returnCode: '0000',
+            returnMessage: '付款確認成功',
+          },
+        }
+      }
+
+      // 如果用戶沒有有效訂閱，則認為付款失敗或未完成
+      if (!subscriptionStatus.isActive && !subscriptionLoading) {
+        console.log('❌ 基於訂閱狀態判斷：付款失敗或未完成')
+        return {
+          status: 'error',
+          message: '付款未完成或已失敗',
+          result: {
+            returnCode: '9999',
+            returnMessage: '付款狀態異常',
+          },
+        }
+      }
+
+      // 其他情況，保持載入狀態
+      return {
+        status: 'loading',
+        message: '正在確認付款狀態...',
+        result: {
+          returnCode: '',
+          returnMessage: '',
+        },
+      }
+    },
+    [subscriptionStatus, subscriptionLoading]
+  )
 
   // 確認交易，處理伺服器通知line pay已確認付款，為必要流程
   const handleConfirm = useCallback(
@@ -55,18 +146,34 @@ function PaymentResultContent() {
     [searchParams]
   )
 
+  // 主要邏輯：處理付款結果
   useEffect(() => {
     const transactionId = searchParams.get('transactionId')
     const orderId = searchParams.get('orderId')
 
+    console.log('🔄 頁面載入，檢查參數:', { transactionId, orderId })
+
     if (transactionId && orderId) {
-      // Success case - user was redirected back from LINE Pay
-      setStatus('loading')
-      setMessage('正在確認付款...')
-      // 向server發送確認交易api
-      handleConfirm(transactionId)
+      // 有交易ID和訂單ID的情況
+      if (!hasProcessedPayment) {
+        // 第一次處理，向server發送確認交易api
+        console.log('🚀 第一次處理付款確認...')
+        setStatus('loading')
+        setMessage('正在確認付款...')
+        setHasProcessedPayment(true)
+        handleConfirm(transactionId)
+      } else {
+        // 已經處理過（可能是重新整理），使用智能判斷
+        console.log('🔄 重新整理後，使用智能判斷...')
+        if (!subscriptionLoading) {
+          const paymentStatus = determinePaymentStatus(orderId)
+          setStatus(paymentStatus.status)
+          setMessage(paymentStatus.message)
+          setResult(paymentStatus.result)
+        }
+      }
     } else {
-      // Check if this is a cancel or error
+      // 沒有交易ID或訂單ID的情況
       const error = searchParams.get('error')
       if (error) {
         setStatus('error')
@@ -76,14 +183,39 @@ function PaymentResultContent() {
         setMessage('付款已取消')
       }
     }
-  }, [searchParams, handleConfirm])
+  }, [
+    searchParams,
+    handleConfirm,
+    hasProcessedPayment,
+    subscriptionLoading,
+    determinePaymentStatus,
+  ])
+
+  // 獲取訂閱狀態
+  useEffect(() => {
+    fetchSubscriptionStatus()
+  }, [fetchSubscriptionStatus])
+
+  // 當訂閱狀態更新時，重新判斷付款狀態
+  useEffect(() => {
+    const orderId = searchParams.get('orderId')
+    if (orderId && hasProcessedPayment && !subscriptionLoading) {
+      console.log('📊 訂閱狀態更新，重新判斷付款狀態...')
+      const paymentStatus = determinePaymentStatus(orderId)
+      setStatus(paymentStatus.status)
+      setMessage(paymentStatus.message)
+      setResult(paymentStatus.result)
+    }
+  }, [
+    subscriptionStatus,
+    searchParams,
+    hasProcessedPayment,
+    subscriptionLoading,
+    determinePaymentStatus,
+  ])
 
   const handleBackToHome = () => {
-    router.push('/')
-  }
-
-  const handleNewPayment = () => {
-    router.push('/line-pay')
+    router.push('/subscription')
   }
 
   if (status === 'loading') {
@@ -141,17 +273,85 @@ function PaymentResultContent() {
           )}
         </div>
 
-        <div className={styles.resultActions}>
-          <button onClick={handleBackToHome} className={styles.backButton}>
-            返回首頁
-          </button>
-          <button
-            onClick={handleNewPayment}
-            className={styles.newPaymentButton}
-          >
-            新的付款
-          </button>
-        </div>
+        {/* 顯示訂閱狀態 */}
+        {isAuth && (
+          <div className={styles.subscriptionStatus}>
+            <h3>訂閱狀態</h3>
+            {subscriptionLoading ? (
+              <p>載入中...</p>
+            ) : (
+              <div>
+                <p>
+                  <strong>訂閱狀態:</strong>{' '}
+                  <span
+                    className={
+                      subscriptionStatus.isActive
+                        ? styles.active
+                        : styles.inactive
+                    }
+                  >
+                    {subscriptionStatus.isActive
+                      ? '✅ 有效訂閱'
+                      : '❌ 無效訂閱'}
+                  </span>
+                </p>
+                {subscriptionStatus.isActive && (
+                  <>
+                    <p>
+                      <strong>訂單編號:</strong> {subscriptionStatus.orderId}
+                    </p>
+                    <p>
+                      <strong>付款時間:</strong>{' '}
+                      {subscriptionStatus.paidAt
+                        ? new Date(subscriptionStatus.paidAt).toLocaleString(
+                            'zh-TW'
+                          )
+                        : '未知'}
+                    </p>
+                    <p>
+                      <strong>到期時間:</strong>{' '}
+                      {subscriptionStatus.dueAt
+                        ? new Date(subscriptionStatus.dueAt).toLocaleString(
+                            'zh-TW'
+                          )
+                        : '未知'}
+                    </p>
+                    <p>
+                      <strong>剩餘天數:</strong>{' '}
+                      <span
+                        className={
+                          subscriptionStatus.daysLeft > 7
+                            ? styles.good
+                            : styles.warning
+                        }
+                      >
+                        {subscriptionStatus.daysLeft} 天
+                      </span>
+                    </p>
+                    <p>
+                      <strong>訂閱金額:</strong> {subscriptionStatus.amount}{' '}
+                      {subscriptionStatus.currency}
+                    </p>
+                  </>
+                )}
+                {subscriptionStatus.message && (
+                  <p className={styles.subscriptionMessage}>
+                    {subscriptionStatus.message}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 只有在付款失敗時才顯示重試按鈕 */}
+        {status === 'error' && (
+          <div className={styles.resultActions}>
+            <button onClick={handleBackToHome} className={styles.backButton}>
+              重試訂閱
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 土司訊息視窗用 */}

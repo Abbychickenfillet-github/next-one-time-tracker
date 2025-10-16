@@ -1,14 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import axios from '@/lib/line-pay-axios'
 import { useAuth } from '@/hooks/use-auth'
 import '@/styles/LinePayPage.css'
 
 function LinePayPage() {
   const { isAuth } = useAuth()
+
+  // 調試 isAuth 狀態變化
+  useEffect(() => {
+    console.log('🔄 isAuth 狀態變化:', isAuth)
+  }, [isAuth])
+
   const [formData, setFormData] = useState({
-    amount: '',
+    amount: 99, // 預設金額，對應月費方案
     orderId: '',
     currency: 'TWD',
     subscriptionType: 'monthly',
@@ -16,6 +22,73 @@ function LinePayPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [paymentUrl, setPaymentUrl] = useState('')
+
+  // 訂閱狀態相關
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null)
+  const [subscriptionLoading, setSubscriptionLoading] = useState(true)
+
+  // 調試 subscriptionStatus 狀態變化
+  useEffect(() => {
+    console.log('🔄 subscriptionStatus 狀態變化:', subscriptionStatus)
+  }, [subscriptionStatus])
+
+  // 調試 subscriptionLoading 狀態變化
+  useEffect(() => {
+    console.log('🔄 subscriptionLoading 狀態變化:', subscriptionLoading)
+  }, [subscriptionLoading])
+
+  // 獲取用戶訂閱狀態
+  const fetchSubscriptionStatus = useCallback(async () => {
+    console.log('🔍 fetchSubscriptionStatus 被呼叫')
+    console.log('🔍 isAuth 狀態:', isAuth)
+
+    if (!isAuth) {
+      console.log('🔐 用戶未登入，跳過訂閱狀態查詢')
+      setSubscriptionLoading(false)
+      return
+    }
+
+    console.log('🚀 開始獲取訂閱狀態...')
+    setSubscriptionLoading(true)
+
+    try {
+      // 使用原生 fetch 避免瀏覽器擴充功能干擾
+      const response = await fetch('/api/user/subscription-status', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      console.log('📡 Fetch 回應狀態:', response.status, response.ok)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      console.log('✅ 訂閱狀態 API 回應:', result)
+      console.log('✅ 設定 subscriptionStatus:', result)
+      setSubscriptionStatus(result)
+    } catch (error) {
+      console.error('❌ 獲取訂閱狀態失敗:', error)
+      console.error('❌ 錯誤詳情:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+      })
+      setSubscriptionStatus(null)
+    } finally {
+      console.log('🏁 設定 subscriptionLoading 為 false')
+      setSubscriptionLoading(false)
+    }
+  }, [isAuth])
+
+  // 組件載入時獲取訂閱狀態
+  useEffect(() => {
+    fetchSubscriptionStatus()
+  }, [isAuth, fetchSubscriptionStatus])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -45,16 +118,16 @@ function LinePayPage() {
       const subscriptionPlans = {
         monthly: { name: '月費方案', price: 99, duration: '1個月' },
       }
-
+      const orderId = `SUB-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
       const selectedPlan = subscriptionPlans[formData.subscriptionType]
-      const finalAmount = formData.amount || selectedPlan.price
+      const finalAmount = selectedPlan.price // 直接使用方案價格，不讓用戶自訂
 
       console.log('💰 選擇的方案:', selectedPlan)
       console.log('💰 最終金額:', finalAmount)
 
       const paymentData = {
         amount: Number(finalAmount),
-        orderId: formData.orderId,
+        orderId: orderId,
         currency: formData.currency,
         packages: [
           {
@@ -64,7 +137,6 @@ function LinePayPage() {
             products: [
               {
                 name: `訂閱服務 - ${selectedPlan.name}`,
-                quantity: 1, // 移除
                 price: Number(finalAmount),
               },
             ],
@@ -133,6 +205,88 @@ function LinePayPage() {
           選擇您的訂閱方案，享受專業服務
         </p>
 
+        {/* 訂閱狀態顯示 */}
+        {isAuth && (
+          <div className="subscription-status">
+            {(() => {
+              console.log('🎨 渲染訂閱狀態區域')
+              console.log('🎨 subscriptionLoading:', subscriptionLoading)
+              console.log('🎨 subscriptionStatus:', subscriptionStatus)
+              return null
+            })()}
+            {subscriptionLoading ? (
+              <div className="status-loading">
+                <p>載入訂閱狀態中...</p>
+              </div>
+            ) : subscriptionStatus?.data?.isActive ? (
+              <div className="status-card">
+                <div className="status-header">
+                  <h3>📋 訂閱狀態</h3>
+                  <span className="status-badge active">✅ 已訂閱</span>
+                </div>
+                <div className="status-details">
+                  <div className="status-item">
+                    <span className="label">訂單編號:</span>
+                    <span className="value">
+                      {subscriptionStatus.data.orderId}
+                    </span>
+                  </div>
+                  <div className="status-item">
+                    <span className="label">付款時間:</span>
+                    <span className="value">
+                      {new Date(subscriptionStatus.data.paidAt).toLocaleString(
+                        'zh-TW',
+                        {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          timeZone: 'Asia/Taipei',
+                        }
+                      )}
+                    </span>
+                  </div>
+                  <div className="status-item">
+                    <span className="label">到期時間:</span>
+                    <span className="value">
+                      {new Date(subscriptionStatus.data.dueAt).toLocaleString(
+                        'zh-TW',
+                        {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          timeZone: 'Asia/Taipei',
+                        }
+                      )}
+                    </span>
+                  </div>
+                  <div className="status-item">
+                    <span className="label">剩餘天數:</span>
+                    <span className="value">
+                      {subscriptionStatus.data.daysLeft > 0
+                        ? `${subscriptionStatus.data.daysLeft} 天`
+                        : '已過期'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="status-card">
+                <div className="status-header">
+                  <h3>📋 訂閱狀態</h3>
+                  <span className="status-badge inactive">❌ 尚未訂閱</span>
+                </div>
+                <p className="status-message">
+                  您尚未訂閱任何方案，請選擇下方方案開始訂閱。
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="payment-form">
           <div className="form-group">
             <label htmlFor="subscriptionType">訂閱方案</label>
@@ -143,36 +297,7 @@ function LinePayPage() {
               onChange={handleInputChange}
             >
               <option value="monthly">月費方案 - NT$99/月</option>
-              <option value="quarterly">季費方案 - NT$799/季 (省 NT$98)</option>
-              <option value="yearly">年費方案 - NT$2,999/年 (省 NT$589)</option>
             </select>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="orderId">訂單編號</label>
-            <input
-              type="text"
-              id="orderId"
-              name="orderId"
-              value={formData.orderId}
-              onChange={handleInputChange}
-              placeholder="例如: SUB-2024-001"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="amount">自訂金額 (選填)</label>
-            <input
-              type="number"
-              id="amount"
-              name="amount"
-              value={formData.amount}
-              onChange={handleInputChange}
-              placeholder="留空使用方案預設價格"
-              min="1"
-            />
-            <small className="form-help">留空將使用選擇方案的預設價格</small>
           </div>
 
           <div className="form-group">
@@ -184,13 +309,38 @@ function LinePayPage() {
               onChange={handleInputChange}
             >
               <option value="TWD">TWD (新台幣)</option>
-              <option value="USD">USD (美元)</option>
-              <option value="JPY">JPY (日圓)</option>
             </select>
           </div>
 
-          <button type="submit" className="pay-button" disabled={loading}>
-            {loading ? '處理中...' : '開始訂閱並付款'}
+          {(() => {
+            console.log('🔘 按鈕狀態檢查:')
+            console.log('🔘 subscriptionStatus:', subscriptionStatus)
+            console.log(
+              '🔘 subscriptionStatus?.data:',
+              subscriptionStatus?.data
+            )
+            console.log('🔘 isActive:', subscriptionStatus?.data?.isActive)
+            console.log('🔘 isCurrent:', subscriptionStatus?.data?.isCurrent)
+            console.log('🔘 loading:', loading)
+            return null
+          })()}
+          <button
+            type="submit"
+            className={`pay-button ${
+              subscriptionStatus?.data?.isCurrent === true ? 'paid' : ''
+            }`}
+            disabled={
+              loading ||
+              (subscriptionStatus?.data?.isActive &&
+                subscriptionStatus?.data?.isCurrent)
+            }
+          >
+            {loading
+              ? '處理中...'
+              : subscriptionStatus?.data?.isActive &&
+                  subscriptionStatus?.data?.isCurrent
+                ? '✅ 已付款'
+                : '開始訂閱並付款'}
           </button>
         </form>
 

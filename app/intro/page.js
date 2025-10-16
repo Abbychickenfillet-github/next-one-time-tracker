@@ -317,14 +317,29 @@ export default function IntroPage() {
                         </li>
                       ))}
                     </ul>
-                    <Button
-                      variant={plan.buttonVariant}
-                      size="lg"
-                      className="w-100 mt-4"
-                      disabled={plan.disabled}
-                    >
-                      {plan.buttonText}
-                    </Button>
+                    {plan.buttonText === '開始訂閱' ? (
+                      <Link
+                        href="/subscription"
+                        className="text-decoration-none"
+                      >
+                        <Button
+                          variant={plan.buttonVariant}
+                          size="lg"
+                          className="w-100 mt-4"
+                        >
+                          {plan.buttonText}
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Button
+                        variant={plan.buttonVariant}
+                        size="lg"
+                        className="w-100 mt-4"
+                        disabled={plan.disabled}
+                      >
+                        {plan.buttonText}
+                      </Button>
+                    )}
                   </Card.Body>
                 </Card>
               </Col>

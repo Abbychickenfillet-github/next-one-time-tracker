@@ -96,6 +96,18 @@
   transform: none;
 }
 
+/* 已付款按鈕樣式 */
+.pay-button.paid {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  opacity: 1;
+  cursor: default;
+}
+
+.pay-button.paid:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .error-message {
   background: #fee;
   color: #c33;

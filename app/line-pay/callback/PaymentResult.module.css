@@ -1,5 +1,5 @@
 .paymentResultPage {
-  min-height: 100vh;
+  min-height: 125vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
@@ -168,6 +168,63 @@
   color: #666;
   font-size: 18px;
   margin-top: 20px;
+}
+
+/* 訂閱狀態樣式 */
+.subscriptionStatus {
+  background: #f0f8ff;
+  border: 1px solid #b3d9ff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.subscriptionStatus h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+  text-align: center;
+}
+
+.subscriptionStatus p {
+  margin: 8px 0;
+  color: #555;
+}
+
+.subscriptionStatus strong {
+  color: #333;
+}
+
+.active {
+  color: #00c300;
+  font-weight: 600;
+}
+
+.inactive {
+  color: #ff4444;
+  font-weight: 600;
+}
+
+.good {
+  color: #00c300;
+  font-weight: 600;
+}
+
+.warning {
+  color: #ffa500;
+  font-weight: 600;
+}
+
+.subscriptionMessage {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 15px;
+  color: #856404 !important;
+  font-style: italic;
 }
 
 @media (max-width: 600px) {

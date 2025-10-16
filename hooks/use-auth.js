@@ -7,6 +7,7 @@ import {
   useMemo,
 } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import axios from '@/lib/line-pay-axios'
 // import { getFavs } from '@/services/user'
 
 // ========================================
@@ -94,25 +95,16 @@ export const AuthProvider = ({ children }) => {
         console.log('🔑 登入 password:', password ? '[已隱藏]' : '未提供')
 
         // 向後端發送登入請求
-        const response = await fetch('/api/auth/local/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include', // 包含 cookies
-          body: JSON.stringify({ email, password }),
+        const response = await axios.post('/auth/local/login', {
+          email,
+          password,
         })
 
         console.log('Response status:', response.status)
-        console.log('Response ok:', response.ok)
-
-        // 檢查 HTTP 響應狀態
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
+        console.log('Response data:', response.data)
 
         // 解析響應數據
-        const result = await response.json()
+        const result = response.data
         console.log('API 回應結果:', result)
         console.log('Response headers:', response.headers)
         console.log('Cookies after login:', document.cookie)
@@ -186,19 +178,13 @@ export const AuthProvider = ({ children }) => {
         'ACCESS_TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; httpOnly;'
 
       // 向後端發送登出請求
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      const response = await axios.post('/auth/local/logout')
 
       console.log('📡 後端登出回應:', response.status)
 
       // 如果後端成功，顯示成功訊息
-      if (response.ok) {
-        const result = await response.json()
+      if (response.status === 200) {
+        const result = response.data
         if (result.status === 'success') {
           console.log('✅ 登出成功')
         }
@@ -338,16 +324,10 @@ export const AuthProvider = ({ children }) => {
 
       // 向後端驗證 token 有效性
       console.log('🔍 向後端驗證 token...')
-      const response = await fetch(`/api/auth/verify`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      const response = await axios.get('/auth/verify')
 
-      if (response.ok) {
-        const result = await response.json()
+      if (response.status === 200) {
+        const result = response.data
         if (result.status === 'success') {
           console.log('✅ Token 有效，設置為已登入狀態')
           setAuth((prev) => ({
