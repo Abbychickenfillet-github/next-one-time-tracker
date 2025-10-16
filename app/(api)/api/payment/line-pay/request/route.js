@@ -5,8 +5,10 @@ import { requestPayment } from '@/services/line-pay.service'
 // 導入回應函式
 import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
 // 導入 JWT 認證
-import { decrypt } from '@/lib/jwt-session'
+import { decrypt, encrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
+// 導入 Prisma。使LINE Pay 請求階段就建立 PaymentOrder 記錄
+import prisma from '@/lib/prisma.js'
 
 // 處理金流串接的路由 GET /api/payment/line-pay/request
 export async function GET(request) {
@@ -23,7 +25,7 @@ export async function GET(request) {
   const amount = Number(searchParams.get('amount')) || 0
 
   if (!amount) {
-    return errorResponse(res, { message: '缺少金額' })
+    return errorResponse(res, { message: '缺少金額' }) //金額很重要。勢必要參數
   }
 
   // 取得資料 (使用 Line Pay v3)
@@ -75,6 +77,42 @@ export async function POST(request) {
       return errorResponse(res, { message: '未登入或授權失敗' })
     }
 
+    // 檢查用戶是否已經有有效的付費訂閱
+    try {
+      const currentSubscription = await prisma.paymentOrder.findFirst({
+        where: {
+          userId: userId,
+          status: 'SUCCESS',
+          subscriptionStatus: 'ACTIVE',
+          isCurrent: true,
+          dueAt: {
+            gt: new Date(), // 到期時間大於現在時間
+          },
+        },
+        orderBy: {
+          dueAt: 'desc',
+        },
+      })
+
+      if (currentSubscription) {
+        console.log('⚠️ 用戶已有有效訂閱:', {
+          userId,
+          orderId: currentSubscription.orderId,
+          dueAt: currentSubscription.dueAt,
+          daysLeft: Math.ceil(
+            (currentSubscription.dueAt - new Date()) / (1000 * 60 * 60 * 24)
+          ),
+        })
+
+        return errorResponse(res, {
+          message: `您已有有效訂閱，到期時間：${currentSubscription.dueAt.toLocaleDateString('zh-TW')}，無法重複付款`,
+        })
+      }
+    } catch (subscriptionCheckError) {
+      console.error('❌ 檢查用戶訂閱狀態失敗:', subscriptionCheckError)
+      // 不中斷流程，繼續處理付款請求
+    }
+
     console.log('🚀 [Line Pay v3] 開始處理訂閱付款請求:', {
       amount,
       orderId,
@@ -98,25 +136,56 @@ export async function POST(request) {
     // API回應
     if (data.status === 'success') {
       console.log('✅ [Line Pay v3] 訂閱付款請求成功')
-      // 我應該要印出來的是data還是response？
+
+      const transactionId = String(
+        data?.payload?.transactionId || data?.data?.transactionId
+      )
+
       // 印出完整的後端回應給前端
       console.log('📤 後端回應給前端的完整資料:', {
         status: 'success',
         payload: data?.payload,
         data: data?.data,
         paymentUrl: data?.payload?.paymentUrl || data?.data?.paymentUrl,
-        transactionId:
-          data?.payload?.transactionId || data?.data?.transactionId,
+        transactionId,
       })
 
-      // 不在此時存儲訂單到資料庫，應該等到 callback 確認付款後才存儲
-      // 只回傳付款 URL 給前端進行跳轉
+      // 將訂單資料存在 session 中，等付款成功後再寫入資料庫
+      const orderData = {
+        orderId,
+        userId,
+        amount,
+        currency,
+        packages,
+        transactionId,
+        redirectUrls: {
+          confirmUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/line-pay/confirm`,
+          cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/line-pay/cancel`,
+        },
+      }
+
+      // 將訂單資料加密後存到 session
+      const orderSession = await encrypt({
+        orderData,
+        createdAt: new Date(),
+        expiresAt: new Date(Date.now() + 30 * 60 * 1000), // 30分鐘後過期
+      })
+
+      // 設定 session cookie
+      const cookieStore = await cookies()
+      cookieStore.set('PENDING_ORDER', orderSession, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 30 * 60, // 30分鐘
+        path: '/',
+      })
+
+      console.log('📝 訂單資料已暫存到 session，等待付款確認:', orderData)
 
       return successResponse(res, {
         paymentUrl: data?.payload?.paymentUrl || data?.data?.paymentUrl,
-        transactionId: String(
-          data?.payload?.transactionId || data?.data?.transactionId
-        ), // 轉為字串避免 Prisma 錯誤
+        transactionId,
         orderId,
         status: 'PENDING',
       })

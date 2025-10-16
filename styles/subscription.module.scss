@@ -235,6 +235,17 @@
       opacity: 0.6;
       cursor: not-allowed;
     }
+
+    &.paid {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      opacity: 1;
+      cursor: default;
+    }
+
+    &.paid:hover {
+      transform: none;
+      box-shadow: none;
+    }
   }
 
   .paymentNote {

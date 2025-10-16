@@ -1,21 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import Link from 'next/link'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import axios from '@/lib/line-pay-axios'
 import styles from '@/styles/subscription.module.scss'
-// 移除未使用的 isDev 匯入，因為在這個檔案中沒有使用到
 
 export default function SubscriptionPage() {
-  // 移除未使用的 user 變數，只保留需要的 isAuth 狀態
   const { isAuth } = useAuth()
   const [loading, setLoading] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState('monthly')
   const [redirecting, setRedirecting] = useState(false)
   const [paymentUrl, setPaymentUrl] = useState('')
+
+  // 訂閱狀態相關
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null)
+  const [subscriptionLoading, setSubscriptionLoading] = useState(true)
 
   // 訂閱方案設定
   const subscriptionPlans = {
@@ -39,6 +41,49 @@ export default function SubscriptionPage() {
 
   const selectedPlanData = subscriptionPlans[selectedPlan]
 
+  // 獲取用戶訂閱狀態
+  const fetchSubscriptionStatus = useCallback(async () => {
+    if (!isAuth) {
+      setSubscriptionLoading(false)
+      return
+    }
+
+    console.log('🚀 開始獲取訂閱狀態...')
+    try {
+      // 使用原生 fetch 避免瀏覽器擴充功能干擾
+      const response = await fetch('/api/user/subscription-status', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      console.log('✅ 訂閱狀態 API 回應:', result)
+      setSubscriptionStatus(result)
+    } catch (error) {
+      console.error('❌ 獲取訂閱狀態失敗:', error)
+      console.error('❌ 錯誤詳情:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+      })
+      setSubscriptionStatus(null)
+    } finally {
+      setSubscriptionLoading(false)
+    }
+  }, [isAuth])
+
+  // 組件載入時獲取訂閱狀態
+  useEffect(() => {
+    fetchSubscriptionStatus()
+  }, [isAuth, fetchSubscriptionStatus])
+
   // 處理訂閱付款
   const handleSubscribe = async () => {
     if (!isAuth) {
@@ -53,7 +98,7 @@ export default function SubscriptionPage() {
 
     setLoading(true)
     try {
-      const orderId = `SUB-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      const orderId = `SUB-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
 
       const paymentData = {
         amount: selectedPlanData.price,
@@ -67,7 +112,6 @@ export default function SubscriptionPage() {
             products: [
               {
                 name: `訂閱服務 - ${selectedPlanData.name}`,
-                quantity: 1,
                 price: selectedPlanData.price,
               },
             ],
@@ -130,6 +174,86 @@ export default function SubscriptionPage() {
             <Link href="/user/login" className={styles.loginLink}>
               前往登入
             </Link>
+          </div>
+        )}
+
+        {/* 訂閱狀態顯示 */}
+        {isAuth && (
+          <div className={styles.subscriptionStatus}>
+            {subscriptionLoading ? (
+              <div className={styles.statusLoading}>
+                <p>載入訂閱狀態中...</p>
+              </div>
+            ) : subscriptionStatus?.data?.isActive ? (
+              <div className={styles.statusCard}>
+                <div className={styles.statusHeader}>
+                  <h3>📋 訂閱狀態</h3>
+                  <span className={`${styles.statusBadge} ${styles.active}`}>
+                    ✅ 已訂閱
+                  </span>
+                </div>
+                <div className={styles.statusDetails}>
+                  <div className={styles.statusItem}>
+                    <span className={styles.label}>訂單編號:</span>
+                    <span className={styles.value}>
+                      {subscriptionStatus.data.orderId}
+                    </span>
+                  </div>
+                  <div className={styles.statusItem}>
+                    <span className={styles.label}>付款時間:</span>
+                    <span className={styles.value}>
+                      {new Date(subscriptionStatus.data.paidAt).toLocaleString(
+                        'zh-TW',
+                        {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          timeZone: 'Asia/Taipei',
+                        }
+                      )}
+                    </span>
+                  </div>
+                  <div className={styles.statusItem}>
+                    <span className={styles.label}>到期時間:</span>
+                    <span className={styles.value}>
+                      {new Date(subscriptionStatus.data.dueAt).toLocaleString(
+                        'zh-TW',
+                        {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          timeZone: 'Asia/Taipei',
+                        }
+                      )}
+                    </span>
+                  </div>
+                  <div className={styles.statusItem}>
+                    <span className={styles.label}>剩餘天數:</span>
+                    <span className={styles.value}>
+                      {subscriptionStatus.data.daysLeft > 0
+                        ? `${subscriptionStatus.data.daysLeft} 天`
+                        : '已過期'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className={styles.statusCard}>
+                <div className={styles.statusHeader}>
+                  <h3>📋 訂閱狀態</h3>
+                  <span className={`${styles.statusBadge} ${styles.inactive}`}>
+                    ❌ 尚未訂閱
+                  </span>
+                </div>
+                <p className={styles.statusMessage}>
+                  您尚未訂閱任何方案，請選擇下方方案開始訂閱。
+                </p>
+              </div>
+            )}
           </div>
         )}
 
@@ -205,15 +329,31 @@ export default function SubscriptionPage() {
 
         <div className={styles.paymentSection}>
           <button
-            className={styles.subscribeBtn}
+            className={`${styles.subscribeBtn} ${
+              subscriptionStatus?.data?.isActive &&
+              subscriptionStatus?.data?.isCurrent
+                ? styles.paid
+                : ''
+            }`}
             onClick={handleSubscribe}
-            disabled={loading || redirecting || !isAuth || !selectedPlanData}
+            disabled={
+              loading ||
+              redirecting ||
+              !isAuth ||
+              !selectedPlanData ||
+              (subscriptionStatus?.data?.isActive &&
+                subscriptionStatus?.data?.isCurrent)
+            }
+            // 只要有一個條件為true，整個表達式就是true。會造成按鈕無法點擊
           >
             {loading
               ? '處理中...'
               : redirecting
                 ? '正在跳轉...'
-                : '開始訂閱並付款'}
+                : subscriptionStatus?.data?.isActive &&
+                    subscriptionStatus?.data?.isCurrent
+                  ? '✅ 已付款'
+                  : '開始訂閱並付款'}
           </button>
 
           {redirecting && (
