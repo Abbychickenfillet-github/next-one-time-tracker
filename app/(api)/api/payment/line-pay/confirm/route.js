@@ -91,8 +91,31 @@ export async function GET(request) {
       )
 
       if (existingOrder) {
-        // 如果記錄已存在，更新狀態
+        // 如果記錄已存在，更新狀態為成功
         console.log('✅ 找到已存在的訂單記錄:', existingOrder.id)
+        console.log('🔄 更新訂單狀態為成功...')
+
+        updatedOrder = await prisma.paymentOrder.update({
+          where: { id: existingOrder.id },
+          data: {
+            status: 'SUCCESS',
+            isCurrent: true,
+            subscriptionStatus: 'ACTIVE',
+            paidAt: taipeiNow,
+            dueAt: taipeiDueAt,
+            transactionId: transactionId,
+          },
+          include: {
+            user: {
+              select: {
+                user_id: true,
+                email: true,
+              },
+            },
+          },
+        })
+
+        console.log('✅ 訂單狀態更新成功:', updatedOrder.id)
       } else if (pendingOrderData) {
         // 如果沒有現有記錄但有 session 資料，使用 session 資料建立記錄
         console.log('📝 使用 session 中的訂單資料建立新記錄')
@@ -181,18 +204,9 @@ export async function GET(request) {
           },
         })
 
-        // 將該用戶的其他訂單設為非當前訂閱
-        await prisma.paymentOrder.updateMany({
-          where: {
-            userId: updatedOrder.userId,
-            transactionId: { not: transactionId },
-            isCurrent: true,
-          },
-          data: {
-            isCurrent: false,
-            subscriptionStatus: 'EXPIRED',
-          },
-        })
+        // 注意：不應該強制將其他訂單設為過期
+        // 讓 due_at 時間自然到期，由查詢邏輯自動處理
+        console.log('ℹ️ 其他訂單將根據 due_at 時間自然到期，不強制設定為過期')
 
         console.log('✅ 用戶付費狀態已更新:', updatedOrder.user?.email)
       }
