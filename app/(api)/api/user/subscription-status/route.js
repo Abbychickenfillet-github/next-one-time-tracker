@@ -24,20 +24,33 @@ export async function GET() {
     }
 
     // 查詢用戶的當前有效訂閱
+    const now = new Date()
     console.log('🔍 查詢條件:', {
       userId,
       status: 'SUCCESS',
       isCurrent: true,
-      dueAt: { gt: new Date() },
+      dueAt: { gt: now },
+      currentTime: now.toISOString(),
     })
+
+    // 先查詢所有該用戶的訂閱記錄（用於除錯）
+    const allSubscriptions = await prisma.paymentOrder.findMany({
+      where: {
+        userId: userId,
+      },
+      orderBy: {
+        dueAt: 'desc',
+      },
+    })
+    console.log('📋 用戶所有訂閱記錄:', allSubscriptions)
 
     const currentSubscription = await prisma.paymentOrder.findFirst({
       where: {
-        userId: userId,
+        userId: userId, // 這裡使用 Prisma 的欄位名稱 userId，會自動映射到資料庫的 user_id
         status: 'SUCCESS',
         isCurrent: true,
         dueAt: {
-          gt: new Date(), // 到期時間大於現在時間。是 Prisma ORM 的查詢語法， gt = greater than (大於)
+          gt: now, // 到期時間大於現在時間。是 Prisma ORM 的查詢語法， gt = greater than (大於)
         },
       },
       orderBy: {
@@ -45,7 +58,7 @@ export async function GET() {
       },
     })
 
-    console.log('📋 查詢結果:', currentSubscription)
+    console.log('📋 有效訂閱查詢結果:', currentSubscription)
     // 這邊應該先查詢用戶是否已經有訂閱，如果沒有則返回尚未訂閱。我要取出訂閱者的各項欄位資料，包括訂閱編號、付款時間、到期時間、剩餘天數、金額、幣別。
     if (currentSubscription) {
       // 計算剩餘天數
@@ -64,11 +77,11 @@ export async function GET() {
         currency: currentSubscription.currency,
       })
     } else {
-      // 查詢是否有過期的訂閱
+      // 查詢是否有過期的訂閱（包括 SUCCESS 但已過期的）
       const expiredSubscription = await prisma.paymentOrder.findFirst({
         where: {
-          userId: userId,
-          status: 'SUCCESS',
+          userId: userId, // 這裡使用 Prisma 的欄位名稱 userId，會自動映射到資料庫的 user_id
+          status: 'SUCCESS', // 改為查詢 SUCCESS 狀態的記錄
           dueAt: {
             lte: new Date(), // 到期時間小於等於現在時間
           },

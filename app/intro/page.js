@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Carousel, Card, Button, Container, Row, Col } from 'react-bootstrap'
 import Link from 'next/link'
 import {
@@ -15,7 +15,60 @@ import {
 import styles from './intro.module.scss'
 
 export default function IntroPage() {
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeIndexCarou, setActiveIndex] = useState(0)
+
+  // 滾動監聽器 - 使用 useCallback 優化
+  const handleScroll = useCallback(() => {
+    const mainElement = document.querySelector('main')
+    if (mainElement) {
+      console.log('滾動中，位置:', mainElement.scrollTop)
+    }
+  }, []) // 空依賴陣列，函數不會重新創建
+
+  useEffect(() => {
+    const mainElement = document.querySelector('main')
+    if (mainElement) {
+      mainElement.addEventListener('scroll', handleScroll)
+
+      // 清理函式：組件卸載時移除監聽器
+      return () => {
+        mainElement.removeEventListener('scroll', handleScroll)
+      }
+    }
+  }, [handleScroll]) // 依賴 handleScroll，但因為 useCallback 它不會改變
+
+  const scrollToNextSection = useCallback(() => {
+    console.log('按鈕被點擊了！')
+
+    // 找到 main 元素（實際的滾動容器）
+    const mainElement = document.querySelector('main')
+    if (!mainElement) {
+      console.log('找不到 main 元素')
+      return
+    }
+
+    const currentScrollY = mainElement.scrollTop
+    const viewportHeight = window.innerHeight
+
+    // 計算當前在哪個 section (每個 section 都是 100vh)
+    const currentSection = Math.floor(currentScrollY / viewportHeight)
+    const nextSection = currentSection + 1
+    const targetScrollY = nextSection * viewportHeight
+
+    console.log('當前滾動位置:', currentScrollY)
+    console.log('視窗高度:', viewportHeight)
+    console.log('當前 section:', currentSection)
+    console.log('目標 section:', nextSection)
+    console.log('目標滾動位置:', targetScrollY)
+
+    // 滾動到下一個 section
+    mainElement.scrollTo({
+      top: targetScrollY,
+      behavior: 'smooth',
+    })
+
+    console.log('滾動指令已執行')
+  }, []) // 空依賴陣列，函數不會重新創建
 
   const features = [
     {
@@ -65,7 +118,7 @@ export default function IntroPage() {
         '🚦 每小時30次 API 呼叫',
         '🚦 每天100次資料庫查詢',
       ],
-      buttonText: '立即體驗',
+      buttonText: '立即註冊',
       buttonVariant: 'outline-primary',
     },
     {
@@ -164,7 +217,11 @@ export default function IntroPage() {
                   >
                     立即開始記錄
                   </Button>
-                  <Button variant="outline-light" size="lg">
+                  <Button
+                    variant="outline-light"
+                    size="lg"
+                    onClick={scrollToNextSection}
+                  >
                     了解更多
                   </Button>
                 </div>
@@ -330,6 +387,19 @@ export default function IntroPage() {
                           {plan.buttonText}
                         </Button>
                       </Link>
+                    ) : plan.buttonText === '立即註冊' ? (
+                      <Link
+                        href="/user/register"
+                        className="text-decoration-none"
+                      >
+                        <Button
+                          variant={plan.buttonVariant}
+                          size="lg"
+                          className="w-100 mt-4"
+                        >
+                          {plan.buttonText}
+                        </Button>
+                      </Link>
                     ) : (
                       <Button
                         variant={plan.buttonVariant}
@@ -406,7 +476,7 @@ export default function IntroPage() {
           <Row>
             <Col lg={8} className="mx-auto">
               <Carousel
-                activeIndex={activeIndex}
+                activeIndex={activeIndexCarou}
                 onSelect={setActiveIndex}
                 className={styles.stepsCarousel}
               >
@@ -439,7 +509,9 @@ export default function IntroPage() {
                 <Button
                   variant="outline-secondary"
                   onClick={() =>
-                    setActiveIndex((activeIndex + 1) % clearStorageSteps.length)
+                    setActiveIndex(
+                      (activeIndexCarou + 1) % clearStorageSteps.length
+                    )
                   }
                 >
                   下一步

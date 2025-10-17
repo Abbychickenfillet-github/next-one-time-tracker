@@ -121,7 +121,7 @@ console.log('🔧 [DEBUG] redirectUrls 設定:', redirectUrls)
 if (isDev) {
   console.log('🚀 運行在開發環境 (npm run dev)')
 } else {
-  console.log('🚀 運行在生產環境 (npm start)，使用 LINE Pay 正式環境 IP 白名單')
+  console.log('🚀 運行在生產環境 (npm start)')
 }
 // 回應line-pay交易網址到前端，由前端導向line pay付款頁面
 // 資料格式參考 https://enylin.github.io/line-pay-merchant/api-reference/request.html#example
@@ -138,22 +138,6 @@ export const requestPayment = async (amount, options = {}) => {
 
   // 使用目前最新的v3版本的API，以下是資料的說明:
   // https://pay.line.me/jp/developers/apis/onlineApis?locale=zh_TW
-
-  // packages[]	是包裝的集合，每個包裝可以包含多個商品，以下(Y)是必要的欄位
-  //
-  // packages[].id	String	50	Y	Package list的唯一ID
-  // packages[].amount	Number		Y	一個Package中的商品總價=sum(products[].quantity * products[].price)
-  // packages[].userFee	Number		N	手續費：在付款金額中含手續費時設定
-  // packages[].name	String	100	N	Package名稱 （or Shop Name）
-
-  // products[]	是商品的集合，包含多個商品，以下有(Y)是必要的欄位
-  //
-  // packages[].products[].id	String	50	N	商家商品ID
-  // packages[].products[].name	String	4000	Y	商品名
-  // packages[].products[].imageUrl	String	500	N	商品圖示的URL
-  // packages[].products[].quantity	Number		Y	商品數量
-  // packages[].products[].price	Number		Y	各商品付款金額
-  // packages[].products[].originalPrice	Number		N	各商品原金額
 
   // 要傳送給line pay的訂單資訊
   const order = {

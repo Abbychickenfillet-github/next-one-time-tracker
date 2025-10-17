@@ -11,8 +11,8 @@ datasource db {
 /// 以下為資料表定義
 model Blog {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz
   title     String
   content   String?
   published Boolean  @default(false)
@@ -21,8 +21,8 @@ model Blog {
 model TimeLog {
   id        Int       @id @default(autoincrement())
   title     String
-  startTime DateTime  @map("start_time")
-  endTime   DateTime? @map("end_time")
+  startTime DateTime  @map("start_time") @db.Timestamptz
+  endTime   DateTime  @map("end_time") @db.Timestamptz
   userId    Int?      @map("user_id")
   memo      String?
   steps     Step[]
@@ -35,8 +35,8 @@ model Step {
   userId      Int?      @map("user_id")
   title       String
   description String?
-  startTime   DateTime  @map("start_time")
-  endTime     DateTime? @map("end_time")
+  startTime   DateTime  @map("start_time") @db.Timestamptz
+  endTime     DateTime? @map("end_time") @db.Timestamptz
   timeLog     TimeLog   @relation(fields: [timeLogId], references: [id], onDelete: Cascade)
   user        User?     @relation(fields: [userId], references: [user_id], onDelete: Cascade)
 }
@@ -46,8 +46,8 @@ model Otp {
   email     String   @unique
   token     String
   hash      String?
-  createdAt DateTime @default(now()) @map("created_at")
-  expiredAt DateTime @map("expired_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  expiredAt DateTime @map("expired_at") @db.Timestamptz
 }
 
 model User {
@@ -56,12 +56,12 @@ model User {
   password          String
   email             String         @unique
   phone             String?
-  birthdate         DateTime?
+  birthdate         DateTime?      @db.Timestamptz
   gender            String?
   avatar            String?
   level             Int            @default(0)
   valid             Boolean        @default(true)
-  createdAt         DateTime       @default(now()) @map("created_at")
+  createdAt         DateTime       @default(now()) @map("created_at") @db.Timestamptz
   googleUid         String?        @unique @map("google_uid")
   lineUid           String?        @unique @map("line_uid")
   lineAccessToken   String?
@@ -69,9 +69,9 @@ model User {
   iat               String?
   exp               String?
   current_log_count Int            @default(0) @map("current_log_count")
-  due_date          DateTime?      @map("due_date")
+  due_date          DateTime?      @map("due_date") @db.Timestamptz
   paid              Boolean        @default(false)
-  paid_date         DateTime?      @map("paid_date")
+  paid_date         DateTime?      @map("paid_date") @db.Timestamptz
   paymentOrders     PaymentOrder[]
   steps             Step[]
   timeLogs          TimeLog[]
@@ -87,11 +87,11 @@ model PaymentOrder {
   transactionId      String?   @unique @map("transaction_id")
   packages           Json
   redirectUrls       Json?     @map("redirect_urls")
-  createdAt          DateTime  @default(now()) @map("created_at")
-  updatedAt          DateTime  @updatedAt @map("updated_at")
-  dueAt              DateTime? @map("due_at")
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime? @updatedAt @map("updated_at") @db.Timestamptz
+  dueAt              DateTime  @map("due_at") @db.Timestamptz
   isCurrent          Boolean   @default(true) @map("is_current")
-  paidAt             DateTime? @map("paid_at")
+  paidAt             DateTime  @map("paid_at") @db.Timestamptz
   subscriptionStatus String?   @default("ACTIVE") @map("subscription_status")
   user               User?     @relation(fields: [userId], references: [user_id])
 

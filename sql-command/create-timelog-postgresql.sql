@@ -1,6 +1,6 @@
 -- PostgreSQL 完整資料庫結構腳本
 -- 基於 prisma/schema.prisma 生成
--- 適用於 PostgreSQL 資料庫
+-- 適用於 PostgreSQL 資料庫 1次性
 
 -- ========================================
 -- 1. User 使用者資料表
