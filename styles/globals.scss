@@ -1,6 +1,9 @@
 // 導入 Sass 顏色模組
 @use 'sass:color';
 
+// 導入組件樣式
+@import 'next-section-btn.scss';
+
 // 自定義 bootstrap 的 SCSS 變數
 $primary: #583163;
 $secondary: #ffc107;
@@ -274,7 +277,7 @@ main {
   padding: 0; // 移除所有留白
   max-width: 100%; // 確保不超出容器
   box-sizing: border-box; // 包含 padding 在寬度計算內
-  min-height: 100vh; // 使用完整視窗高度
+  min-height: calc(100vh - 155px); // 使用完整視窗高度
   background: var(
     --secondary-bg
   ); // 使用 background 而不是 background-color，若使用background-color會覆蓋主題背景導致背景只有100vh

@@ -56,10 +56,13 @@ export async function GET(request) {
   }
 
   // 取得資料
+  console.log('🔍 開始確認付款，transactionId:', transactionId)
   const data = await confirmPayment(transactionId)
+  console.log('📋 confirmPayment 回傳結果:', data)
 
   // API回應
   if (data.status === 'success') {
+    console.log('✅ 付款確認成功，開始處理訂單...')
     // 付款成功，現在建立訂單記錄並處理訂閱
     try {
       // 先查詢是否已經有這個 transactionId 的記錄
@@ -222,6 +225,9 @@ export async function GET(request) {
 
     return successResponse(NextResponse, data?.payload)
   } else {
+    console.log('❌ 付款確認失敗，data.status:', data.status)
+    console.log('❌ 錯誤訊息:', data.message)
+
     // 更新資料庫中的訂單狀態為失敗
     try {
       await prisma.paymentOrder.update({
