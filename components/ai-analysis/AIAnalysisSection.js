@@ -138,8 +138,18 @@ export default function AIAnalysisSection() {
 
   return (
     <Card className="border-0 shadow-sm">
-      <Card.Header className="bg-white border-bottom">
-        <h5 className="mb-0">🤖 AI 智能分析</h5>
+      <Card.Header
+        className="border-bottom"
+        style={{
+          background:
+            'var(--primary-bg, linear-gradient(135deg, #0dcaf0, #0aa2c0))',
+          color: 'var(--text-primary, #ffffff)',
+          borderBottom: '1px solid var(--accent-color, #0dcaf0)',
+        }}
+      >
+        <h5 className="mb-0" style={{ color: 'var(--text-primary, #ffffff)' }}>
+          🤖 AI 智能分析
+        </h5>
       </Card.Header>
       <Card.Body>
         {!isAuth && (

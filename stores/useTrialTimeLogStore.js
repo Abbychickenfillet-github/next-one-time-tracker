@@ -22,6 +22,7 @@ export const useTrialTimeLogStore = create(
       // ===== Actions =====
 
       // 設定客戶端渲染標記
+      // 而非布林值切換。如果要切換的話要setClient(true)或setClient(false)
       setClient: (isClient) => set({ isClient }),
 
       // 更新目前時間
@@ -41,6 +42,7 @@ export const useTrialTimeLogStore = create(
 
       // 開始活動
       startActivity: () => {
+        // 以下的const state = { ... } 是解構賦值，將 get() 函數返回的對象解構賦值給 state 變量。也是閉包的外部變數
         const state = get() // get() 函數：獲取當前 store 的完整狀態
         if (!state.title.trim()) {
           alert('請先輸入活動名稱')
@@ -82,6 +84,22 @@ export const useTrialTimeLogStore = create(
         }
 
         const now = new Date()
+
+        // 自動結束所有未完成的步驟
+        const updatedSteps = state.steps.map((step) => {
+          if (!step.ended && step.type === 'step') {
+            return {
+              ...step,
+              ended: true,
+              endTime: now,
+              text: step.text + ` (結束於: ${now.toLocaleTimeString()})`,
+              description:
+                step.description + ` (結束於: ${now.toLocaleTimeString()})`,
+            }
+          }
+          return step
+        })
+
         const newStep = {
           type: 'end',
           title: `結束：${state.title}`,
@@ -95,7 +113,7 @@ export const useTrialTimeLogStore = create(
         set({
           // set() 函數：批量更新多個狀態，合併到現有狀態中
           endTime: now,
-          steps: [...state.steps, newStep], // 展開運算符：將新步驟添加到現有步驟陣列中
+          steps: [...updatedSteps, newStep], // 展開運算符：將新步驟添加到已更新的步驟陣列中
         })
       },
 
@@ -125,7 +143,7 @@ export const useTrialTimeLogStore = create(
           type: 'step',
           title: state.desc,
           description: state.desc,
-          text: `${state.desc} | ${now.toLocaleString()}`,
+          text: `${state.desc} | ${now.toLocaleString()}`, //這邊的豎直號是字串分隔符號
           startTime: now,
           endTime: null,
           ended: false,
@@ -234,30 +252,42 @@ export const useTrialTimeLogStore = create(
         steps: state.endTime ? state.steps : [], // 只有活動結束時才保存 steps
         lastStepTime: state.lastStepTime,
       }),
+      // onRehydrateStorage: 當從 localStorage 恢復狀態時執行的回調函數
+      // 問題：localStorage 只能儲存字串，Date 物件會被序列化為字串
+      // 解決：在恢復時將字串轉換回 Date 物件
       onRehydrateStorage: () => (state) => {
-        // 當從 localStorage 恢復狀態時，將字串轉換回 Date 物件
+        // 檢查 state 是否存在（防止空值錯誤）
         if (state) {
+          // 處理 startTime：如果存在且為字串，轉換為 Date 物件
           if (state.startTime && typeof state.startTime === 'string') {
             state.startTime = new Date(state.startTime)
           }
+
+          // 處理 endTime：如果存在且為字串，轉換為 Date 物件
           if (state.endTime && typeof state.endTime === 'string') {
             state.endTime = new Date(state.endTime)
           }
+
+          // 處理 lastStepTime：如果存在且為字串，轉換為 Date 物件
           if (state.lastStepTime && typeof state.lastStepTime === 'string') {
             state.lastStepTime = new Date(state.lastStepTime)
           }
-          // 處理 steps 陣列中的時間
+
+          // 處理 steps 陣列中的時間欄位
+          // steps 是陣列，需要遍歷每個 step 並處理其時間欄位
           if (state.steps && Array.isArray(state.steps)) {
             state.steps = state.steps.map((step) => ({
-              ...step,
+              ...step, // 展開運算符：保留 step 的所有原有屬性
+              // 處理 step.startTime：如果為字串則轉換為 Date，否則保持原值
               startTime:
                 step.startTime && typeof step.startTime === 'string'
-                  ? new Date(step.startTime)
-                  : step.startTime,
+                  ? new Date(step.startTime) // 字串轉 Date
+                  : step.startTime, // 保持原值（可能是 null 或已經是 Date）
+              // 處理 step.endTime：如果為字串則轉換為 Date，否則保持原值
               endTime:
                 step.endTime && typeof step.endTime === 'string'
-                  ? new Date(step.endTime)
-                  : step.endTime,
+                  ? new Date(step.endTime) // 字串轉 Date
+                  : step.endTime, // 保持原值（可能是 null 或已經是 Date）
             }))
           }
         }

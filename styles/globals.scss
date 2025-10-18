@@ -86,9 +86,16 @@ body {
   --form-bg: rgba(255, 255, 255, 0.1);
   --form-border: rgba(13, 202, 240, 0.3);
   --button-bg: linear-gradient(45deg, #0dcaf0, #0aa2c0);
+  --button-bg2: linear-gradient(
+    45deg,
+    #28a745,
+    #20c997
+  ); // 綠色系，與 logo 同色
   --button-hover: linear-gradient(45deg, #0aa2c0, #087990);
+  --button-hover2: linear-gradient(45deg, #20c997, #17a2b8); // 綠色系懸停效果
   --button-text: #ffffff;
   --button-shadow: 0 2px 8px rgba(13, 202, 240, 0.3);
+  --button-shadow2: 0 2px 8px rgba(40, 167, 69, 0.3); // 綠色系陰影
   --glow-color: #0dcaf0;
   --navbar-bg: rgba(0, 0, 0, 0.9);
   --icon-color: #ffffff;
@@ -117,9 +124,16 @@ body {
   --form-bg: rgba(0, 0, 0, 0.3);
   --form-border: rgba(255, 107, 157, 0.5);
   --button-bg: linear-gradient(45deg, #ff6b9d, #ff8fab);
+  --button-bg2: linear-gradient(
+    45deg,
+    #28a745,
+    #20c997
+  ); // 綠色系，與 logo 同色
   --button-hover: linear-gradient(45deg, #ff1744, #e91e63);
+  --button-hover2: linear-gradient(45deg, #20c997, #17a2b8); // 綠色系懸停效果
   --button-text: #ffffff;
   --button-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+  --button-shadow2: 0 2px 8px rgba(40, 167, 69, 0.3); // 綠色系陰影
   --glow-color: #ff6b9d;
   --navbar-bg: rgba(0, 0, 0, 0.9);
   --icon-color: #ffffff;
@@ -139,14 +153,21 @@ body {
   --secondary-bg: linear-gradient(105deg, #d466e5 0%, #4a148c 100%);
   --accent-color: #7b5fb1;
   --accent-hover: #6b4fa1;
-  --text-primary: #2d1f5a;
+  --text-primary: #6e4cdd;
   --text-secondary: #3d2a6a;
   --form-bg: rgba(255, 255, 255, 0.95);
   --form-border: rgba(123, 95, 177, 0.4);
   --button-bg: linear-gradient(45deg, #7b5fb1, #6b4fa1);
+  --button-bg2: linear-gradient(
+    45deg,
+    #28a745,
+    #20c997
+  ); // 綠色系，與 logo 同色
   --button-hover: linear-gradient(45deg, #6b4fa1, #5b3f91);
+  --button-hover2: linear-gradient(45deg, #20c997, #17a2b8); // 綠色系懸停效果
   --button-text: #ffffff;
   --button-shadow: 0 2px 8px rgba(123, 95, 177, 0.3);
+  --button-shadow2: 0 2px 8px rgba(40, 167, 69, 0.3); // 綠色系陰影
   --glow-color: #c0c0c0;
   --navbar-bg: rgba(26, 15, 15, 0.95);
   --icon-color: #ffffff;
@@ -155,19 +176,26 @@ body {
 }
 
 // 方案四：溫暖奶茶色
-:root[data-theme='warm-tea'] {
-  --primary-bg: linear-gradient(135deg, #c4965c, #b88744);
+:root[data-theme='warm'] {
+  --primary-bg: linear-gradient(90deg, #502f18, #803c10); // 更深的咖啡色
   --secondary-bg: linear-gradient(135deg, #f6ca85, #eaad71, #ad7e48);
-  --accent-color: #b88744;
-  --accent-hover: #a67c3a;
-  --text-primary: #2d1f0d;
-  --text-secondary: #3d2a1a;
+  --accent-color: #8b4513; // 更深的咖啡色
+  --accent-hover: #6b3410; // 更深的咖啡色
+  --text-primary: #ffffff; // 改為白色文字
+  --text-secondary: rgba(255, 255, 255, 0.8); // 白色半透明
   --form-bg: rgba(255, 255, 255, 0.95);
-  --form-border: rgba(184, 135, 68, 0.4);
-  --button-bg: linear-gradient(45deg, #b88744, #a67c3a);
-  --button-hover: linear-gradient(45deg, #a67c3a, #946b30);
+  --form-border: rgba(139, 69, 19, 0.4); // 調整為深咖啡色
+  --button-bg: linear-gradient(45deg, #8b4513, #6b3410); // 更深的咖啡色
+  --button-bg2: linear-gradient(
+    45deg,
+    #28a745,
+    #20c997
+  ); // 綠色系，與 logo 同色
+  --button-hover: linear-gradient(45deg, #6b3410, #5a2d0a); // 更深的咖啡色
+  --button-hover2: linear-gradient(45deg, #20c997, #17a2b8); // 綠色系懸停效果
   --button-text: #ffffff;
-  --button-shadow: 0 2px 8px rgba(184, 135, 68, 0.3);
+  --button-shadow: 0 2px 8px rgba(139, 69, 19, 0.3); // 調整為深咖啡色
+  --button-shadow2: 0 2px 8px rgba(40, 167, 69, 0.3); // 綠色系陰影
   --glow-color: #c0c0c0; // 銀色發光，更適合奶茶色主題
   --glow-color-alt: #8b4513; // 深棕色備選方案
   --navbar-bg: rgba(26, 15, 15, 0.95);
@@ -199,9 +227,16 @@ body {
   --form-bg: rgba(255, 255, 255, 0.1);
   --form-border: rgba(32, 201, 151, 0.4);
   --button-bg: linear-gradient(45deg, #20c997, #1ba085);
+  --button-bg2: linear-gradient(
+    45deg,
+    #28a745,
+    #20c997
+  ); // 綠色系，與 logo 同色
   --button-hover: linear-gradient(45deg, #1ba085, #16806d);
+  --button-hover2: linear-gradient(45deg, #20c997, #17a2b8); // 綠色系懸停效果
   --button-text: #ffffff;
   --button-shadow: 0 2px 8px rgba(32, 201, 151, 0.3);
+  --button-shadow2: 0 2px 8px rgba(40, 167, 69, 0.3); // 綠色系陰影
   --glow-color: #a2ac82; /* 淺橄欖綠色發光 */
   --navbar-bg: rgba(26, 15, 15, 0.95);
   --icon-color: #ffffff;
@@ -233,14 +268,21 @@ body {
     linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(26, 10, 26, 0.8));
   --accent-color: #ff6b9d;
   --accent-hover: #ff1744;
-  --text-primary: #ff6b9d;
+  --text-primary: #ffffff; // 改為白色，提高對比度
   --text-secondary: rgba(255, 107, 157, 0.8);
   --form-bg: rgba(255, 107, 157, 0.1);
   --form-border: rgba(255, 107, 157, 0.3);
   --button-bg: linear-gradient(45deg, #ff6b9d, #ff8fab);
+  --button-bg2: linear-gradient(
+    45deg,
+    #28a745,
+    #20c997
+  ); // 綠色系，與 logo 同色
   --button-hover: linear-gradient(45deg, #ff1744, #e91e63);
+  --button-hover2: linear-gradient(45deg, #20c997, #17a2b8); // 綠色系懸停效果
   --button-text: #ffffff;
   --button-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+  --button-shadow2: 0 2px 8px rgba(40, 167, 69, 0.3); // 綠色系陰影
   --glow-color: #ff6b9d;
   --navbar-bg: rgba(0, 0, 0, 0.9);
   --icon-color: #ffffff;
@@ -696,7 +738,7 @@ body {
   }
 }
 
-:root[data-theme='warm-tea'] .topnav-bootstrap {
+:root[data-theme='warm'] .topnav-bootstrap {
   .nav-link-custom {
     color: #ffffff !important;
 
@@ -966,14 +1008,14 @@ body {
   color: white !important;
 }
 
-/* Warm Tea 主題按鈕 */
-.themeToggle .btn.themeButton.warm-tea {
+/* warm 主題按鈕 */
+.themeToggle .btn.themeButton.warm {
   background: linear-gradient(45deg, #d4a574, #c4965c) !important;
   color: white !important;
   box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
 }
 
-.themeToggle .btn.themeButton.warm-tea:hover {
+.themeToggle .btn.themeButton.warm:hover {
   background: linear-gradient(45deg, #c4965c, #b88744) !important;
   box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
   transform: translateY(-2px);

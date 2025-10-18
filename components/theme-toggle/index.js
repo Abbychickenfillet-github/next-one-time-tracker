@@ -33,8 +33,8 @@ export default function ThemeToggle() {
     },
     { id: 'mint', name: 'Mint', icon: '🌿', title: '柔和薄荷綠 - 清新自然' },
     {
-      id: 'warm-tea',
-      name: 'Warm Tea',
+      id: 'warm',
+      name: 'warm',
       icon: '☕',
       title: '溫暖奶茶色 - 溫馨舒適',
     },

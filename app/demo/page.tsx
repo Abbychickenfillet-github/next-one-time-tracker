@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useTrialTimeLogStore } from '@/stores/useTrialTimeLogStore'
 import VoiceInput from '@/components/timelog/VoiceInput'
+import { Tooltip, OverlayTrigger } from 'react-bootstrap'
 
 export default function TimeLogClient() {
   // ===== 用戶認證 =====
@@ -56,7 +57,10 @@ export default function TimeLogClient() {
 
     return () => clearInterval(timer)
   }, [isClient, updateCurrentTime])
-
+  // 這邊的清理函式會過多久執行一次？
+  // 1000毫秒，也就是1秒
+  // 所以這邊的清理函式會每秒執行一次
+  // 這樣是不是也對記憶體是一個消耗
   // ===== 開始活動 =====
   // 對應: Start 按鈕 (綠色按鈕)
   const handleStart = () => {
@@ -159,26 +163,110 @@ export default function TimeLogClient() {
           {/* 儲存和清除按鈕 */}
           <div className="row mb-4">
             <div className="col-12 col-md-6">
-              <button
-                className={`btn w-100 ${isAuth ? 'btn-info' : 'btn-outline-secondary'}`}
-                onClick={handleSaveToDB}
-                disabled={!isAuth}
-                title={
-                  isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'
-                }
-                aria-label={
-                  isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'
+              <OverlayTrigger
+                placement="top"
+                overlay={
+                  <Tooltip
+                    id="demo-save-tooltip"
+                    style={{
+                      backgroundColor: 'var(--tooltip-bg, #2d3748)',
+                      color: 'var(--tooltip-text, #ffffff)',
+                      border: '1px solid var(--tooltip-border, #4a5568)',
+                      borderRadius: '8px',
+                      fontSize: '0.8rem',
+                      padding: '0.75rem 1rem',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                      maxWidth: '300px',
+                      textAlign: 'justify',
+                      lineHeight: '1.4',
+                    }}
+                  >
+                    {isAuth
+                      ? steps.some(
+                          (step: any) => !step.ended && step.type === 'step'
+                        )
+                        ? '⚠️ 提醒：檢測到未完成的步驟！建議先點擊各步驟的「結束」按鈕記錄您預期的結束時間，再儲存到資料庫，這樣可以更準確地記錄您的實際工作時間'
+                        : 'Demo 版本不支援儲存到資料庫，請註冊後使用完整版本'
+                      : '請先登入才能儲存到資料庫'}
+                  </Tooltip>
                 }
               >
-                {isAuth ? '💾 儲存活動資訊到資料庫' : '🔒 請先登入才能儲存'}
-              </button>
+                <button
+                  className={`btn w-100 ${isAuth ? 'btn-info' : 'btn-outline-secondary'}`}
+                  onClick={handleSaveToDB}
+                  disabled={!isAuth}
+                  aria-label={
+                    isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'
+                  }
+                  style={{
+                    background: isAuth
+                      ? 'var(--button-bg2, linear-gradient(45deg, #28a745, #20c997))'
+                      : undefined,
+                    color: isAuth ? 'var(--button-text, #ffffff)' : undefined,
+                    border: isAuth ? 'none' : undefined,
+                    borderRadius: isAuth ? '8px' : undefined,
+                    transition: isAuth ? 'all 0.3s ease' : undefined,
+                    boxShadow: isAuth
+                      ? 'var(--button-shadow2, 0 2px 8px rgba(40, 167, 69, 0.3))'
+                      : undefined,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (isAuth) {
+                      const target = e.target as HTMLButtonElement
+                      target.style.background =
+                        'var(--button-hover2, linear-gradient(45deg, #20c997, #17a2b8))'
+                      target.style.transform = 'translateY(-1px)'
+                      target.style.boxShadow =
+                        'var(--button-shadow2, 0 4px 12px rgba(40, 167, 69, 0.4))'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (isAuth) {
+                      const target = e.target as HTMLButtonElement
+                      target.style.background =
+                        'var(--button-bg2, linear-gradient(45deg, #28a745, #20c997))'
+                      target.style.transform = 'translateY(0)'
+                      target.style.boxShadow =
+                        'var(--button-shadow2, 0 2px 8px rgba(40, 167, 69, 0.3))'
+                    }
+                  }}
+                >
+                  {isAuth ? '💾 儲存活動資訊到資料庫' : '🔒 請先登入才能儲存'}
+                </button>
+              </OverlayTrigger>
             </div>
             <div className="col-12 col-md-6 mt-2 mt-md-0">
               <button
-                className="btn btn-outline-warning w-100"
+                className="btn w-100"
                 onClick={handleClearStorage}
                 title="清除所有活動記錄"
                 aria-label="清除所有活動記錄"
+                style={{
+                  background:
+                    'var(--button-bg, linear-gradient(45deg, #ffc107, #ff8f00))',
+                  color: 'var(--button-text, #000000)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  transition: 'all 0.3s ease',
+                  boxShadow:
+                    'var(--button-shadow, 0 2px 8px rgba(255, 193, 7, 0.3))',
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLButtonElement
+                  target.style.background =
+                    'var(--button-hover, linear-gradient(45deg, #ff8f00, #ff6f00))'
+                  target.style.transform = 'translateY(-1px)'
+                  target.style.boxShadow =
+                    'var(--button-shadow, 0 4px 12px rgba(255, 193, 7, 0.4))'
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLButtonElement
+                  target.style.background =
+                    'var(--button-bg, linear-gradient(45deg, #ffc107, #ff8f00))'
+                  target.style.transform = 'translateY(0)'
+                  target.style.boxShadow =
+                    'var(--button-shadow, 0 2px 8px rgba(255, 193, 7, 0.3))'
+                }}
               >
                 🗑️ 清除本頁活動記錄
               </button>
@@ -413,12 +501,37 @@ export default function TimeLogClient() {
                 {step.type === 'step' && (
                   <div className="d-flex align-items-center gap-2">
                     {!step.ended && (
-                      <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => handleEndSubStep(i)}
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip
+                            id={`demo-step-tooltip-${i}`}
+                            style={{
+                              backgroundColor: 'var(--tooltip-bg, #2d3748)',
+                              color: 'var(--tooltip-text, #ffffff)',
+                              border:
+                                '1px solid var(--tooltip-border, #4a5568)',
+                              borderRadius: '8px',
+                              fontSize: '0.8rem',
+                              padding: '0.75rem 1rem',
+                              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                              maxWidth: '280px',
+                              textAlign: 'justify',
+                              lineHeight: '1.4',
+                            }}
+                          >
+                            💡
+                            建議：先點擊「結束」記錄您預期的結束時間，再儲存到資料庫，這樣可以更準確地記錄您的實際工作時間
+                          </Tooltip>
+                        }
                       >
-                        ⏹️ 結束
-                      </button>
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => handleEndSubStep(i)}
+                        >
+                          ⏹️ 結束
+                        </button>
+                      </OverlayTrigger>
                     )}
                     {step.ended && (
                       <span className="badge bg-success">✅ 已完成</span>

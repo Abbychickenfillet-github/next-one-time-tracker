@@ -12,7 +12,7 @@ import TimeLogClient from '@/components/timelog/TimeLogClient'
 import AIAnalysisSection from '@/components/ai-analysis/AIAnalysisSection'
 
 export default function Dashboard() {
-  const { auth, logout, user, isAuth } = useAuth()
+  const { auth, user, isAuth } = useAuth()
   const { showLoader, hideLoader } = useLoader()
   const router = useRouter()
   const [timeLogs, setTimeLogs] = useState([])
@@ -112,23 +112,6 @@ export default function Dashboard() {
     } finally {
       // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
       setIsLoading(false)
-    }
-  }
-
-  const handleLogout = async () => {
-    const result = await Swal.fire({
-      title: '確認登出',
-      text: '您確定要登出嗎？',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: '登出',
-      cancelButtonText: '取消',
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-    })
-
-    if (result.isConfirmed) {
-      await logout()
     }
   }
 
@@ -252,68 +235,9 @@ export default function Dashboard() {
       </Head>
 
       <div className="min-vh-100 bg-light">
-        {/* 頂部導航 */}
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-          <div className="container">
-            <span className="navbar-brand mb-0 h1">📊 TimeLog Dashboard</span>
-            <div className="navbar-nav ms-auto">
-              <div className="nav-item dropdown">
-                <button
-                  className="btn btn-outline-light dropdown-toggle"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  👤 {user?.email || '用戶'}
-                </button>
-                <ul className="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <button className="dropdown-item" onClick={handleLogout}>
-                      🚪 登出
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </nav>
-
         <div className="container py-4">
           {/* 統計卡片 */}
           <div className="row mb-4">
-            {/* <div className="col-md-3 mb-3">
-              <div className="card border-0 shadow-sm h-100">
-                <div className="card-body text-center">
-                  <div className="text-primary fs-2 mb-2">📈</div>
-                  <h5 className="card-title">總時數</h5>
-                  <p className="card-text fs-4 fw-bold text-primary">
-                    {statistics.totalDuration} 小時
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-3 mb-3">
-              <div className="card border-0 shadow-sm h-100">
-                <div className="card-body text-center">
-                  <div className="text-success fs-2 mb-2">🎯</div>
-                  <h5 className="card-title">今日記錄</h5>
-                  <p className="card-text fs-4 fw-bold text-success">
-                    {statistics.todayLogs} 筆
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-3 mb-3">
-              <div className="card border-0 shadow-sm h-100">
-                <div className="card-body text-center">
-                  <div className="text-info fs-2 mb-2">📅</div>
-                  <h5 className="card-title">本週記錄</h5>
-                  <p className="card-text fs-4 fw-bold text-info">
-                    {statistics.weekLogs} 筆
-                  </p>
-                </div>
-              </div>
-            </div> */}
             <TimeLogClient />
           </div>
 
@@ -321,9 +245,22 @@ export default function Dashboard() {
           <div className="row">
             <div className="col-12">
               <div className="card border-0 shadow-sm">
-                <div className="card-header bg-white border-bottom">
+                <div
+                  className="card-header border-bottom"
+                  style={{
+                    background:
+                      'var(--primary-bg, linear-gradient(135deg, #0dcaf0, #0aa2c0))',
+                    color: 'var(--text-primary, #ffffff)',
+                    borderBottom: '1px solid var(--accent-color, #0dcaf0)',
+                  }}
+                >
                   <div className="d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0">📋 時間戳記錄</h5>
+                    <h5
+                      className="mb-0"
+                      style={{ color: 'var(--text-primary, #ffffff)' }}
+                    >
+                      📋 時間戳記錄
+                    </h5>
                     <div className="btn-group">
                       <button
                         className="btn btn-outline-primary btn-sm"
@@ -504,13 +441,26 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* 認證資訊卡片 (開發環境) */}
+          {/* 認證資訊卡片 (開發環境)卡片 */}
           {process.env.NODE_ENV === 'development' && (
             <div className="row mt-4">
               <div className="col-12">
                 <div className="card border-0 shadow-sm">
-                  <div className="card-header bg-warning text-dark">
-                    <h6 className="mb-0">🔧 開發環境 - 認證資訊</h6>
+                  <div
+                    className="card-header border-bottom"
+                    style={{
+                      background:
+                        'var(--primary-bg, linear-gradient(135deg, #0dcaf0, #0aa2c0))',
+                      color: 'var(--text-primary, #ffffff)',
+                      borderBottom: '1px solid var(--accent-color, #0dcaf0)',
+                    }}
+                  >
+                    <h6
+                      className="mb-0"
+                      style={{ color: 'var(--text-primary, #ffffff)' }}
+                    >
+                      🔧 個資修改
+                    </h6>
                   </div>
                   <div className="card-body">
                     <div className="row">
@@ -564,13 +514,14 @@ export default function Dashboard() {
                             {isAuth ? '✅ 已認證' : '❌ 未認證'}
                           </li>
                           <li>
-                            <strong>用戶 ID:</strong> {user?.id || '未設定'}
+                            <strong>用戶電話:</strong> {user?.phone || '未設定'}
                           </li>
                           <li>
                             <strong>Email:</strong> {user?.email || '未設定'}
                           </li>
                           <li>
                             <strong>姓名:</strong> {user?.name || '未設定'}
+                            <strong>性別:</strong> {user?.gender || '未設定'}
                           </li>
                         </ul>
                       </div>

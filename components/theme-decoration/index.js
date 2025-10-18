@@ -28,7 +28,7 @@ export default function ThemeDecoration() {
 
   const renderDecoration = () => {
     switch (currentTheme) {
-      case 'warm-tea':
+      case 'warm':
         return (
           <>
             {/* 大螢幕版本 */}
