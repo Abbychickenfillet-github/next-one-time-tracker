@@ -84,7 +84,36 @@ export const useTimeLogStore = create(
           return
         }
 
+        // 檢查是否有未完成的步驟
+        const hasUnfinishedSteps = state.steps.some(
+          (step) => !step.ended && step.type === 'step'
+        )
+        if (hasUnfinishedSteps) {
+          const confirmEnd = confirm(
+            '檢測到未完成的步驟，是否要自動結束所有步驟並結束活動？'
+          )
+          if (!confirmEnd) {
+            return
+          }
+        }
+
         const now = new Date()
+
+        // 自動結束所有未完成的步驟
+        const updatedSteps = state.steps.map((step) => {
+          if (!step.ended && step.type === 'step') {
+            return {
+              ...step,
+              ended: true,
+              endTime: now,
+              text: step.text + ` (結束於: ${now.toLocaleTimeString()})`,
+              description:
+                step.description + ` (結束於: ${now.toLocaleTimeString()})`,
+            }
+          }
+          return step
+        })
+
         const newStep = {
           type: 'end',
           title: `結束：${state.title}`,
@@ -98,7 +127,7 @@ export const useTimeLogStore = create(
         set({
           // set() 函數：批量更新多個狀態，合併到現有狀態中
           endTime: now,
-          steps: [...state.steps, newStep], // 展開運算符：將新步驟添加到現有步驟陣列中
+          steps: [...updatedSteps, newStep], // 展開運算符：將新步驟添加到已更新的步驟陣列中
         })
       },
 

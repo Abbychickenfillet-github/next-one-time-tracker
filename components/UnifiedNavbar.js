@@ -271,23 +271,27 @@ export default function UnifiedNavbar() {
                   variant="outline-light"
                   className="d-flex align-items-center gap-2 border-0 bg-transparent"
                   style={{
-                    color: 'var(--text-primary, #f2f2f2)',
+                    color: '#ffffff !important', // 強制使用白色，覆蓋主題變數
                     fontSize: '0.9rem',
                     padding: '0.5rem 0.75rem',
-                    borderRadius: '8px',
-                    transition: 'all 0.3s ease',
+                    transition: 'all 0.6s ease',
                   }}
                   onMouseEnter={(e) => {
                     e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
                     e.target.style.transform = 'translateY(-1px)'
+                    e.target.style.color = '#ffffff' // 懸停時保持白色
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.backgroundColor = 'transparent'
                     e.target.style.transform = 'translateY(0)'
+                    e.target.style.color = '#ffffff' // 離開時保持白色
                   }}
                 >
-                  <FaUser className="me-1" />
-                  <span className="d-none d-md-inline">
+                  <FaUser className="me-1" style={{ color: '#ffffff' }} />
+                  <span
+                    className="d-none d-md-inline"
+                    style={{ color: '#ffffff' }}
+                  >
                     {user?.name || user?.email || '用戶'}
                   </span>
                 </Dropdown.Toggle>
@@ -303,16 +307,21 @@ export default function UnifiedNavbar() {
                 >
                   {/* 用戶資訊 */}
                   <Dropdown.Header
-                    className="text-light border-bottom border-secondary"
-                    style={{ fontSize: '0.8rem' }}
+                    className="border-bottom border-secondary"
+                    style={{
+                      fontSize: '0.8rem',
+                      color: '#1a1a1a', // 深色文字，提高對比度
+                      backgroundColor: 'transparent',
+                    }}
                   >
                     <div className="d-flex align-items-center gap-2">
-                      <FaUser className="text-primary" />
+                      <FaUser style={{ color: '#0d6efd' }} />{' '}
+                      {/* Bootstrap primary 藍色 */}
                       <div>
-                        <div className="fw-bold">
+                        <div className="fw-bold" style={{ color: '#1a1a1a' }}>
                           {user?.name || '未設定姓名'}
                         </div>
-                        <div className="text-muted small">
+                        <div className="small" style={{ color: '#495057' }}>
                           {user?.email || '未設定信箱'}
                         </div>
                       </div>
@@ -323,25 +332,35 @@ export default function UnifiedNavbar() {
                   <Dropdown.Item
                     as={Link}
                     href="/subscription"
-                    className="d-flex align-items-center gap-2 text-light py-2"
+                    className="d-flex align-items-center gap-2 py-2"
                     style={{
                       borderRadius: '8px',
                       transition: 'all 0.2s ease',
+                      color: '#1a1a1a', // 深色文字，提高對比度
+                      backgroundColor: 'transparent',
                     }}
                     onMouseEnter={(e) => {
-                      e.target.style.backgroundColor =
-                        'rgba(255, 255, 255, 0.1)'
+                      e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.1)' // 深色懸停效果
+                      e.target.style.color = '#000000' // 懸停時更深的文字
                     }}
                     onMouseLeave={(e) => {
                       e.target.style.backgroundColor = 'transparent'
+                      e.target.style.color = '#1a1a1a' // 恢復原始文字顏色
                     }}
                   >
-                    <FaCog className="text-info" />
+                    <FaCog style={{ color: '#0dcaf0' }} />{' '}
+                    {/* Bootstrap info 青色 */}
                     訂閱服務
                   </Dropdown.Item>
 
                   {/* 分隔線 */}
-                  <Dropdown.Divider className="border-secondary my-2" />
+                  <Dropdown.Divider
+                    className="my-2"
+                    style={{
+                      borderColor: 'rgba(0, 0, 0, 0.2)', // 更明顯的分隔線
+                      opacity: 1,
+                    }}
+                  />
 
                   {/* 登出按鈕 */}
                   <Dropdown.Item
@@ -357,7 +376,7 @@ export default function UnifiedNavbar() {
                     onMouseEnter={(e) => {
                       if (!isLoggingOut) {
                         e.target.style.backgroundColor =
-                          'rgba(220, 53, 69, 0.1)'
+                          'rgba(226, 13, 34, 0.1)'
                       }
                     }}
                     onMouseLeave={(e) => {

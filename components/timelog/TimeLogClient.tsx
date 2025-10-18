@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useTimeLogStore } from '@/stores/useTimeLogStore'
 import VoiceInput from './VoiceInput'
-
+import { Tooltip, OverlayTrigger, Col } from 'react-bootstrap'
 export default function TimeLogClient() {
   // ===== 用戶認證 =====
   const { user: authUser, isAuth } = useAuth()
@@ -37,7 +37,7 @@ export default function TimeLogClient() {
   } = useTimeLogStore()
 
   const stepListRef = useRef<HTMLOListElement | null>(null) // 步驟列表的 DOM 引用
-
+  // HTMLOListElement 是 HTML 列表元素的類型 是HTMLCollection的子類是無序數列表的意思嗎
   // ===== 客戶端渲染標記 =====
   useEffect(() => {
     setClient(true)
@@ -113,92 +113,28 @@ export default function TimeLogClient() {
 
   return (
     <div className="card border-0 shadow-sm mb-4">
-      <div className="card-header bg-white border-bottom">
-        <h5 className="mb-0">⏱️ 時間記錄工具</h5>
-      </div>
-      <div className="card-body">
-        {/* ===== 用戶資訊顯示 ===== */}
-        {isAuth ? (
-          <div className="alert alert-info mb-4">
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <strong>👤 當前用戶:</strong> {user?.name || user?.email}
-                <br />
-                <small className="text-muted">用戶 ID: {user?.user_id}</small>
-              </div>
-              <div>
-                <span className="badge bg-success">已登入</span>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="alert alert-warning mb-4">
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <strong>👤 訪客模式</strong>
-                <br />
-                <small className="text-muted">
-                  您可以測試時間記錄功能，但需要登入才能儲存到資料庫。否則只能在本地端儲存。可以按清除活動紀錄刪除訪客模式當前紀錄。
-                </small>
-              </div>
-              <div>
-                <span className="badge bg-warning">未登入</span>
-                <a href="/user/login" className="btn btn-sm btn-primary ms-2">
-                  登入
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ===== 語音輸入元件 ===== */}
-        <VoiceInput onResult={handleVoiceResultWrapper} />
-
-        {/* ===== 主要控制區域 ===== */}
-        <div className="mb-4">
-          {/* 儲存和清除按鈕 */}
-          <div className="row mb-4">
-            <div className="col-12 col-md-6">
-              <button
-                className={`btn w-100 ${isAuth ? 'btn-info' : 'btn-outline-secondary'}`}
-                onClick={handleSaveToDB}
-                disabled={!isAuth}
-                title={
-                  isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'
-                }
-                aria-label={
-                  isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'
-                }
-              >
-                {isAuth ? '💾 儲存活動資訊到資料庫' : '🔒 請先登入才能儲存'}
-              </button>
-            </div>
-            <div className="col-12 col-md-6 mt-2 mt-md-0">
-              <button
-                className="btn btn-outline-warning w-100"
-                onClick={handleClearStorage}
-                title="清除所有活動記錄"
-                aria-label="清除所有活動記錄"
-              >
-                🗑️ 清除本頁活動記錄
-              </button>
-            </div>
-          </div>
-
-          {/* 活動名稱輸入框和開始/結束按鈕在同一行 */}
-          <div className="row d-md-flex align-items-center">
-            {/* 活動名稱標題 */}
-            <div className="col-12 col-md-3 mb-3 mb-md-0">
+      <div
+        className="card-header border-bottom"
+        style={{
+          background:
+            'var(--primary-bg, linear-gradient(135deg, #0dcaf0, #0aa2c0))',
+          color: 'var(--text-primary, #ffffff)',
+          borderBottom: '1px solid var(--accent-color, #0dcaf0)',
+        }}
+      >
+        <div className="d-flex align-items-center justify-content-start">
+          <Col md={3}>
+            <h5 className="mb-0 flex-shrink-0 me-3">⏱️ 時間記錄工具</h5>
+          </Col>
+          <Col md={8}>
+            <div className="d-flex align-items-center gap-2 flex-grow-1">
               <label
                 htmlFor="titleInput"
-                className="form-label fw-bold text-dark mb-2"
+                className="form-label mb-0 fw-bold flex-shrink-0"
+                style={{ color: 'var(--text-primary, #ffffff)' }}
               >
-                📝 活動名稱
+                📝 輸入活動名稱
               </label>
-            </div>
-
-            {/* 活動名稱輸入框 */}
-            <div className="col-12 col-md-4 mb-3 mb-md-0">
               <input
                 type="text"
                 id="titleInput"
@@ -208,54 +144,176 @@ export default function TimeLogClient() {
                 onChange={(e) => setTitle(e.target.value)}
                 aria-label="活動名稱輸入框"
               />
+              <span
+                className="flex-shrink-0"
+                style={{
+                  color: 'var(--text-secondary, rgba(255, 255, 255, 0.8))',
+                  fontSize: '0.9rem',
+                }}
+              >
+                卡片數量: 1/4
+              </span>
+            </div>
+          </Col>
+        </div>
+      </div>
+      <div className="card-body">
+        {/* ===== 語音輸入元件 ===== */}
+        <VoiceInput onResult={handleVoiceResultWrapper} />
+        {/* onResult 是內建的屬性嗎？還是說是自定義的屬性？ */}
+        {/* ===== 主要控制區域 ===== */}
+        <div className="mb-4">
+          {/* 四個按鈕並排 */}
+          <div className="row mb-4">
+            {/* 開始按鈕 */}
+            <div className="col-6 col-md-3 mb-2">
+              <button
+                className={`btn w-100 ${
+                  !isClient
+                    ? 'btn-outline-success'
+                    : getActivityStatus() === '進行中'
+                      ? 'btn-outline-success'
+                      : 'btn-success'
+                }`}
+                onClick={handleStart}
+                disabled={!isClient ? false : getActivityStatus() === '進行中'}
+                aria-label="開始記錄時間"
+              >
+                {!isClient
+                  ? '載入中...'
+                  : getActivityStatus() === '進行中'
+                    ? '⏸️ 進行中'
+                    : '▶️ 開始'}
+              </button>
+            </div>
+            {/* 儲存按鈕 */}
+            <div className="col-6 col-md-3 mb-2">
+              <OverlayTrigger
+                placement="top"
+                overlay={
+                  <Tooltip
+                    id="save-tooltip"
+                    style={{
+                      backgroundColor: 'var(--tooltip-bg, #2d3748)',
+                      color: 'var(--tooltip-text, #ffffff)',
+                      border: '1px solid var(--tooltip-border, #4a5568)',
+                      borderRadius: '8px',
+                      fontSize: '0.8rem',
+                      padding: '0.75rem 1rem',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                      maxWidth: '300px',
+                      textAlign: 'justify',
+                      lineHeight: '1.4',
+                    }}
+                  >
+                    {isAuth
+                      ? steps.some(
+                          (step: any) => !step.ended && step.type === 'step'
+                        )
+                        ? '⚠️ 提醒：檢測到未完成的步驟！建議先點擊各步驟的「結束」按鈕記錄您預期的結束時間，再儲存到資料庫，這樣可以更準確地記錄您的實際工作時間'
+                        : '儲存活動資訊到資料庫'
+                      : '請先登入才能儲存到資料庫'}
+                  </Tooltip>
+                }
+              >
+                <button
+                  className={`btn w-100 ${isAuth ? 'btn-info' : 'btn-outline-secondary'}`}
+                  onClick={handleSaveToDB}
+                  disabled={!isAuth}
+                  aria-label={
+                    isAuth ? '儲存活動資訊到資料庫' : '請先登入才能儲存到資料庫'
+                  }
+                  style={{
+                    background: isAuth
+                      ? 'var(--button-bg2, linear-gradient(45deg, #28a745, #20c997))'
+                      : undefined,
+                    color: isAuth ? 'var(--button-text, #ffffff)' : undefined,
+                    border: isAuth ? 'none' : undefined,
+                    borderRadius: isAuth ? '8px' : undefined,
+                    transition: isAuth ? 'all 0.3s ease' : undefined,
+                    boxShadow: isAuth
+                      ? 'var(--button-shadow2, 0 2px 8px rgba(40, 167, 69, 0.3))'
+                      : undefined,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (isAuth) {
+                      const target = e.target as HTMLButtonElement
+                      target.style.background =
+                        'var(--button-hover2, linear-gradient(45deg, #20c997, #17a2b8))'
+                      target.style.transform = 'translateY(-1px)'
+                      target.style.boxShadow =
+                        'var(--button-shadow2, 0 4px 12px rgba(40, 167, 69, 0.4))'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (isAuth) {
+                      const target = e.target as HTMLButtonElement
+                      target.style.background =
+                        'var(--button-bg2, linear-gradient(45deg, #28a745, #20c997))'
+                      target.style.transform = 'translateY(0)'
+                      target.style.boxShadow =
+                        'var(--button-shadow2, 0 2px 8px rgba(40, 167, 69, 0.3))'
+                    }
+                  }}
+                >
+                  {isAuth ? '💾 儲存本次活動到資料庫' : '🔒 請登入'}
+                </button>
+              </OverlayTrigger>
             </div>
 
-            {/* 開始/結束按鈕 */}
-            <div className="col-12 col-md-5">
-              <div className="d-flex gap-2">
-                {/* 開始 */}
-                <button
-                  className={`btn flex-grow-1 ${
-                    !isClient
-                      ? 'btn-outline-success'
-                      : getActivityStatus() === '進行中'
-                        ? 'btn-outline-success'
-                        : 'btn-success'
-                  }`}
-                  onClick={handleStart}
-                  disabled={
-                    !isClient ? false : getActivityStatus() === '進行中'
-                  }
-                  aria-label="開始記錄時間"
-                >
-                  {!isClient
-                    ? '載入中...'
-                    : getActivityStatus() === '進行中'
-                      ? '⏸️ 進行中'
-                      : '▶️ Start'}
-                </button>
-                <button
-                  className={`btn flex-grow-1 ${
-                    !isClient
-                      ? 'btn-outline-danger'
-                      : getActivityStatus() === '已結束'
-                        ? 'btn-outline-danger'
-                        : 'btn-danger'
-                  }`}
-                  onClick={handleEnd}
-                  disabled={
-                    !startTime ||
-                    (!isClient ? false : getActivityStatus() === '已結束')
-                  }
-                  aria-label="結束記錄時間"
-                >
-                  {!isClient
-                    ? '載入中...'
+            {/* 清除按鈕 */}
+            <div className="col-6 col-md-3 mb-2">
+              <button
+                className="btn w-100"
+                onClick={handleClearStorage}
+                title="清除所有活動記錄"
+                aria-label="清除所有活動記錄"
+                style={{
+                  background:
+                    'var(--button-bg, linear-gradient(45deg, #ffc107, #ff8f00))',
+                  color: 'var(--button-text, #000000)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  transition: 'all 0.3s ease',
+                  boxShadow:
+                    'var(--button-shadow, 0 2px 8px rgba(255, 193, 7, 0.3))',
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLButtonElement
+                  target.style.background =
+                    'var(--button-hover, linear-gradient(45deg, #ff8f00, #ff6f00))'
+                  target.style.transform = 'translateY(-1px)'
+                  target.style.boxShadow =
+                    'var(--button-shadow, 0 4px 12px rgba(255, 193, 7, 0.4))'
+                }}
+              >
+                🗑️ 清除本頁活動記錄
+              </button>
+            </div>
+
+            {/* 結束按鈕 */}
+            <div className="col-6 col-md-3 mb-2">
+              <button
+                className={`btn w-100 ${
+                  !isClient
+                    ? 'btn-outline-danger'
                     : getActivityStatus() === '已結束'
-                      ? '已結束'
-                      : '⏹️ End'}
-                </button>
-              </div>
+                      ? 'btn-outline-danger'
+                      : 'btn-danger'
+                }`}
+                onClick={handleEnd}
+                disabled={
+                  !startTime ||
+                  (!isClient ? false : getActivityStatus() === '已結束')
+                }
+                aria-label="結束記錄時間"
+              >
+                {!isClient
+                  ? '載入中...'
+                  : getActivityStatus() === '已結束'
+                    ? '已結束'
+                    : '⏹️ 結束'}
+              </button>
             </div>
           </div>
 
@@ -288,50 +346,24 @@ export default function TimeLogClient() {
                 </span>
               </div>
             </div>
-
-            {/* 活動時間統計 */}
-            {startTime && (
-              <div className="row text-center">
-                <div className="col-4">
-                  <small className="text-muted">開始時間</small>
-                  <div className="fw-bold">
-                    {startTime instanceof Date
-                      ? startTime.toLocaleTimeString()
-                      : '未開始'}
-                  </div>
-                </div>
-                <div className="col-4">
-                  <small className="text-muted">已進行</small>
-                  <div className="fw-bold text-primary">
-                    {getElapsedMinutes()} 分鐘
-                  </div>
-                </div>
-                <div className="col-4">
-                  <small className="text-muted">結束時間</small>
-                  <div className="fw-bold">
-                    {endTime instanceof Date
-                      ? endTime.toLocaleTimeString()
-                      : '進行中...'}
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
         {/* 階段記錄區域 */}
-        <div className="mb-3">
-          <label
-            htmlFor="stepDescription"
-            className="form-label fw-bold text-dark mb-2"
-          >
-            📝 記錄活動階段
-          </label>
-          <div className="d-flex gap-2 flex-wrap justify-content-center">
+        <div className="row align-items-center mb-3">
+          <Col md={2}>
+            <label
+              htmlFor="stepDescription"
+              className="form-label fw-bold text-dark mb-0"
+            >
+              📝 記錄活動階段
+            </label>
+          </Col>
+          <Col md={6}>
             <input
               type="text"
               id="stepDescription"
-              className="form-control col-md-6"
+              className="form-control"
               placeholder="描述當前階段 (按 Enter 快速記錄時間點)"
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
@@ -344,40 +376,70 @@ export default function TimeLogClient() {
                 minWidth: '200px',
               }}
             />
-            <button
-              id="voiceBtn"
-              className="btn btn-outline-info"
-              type="button"
-              disabled={!startTime || getActivityStatus() === '已結束'}
-              title="語音輸入功能"
-              aria-label="語音輸入功能"
-              style={{
-                whiteSpace: 'nowrap',
-                minWidth: 'fit-content',
-              }}
-            >
-              🎤 語音
-            </button>
-            <button
-              className="btn btn-primary"
-              type="button"
-              onClick={handleAddStep}
-              disabled={
-                !startTime || getActivityStatus() === '已結束' || !desc.trim()
-              }
-              aria-label="記錄時間點"
-              style={{
-                whiteSpace: 'nowrap',
-                minWidth: 'fit-content',
-              }}
-            >
-              ⏱️ 記錄時間點
-            </button>
-          </div>
-          <small className="text-muted">
-            💡 提示：輸入描述後按 Enter 或點擊「記錄時間點」來標記當前進度
-          </small>
+          </Col>
+          <Col md={4}>
+            <div className="d-flex gap-2 justify-content-end">
+              <button
+                id="voiceBtn"
+                className="btn btn-outline-info"
+                type="button"
+                disabled={!startTime || getActivityStatus() === '已結束'}
+                title="語音輸入功能"
+                aria-label="語音輸入功能"
+                style={{
+                  whiteSpace: 'nowrap',
+                  minWidth: 'fit-content',
+                }}
+              >
+                🎤 語音
+              </button>
+              <button
+                className="btn"
+                type="button"
+                onClick={handleAddStep}
+                disabled={
+                  !startTime || getActivityStatus() === '已結束' || !desc.trim()
+                }
+                aria-label="記錄時間點"
+                style={{
+                  whiteSpace: 'nowrap',
+                  minWidth: 'fit-content',
+                  background:
+                    'var(--button-bg, linear-gradient(45deg, #0dcaf0, #0aa2c0))',
+                  color: 'var(--button-text, #ffffff)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  transition: 'all 0.3s ease',
+                  boxShadow:
+                    'var(--button-shadow, 0 2px 8px rgba(13, 202, 240, 0.3))',
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLButtonElement
+                  if (!target.disabled) {
+                    target.style.background =
+                      'var(--button-hover, linear-gradient(45deg, #0aa2c0, #087990))'
+                    target.style.transform = 'translateY(-1px)'
+                    target.style.boxShadow =
+                      'var(--button-shadow, 0 4px 12px rgba(13, 202, 240, 0.4))'
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLButtonElement
+                  target.style.background =
+                    'var(--button-bg, linear-gradient(45deg, #0dcaf0, #0aa2c0))'
+                  target.style.transform = 'translateY(0)'
+                  target.style.boxShadow =
+                    'var(--button-shadow, 0 2px 8px rgba(13, 202, 240, 0.3))'
+                }}
+              >
+                ⏱️ 記錄時間點
+              </button>
+            </div>
+          </Col>
         </div>
+        <small className="text-muted">
+          💡 提示：輸入描述後按 Enter 或點擊「記錄時間點」來標記當前進度
+        </small>
 
         {/* 步驟列表 */}
         <div className="mb-3">
@@ -413,12 +475,52 @@ export default function TimeLogClient() {
                 {step.type === 'step' && (
                   <div className="d-flex align-items-center gap-2">
                     {!step.ended && (
-                      <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => handleEndSubStep(i)}
+                      // {/*
+                      //   步驟「結束」按鈕的 OverlayTrigger：
+                      //   只有當步驟未完成時才顯示此 tooltip
+                      //   提醒用戶先手動結束步驟以記錄更準確的時間
+                      // */}
+                      <OverlayTrigger
+                        placement="top" // tooltip 顯示在按鈕上方
+                        overlay={
+                          <Tooltip
+                            id={`step-tooltip-${i}`} // 使用步驟索引作為唯一 ID
+                            style={{
+                              // 與儲存按鈕相同的樣式，保持一致性
+                              backgroundColor: 'var(--tooltip-bg, #2d3748)',
+                              color: 'var(--tooltip-text, #ffffff)',
+                              border:
+                                '1px solid var(--tooltip-border, #4a5568)',
+                              borderRadius: '8px',
+                              fontSize: '0.8rem',
+                              padding: '0.75rem 1rem',
+                              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                              maxWidth: '280px', // 稍微窄一點，因為文字較短
+                              textAlign: 'justify',
+                              lineHeight: '1.4',
+                            }}
+                          >
+                            {/*
+                              固定的 tooltip 內容：
+                              提醒用戶先手動結束步驟，再儲存到資料庫
+                              這樣可以記錄更準確的實際工作時間
+                            */}
+                            💡
+                            建議：先點擊「結束」記錄您預期的結束時間，再儲存到資料庫，這樣可以更準確地記錄您的實際工作時間
+                          </Tooltip>
+                        }
                       >
-                        ⏹️ 結束
-                      </button>
+                        {/*
+                          觸發元素：「結束」按鈕
+                          當用戶滑鼠懸停時，會顯示上方的建議 tooltip
+                        */}
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => handleEndSubStep(i)}
+                        >
+                          ⏹️ 結束
+                        </button>
+                      </OverlayTrigger>
                     )}
                     {step.ended && (
                       <span className="badge bg-success">✅ 已完成</span>
@@ -429,6 +531,33 @@ export default function TimeLogClient() {
             ))}
           </ol>
         </div>
+        {/* 活動時間統計 */}
+        {startTime && (
+          <div className="row text-center">
+            <div className="col-4">
+              <small className="text-muted">開始時間</small>
+              <div className="fw-bold">
+                {startTime instanceof Date
+                  ? startTime.toLocaleTimeString()
+                  : '未開始'}
+              </div>
+            </div>
+            <div className="col-4">
+              <small className="text-muted">已進行</small>
+              <div className="fw-bold text-primary">
+                {getElapsedMinutes()} 分鐘
+              </div>
+            </div>
+            <div className="col-4">
+              <small className="text-muted">結束時間</small>
+              <div className="fw-bold">
+                {endTime instanceof Date
+                  ? endTime.toLocaleTimeString()
+                  : '進行中...'}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
