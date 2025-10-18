@@ -251,13 +251,17 @@ export const requestPayment = async (amount, options = {}) => {
 // 付款完成後，導回前端同一畫面，之後由伺服器向Line Pay伺服器確認交易結果
 // 格式參考: https://enylin.github.io/line-pay-merchant/api-reference/confirm.html#example
 export const confirmPayment = async (transactionId) => {
+  console.log('🔍 confirmPayment 開始，transactionId:', transactionId)
+
   if (!transactionId) {
+    console.log('❌ 缺少交易編號')
     return { status: 'error', message: '缺少交易編號' }
   }
 
   // 從session得到交易金額
   const session = await getSession('LINE_PAY')
   const reservation = session?.reservation
+  console.log('📋 Session 資料:', { session, reservation })
 
   // 如果沒有 session 資料，嘗試從資料庫查詢現有訂單
   let amount = null
@@ -304,10 +308,14 @@ export const confirmPayment = async (transactionId) => {
   }
 
   if (!amount) {
+    console.log('❌ 沒有找到付款金額，session 和資料庫都沒有資料')
     return { status: 'error', message: '沒有已記錄的付款資料' }
   }
 
+  console.log('💰 找到付款金額:', amount)
+
   try {
+    console.log('🚀 開始向 LINE Pay 確認付款...')
     // 最後確認交易 - 使用 v3 API
     const linePayResponse = await createLinePayRequest(
       `/v3/payments/${transactionId}/confirm`,
@@ -318,18 +326,32 @@ export const confirmPayment = async (transactionId) => {
       }
     )
 
-    // linePayResponse.body回傳的資料
-    if (isDev) console.log('line-pay confirm response: ', linePayResponse)
+    console.log('📥 LINE Pay 確認付款回應:', linePayResponse)
+
+    // 檢查 LINE Pay 回應是否成功
+    if (linePayResponse.body.returnCode !== '0000') {
+      console.log(
+        '❌ LINE Pay 確認付款失敗:',
+        linePayResponse.body.returnMessage
+      )
+      return {
+        status: 'error',
+        message: `LINE Pay 確認失敗: ${linePayResponse.body.returnMessage}`,
+      }
+    }
 
     // 清除session中的reservation的資料
     await deleteSession('LINE_PAY', 'reservation')
+    console.log('🗑️ 已清除 session 資料')
 
     // 回傳line pay的回應
+    console.log('✅ 付款確認成功')
     return {
       status: 'success',
       payload: { ...linePayResponse.body },
     }
   } catch (error) {
+    console.error('❌ LINE Pay 確認付款時發生錯誤:', error)
     return { status: 'error', message: error.message }
   }
 }

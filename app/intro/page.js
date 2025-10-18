@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Carousel, Card, Button, Container, Row, Col } from 'react-bootstrap'
 import Link from 'next/link'
 import {
@@ -13,9 +13,43 @@ import {
   FaRobot,
 } from 'react-icons/fa'
 import styles from './intro.module.scss'
+import NextSectionBtn from '@/components/next-section-btn/next-section-btn'
 
 export default function IntroPage() {
   const [activeIndex, setActiveIndex] = useState(0)
+
+  const scrollToNextSection = useCallback(() => {
+    console.log('按鈕被點擊了！')
+
+    // 找到 main 元素（實際的滾動容器）
+    const mainElement = document.querySelector('main')
+    if (!mainElement) {
+      console.log('找不到 main 元素')
+      return
+    }
+
+    const currentScrollY = mainElement.scrollTop
+    const viewportHeight = window.innerHeight
+
+    // 計算當前在哪個 section (每個 section 都是 100vh)
+    const currentSection = Math.floor(currentScrollY / viewportHeight)
+    const nextSection = currentSection + 1
+    const targetScrollY = nextSection * viewportHeight
+
+    console.log('當前滾動位置:', currentScrollY)
+    console.log('視窗高度:', viewportHeight)
+    console.log('當前 section:', currentSection)
+    console.log('目標 section:', nextSection)
+    console.log('目標滾動位置:', targetScrollY)
+
+    // 滾動到下一個 section
+    mainElement.scrollTo({
+      top: targetScrollY,
+      behavior: 'smooth',
+    })
+
+    console.log('滾動指令已執行')
+  }, []) // 空依賴陣列，函數不會重新創建
 
   const features = [
     {
@@ -65,7 +99,7 @@ export default function IntroPage() {
         '🚦 每小時30次 API 呼叫',
         '🚦 每天100次資料庫查詢',
       ],
-      buttonText: '立即體驗',
+      buttonText: '立即註冊',
       buttonVariant: 'outline-primary',
     },
     {
@@ -142,7 +176,7 @@ export default function IntroPage() {
       {/* Hero Section */}
       <section className={styles.heroSection}>
         <Container>
-          <Row className="align-items-center min-vh-100">
+          <Row className="align-items-center">
             <Col lg={6}>
               <div className={styles.heroContent}>
                 <h1 className={styles.heroTitle}>
@@ -164,7 +198,11 @@ export default function IntroPage() {
                   >
                     立即開始記錄
                   </Button>
-                  <Button variant="outline-light" size="lg">
+                  <Button
+                    variant="outline-light"
+                    size="lg"
+                    onClick={scrollToNextSection}
+                  >
                     了解更多
                   </Button>
                 </div>
@@ -208,12 +246,12 @@ export default function IntroPage() {
             </p>
           </div>
           <Row>
-            <Col lg={8} className="mx-auto">
+            <Col lg={12} className="mx-auto">
               <Card className={styles.problemCard}>
                 <Card.Body>
                   <h4 className="text-center mb-4">🔍 現有工具的不足</h4>
                   <Row>
-                    <Col md={6} className="mb-3">
+                    <Col md={4} className="mb-3">
                       <div className={styles.problemItem}>
                         <h6>📅 Google Calendar</h6>
                         <p className="text-muted small">
@@ -221,27 +259,47 @@ export default function IntroPage() {
                         </p>
                       </div>
                     </Col>
-                    <Col md={6} className="mb-3">
+                    <Col md={4} className="mb-3">
                       <div className={styles.problemItem}>
                         <h6>⏰ 手機計時器</h6>
                         <p className="text-muted small">
                           功能單一，無法記錄多步驟流程
+                          <br />
+                          無法一鍵保存紀錄，需要手動複製貼上或截圖
                         </p>
                       </div>
                     </Col>
-                    <Col md={6} className="mb-3">
+                    <Col md={4} className="mb-3">
                       <div className={styles.problemItem}>
                         <h6>📝 筆記軟體</h6>
                         <p className="text-muted small">
                           缺乏時間追蹤和統計分析功能
+                          <br />
+                          Notion 原生的日期屬性並不提供秒級的輸入或顯示
                         </p>
                       </div>
                     </Col>
-                    <Col md={6} className="mb-3">
+                    <Col md={4} className="mb-3">
                       <div className={styles.problemItem}>
-                        <h6>💼 專業軟體</h6>
+                        <h6>💼 剪貼到AI</h6>
                         <p className="text-muted small">
-                          過於複雜，不適合日常簡單任務
+                          AI對時間的認知會錯誤，需要手動修正時間格式
+                        </p>
+                      </div>
+                    </Col>
+                    <Col md={4} className="mb-3">
+                      <div className={styles.problemItem}>
+                        <h6>🔍 鏡頭監控分析</h6>
+                        <p className="text-muted small">
+                          需要昂貴的監控設備，成本高且複雜
+                        </p>
+                      </div>
+                    </Col>
+                    <Col md={4} className="mb-3">
+                      <div className={styles.problemItem}>
+                        <h6>💕 專門社群</h6>
+                        <p className="text-muted small">
+                          缺乏專業的時間管理工具，無法有效分享時間分配
                         </p>
                       </div>
                     </Col>
@@ -249,9 +307,38 @@ export default function IntroPage() {
                   <div className="text-center mt-4">
                     <div className={styles.solutionBox}>
                       <h5 className="text-white">✨ TimeLog 的解決方案</h5>
-                      <p className="mb-0">
-                        精確到秒 + 多步驟管理 + 數據分析 + 雲端同步
-                      </p>
+                      <Row className="mt-3">
+                        <Col md={3} className="mb-2">
+                          <div className="text-white">
+                            <strong>⏱️ 精確到秒</strong>
+                            <br />
+                            <small>
+                              解決 Google Calendar 無法精確記錄的問題
+                            </small>
+                          </div>
+                        </Col>
+                        <Col md={3} className="mb-2">
+                          <div className="text-white">
+                            <strong>📋 多步驟管理</strong>
+                            <br />
+                            <small>解決手機計時器功能單一的問題</small>
+                          </div>
+                        </Col>
+                        <Col md={3} className="mb-2">
+                          <div className="text-white">
+                            <strong>📊 數據分析</strong>
+                            <br />
+                            <small>解決筆記軟體缺乏統計功能的問題</small>
+                          </div>
+                        </Col>
+                        <Col md={3} className="mb-2">
+                          <div className="text-white">
+                            <strong>☁️ 雲端同步</strong>
+                            <br />
+                            <small>解決 AI 時間認知錯誤的問題</small>
+                          </div>
+                        </Col>
+                      </Row>
                     </div>
                   </div>
                 </Card.Body>
@@ -264,7 +351,7 @@ export default function IntroPage() {
       {/* Features Section */}
       <section className={styles.featuresSection}>
         <Container>
-          <div className="text-center mb-5">
+          <div className="text-center mb-4">
             <h2 className={styles.sectionTitle}>為什麼選擇我們？</h2>
             <p className={styles.sectionDescription}>
               從免費體驗開始，逐步升級到專業功能
@@ -272,11 +359,11 @@ export default function IntroPage() {
           </div>
           <Row>
             {features.map((feature, index) => (
-              <Col md={6} lg={3} key={index} className="mb-4">
+              <Col md={6} lg={3} key={index} className="mb-3">
                 <Card className={`${styles.featureCard} h-100`}>
                   <Card.Body className="text-center">
                     <div className={styles.featureIcon}>{feature.icon}</div>
-                    <h5 className="mt-3">{feature.title}</h5>
+                    <h5 className="mt-2">{feature.title}</h5>
                     <p className="text-muted">{feature.description}</p>
                     <small className="text-muted">{feature.details}</small>
                   </Card.Body>
@@ -351,14 +438,14 @@ export default function IntroPage() {
       {/* How It Works Section */}
       <section className={styles.howItWorksSection}>
         <Container>
-          <div className="text-center mb-5">
+          <div className="text-center mb-4">
             <h2 className={styles.sectionTitle}>如何使用？</h2>
             <p className={styles.sectionDescription}>
               簡單四步驟，從免費體驗到 AI 智能分析
             </p>
           </div>
           <Row>
-            <Col md={3} className="text-center mb-4">
+            <Col md={3} className="text-center mb-3">
               <div className={styles.stepCard}>
                 <div className={styles.stepNumber}>1</div>
                 <h5>開始記錄</h5>
@@ -366,7 +453,7 @@ export default function IntroPage() {
                 <FaClock className={styles.stepIcon} />
               </div>
             </Col>
-            <Col md={3} className="text-center mb-4">
+            <Col md={3} className="text-center mb-3">
               <div className={styles.stepCard}>
                 <div className={styles.stepNumber}>2</div>
                 <h5>註冊登入</h5>
@@ -374,7 +461,7 @@ export default function IntroPage() {
                 <FaSync className={styles.stepIcon} />
               </div>
             </Col>
-            <Col md={3} className="text-center mb-4">
+            <Col md={3} className="text-center mb-3">
               <div className={styles.stepCard}>
                 <div className={styles.stepNumber}>3</div>
                 <h5>訂閱付費</h5>
@@ -382,7 +469,7 @@ export default function IntroPage() {
                 <FaChartLine className={styles.stepIcon} />
               </div>
             </Col>
-            <Col md={3} className="text-center mb-4">
+            <Col md={3} className="text-center mb-3">
               <div className={styles.stepCard}>
                 <div className={styles.stepNumber}>4</div>
                 <h5>AI 分析</h5>
@@ -459,7 +546,13 @@ export default function IntroPage() {
               立即體驗免費版本，感受智能時間管理的魅力
             </p>
             <div className={styles.ctaButtons}>
-              <Button variant="primary" size="lg" className="me-3">
+              <Button
+                variant="primary"
+                size="lg"
+                className="me-3"
+                as={Link}
+                href="/demo"
+              >
                 開始免費體驗
               </Button>
               <Button variant="outline-light" size="lg">
@@ -467,6 +560,7 @@ export default function IntroPage() {
               </Button>
             </div>
           </div>
+          <NextSectionBtn />
         </Container>
       </section>
     </div>

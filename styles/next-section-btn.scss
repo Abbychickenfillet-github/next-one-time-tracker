@@ -1,0 +1,197 @@
+// ========================================
+// 🔽 右下角滾動按鈕樣式
+// ========================================
+
+.scroll-to-next-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--button-bg);
+  color: var(--button-text, #ffffff);
+  box-shadow: var(--button-shadow, 0 4px 15px rgba(13, 202, 240, 0.3));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  visibility: visible;
+
+  // 懸停效果
+  &:hover {
+    background: var(--button-hover, linear-gradient(45deg, #0aa2c0, #087990));
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: var(--button-shadow, 0 6px 20px rgba(13, 202, 240, 0.4));
+  }
+
+  // 點擊效果
+  &:active {
+    transform: translateY(0) scale(0.95);
+  }
+
+  // 可見狀態
+  &.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    visibility: visible;
+  }
+
+  // SVG 圖示樣式
+  svg {
+    transition: transform 0.3s ease;
+  }
+
+  &:hover svg {
+    transform: translateY(2px);
+  }
+
+  // 底部狀態樣式
+  &.at-bottom {
+    background: var(--button-hover, linear-gradient(45deg, #0aa2c0, #087990));
+
+    &:hover {
+      background: var(--button-bg, linear-gradient(45deg, #0dcaf0, #0aa2c0));
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    svg {
+      animation: bounceUp 1s ease-in-out infinite alternate;
+    }
+  }
+}
+
+// 向上箭頭動畫
+@keyframes bounceUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-3px);
+  }
+}
+
+// 主題適配樣式
+:root[data-theme='pink'] .scroll-to-next-btn {
+  background: linear-gradient(45deg, #ff6b9d, #ff8fab);
+  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+
+  &:hover {
+    background: linear-gradient(45deg, #ff1744, #e91e63);
+    box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+  }
+
+  &.at-bottom {
+    background: linear-gradient(45deg, #ff1744, #e91e63);
+
+    &:hover {
+      background: linear-gradient(45deg, #ff6b9d, #ff8fab);
+    }
+  }
+}
+
+:root[data-theme='mint'] .scroll-to-next-btn {
+  background: linear-gradient(45deg, #20c997, #1ba085);
+  box-shadow: 0 4px 15px rgba(32, 201, 151, 0.3);
+
+  &:hover {
+    background: linear-gradient(45deg, #1ba085, #16806d);
+    box-shadow: 0 6px 20px rgba(32, 201, 151, 0.4);
+  }
+
+  &.at-bottom {
+    background: linear-gradient(45deg, #1ba085, #16806d);
+
+    &:hover {
+      background: linear-gradient(45deg, #20c997, #1ba085);
+    }
+  }
+}
+
+:root[data-theme='warm-tea'] .scroll-to-next-btn {
+  background: linear-gradient(45deg, #d4a574, #c4965c);
+  box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+
+  &:hover {
+    background: linear-gradient(45deg, #c4965c, #b88744);
+    box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+  }
+
+  &.at-bottom {
+    background: linear-gradient(45deg, #c4965c, #b88744);
+
+    &:hover {
+      background: linear-gradient(45deg, #d4a574, #c4965c);
+    }
+  }
+}
+
+:root[data-theme='lavender'] .scroll-to-next-btn {
+  background: linear-gradient(45deg, #9b7fd1, #8b6fc1);
+  box-shadow: 0 4px 15px rgba(155, 127, 209, 0.3);
+
+  &:hover {
+    background: linear-gradient(45deg, #8b6fc1, #7b5fb1);
+    box-shadow: 0 6px 20px rgba(155, 127, 209, 0.4);
+  }
+
+  &.at-bottom {
+    background: linear-gradient(45deg, #8b6fc1, #7b5fb1);
+
+    &:hover {
+      background: linear-gradient(45deg, #9b7fd1, #8b6fc1);
+    }
+  }
+}
+
+:root[data-theme='sand-barbie'] .scroll-to-next-btn {
+  background: linear-gradient(45deg, #ff6b9d, #ff8fab);
+  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+
+  &:hover {
+    background: linear-gradient(45deg, #ff8fab, #ffb3d1);
+    box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+  }
+
+  &.at-bottom {
+    background: linear-gradient(45deg, #ff8fab, #ffb3d1);
+
+    &:hover {
+      background: linear-gradient(45deg, #ff6b9d, #ff8fab);
+    }
+  }
+}
+
+// 響應式設計
+@media (max-width: 768px) {
+  .scroll-to-next-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .scroll-to-next-btn {
+    bottom: 15px;
+    right: 15px;
+    width: 44px;
+    height: 44px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}

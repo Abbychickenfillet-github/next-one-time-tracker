@@ -10,6 +10,7 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
   overflow: hidden;
+  height: calc(100vh - 59px); // 設定最小高度為視窗高度的 80%
 
   &::before {
     content: '';
@@ -206,6 +207,7 @@
   background: #fff;
   color: #333;
   padding: 5rem 0;
+  min-height: calc(100vh - 59px);
 }
 
 .problemCard {
@@ -238,14 +240,30 @@
 .solutionBox {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 2rem;
+  padding: 2.5rem;
   border-radius: 15px;
   box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
   animation: pulse 2s infinite;
 
   h5 {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     font-weight: 600;
+  }
+
+  .text-white {
+    text-align: center;
+
+    strong {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    small {
+      opacity: 0.9;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
   }
 }
 
@@ -263,20 +281,24 @@
 .featuresSection {
   background: #f8f9fa;
   color: #333;
-  padding: 5rem 0;
+  padding: 3rem 0; // 減少 padding
+  min-height: calc(100vh - 59px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .sectionTitle {
-  font-size: 2.5rem;
+  font-size: 2.2rem; // 稍微縮小標題
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem; // 減少底部間距
   color: #333;
 }
 
 .sectionDescription {
-  font-size: 1.1rem;
+  font-size: 1rem; // 稍微縮小描述文字
   color: #666;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem; // 減少底部間距
 }
 
 .featureCard {
@@ -292,8 +314,8 @@
 }
 
 .featureIcon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 2.5rem; // 縮小圖標
+  margin-bottom: 0.8rem; // 減少底部間距
 }
 
 // Pricing Section
@@ -301,14 +323,17 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   padding: 5rem 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .pricingCard {
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
   position: relative;
 
@@ -360,7 +385,7 @@
   text-align: left;
 
   li {
-    padding: 0.5rem 0;
+    padding: 0.2rem 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
     &:last-child {
@@ -373,11 +398,15 @@
 .howItWorksSection {
   background: #fff;
   color: #333;
-  padding: 5rem 0;
+  padding: 3rem 0; // 減少 padding
+  min-height: calc(100vh - 59px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .stepCard {
-  padding: 2rem;
+  padding: 1.5rem; // 減少卡片內邊距
   border-radius: 15px;
   background: #f8f9fa;
   transition: all 0.3s ease;
@@ -390,21 +419,21 @@
 
 .stepNumber {
   display: inline-block;
-  width: 60px;
-  height: 60px;
+  width: 50px; // 縮小步驟數字圓圈
+  height: 50px;
   background: linear-gradient(45deg, #667eea, #764ba2);
   color: white;
   border-radius: 50%;
-  line-height: 60px;
-  font-size: 1.5rem;
+  line-height: 50px;
+  font-size: 1.3rem; // 縮小字體
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem; // 減少底部間距
 }
 
 .stepIcon {
-  font-size: 2rem;
+  font-size: 1.8rem; // 縮小圖標
   color: #667eea;
-  margin-top: 1rem;
+  margin-top: 0.8rem; // 減少頂部間距
 }
 
 // Clear Storage Section
@@ -412,6 +441,10 @@
   background: #f8f9fa;
   color: #333;
   padding: 5rem 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .stepsCarousel {
@@ -469,6 +502,10 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   padding: 5rem 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .ctaTitle {
