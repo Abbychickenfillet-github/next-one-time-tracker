@@ -76,7 +76,7 @@ export default function EcpayPage() {
       <p>
         會員登入狀態: {isAuth ? '已登入' : '未登入'}
         <br />
-        <Link href="/user">連至會員登入頁</Link>
+        <Link href="/user/login">連至會員登入頁</Link>
       </p>
       <hr />
       <div ref={payFormDiv}></div>

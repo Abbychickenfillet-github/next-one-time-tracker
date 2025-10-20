@@ -283,7 +283,7 @@ export default function RegisterPage() {
             {/* 姓名輸入 */}
             <div className="mb-3">
               <label htmlFor="name" className="text-white fw-semibold">
-                姓名
+                姓名<span className="text-white-50">(選填)</span>
               </label>
               <input
                 type="text"
@@ -427,7 +427,7 @@ export default function RegisterPage() {
           <>
             <div className="mb-3">
               <label htmlFor="phone" className="text-white fw-semibold">
-                手機
+                手機<span className="text-white-50">(選填)</span>
               </label>
               <input
                 type="tel"
@@ -698,7 +698,7 @@ export default function RegisterPage() {
                 <div className="text-center mt-4">
                   <span className="text-white-50">已經有帳號？</span>
                   <Link
-                    href="/user"
+                    href="/user/login"
                     className="text-white text-decoration-none ms-1 fw-semibold"
                   >
                     立即登入

@@ -37,7 +37,15 @@ export default function TimeLogClient() {
   } = useTimeLogStore()
 
   const stepListRef = useRef<HTMLOListElement | null>(null) // 步驟列表的 DOM 引用
-  // HTMLOListElement 是 HTML 列表元素的類型 是HTMLCollection的子類是無序數列表的意思嗎
+
+  /*
+    ===== TypeScript 型別註解說明 =====
+    HTMLOListElement 是 HTML 有序列表元素 (Ordered List Element) 的型別
+    - HTMLOListElement 繼承自 HTMLElement，不是 HTMLCollection 的子類
+    - HTMLCollection 是元素集合的介面，不是元素本身的型別
+    - HTMLOListElement 專門用於 <ol> 標籤，提供有序列表特有的屬性和方法
+    - 使用 useRef 可以獲取 DOM 元素的引用，用於滾動、聚焦等操作
+  */
   // ===== 客戶端渲染標記 =====
   useEffect(() => {
     setClient(true)
@@ -122,45 +130,75 @@ export default function TimeLogClient() {
           borderBottom: '1px solid var(--accent-color, #0dcaf0)',
         }}
       >
-        <div className="d-flex align-items-center justify-content-start">
-          <Col md={3}>
-            <h5 className="mb-0 flex-shrink-0 me-3">⏱️ 時間記錄工具</h5>
+        {/*
+          ===== 響應式布局說明 =====
+          問題：原本使用 flexbox 在手機版會導致輸入框被壓縮
+          解決：改用 Bootstrap 響應式網格系統
+
+          布局結構：
+          - 手機版 (xs): 標題佔滿整行，輸入框佔滿整行
+          - 平板版 (sm): 標題佔 4 欄，輸入框佔 8 欄
+          - 桌面版 (md+): 標題佔 3 欄，標籤佔 2 欄，輸入框佔 6 欄，狀態佔 1 欄
+        */}
+        <div className="row align-items-center">
+          {/* 標題區域 */}
+          <Col xs={12} sm={4} md={3}>
+            <h5 className="mb-0 mb-2 mb-md-0">⏱️ 時間記錄工具</h5>
           </Col>
-          <Col md={8}>
-            <div className="d-flex align-items-center gap-2 flex-grow-1">
-              <label
-                htmlFor="titleInput"
-                className="form-label mb-0 fw-bold flex-shrink-0"
-                style={{ color: 'var(--text-primary, #ffffff)' }}
-              >
-                📝 輸入活動名稱
-              </label>
-              <input
-                type="text"
-                id="titleInput"
-                className="form-control"
-                placeholder="輸入活動名稱"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                aria-label="活動名稱輸入框"
-              />
-              <span
-                className="flex-shrink-0"
-                style={{
-                  color: 'var(--text-secondary, rgba(255, 255, 255, 0.8))',
-                  fontSize: '0.9rem',
-                }}
-              >
-                卡片數量: 1/4
-              </span>
-            </div>
+
+          {/* 標籤區域 - 只在桌面版顯示 */}
+          <Col md={2} className="d-none d-md-block">
+            <label
+              htmlFor="titleInput"
+              className="form-label mb-0 fw-bold"
+              style={{ color: 'var(--text-primary, #ffffff)' }}
+            >
+              📝 輸入活動名稱
+            </label>
+          </Col>
+
+          {/* 輸入框區域 */}
+          <Col xs={12} sm={8} md={6}>
+            <input
+              type="text"
+              id="titleInput"
+              className="form-control"
+              placeholder="輸入活動名稱"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              aria-label="活動名稱輸入框"
+            />
+          </Col>
+
+          {/* 狀態區域 - 只在桌面版顯示 */}
+          <Col md={1} className="d-none d-md-block">
+            <span
+              className="text-end d-block"
+              style={{
+                color: 'var(--text-secondary, rgba(255, 255, 255, 0.8))',
+                fontSize: '0.9rem',
+              }}
+            >
+              卡片數量: 1/4
+            </span>
           </Col>
         </div>
       </div>
       <div className="card-body">
-        {/* ===== 語音輸入元件 ===== */}
+        {/*
+          ===== 語音輸入元件說明 =====
+          onResult 是自定義的屬性，不是內建的
+
+          語法說明：
+          - VoiceInput 是我們自定義的 React 組件
+          - onResult 是我們定義的 props 屬性，型別為 (text: string) => void
+          - handleVoiceResultWrapper 是父組件傳入的函數
+          - 當語音識別完成時，子組件會調用 onResult(text) 通知父組件
+
+          數據流向：
+          子組件 (VoiceInput) → 語音識別結果 → 父組件 (TimeLogClient) → 更新狀態
+        */}
         <VoiceInput onResult={handleVoiceResultWrapper} />
-        {/* onResult 是內建的屬性嗎？還是說是自定義的屬性？ */}
         {/* ===== 主要控制區域 ===== */}
         <div className="mb-4">
           {/* 四個按鈕並排 */}
@@ -349,9 +387,19 @@ export default function TimeLogClient() {
           </div>
         </div>
 
-        {/* 階段記錄區域 */}
+        {/*
+          ===== 階段記錄區域響應式布局 =====
+          問題：手機版輸入框和按鈕會被壓縮
+          解決：使用 Bootstrap 響應式網格，在不同螢幕尺寸下調整布局
+
+          布局結構：
+          - 手機版 (xs): 標籤和輸入框各佔一行，按鈕佔一行
+          - 平板版 (sm): 標籤佔 3 欄，輸入框佔 6 欄，按鈕佔 3 欄
+          - 桌面版 (md+): 標籤佔 2 欄，輸入框佔 6 欄，按鈕佔 4 欄
+        */}
         <div className="row align-items-center mb-3">
-          <Col md={2}>
+          {/* 標籤區域 */}
+          <Col xs={12} sm={3} md={2} className="mb-2 mb-sm-0">
             <label
               htmlFor="stepDescription"
               className="form-label fw-bold text-dark mb-0"
@@ -359,7 +407,9 @@ export default function TimeLogClient() {
               📝 記錄活動階段
             </label>
           </Col>
-          <Col md={6}>
+
+          {/* 輸入框區域 */}
+          <Col xs={12} sm={6} md={6} className="mb-2 mb-sm-0">
             <input
               type="text"
               id="stepDescription"
@@ -373,12 +423,13 @@ export default function TimeLogClient() {
               style={{
                 opacity:
                   !startTime || getActivityStatus() === '已結束' ? 0.6 : 1,
-                minWidth: '200px',
               }}
             />
           </Col>
-          <Col md={4}>
-            <div className="d-flex gap-2 justify-content-end">
+
+          {/* 按鈕區域 */}
+          <Col xs={12} sm={3} md={4}>
+            <div className="d-flex gap-2 justify-content-start justify-content-sm-end">
               <button
                 id="voiceBtn"
                 className="btn btn-outline-info"
