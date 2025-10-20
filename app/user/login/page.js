@@ -182,11 +182,39 @@ export default function LogIn() {
                 className="bg-transparent backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25"
                 style={{ zIndex: 100 }}
               >
+                {/* 3 日登入持久化提示 */}
+                <div
+                  className="alert alert-info d-flex align-items-start gap-2 mb-4"
+                  role="alert"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M12 7V13"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <circle cx="12" cy="16" r="1.25" fill="currentColor" />
+                  </svg>
+                  <div>
+                    <div className="fw-semibold">登入狀態將維持 3 天</div>
+                    <small className="text-muted">
+                      為了方便使用，除非您主動登出，系統會保持登入狀態 3 天。
+                    </small>
+                  </div>
+                </div>
                 {/* 頁籤切換 */}
                 <div className="d-flex justify-content-center mb-4">
                   <div className="btn-group" role="group">
                     <Link
-                      href="/user"
+                      href="/user/login"
                       className="btn btn-outline-light active px-4 py-2"
                     >
                       登入

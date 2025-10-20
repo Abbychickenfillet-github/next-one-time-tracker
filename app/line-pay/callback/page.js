@@ -267,7 +267,7 @@ function PaymentResultContent() {
         <div className={styles.authStatus}>
           <p>會員登入狀態: {isAuth ? '已登入' : '未登入'}</p>
           {!isAuth && (
-            <Link href="/user" className={styles.loginLink}>
+            <Link href="/user/login" className={styles.loginLink}>
               前往會員登入頁
             </Link>
           )}
