@@ -8,6 +8,8 @@ import {
 } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import axios from '@/lib/line-pay-axios'
+import { useTimeLogStore } from '@/stores/useTimeLogStore'
+import { useTrialTimeLogStore } from '@/stores/useTrialTimeLogStore'
 // import { getFavs } from '@/services/user'
 
 // ========================================
@@ -158,6 +160,27 @@ export const AuthProvider = ({ children }) => {
 
       // 先清除本地認證狀態
       clearAuthState()
+
+      // 清除與 TimeLog 相關的 localStorage（避免帳號切換資料殘留）
+      try {
+        // 活動/步驟（正式版）
+        localStorage.removeItem('timelog-storage')
+        // 活動/步驟（試用版）
+        localStorage.removeItem('trial-timelog-storage')
+        // 立即清空記憶體內的 Zustand store，避免在單頁導覽時殘留舊狀態
+        try {
+          const timeLogState = useTimeLogStore.getState()
+          const trialState = useTrialTimeLogStore.getState()
+          timeLogState.reset && timeLogState.reset()
+          trialState.reset && trialState.reset()
+        } catch (err) {
+          console.warn('Zustand timelog reset failed, ignore.', err)
+        }
+        // eslint-disable-next-line no-unused-vars
+      } catch (e) {
+        // 在隱私模式或禁用 storage 時可能拋錯，忽略即可
+        console.warn('清除 timelog localStorage 失敗或無權限，已忽略。')
+      }
 
       // 強制清除瀏覽器中的 ACCESS_TOKEN cookie（多種方式確保清除）
       console.log('🧹 清除瀏覽器 cookie...')

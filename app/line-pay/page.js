@@ -205,6 +205,45 @@ function LinePayPage() {
           選擇您的訂閱方案，享受專業服務
         </p>
 
+        {/* 功能說明 */}
+        <div className="features-info">
+          <h3>📋 付費版功能</h3>
+          <div className="features-grid">
+            <div className="feature-item">
+              <span className="feature-icon">✅</span>
+              <span>解鎖多裝置同步</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">✅</span>
+              <span>無限制記錄數量 (最多50筆)</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">✅</span>
+              <span>雲端資料庫儲存</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">✅</span>
+              <span>資料永久保存</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">✅</span>
+              <span>基礎統計分析</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">📱</span>
+              <span>手機、平板、電腦同步</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">🚦</span>
+              <span>每小時120次 API 呼叫</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">🚦</span>
+              <span>每天520次資料庫查詢</span>
+            </div>
+          </div>
+        </div>
+
         {/* 訂閱狀態顯示 */}
         {isAuth && (
           <div className="subscription-status">

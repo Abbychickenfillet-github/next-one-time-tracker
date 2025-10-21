@@ -66,6 +66,7 @@ export async function GET() {
           message: `請求過於頻繁，請在 ${resetTime.toLocaleString()} 後再試`,
           resetTime: resetTime.toISOString(),
           limit: rateLimitResult.limit,
+          errorType: 'rate_limit', // 標記為速率限制錯誤
         },
         { status: 429 }
       )

@@ -384,34 +384,36 @@ export default function RegisterPage() {
               <label htmlFor="confirmpassword" className="text-white">
                 確認密碼
               </label>
-              <input
-                type={showConfirmpassword ? 'text' : 'password'}
-                id="confirmpassword"
-                name="confirmpassword"
-                className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
-                value={user.confirmpassword}
-                onChange={handleFieldChange}
-                placeholder="請再次輸入您的密碼"
-                required
-                style={{
-                  backdropFilter: 'blur(10px)',
-                  color: 'white',
-                }}
-              />
-              <div className="form-check">
+              <div className="position-relative">
                 <input
-                  type="checkbox"
-                  id="showConfirmpassword"
-                  checked={showConfirmpassword}
-                  onChange={() => setShowConfirmpassword(!showConfirmpassword)}
-                  className="form-check-input"
+                  type={showConfirmpassword ? 'text' : 'password'}
+                  id="confirmpassword"
+                  name="confirmpassword"
+                  className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
+                  value={user.confirmpassword}
+                  onChange={handleFieldChange}
+                  placeholder="請再次輸入您的密碼"
+                  required
+                  style={{
+                    backdropFilter: 'blur(10px)',
+                    color: 'white',
+                  }}
                 />
-                <label
-                  htmlFor="showConfirmpassword"
-                  className="text-white form-check-label"
+                <button
+                  type="button"
+                  className="btn position-absolute top-50 end-0 translate-middle-y me-3 p-0"
+                  onClick={() => setShowConfirmpassword(!showConfirmpassword)}
+                  style={{ background: 'none', border: 'none' }}
+                  aria-label={
+                    showConfirmpassword ? '隱藏確認密碼' : '顯示確認密碼'
+                  }
                 >
-                  顯示密碼
-                </label>
+                  {showConfirmpassword ? (
+                    <AiOutlineEyeInvisible size={20} className="eye-icon" />
+                  ) : (
+                    <AiOutlineEye size={20} className="eye-icon" />
+                  )}
+                </button>
               </div>
               {errors.confirmpassword && (
                 <div className="alert alert-danger py-2 mt-2" role="alert">

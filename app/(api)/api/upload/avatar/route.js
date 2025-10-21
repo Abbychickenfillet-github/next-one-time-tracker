@@ -1,28 +1,25 @@
 import { NextResponse } from 'next/server'
-import { v2 as cloudinary } from 'cloudinary'
-import streamifier from 'streamifier'
 import { decrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
-
-// 配置 Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-})
+import {
+  uploadImage,
+  deleteImage,
+  AVATAR_TRANSFORMATIONS,
+} from '@/lib/cloudinary'
+import { updateAvatarByUserId } from '@/services/user.service'
 
 export async function POST(request) {
   try {
     // 1. 檢查用戶是否已登入
     const cookieStore = cookies()
-    const session = cookieStore.get('session')?.value
-
+    const session = cookieStore.get('ACCESS_TOKEN')?.value
+    // session的定義由名稱session改為ACCESS_TOKEN就這樣而已
     if (!session) {
       return NextResponse.json({ error: '請先登入' }, { status: 401 })
     }
 
     const payload = await decrypt(session)
-    if (!payload || !payload.userId) {
+    if (!payload || !payload.payload?.userId) {
       return NextResponse.json({ error: '請先登入' }, { status: 401 })
     }
 
@@ -52,33 +49,39 @@ export async function POST(request) {
     }
 
     // 5. 轉換為 Buffer
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    // ========================================
+    // 🔍 ArrayBuffer 具體位置說明
+    // ========================================
+    // file.arrayBuffer() - 將 File 物件轉換為 ArrayBuffer (瀏覽器 API)
+    // ArrayBuffer 是二進位資料的原始表示，類似於 C 語言的陣列
+    // 這裡的 ArrayBuffer 就是 bytes 變數
+    const bytes = await file.arrayBuffer() // ← ArrayBuffer 在這裡
+
+    // Buffer.from(bytes) - 將 ArrayBuffer 轉換為 Node.js Buffer
+    // Buffer 是 Node.js 中處理二進位資料的物件，提供更多操作方法
+    // 兩者差異：
+    // - ArrayBuffer: 瀏覽器標準，不可變，只能透過 TypedArray 操作
+    // - Buffer: Node.js 專用，可變，提供更多便利方法 (如 .pipe(), .toString() 等)
+    const buffer = Buffer.from(bytes) // ← 將 ArrayBuffer 轉為 Buffer
 
     // 6. 上傳到 Cloudinary
-    const uploadResult = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          folder: 'avatars',
-          public_id: `user_${payload.userId}`,
-          overwrite: true, // 覆蓋舊圖片
-          resource_type: 'image',
-          transformation: [
-            { width: 200, height: 200, crop: 'fill', gravity: 'face' },
-            { format: 'webp', quality: 'auto' },
-          ],
-        },
-        (error, result) => {
-          if (error) reject(error)
-          else resolve(result)
-        }
-      )
-
-      streamifier.createReadStream(buffer).pipe(uploadStream)
+    const uploadResult = await uploadImage(buffer, {
+      folder: 'avatars',
+      publicId: `user_${payload.payload.userId}`,
+      overwrite: true,
+      transformations: AVATAR_TRANSFORMATIONS,
     })
 
-    // 7. 這裡可以更新資料庫中的用戶頭貼路徑
-    // await updateUserAvatar(payload.userId, uploadResult.secure_url)
+    // 7. 更新資料庫中的用戶頭貼路徑
+    try {
+      await updateAvatarByUserId(
+        payload.payload.userId,
+        uploadResult.secure_url
+      )
+    } catch (dbError) {
+      console.error('更新資料庫頭貼失敗:', dbError)
+      // 即使資料庫更新失敗，也回傳上傳成功的結果
+    }
 
     // 8. 回傳結果
     return NextResponse.json({
@@ -96,14 +99,14 @@ export async function POST(request) {
 export async function DELETE(request) {
   try {
     const cookieStore = cookies()
-    const session = cookieStore.get('session')?.value
+    const session = cookieStore.get('ACCESS_TOKEN')?.value
 
     if (!session) {
       return NextResponse.json({ error: '請先登入' }, { status: 401 })
     }
 
     const payload = await decrypt(session)
-    if (!payload || !payload.userId) {
+    if (!payload || !payload.payload?.userId) {
       return NextResponse.json({ error: '請先登入' }, { status: 401 })
     }
 
@@ -111,7 +114,7 @@ export async function DELETE(request) {
     const { publicId } = await request.json()
 
     if (publicId) {
-      await cloudinary.uploader.destroy(publicId)
+      await deleteImage(publicId)
     }
 
     return NextResponse.json({

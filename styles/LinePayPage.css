@@ -31,6 +31,38 @@
   font-size: 16px;
 }
 
+/* 功能說明樣式 */
+.features-info {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.features-info h3 {
+  color: #495057;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.feature-icon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
 .payment-form {
   display: flex;
   flex-direction: column;

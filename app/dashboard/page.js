@@ -1,15 +1,25 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, lazy, Suspense } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useLoader } from '@/hooks/use-loader'
 import { useRouter } from 'next/navigation'
-import Swal from 'sweetalert2'
 import Head from 'next/head'
 import Image from 'next/image'
 import { Accordion, Col } from 'react-bootstrap'
-import AvatarUpload from '@/components/AvatarUpload'
 import TimeLogClient from '@/components/timelog/TimeLogClient'
-import AIAnalysisSection from '@/components/ai-analysis/AIAnalysisSection'
+
+// 動態載入非關鍵元件，減少首屏 bundle
+// ========================================
+// 🔍 lazy() 空參數說明
+// ========================================
+// lazy(() => import(...)) 中的空參數 () 表示：
+// - 不論有沒有任何參數傳入都會執行
+// - 這是 React.lazy() 的標準寫法
+// - 函數會在組件需要時才執行，實現延遲載入
+const AvatarUpload = lazy(() => import('@/components/AvatarUpload'))
+const AIAnalysisSection = lazy(
+  () => import('@/components/ai-analysis/AIAnalysisSection')
+)
 
 export default function Dashboard() {
   const { auth, user, isAuth } = useAuth()
@@ -30,6 +40,13 @@ export default function Dashboard() {
   const [error, setError] = useState(null)
 
   // 檢查認證狀態
+  // ========================================
+  // 🔍 useEffect 空參數說明
+  // ========================================
+  // useEffect(() => {...}) 中的空參數 () 表示：
+  // - 不論有沒有任何參數傳入都會執行
+  // - 這是 React useEffect 的標準寫法
+  // - 函數會在組件渲染後執行
   useEffect(() => {
     console.log('Dashboard: 認證狀態檢查', {
       hasChecked: auth.hasChecked,
@@ -46,6 +63,11 @@ export default function Dashboard() {
   }, [auth, isAuth, router, user])
 
   // 初始化 Bootstrap dropdown
+  // ========================================
+  // 🔍 useEffect 空參數說明 (第二個)
+  // ========================================
+  // 這裡的空參數 () 同樣表示不論有沒有參數都會執行
+  // 用於初始化 Bootstrap 元件
   useEffect(() => {
     // 確保 Bootstrap JavaScript 已載入
     if (typeof window !== 'undefined' && window.bootstrap) {
@@ -89,6 +111,26 @@ export default function Dashboard() {
       })
 
       if (!response.ok) {
+        // ========================================
+        // 🚦 處理速率限制錯誤
+        // ========================================
+        if (response.status === 429) {
+          try {
+            const errorData = await response.json()
+            if (errorData.errorType === 'rate_limit') {
+              // 動態載入 SweetAlert2
+              const { showRateLimitAlert } = await import(
+                '@/lib/swal-rate-limit'
+              )
+
+              showRateLimitAlert(errorData)
+              throw new Error('速率限制錯誤')
+            }
+          } catch (parseError) {
+            console.error('解析錯誤回應失敗:', parseError)
+          }
+        }
+
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
@@ -116,6 +158,8 @@ export default function Dashboard() {
   }
 
   const handleDeleteTimeLog = async (logId, logTitle) => {
+    // 動態載入 SweetAlert2，避免首屏阻塞
+    const { default: Swal } = await import('sweetalert2')
     const result = await Swal.fire({
       title: '確認刪除',
       text: `您確定要刪除「${logTitle}」這個時間戳記錄嗎？`,
@@ -145,6 +189,7 @@ export default function Dashboard() {
         console.log('刪除時間戳記錄:', result)
 
         if (result.status === 'success') {
+          const { default: Swal } = await import('sweetalert2')
           Swal.fire({
             title: '刪除成功',
             text: '時間戳記錄已成功刪除',
@@ -160,6 +205,7 @@ export default function Dashboard() {
         }
       } catch (error) {
         console.error('刪除失敗:', error)
+        const { default: Swal } = await import('sweetalert2')
         Swal.fire({
           title: '刪除失敗',
           text: '刪除時間戳記錄時發生錯誤',
@@ -434,10 +480,16 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* AI 分析區域 */}
+          {/* AI 分析區域 - 延後載入 */}
           <div className="row mt-4">
             <div className="col-12">
-              <AIAnalysisSection />
+              <Suspense
+                fallback={
+                  <div className="text-center py-4">載入 AI 分析功能中...</div>
+                }
+              >
+                <AIAnalysisSection />
+              </Suspense>
             </div>
           </div>
 
@@ -468,7 +520,7 @@ export default function Dashboard() {
                       <div className="col-md-3 text-center mb-3">
                         <div className="mb-3">
                           <Image
-                            src={user?.avatar || '/avatar/pokemon2.png'}
+                            src={user?.avatar || '/avatar/avatar.svg'}
                             alt="用戶頭貼"
                             width={80}
                             height={80}
@@ -482,28 +534,27 @@ export default function Dashboard() {
                               e.target.nextSibling.style.display = 'block'
                             }}
                           />
-                          <div
-                            className="rounded-circle shadow-sm d-flex align-items-center justify-content-center"
-                            style={{
-                              width: '80px',
-                              height: '80px',
-                              border: '3px solid var(--accent-color, #0dcaf0)',
-                              backgroundColor: 'var(--accent-color, #0dcaf0)',
-                              color: 'white',
-                              fontSize: '2rem',
-                              display: 'none',
-                            }}
-                          >
-                            👤
-                          </div>
                         </div>
                         <h6 className="mb-2">我的頭貼</h6>
-                        <AvatarUpload
-                          onUploadSuccess={() => {
-                            // 更新用戶狀態或重新載入頁面
-                            window.location.reload()
-                          }}
-                        />
+                        <Suspense
+                          fallback={
+                            <div className="text-center">載入中...</div>
+                          }
+                        >
+                          <AvatarUpload
+                            // ========================================
+                            // 🔍 箭頭函數空參數說明
+                            // ========================================
+                            // onUploadSuccess={() => {...}} 中的空參數 () 表示：
+                            // - 不論有沒有任何參數傳入都會執行
+                            // - 這是箭頭函數的標準寫法
+                            // - 函數會在上傳成功時被呼叫
+                            onUploadSuccess={() => {
+                              // 更新用戶狀態或重新載入頁面
+                              window.location.reload()
+                            }}
+                          />
+                        </Suspense>
                       </div>
 
                       <div className="col-md-4">

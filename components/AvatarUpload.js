@@ -1,17 +1,28 @@
 'use client'
 
 import { useState } from 'react'
-// eslint-disable-next-line no-unused-vars
 import { useAuth } from '@/hooks/use-auth'
 
 export default function AvatarUpload({ onUploadSuccess }) {
-  //   const auth = useAuth()
+  // ========================================
+  // 📥 onUploadSuccess 參數說明
+  // ========================================
+  // onUploadSuccess 是從父組件傳入的回調函數
+  // 流向：父組件 → AvatarUpload → 上傳成功時呼叫
+  // 用途：讓父組件知道上傳成功，並可以處理後續邏輯
+  const { isAuth } = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0]
     if (!file) return
+
+    // 檢查是否已登入
+    if (!isAuth) {
+      setError('請先登入才能上傳圖片')
+      return
+    }
 
     setLoading(true)
     setError('')
@@ -25,7 +36,24 @@ export default function AvatarUpload({ onUploadSuccess }) {
         body: formData,
       })
 
+      // ========================================
+      // 🔍 詳細的 Response 和 Result 資訊
+      // ========================================
+      console.log('📡 Response 物件:', response)
+      console.log('📊 Response 狀態:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries()),
+        url: response.url,
+        type: response.type,
+        redirected: response.redirected,
+      })
+
       const result = await response.json()
+      console.log('📦 Result 資料:', result)
+      console.log('🔗 Result 類型:', typeof result)
+      console.log('📋 Result 鍵值:', Object.keys(result))
 
       if (response.ok) {
         // 成功上傳，觸發回調
