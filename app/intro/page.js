@@ -194,7 +194,7 @@ export default function IntroPage() {
                     size="lg"
                     className="me-3"
                     as={Link}
-                    href="/demo"
+                    href="/trial"
                   >
                     立即開始記錄
                   </Button>
@@ -551,7 +551,7 @@ export default function IntroPage() {
                 size="lg"
                 className="me-3"
                 as={Link}
-                href="/demo"
+                href="/trial"
               >
                 開始免費體驗
               </Button>

@@ -5,7 +5,7 @@ import NextSectionBtn from '@/components/next-section-btn/next-section-btn'
 
 export default function TutorialPage() {
   const [windowInfo, setWindowInfo] = useState({})
-  const [positionDemo, setPositionDemo] = useState('static')
+  const [positiontrial, setPositiontrial] = useState('static')
 
   useEffect(() => {
     const updateWindowInfo = () => {
@@ -240,7 +240,7 @@ export default function TutorialPage() {
                               特點：不受 top, right, bottom, left 影響
                             </p>
                             <div
-                              className="demo-box"
+                              className="trial-box"
                               style={{
                                 position: 'static',
                                 background: '#e3f2fd',
@@ -265,7 +265,7 @@ export default function TutorialPage() {
                               特點：保留原本空間，不影響其他元素
                             </p>
                             <div
-                              className="demo-box"
+                              className="trial-box"
                               style={{
                                 position: 'relative',
                                 top: '20px',
@@ -300,7 +300,7 @@ export default function TutorialPage() {
                               }}
                             >
                               <div
-                                className="demo-box"
+                                className="trial-box"
                                 style={{
                                   position: 'absolute',
                                   top: '10px',
@@ -327,7 +327,7 @@ export default function TutorialPage() {
                               特點：滾動時保持固定位置
                             </p>
                             <div
-                              className="demo-box"
+                              className="trial-box"
                               style={{
                                 position: 'fixed',
                                 bottom: '20px',
@@ -376,44 +376,44 @@ export default function TutorialPage() {
                     <div className="mb-3">
                       <Button
                         variant={
-                          positionDemo === 'static'
+                          positiontrial === 'static'
                             ? 'primary'
                             : 'outline-primary'
                         }
-                        onClick={() => setPositionDemo('static')}
+                        onClick={() => setPositiontrial('static')}
                         className="me-2"
                       >
                         Static
                       </Button>
                       <Button
                         variant={
-                          positionDemo === 'relative'
+                          positiontrial === 'relative'
                             ? 'primary'
                             : 'outline-primary'
                         }
-                        onClick={() => setPositionDemo('relative')}
+                        onClick={() => setPositiontrial('relative')}
                         className="me-2"
                       >
                         Relative
                       </Button>
                       <Button
                         variant={
-                          positionDemo === 'absolute'
+                          positiontrial === 'absolute'
                             ? 'primary'
                             : 'outline-primary'
                         }
-                        onClick={() => setPositionDemo('absolute')}
+                        onClick={() => setPositiontrial('absolute')}
                         className="me-2"
                       >
                         Absolute
                       </Button>
                       <Button
                         variant={
-                          positionDemo === 'fixed'
+                          positiontrial === 'fixed'
                             ? 'primary'
                             : 'outline-primary'
                         }
-                        onClick={() => setPositionDemo('fixed')}
+                        onClick={() => setPositiontrial('fixed')}
                       >
                         Fixed
                       </Button>
@@ -430,16 +430,16 @@ export default function TutorialPage() {
                     >
                       <div
                         style={{
-                          position: positionDemo,
-                          top: positionDemo === 'static' ? 'auto' : '20px',
-                          left: positionDemo === 'static' ? 'auto' : '20px',
+                          position: positiontrial,
+                          top: positiontrial === 'static' ? 'auto' : '20px',
+                          left: positiontrial === 'static' ? 'auto' : '20px',
                           background: '#2196f3',
                           color: 'white',
                           padding: '10px',
                           borderRadius: '5px',
                         }}
                       >
-                        當前 Position: {positionDemo}
+                        當前 Position: {positiontrial}
                       </div>
                       <p className="mt-3">
                         這個容器用來演示不同 position 屬性的效果。

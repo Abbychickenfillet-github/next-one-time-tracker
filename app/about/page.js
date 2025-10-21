@@ -87,7 +87,7 @@ export default function About() {
 
           <div className={`card mb-4 ${styles.cardZindex}`}>
             <div className="card-body">
-              <h2 className="card-title">💇‍♀️ 離子燙藥水燙直步驟 Demo</h2>
+              <h2 className="card-title">💇‍♀️ 離子燙藥水燙直步驟 trial</h2>
               <div className="table-responsive">
                 <table className="table table-striped">
                   <thead>

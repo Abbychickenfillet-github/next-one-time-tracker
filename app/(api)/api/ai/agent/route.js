@@ -96,7 +96,7 @@ const WEBSITE_DATA = {
   pages: [
     { path: '/', name: '首頁', description: '時間記錄主頁面' },
     { path: '/intro', name: '使用介紹', description: '網站功能介紹' },
-    { path: '/demo', name: '免註冊試用', description: '試用時間記錄功能' },
+    { path: '/trial', name: '免註冊試用', description: '試用時間記錄功能' },
     { path: '/about', name: '開發原因', description: '網站創建理念' },
     { path: '/user/login', name: '登入', description: '用戶登入頁面' },
     { path: '/user/register', name: '註冊', description: '用戶註冊頁面' },

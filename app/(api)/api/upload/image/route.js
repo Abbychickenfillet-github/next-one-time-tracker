@@ -58,12 +58,20 @@ export async function POST(request) {
     const buffer = Buffer.from(bytes)
 
     // 6. 解析轉換設定
+    // ========================================
+    // 🔧 ESLint 修復注意事項
+    // ========================================
+    // 問題：未使用變數警告 - 'error' 變數被宣告但未使用
+    // 原因：catch 區塊中的 error 參數沒有被使用
+    // 修復：將變數名改為 parseError 並在 console.warn 中使用
+    // 影響：避免 ESLint no-unused-vars 警告
+    // ========================================
     let transformations = GENERAL_IMAGE_TRANSFORMATIONS
     if (customTransformations) {
       try {
         transformations = JSON.parse(customTransformations)
-      } catch (error) {
-        console.warn('無法解析自定義轉換設定，使用預設設定')
+      } catch (parseError) {
+        console.warn('無法解析自定義轉換設定，使用預設設定:', parseError)
       }
     }
 

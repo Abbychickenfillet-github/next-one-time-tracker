@@ -69,9 +69,9 @@ export default function TimeLogClient() {
 
   // ===== 儲存到資料庫 =====
   // 對應: 儲存活動資訊到資料庫按鈕 (藍色按鈕)
-  // Demo 版本不支援儲存到資料庫
+  // trial 版本不支援儲存到資料庫
   const handleSaveToDB = async () => {
-    alert('Demo 版本不支援儲存到資料庫，請註冊後使用完整版本')
+    alert('trial 版本不支援儲存到資料庫，請註冊後使用完整版本')
   }
 
   // ===== 清除 localStorage =====
@@ -167,7 +167,7 @@ export default function TimeLogClient() {
                 placement="top"
                 overlay={
                   <Tooltip
-                    id="demo-save-tooltip"
+                    id="trial-save-tooltip"
                     style={{
                       backgroundColor: 'var(--tooltip-bg, #2d3748)',
                       color: 'var(--tooltip-text, #ffffff)',
@@ -186,7 +186,7 @@ export default function TimeLogClient() {
                           (step: any) => !step.ended && step.type === 'step'
                         )
                         ? '⚠️ 提醒：檢測到未完成的步驟！建議先點擊各步驟的「結束」按鈕記錄您預期的結束時間，再儲存到資料庫，這樣可以更準確地記錄您的實際工作時間'
-                        : 'Demo 版本不支援儲存到資料庫，請註冊後使用完整版本'
+                        : 'trial 版本不支援儲存到資料庫，請註冊後使用完整版本'
                       : '請先登入才能儲存到資料庫'}
                   </Tooltip>
                 }
@@ -505,7 +505,7 @@ export default function TimeLogClient() {
                         placement="top"
                         overlay={
                           <Tooltip
-                            id={`demo-step-tooltip-${i}`}
+                            id={`trial-step-tooltip-${i}`}
                             style={{
                               backgroundColor: 'var(--tooltip-bg, #2d3748)',
                               color: 'var(--tooltip-text, #ffffff)',

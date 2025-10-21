@@ -138,7 +138,7 @@ export default function UnifiedNavbar() {
                 </Nav.Link>
                 <Nav.Link
                   as={Link}
-                  href="/demo"
+                  href="/trial"
                   className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                 >
                   免註冊試用
@@ -154,13 +154,57 @@ export default function UnifiedNavbar() {
                 {/* 未登入用戶顯示註冊和登入連結 */}
                 {!isAuth && (
                   <>
-                    <Nav.Link
-                      as={Link}
-                      href="/user/register"
-                      className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
+                    <OverlayTrigger
+                      placement="bottom"
+                      overlay={
+                        <Tooltip
+                          id="register-tooltip"
+                          style={{
+                            backgroundColor: 'var(--tooltip-bg, #2d3748)',
+                            color: 'var(--tooltip-text, #ffffff)',
+                            border: '1px solid var(--tooltip-border, #4a5568)',
+                            borderRadius: '8px',
+                            fontSize: '0.8rem',
+                            padding: '0.75rem 1rem',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                            maxWidth: '280px',
+                            textAlign: 'justify',
+                            lineHeight: '1.4',
+                          }}
+                        >
+                          <div>
+                            <div
+                              style={{
+                                fontWeight: 'bold',
+                                marginBottom: '0.5rem',
+                              }}
+                            >
+                              🌐 註冊後享受跨裝置同步
+                            </div>
+                            <div>
+                              • <strong>雲端儲存</strong>
+                              ：時間記錄自動同步到雲端
+                            </div>
+                            <div>
+                              • <strong>多裝置存取</strong>
+                              ：手機、電腦、平板無縫切換
+                            </div>
+                            <div>
+                              • <strong>數據安全</strong>：重要記錄永不遺失
+                            </div>
+                          </div>
+                        </Tooltip>
+                      }
                     >
-                      註冊
-                    </Nav.Link>
+                      <Nav.Link
+                        as={Link}
+                        href="/user/register"
+                        className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
+                        style={{ cursor: 'help' }}
+                      >
+                        註冊
+                      </Nav.Link>
+                    </OverlayTrigger>
                     <OverlayTrigger
                       placement="bottom"
                       overlay={

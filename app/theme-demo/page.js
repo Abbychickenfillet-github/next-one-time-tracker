@@ -3,28 +3,60 @@ import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import GlowingText from '../../components/glowing-text/glowing-text'
 
-export default function ThemeDemo() {
+export default function Themetrial() {
   const [systemTheme, setSystemTheme] = useState('')
-  const [currentTime, setCurrentTime] = useState(new Date())
+  const [currentTime, setCurrentTime] = useState('')
+  // 為什麼 currentTime 的初始值要設為空字符串？
+  // 服務端渲染：new Date() 在服務端執行時會產生一個時間（例如：14:30:25）
+  // 客戶端渲染：當 JavaScript 在瀏覽器中執行時，new Date() 會產生另一個時間（例如：14:30:26）
+  // 時間差：服務端和客戶端的時間不同，導致 React 無法正確匹配 DOM 結構
+  const [isClient, setIsClient] = useState(false)
+  // 增加isClient以避免水核化問題
 
   // 檢測系統主題
   useEffect(() => {
+    // window.matchMedia('(prefers-color-scheme: dark)') 是必要的嗎？
+    // 答案：在這個範例中，其實不是絕對必要的，因為 CSS 的 @media (prefers-color-scheme)
+    // 已經可以自動處理主題切換。但這裡使用 JavaScript 的目的是：
+    // 1. 在頁面上顯示當前系統主題狀態（讓用戶知道現在是什麼主題）
+    // 2. 提供即時的主題變化監聽（當用戶切換系統主題時，頁面能立即反映）
+    // 3. 為後續可能的手動主題控制功能做準備
+
+    // window.matchMedia() 是什麼？
+    // 這是瀏覽器提供的 API，用來檢測 CSS media query 是否匹配
+    // 它返回一個 MediaQueryList 對象，包含 matches 屬性（boolean）和 change 事件
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+    // mediaQuery.matches 是什麼？
+    // matches 是一個 boolean 值：
+    // - true：表示當前系統設定為深色主題
+    // - false：表示當前系統設定為淺色主題
+    // 這個值會根據用戶的系統設定自動變化
     setSystemTheme(mediaQuery.matches ? 'dark' : 'light')
 
+    // 監聽主題變化事件
+    // 當用戶在系統設定中切換主題時，這個函數會被觸發
     const handleChange = (e) => {
+      // e.matches 同樣是 boolean 值，表示新的主題狀態
       setSystemTheme(e.matches ? 'dark' : 'light')
     }
 
+    // 註冊變化監聽器
     mediaQuery.addEventListener('change', handleChange)
+
+    // 清理函數：移除監聽器避免記憶體洩漏
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
-  // 更新時間
+  // 修復 Hydration 錯誤：確保客戶端渲染
   useEffect(() => {
+    setIsClient(true)
+    setCurrentTime(new Date())
+
     const timer = setInterval(() => {
       setCurrentTime(new Date())
     }, 1000)
+
     return () => clearInterval(timer)
   }, [])
 
@@ -34,7 +66,7 @@ export default function ThemeDemo() {
         <title>純 CSS 主題切換測試</title>
       </Head>
 
-      <div className="theme-demo-container">
+      <div className="theme-trial-container">
         {/* 頂部資訊欄 */}
         <div className="info-bar">
           <div className="info-item">
@@ -46,7 +78,7 @@ export default function ThemeDemo() {
           <div className="info-item">
             <span className="label">當前時間：</span>
             <span className="value">
-              {currentTime.toLocaleTimeString('zh-TW')}
+              {isClient ? currentTime.toLocaleTimeString('zh-TW') : '載入中...'}
             </span>
           </div>
         </div>
@@ -56,7 +88,7 @@ export default function ThemeDemo() {
           <h1 className="title">純 CSS 自動主題切換測試</h1>
 
           {/* 發光文字測試 */}
-          <div className="glowing-text-demo mb-4">
+          <div className="glowing-text-trial mb-4">
             <GlowingText text="發光文字測試" />
           </div>
 
@@ -81,7 +113,7 @@ export default function ThemeDemo() {
 
           {/* 卡片展示區域 */}
           <div className="cards-grid">
-            <div className="demo-card">
+            <div className="trial-card">
               <h3>📊 統計卡片</h3>
               <div className="stats">
                 <div className="stat-item">
@@ -99,7 +131,7 @@ export default function ThemeDemo() {
               </div>
             </div>
 
-            <div className="demo-card">
+            <div className="trial-card">
               <h3>🎨 色彩展示</h3>
               <div className="color-palette">
                 <div className="color-item primary">主要色彩</div>
@@ -111,25 +143,25 @@ export default function ThemeDemo() {
               </div>
             </div>
 
-            <div className="demo-card">
+            <div className="trial-card">
               <h3>📝 表單元素</h3>
-              <div className="form-demo">
+              <div className="form-trial">
                 <input
                   type="text"
                   placeholder="輸入文字..."
-                  className="demo-input"
+                  className="trial-input"
                 />
-                <select className="demo-select">
+                <select className="trial-select">
                   <option>選項 1</option>
                   <option>選項 2</option>
                   <option>選項 3</option>
                 </select>
-                <button className="demo-button primary">主要按鈕</button>
-                <button className="demo-button secondary">次要按鈕</button>
+                <button className="trial-button primary">主要按鈕</button>
+                <button className="trial-button secondary">次要按鈕</button>
               </div>
             </div>
 
-            <div className="demo-card">
+            <div className="trial-card">
               <h3>🔔 通知區域</h3>
               <div className="notifications">
                 <div className="notification success">✅ 操作成功完成</div>
@@ -195,7 +227,7 @@ export default function ThemeDemo() {
       </div>
 
       <style jsx>{`
-        .theme-demo-container {
+        .theme-trial-container {
           min-height: 100vh;
           padding: 20px;
           font-family:
@@ -269,7 +301,7 @@ export default function ThemeDemo() {
           margin-bottom: 50px;
         }
 
-        .demo-card {
+        .trial-card {
           padding: 25px;
           border-radius: 15px;
           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -278,12 +310,12 @@ export default function ThemeDemo() {
             box-shadow 0.3s ease;
         }
 
-        .demo-card:hover {
+        .trial-card:hover {
           transform: translateY(-5px);
           box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
-        .demo-card h3 {
+        .trial-card h3 {
           margin: 0 0 20px 0;
           font-size: 1.3em;
         }
@@ -349,14 +381,14 @@ export default function ThemeDemo() {
           background: #dc3545;
         }
 
-        .form-demo {
+        .form-trial {
           display: flex;
           flex-direction: column;
           gap: 15px;
         }
 
-        .demo-input,
-        .demo-select {
+        .trial-input,
+        .trial-select {
           padding: 12px;
           border-radius: 8px;
           border: 2px solid rgba(0, 0, 0, 0.1);
@@ -364,13 +396,13 @@ export default function ThemeDemo() {
           transition: border-color 0.3s ease;
         }
 
-        .demo-input:focus,
-        .demo-select:focus {
+        .trial-input:focus,
+        .trial-select:focus {
           outline: none;
           border-color: #007bff;
         }
 
-        .demo-button {
+        .trial-button {
           padding: 12px 20px;
           border: none;
           border-radius: 8px;
@@ -380,16 +412,16 @@ export default function ThemeDemo() {
           transition: all 0.3s ease;
         }
 
-        .demo-button.primary {
+        .trial-button.primary {
           background: #007bff;
           color: white;
         }
 
-        .demo-button.secondary {
+        .trial-button.secondary {
           background: rgba(0, 0, 0, 0.1);
         }
 
-        .demo-button:hover {
+        .trial-button:hover {
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
@@ -473,7 +505,7 @@ export default function ThemeDemo() {
 
         /* 亮色主題 */
         @media (prefers-color-scheme: light) {
-          .theme-demo-container {
+          .theme-trial-container {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
           }
@@ -483,7 +515,7 @@ export default function ThemeDemo() {
             color: #333;
           }
 
-          .demo-card {
+          .trial-card {
             background: rgba(255, 255, 255, 0.95);
             color: #333;
           }
@@ -501,7 +533,7 @@ export default function ThemeDemo() {
 
         /* 深色主題 */
         @media (prefers-color-scheme: dark) {
-          .theme-demo-container {
+          .theme-trial-container {
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: #ecf0f1;
           }
@@ -511,7 +543,7 @@ export default function ThemeDemo() {
             color: #ecf0f1;
           }
 
-          .demo-card {
+          .trial-card {
             background: rgba(52, 73, 94, 0.95);
             color: #ecf0f1;
           }
@@ -526,14 +558,14 @@ export default function ThemeDemo() {
             color: #ecf0f1;
           }
 
-          .demo-input,
-          .demo-select {
+          .trial-input,
+          .trial-select {
             background: rgba(44, 62, 80, 0.8);
             color: #ecf0f1;
             border-color: rgba(236, 240, 241, 0.3);
           }
 
-          .demo-button.secondary {
+          .trial-button.secondary {
             background: rgba(236, 240, 241, 0.1);
             color: #ecf0f1;
           }

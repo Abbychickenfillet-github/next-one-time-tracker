@@ -18,6 +18,7 @@ export const useTrialTimeLogStore = create(
       isClient: false, // 客戶端渲染標記
       lastStepTime: null, // 最後步驟時間
       titleHistory: [], // 活動名稱歷史，用於下拉選單
+      savedActivities: [], // 已儲存的活動列表
 
       // ===== Actions =====
 
@@ -56,6 +57,8 @@ export const useTrialTimeLogStore = create(
         const now = new Date()
         const newStep = {
           type: 'start',
+          title: `開始：${state.title}`,
+          description: state.desc || '活動開始',
           text: `✅ 開始：${state.title} | ${now.toLocaleString()}`,
           startTime: now,
           endTime: now,
@@ -204,7 +207,14 @@ export const useTrialTimeLogStore = create(
 
       // 清除 localStorage 中的資料
       clearStorage: () => {
+        // 清除主要的 trial-timelog-storage
         localStorage.removeItem('trial-timelog-storage')
+
+        // 清除所有帶序數的活動記錄
+        for (let i = 1; i <= 10; i++) {
+          localStorage.removeItem(`trial-activity-${i}`)
+        }
+
         set({
           title: '',
           desc: '',
@@ -213,6 +223,7 @@ export const useTrialTimeLogStore = create(
           steps: [],
           currentTime: null,
           lastStepTime: null,
+          savedActivities: [],
         })
       },
 
@@ -237,6 +248,197 @@ export const useTrialTimeLogStore = create(
         if (state.endTime) return '已結束'
         return '準備中'
       },
+
+      // 儲存當前活動
+      saveCurrentActivity: () => {
+        const state = get()
+
+        // 檢查是否有完整的活動資料
+        if (!state.title.trim()) {
+          alert('請先輸入活動名稱')
+          return false
+        }
+
+        if (!state.startTime) {
+          alert('請先開始活動')
+          return false
+        }
+
+        if (!state.endTime) {
+          alert('請先結束活動')
+          return false
+        }
+
+        // 檢查是否已達10筆限制
+        if (state.savedActivities.length >= 10) {
+          alert('已達到試用版10筆記錄限制，請註冊升級享受無限記錄！')
+          return false
+        }
+
+        // 創建活動記錄
+        const activityRecord = {
+          id: Date.now(), // 使用時間戳作為唯一ID
+          title: state.title,
+          desc: state.desc,
+          memo: state.memo,
+          startTime: state.startTime,
+          endTime: state.endTime,
+          steps: state.steps,
+          createdAt: new Date(),
+          duration: state.endTime.getTime() - state.startTime.getTime(),
+        }
+
+        // 使用帶序數的 localStorage key 儲存
+        const nextIndex = state.savedActivities.length + 1
+        const storageKey = `trial-activity-${nextIndex}`
+
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(activityRecord))
+
+          // 更新已儲存活動列表
+          set({
+            savedActivities: [...state.savedActivities, activityRecord],
+          })
+
+          // 重置當前活動狀態
+          set({
+            title: '',
+            desc: '',
+            memo: '',
+            startTime: null,
+            endTime: null,
+            steps: [],
+            lastStepTime: null,
+          })
+
+          return true
+        } catch (error) {
+          console.error('儲存活動失敗:', error)
+          alert('儲存失敗，請檢查 localStorage 空間')
+          return false
+        }
+      },
+
+      // 獲取已儲存活動數量
+      getSavedActivitiesCount: () => {
+        const state = get()
+        return state.savedActivities.length
+      },
+
+      // 載入已儲存的活動
+      loadSavedActivities: () => {
+        if (typeof window === 'undefined') return
+
+        try {
+          const savedActivities = []
+
+          // 檢查 localStorage 中所有 trial-activity-* 的 key
+          for (let i = 1; i <= 10; i++) {
+            const key = `trial-activity-${i}`
+            const data = localStorage.getItem(key)
+
+            if (data) {
+              const activity = JSON.parse(data)
+              // 轉換時間字串為 Date 物件
+              if (
+                activity.startTime &&
+                typeof activity.startTime === 'string'
+              ) {
+                activity.startTime = new Date(activity.startTime)
+              }
+              if (activity.endTime && typeof activity.endTime === 'string') {
+                activity.endTime = new Date(activity.endTime)
+              }
+              if (
+                activity.createdAt &&
+                typeof activity.createdAt === 'string'
+              ) {
+                activity.createdAt = new Date(activity.createdAt)
+              }
+              // 處理 steps 中的時間
+              if (activity.steps && Array.isArray(activity.steps)) {
+                activity.steps = activity.steps.map((step) => ({
+                  ...step,
+                  startTime:
+                    step.startTime && typeof step.startTime === 'string'
+                      ? new Date(step.startTime)
+                      : step.startTime,
+                  endTime:
+                    step.endTime && typeof step.endTime === 'string'
+                      ? new Date(step.endTime)
+                      : step.endTime,
+                }))
+              }
+
+              savedActivities.push(activity)
+            }
+          }
+
+          set({ savedActivities })
+        } catch (error) {
+          console.error('載入已儲存活動失敗:', error)
+        }
+      },
+
+      // 刪除已儲存的活動
+      deleteSavedActivity: (activityId) => {
+        const state = get()
+
+        // 找到要刪除的活動
+        const activityToDelete = state.savedActivities.find(
+          (activity) => activity.id === activityId
+        )
+
+        if (activityToDelete) {
+          // 從 localStorage 中刪除
+          const activityIndex = state.savedActivities.findIndex(
+            (activity) => activity.id === activityId
+          )
+          const storageKey = `trial-activity-${activityIndex + 1}`
+          localStorage.removeItem(storageKey)
+
+          // 重新整理 localStorage 中的序數
+          this.reorganizeStorage()
+
+          // 從狀態中移除
+          set({
+            savedActivities: state.savedActivities.filter(
+              (activity) => activity.id !== activityId
+            ),
+          })
+        }
+      },
+
+      // 重新整理 localStorage 序數
+      reorganizeStorage: () => {
+        if (typeof window === 'undefined') return
+
+        try {
+          const activities = []
+
+          // 收集所有活動
+          for (let i = 1; i <= 10; i++) {
+            const key = `trial-activity-${i}`
+            const data = localStorage.getItem(key)
+            if (data) {
+              activities.push(JSON.parse(data))
+            }
+          }
+
+          // 清除所有舊的 key
+          for (let i = 1; i <= 10; i++) {
+            localStorage.removeItem(`trial-activity-${i}`)
+          }
+
+          // 重新儲存，確保序數連續
+          activities.forEach((activity, index) => {
+            const newKey = `trial-activity-${index + 1}`
+            localStorage.setItem(newKey, JSON.stringify(activity))
+          })
+        } catch (error) {
+          console.error('重新整理儲存失敗:', error)
+        }
+      },
     }),
     {
       // persist() 中間件的配置選項
@@ -244,13 +446,13 @@ export const useTrialTimeLogStore = create(
       partialize: (state) => ({
         // partialize 函數：選擇要持久化的狀態，過濾掉不需要的狀態
         // 只持久化這些狀態，不包含 currentTime 和 isClient
-        // 只有當活動已結束時才持久化 steps，避免覆蓋主頁的已儲存資料
         title: state.title,
         desc: state.desc,
         startTime: state.startTime,
         endTime: state.endTime,
-        steps: state.endTime ? state.steps : [], // 只有活動結束時才保存 steps
+        steps: state.steps,
         lastStepTime: state.lastStepTime,
+        savedActivities: state.savedActivities, // 持久化已儲存的活動列表
       }),
       // onRehydrateStorage: 當從 localStorage 恢復狀態時執行的回調函數
       // 問題：localStorage 只能儲存字串，Date 物件會被序列化為字串
@@ -288,6 +490,40 @@ export const useTrialTimeLogStore = create(
                 step.endTime && typeof step.endTime === 'string'
                   ? new Date(step.endTime) // 字串轉 Date
                   : step.endTime, // 保持原值（可能是 null 或已經是 Date）
+            }))
+          }
+
+          // 處理 savedActivities 陣列中的時間欄位
+          if (state.savedActivities && Array.isArray(state.savedActivities)) {
+            state.savedActivities = state.savedActivities.map((activity) => ({
+              ...activity,
+              startTime:
+                activity.startTime && typeof activity.startTime === 'string'
+                  ? new Date(activity.startTime)
+                  : activity.startTime,
+              endTime:
+                activity.endTime && typeof activity.endTime === 'string'
+                  ? new Date(activity.endTime)
+                  : activity.endTime,
+              createdAt:
+                activity.createdAt && typeof activity.createdAt === 'string'
+                  ? new Date(activity.createdAt)
+                  : activity.createdAt,
+              // 處理 steps 中的時間
+              steps:
+                activity.steps && Array.isArray(activity.steps)
+                  ? activity.steps.map((step) => ({
+                      ...step,
+                      startTime:
+                        step.startTime && typeof step.startTime === 'string'
+                          ? new Date(step.startTime)
+                          : step.startTime,
+                      endTime:
+                        step.endTime && typeof step.endTime === 'string'
+                          ? new Date(step.endTime)
+                          : step.endTime,
+                    }))
+                  : activity.steps,
             }))
           }
         }

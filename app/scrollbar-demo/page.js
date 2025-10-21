@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 // for learning how to use scrollbar
-export default function ScrollbarDemo() {
+export default function Scrollbartrial() {
   const [selectedStyle, setSelectedStyle] = useState('basic')
 
   // 不同滾動條樣式
