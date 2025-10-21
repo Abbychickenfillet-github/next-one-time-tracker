@@ -32,6 +32,7 @@ export default function TimeLogClient() {
     handleVoiceResult,
     saveToDB,
     clearStorage,
+    reset,
     getElapsedMinutes,
     getActivityStatus,
   } = useTimeLogStore()
@@ -50,6 +51,39 @@ export default function TimeLogClient() {
   useEffect(() => {
     setClient(true)
   }, [setClient])
+
+  // 針對帳號切換/未登入狀態，保險清空 timelog 狀態，避免跨帳資料殘留
+  const prevUserIdRef = useRef<number | null>(null)
+  useEffect(() => {
+    const currentUserId = user?.user_id ?? null
+    const prevUserId = prevUserIdRef.current
+
+    // 情境一：未登入（或剛登出後進入頁面）
+    if (!isAuth) {
+      try {
+        clearStorage()
+        reset?.()
+      } catch {
+        // ignore
+      }
+    }
+
+    // 情境二：帳號變更（從 A 切到 B）
+    if (
+      prevUserId !== null &&
+      currentUserId !== null &&
+      prevUserId !== currentUserId
+    ) {
+      try {
+        clearStorage()
+        reset?.()
+      } catch {
+        // ignore
+      }
+    }
+
+    prevUserIdRef.current = currentUserId
+  }, [isAuth, user?.user_id, clearStorage, reset])
 
   // ===== 即時時間更新 =====
   // 對應: 目前時間顯示 (每秒更新一次)

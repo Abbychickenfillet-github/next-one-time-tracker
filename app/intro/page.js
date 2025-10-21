@@ -62,7 +62,7 @@ export default function IntroPage() {
       icon: <FaCloud className="text-info" />,
       title: '雲端同步',
       description: '付費後享受多裝置同步',
-      details: '免費版僅5筆記錄，付費版無限同步',
+      details: '免費版50次/小時API呼叫，付費版120次/小時',
     },
     {
       icon: <FaMobile className="text-success" />,
@@ -92,12 +92,12 @@ export default function IntroPage() {
       features: [
         'localStorage 儲存',
         '最多 10 筆記錄',
-        '註冊後僅 5 筆雲端記錄',
+        '每小時 50 次 API 呼叫',
         '基礎時間記錄',
         '7 天資料保存',
         '⚠️ 無法多裝置同步',
-        '🚦 每小時30次 API 呼叫',
-        '🚦 每天100次資料庫查詢',
+        '🚦 每小時50次 API 呼叫',
+        '🚦 每天120次資料庫查詢',
       ],
       buttonText: '立即註冊',
       buttonVariant: 'outline-primary',
@@ -113,8 +113,8 @@ export default function IntroPage() {
         '✅ 資料永久保存',
         '✅ 基礎統計分析',
         '📱 手機、平板、電腦同步',
-        '🚦 每小時100次 API 呼叫',
-        '🚦 每天500次資料庫查詢',
+        '🚦 每小時120次 API 呼叫',
+        '🚦 每天520次資料庫查詢',
       ],
       buttonText: '開始訂閱',
       buttonVariant: 'primary',
@@ -184,9 +184,9 @@ export default function IntroPage() {
                   <span className={styles.highlight}> 從免費開始</span>
                 </h1>
                 <p className={styles.heroDescription}>
-                  無需註冊，立即體驗時間記錄功能。免費版僅限5筆雲端記錄，
-                  付費版解鎖多裝置同步與無限記錄，更提供 Gemini 2.5 Flash AI
-                  分析，讓你的時間管理更智能、更高效。
+                  無需註冊，立即體驗時間記錄功能。免費版每小時50次API呼叫，
+                  付費版每小時120次API呼叫，解鎖多裝置同步與無限記錄，更提供
+                  Gemini 2.5 Flash AI 分析，讓你的時間管理更智能、更高效。
                 </p>
                 <div className={styles.heroButtons}>
                   <Button
@@ -457,7 +457,7 @@ export default function IntroPage() {
               <div className={styles.stepCard}>
                 <div className={styles.stepNumber}>2</div>
                 <h5>註冊登入</h5>
-                <p>註冊帳號，免費儲存5筆記錄</p>
+                <p>註冊帳號，每小時50次API呼叫</p>
                 <FaSync className={styles.stepIcon} />
               </div>
             </Col>
@@ -465,7 +465,7 @@ export default function IntroPage() {
               <div className={styles.stepCard}>
                 <div className={styles.stepNumber}>3</div>
                 <h5>訂閱付費</h5>
-                <p>解鎖多裝置同步與無限記錄</p>
+                <p>解鎖多裝置同步與每小時120次API呼叫</p>
                 <FaChartLine className={styles.stepIcon} />
               </div>
             </Col>
