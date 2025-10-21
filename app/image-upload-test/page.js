@@ -1,6 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+// ========================================
+// 🔧 ESLint 修復注意事項
+// ========================================
+// 問題：img 標籤警告 - 使用 <img> 而非 Next.js 優化的 <Image> 元件
+// 原因：<img> 標籤會導致較慢的 LCP 和更高的頻寬使用
+// 修復：加入 Image import 並將 <img> 替換為 <Image> 元件
+// 影響：提升圖片載入效能，自動優化圖片格式和大小
+// ========================================
+import Image from 'next/image'
 import { useAuth } from '@/hooks/use-auth'
 import ImageUpload from '@/components/ImageUpload'
 import AvatarUpload from '@/components/AvatarUpload'
@@ -92,10 +101,12 @@ export default function ImageUploadTest() {
                   {uploadResults.map((result, index) => (
                     <div key={index} className="col-md-4 mb-3">
                       <div className="card">
-                        <img
+                        <Image
                           src={result.url}
                           className="card-img-top"
                           alt={`上傳的圖片 ${index + 1}`}
+                          width={300}
+                          height={200}
                           style={{ height: '200px', objectFit: 'cover' }}
                         />
                         <div className="card-body">
@@ -195,4 +206,3 @@ export default function ImageUploadTest() {
     </div>
   )
 }
-

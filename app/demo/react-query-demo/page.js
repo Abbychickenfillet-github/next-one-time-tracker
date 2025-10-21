@@ -20,7 +20,7 @@ const createUser = async (userData) => {
   return response.json()
 }
 
-export default function ReactQueryDemo() {
+export default function ReactQuerytrial() {
   const [name, setName] = useState('')
   const queryClient = useQueryClient()
 
@@ -61,7 +61,7 @@ export default function ReactQueryDemo() {
 
   return (
     <div className="container mt-4">
-      <h1>React Query Demo</h1>
+      <h1>React Query trial</h1>
 
       {/* 顯示用戶列表 */}
       <div className="mb-4">

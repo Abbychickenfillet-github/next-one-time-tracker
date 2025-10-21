@@ -17,6 +17,7 @@ export default function TrialPage() {
     steps,
     currentTime,
     isClient,
+    savedActivities,
     // Actions
     setClient,
     updateCurrentTime,
@@ -30,6 +31,10 @@ export default function TrialPage() {
     clearStorage,
     getElapsedMinutes,
     getActivityStatus,
+    saveCurrentActivity,
+    getSavedActivitiesCount,
+    deleteSavedActivity,
+    loadSavedActivities,
   } = useTrialTimeLogStore()
 
   const [localStorageCount, setLocalStorageCount] = useState(0)
@@ -37,7 +42,9 @@ export default function TrialPage() {
   // ===== 客戶端渲染標記 =====
   useEffect(() => {
     setClient(true)
-  }, [setClient])
+    // 載入已儲存的活動
+    loadSavedActivities()
+  }, [setClient, loadSavedActivities])
 
   // ===== 即時時間更新 =====
   useEffect(() => {
@@ -58,13 +65,15 @@ export default function TrialPage() {
     if (typeof window !== 'undefined') {
       const checkLocalStorageUsage = () => {
         try {
-          const timelogData = localStorage.getItem('trial-timelog-storage')
-          if (timelogData) {
-            const parsed = JSON.parse(timelogData)
-            // 簡單計算：如果有標題就算一筆記錄
-            const count = parsed.state?.title ? 1 : 0
-            setLocalStorageCount(count)
+          let count = 0
+          // 檢查所有帶序數的活動記錄
+          for (let i = 1; i <= 10; i++) {
+            const key = `trial-activity-${i}`
+            if (localStorage.getItem(key)) {
+              count++
+            }
           }
+          setLocalStorageCount(count)
         } catch (error) {
           console.log('檢查 localStorage 使用量失敗:', error)
         }
@@ -75,11 +84,22 @@ export default function TrialPage() {
       const interval = setInterval(checkLocalStorageUsage, 5000)
       return () => clearInterval(interval)
     }
-  }, [])
+  }, [savedActivities]) // 當 savedActivities 改變時重新檢查
 
   // ===== 開始活動 =====
   const handleStart = () => {
     startActivity()
+  }
+
+  // ===== 儲存當前活動 =====
+  const handleSaveActivity = () => {
+    const success = saveCurrentActivity()
+    if (success) {
+      alert('活動已成功儲存！')
+      // 重新載入已儲存的活動並更新計數
+      loadSavedActivities()
+      setLocalStorageCount(getSavedActivitiesCount())
+    }
   }
 
   // ===== 清除 localStorage =====
@@ -245,9 +265,19 @@ export default function TrialPage() {
                   </>
                 )}
                 {getActivityStatus() === '已結束' && (
-                  <Button variant="primary" size="lg" onClick={handleStart}>
-                    🔄 重新開始
-                  </Button>
+                  <>
+                    <Button variant="primary" size="lg" onClick={handleStart}>
+                      🔄 重新開始
+                    </Button>
+                    <Button
+                      variant="success"
+                      size="lg"
+                      onClick={handleSaveActivity}
+                      disabled={localStorageCount >= 10}
+                    >
+                      💾 儲存活動
+                    </Button>
+                  </>
                 )}
               </div>
             </div>
@@ -283,7 +313,8 @@ export default function TrialPage() {
                     <div key={index} className="list-group-item">
                       <div className="d-flex justify-content-between align-items-center">
                         <div>
-                          <strong>步驟 {index + 1}:</strong> {step.name}
+                          <strong>步驟 {index + 1}:</strong>{' '}
+                          {step.title || step.name}
                           {step.description && (
                             <div className="text-muted small">
                               {step.description}
@@ -308,6 +339,48 @@ export default function TrialPage() {
                             </Button>
                           )}
                         </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 已儲存活動列表 */}
+            {savedActivities.length > 0 && (
+              <div className="mb-4">
+                <h5 className="mb-3">📚 已儲存的活動</h5>
+                <div className="list-group">
+                  {savedActivities.map((activity, index) => (
+                    <div key={activity.id} className="list-group-item">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <strong>活動 {index + 1}:</strong> {activity.title}
+                          {activity.desc && (
+                            <div className="text-muted small">
+                              描述: {activity.desc}
+                            </div>
+                          )}
+                          <div className="text-muted small">
+                            開始: {formatTime(activity.startTime)} | 結束:{' '}
+                            {formatTime(activity.endTime)} | 持續:{' '}
+                            {Math.floor(activity.duration / 1000 / 60)} 分鐘
+                          </div>
+                        </div>
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          onClick={() => {
+                            if (confirm('確定要刪除此活動記錄嗎？')) {
+                              deleteSavedActivity(activity.id)
+                              // 重新載入已儲存的活動並更新計數
+                              loadSavedActivities()
+                              setLocalStorageCount(getSavedActivitiesCount())
+                            }
+                          }}
+                        >
+                          刪除
+                        </Button>
                       </div>
                     </div>
                   ))}
