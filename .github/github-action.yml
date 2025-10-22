@@ -35,16 +35,41 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # 6. 建置 Docker 映像（如果需要）
+      # 6. 建置 Docker 映像
       - name: Build Docker image
         run: |
           docker build -t next-one-app .
 
-      # 7. 推送到 Docker Registry（如果需要）
-      - name: Push to registry
+      # 7. 登入 Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 8. 推送到 Docker Hub
+      - name: Push to Docker Hub
         run: |
-          echo "Docker image built successfully"
-          # 這裡可以加入推送到 Docker Hub 或其他 registry 的步驟
+          docker tag next-one-app ${{ secrets.DOCKERHUB_USERNAME }}/next-one-app:latest
+          docker tag next-one-app ${{ secrets.DOCKERHUB_USERNAME }}/next-one-app:${{ github.sha }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/next-one-app:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/next-one-app:${{ github.sha }}
+
+      # 9. 登入 GitHub Container Registry
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 10. 推送到 GitHub Container Registry
+      - name: Push to GitHub Container Registry
+        run: |
+          docker tag next-one-app ghcr.io/${{ github.repository }}/next-one-app:latest
+          docker tag next-one-app ghcr.io/${{ github.repository }}/next-one-app:${{ github.sha }}
+          docker push ghcr.io/${{ github.repository }}/next-one-app:latest
+          docker push ghcr.io/${{ github.repository }}/next-one-app:${{ github.sha }}
 
       # 8. 成功後寄送通知郵件
       - name: Send success notification
@@ -67,9 +92,15 @@ jobs:
             - 觸發者：${{ github.actor }}
             - 時間：${{ github.event.head_commit.timestamp }}
 
+            🐳 Docker 映像：
+            - Docker Hub: ${{ secrets.DOCKERHUB_USERNAME }}/next-one-app:latest
+            - GitHub Registry: ghcr.io/${{ github.repository }}/next-one-app:latest
+            - 版本標籤: ${{ github.sha }}
+
             🔗 相關連結：
             - Repository: ${{ github.repository }}
             - Commit: ${{ github.event.head_commit.url }}
+            - Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
             建置過程一切順利！🚀
 
@@ -100,8 +131,3 @@ jobs:
             - Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
             請檢查建置日誌並修復問題！🔧
-      #10. 使用 GitHub 內建的郵件通知
-      - name: Notify on success
-        if: success()
-        run: |
-          echo "Build successful! Check the Actions tab for details."
