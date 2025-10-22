@@ -10,11 +10,11 @@ WORKDIR /app
 # 複製 package.json 和 package-lock.json
 COPY package*.json ./
 
-# 安裝依賴
-RUN npm ci --only=production && npm cache clean --force
-
-# 複製 Prisma schema
+# 複製 Prisma schema（在安裝依賴之前）
 COPY prisma ./prisma/
+
+# 安裝所有依賴（包括 devDependencies，因為需要 Prisma CLI）
+RUN npm install && npm cache clean --force
 
 # 生成 Prisma client
 RUN npx prisma generate
