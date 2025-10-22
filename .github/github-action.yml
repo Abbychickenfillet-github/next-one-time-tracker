@@ -1,0 +1,107 @@
+name: Build and Deploy with Email Notification
+
+# 觸發條件：當有 push 到 main 分支時執行
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 檢出程式碼
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 設定 Node.js 環境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # 3. 安裝依賴
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. 執行測試（如果有測試的話）
+      - name: Run tests
+        run: npm test --if-present
+
+      # 5. 建置專案
+      - name: Build project
+        run: npm run build
+
+      # 6. 建置 Docker 映像（如果需要）
+      - name: Build Docker image
+        run: |
+          docker build -t next-one-app .
+
+      # 7. 推送到 Docker Registry（如果需要）
+      - name: Push to registry
+        run: |
+          echo "Docker image built successfully"
+          # 這裡可以加入推送到 Docker Hub 或其他 registry 的步驟
+
+      # 8. 成功後寄送通知郵件
+      - name: Send success notification
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: '✅ Build Success - Next One Project'
+          to: aintluminate@gmail.com
+          from: ${{ secrets.EMAIL_USERNAME }}
+          body: |
+            🎉 恭喜！你的 Next One 專案已經成功建置和部署！
+
+            📊 建置詳情：
+            - 分支：${{ github.ref_name }}
+            - 提交：${{ github.sha }}
+            - 觸發者：${{ github.actor }}
+            - 時間：${{ github.event.head_commit.timestamp }}
+
+            🔗 相關連結：
+            - Repository: ${{ github.repository }}
+            - Commit: ${{ github.event.head_commit.url }}
+
+            建置過程一切順利！🚀
+
+      # 9. 失敗時寄送錯誤通知
+      - name: Send failure notification
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: '❌ Build Failed - Next One Project'
+          to: aintluminate@gmail.com
+          from: ${{ secrets.EMAIL_USERNAME }}
+          body: |
+            😞 抱歉，你的 Next One 專案建置失敗了！
+
+            📊 建置詳情：
+            - 分支：${{ github.ref_name }}
+            - 提交：${{ github.sha }}
+            - 觸發者：${{ github.actor }}
+            - 時間：${{ github.event.head_commit.timestamp }}
+
+            🔗 相關連結：
+            - Repository: ${{ github.repository }}
+            - Commit: ${{ github.event.head_commit.url }}
+            - Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            請檢查建置日誌並修復問題！🔧
+      #10. 使用 GitHub 內建的郵件通知
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "Build successful! Check the Actions tab for details."

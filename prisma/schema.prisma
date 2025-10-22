@@ -27,6 +27,7 @@ model TimeLog {
   memo      String?
   steps     Step[]
   user      User?     @relation(fields: [userId], references: [user_id], onDelete: Cascade)
+  featuredShares FeaturedShare[]
 }
 
 model Step {
@@ -75,6 +76,7 @@ model User {
   paymentOrders     PaymentOrder[]
   steps             Step[]
   timeLogs          TimeLog[]
+  featuredShares    FeaturedShare[]
 }
 
 model PaymentOrder {
@@ -97,4 +99,23 @@ model PaymentOrder {
 
   @@index([userId, isCurrent]) // 索引：用戶ID + 是否當前訂閱
   @@index([dueAt]) // 索引：到期時間，用於查詢過期訂閱
+}
+
+model FeaturedShare {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @map("user_id")
+  timeLogId     Int       @map("time_log_id")
+  title         String    // 分享標題
+  description   String?   // 分享描述
+  shareReason   String?   @map("share_reason") // 分享原因
+  starCount     Int       @default(0) @map("star_count") // 星星數量
+  isPublic      Boolean   @default(true) @map("is_public") // 是否公開
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  user          User      @relation(fields: [userId], references: [user_id], onDelete: Cascade)
+  timeLog       TimeLog   @relation(fields: [timeLogId], references: [id], onDelete: Cascade)
+
+  @@index([userId]) // 索引：用戶ID，用於查詢用戶的分享
+  @@index([isPublic, createdAt]) // 複合索引：公開狀態 + 創建時間，用於查詢公開分享
+  @@index([starCount]) // 索引：星星數量，用於排序
 }
