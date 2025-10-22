@@ -138,6 +138,13 @@ export default function UnifiedNavbar() {
                 </Nav.Link>
                 <Nav.Link
                   as={Link}
+                  href="/featured-shares"
+                  className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
+                >
+                  精選分享
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
                   href="/trial"
                   className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                 >
@@ -149,6 +156,13 @@ export default function UnifiedNavbar() {
                   className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                 >
                   開發原因
+                </Nav.Link>
+                <Nav.Link
+                  as={Link}
+                  href="/featured-shares"
+                  className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
+                >
+                  ⭐ 精選分享
                 </Nav.Link>
 
                 {/* 未登入用戶顯示註冊和登入連結 */}

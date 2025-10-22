@@ -144,3 +144,4 @@ console.log('uploadResult:', uploadResult) // { public_id: "...", secure_url: ".
 這些都是您平常熟悉的 JavaScript 概念，只是在不同環境中的應用！
 
 
+
