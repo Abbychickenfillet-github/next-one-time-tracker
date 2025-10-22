@@ -74,10 +74,11 @@ jobs:
       # 8. 成功後寄送通知郵件
       - name: Send success notification
         if: success()
-        uses: dawidd6/action-send-mail@v3
+        uses: dawidd6/action-send-mail@v6
         with:
           server_address: smtp.gmail.com
-          server_port: 587
+          server_port: 465
+          secure: true
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: '✅ Build Success - Next One Project'
@@ -103,14 +104,17 @@ jobs:
             - Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
             建置過程一切順利！🚀
+          convert_markdown: true
+          priority: normal
 
       # 9. 失敗時寄送錯誤通知
       - name: Send failure notification
         if: failure()
-        uses: dawidd6/action-send-mail@v3
+        uses: dawidd6/action-send-mail@v6
         with:
           server_address: smtp.gmail.com
-          server_port: 587
+          server_port: 465
+          secure: true
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: '❌ Build Failed - Next One Project'
@@ -131,3 +135,5 @@ jobs:
             - Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
             請檢查建置日誌並修復問題！🔧
+          convert_markdown: true
+          priority: high
