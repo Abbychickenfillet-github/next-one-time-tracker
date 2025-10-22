@@ -77,7 +77,7 @@ TimeLog & Analysis Platform 是一個全端時間管理應用程式，旨在幫�
 
 - **語言**: TypeScript, JavaScript
 - **代碼品質**: ESLint, Prettier
-- **部署**: Vercel, Docker
+- **部署**: Zeabur, Docker
 - **版本控制**: Git
 
 ## 🚀 快速開始
