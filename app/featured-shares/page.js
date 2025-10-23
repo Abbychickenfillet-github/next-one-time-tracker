@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { Card, Button, Badge, Col, Alert, Spinner } from 'react-bootstrap'
-import { useAuth } from '@/hooks/use-auth'
+// import { useAuth } from '@/hooks/use-auth' // 暫時未使用，保留供未來使用
 import Image from 'next/image'
 
 export default function FeaturedShares() {
