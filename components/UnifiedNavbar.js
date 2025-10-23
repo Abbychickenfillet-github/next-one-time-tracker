@@ -159,12 +159,11 @@ export default function UnifiedNavbar() {
                 </Nav.Link>
                 <Nav.Link
                   as={Link}
-                  href="/featured-shares"
+                  href="/subscription"
                   className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
                 >
-                  ⭐ 精選分享
+                  訂閱服務
                 </Nav.Link>
-
                 {/* 未登入用戶顯示註冊和登入連結 */}
                 {!isAuth && (
                   <>
@@ -276,13 +275,6 @@ export default function UnifiedNavbar() {
                 {/* 已登入用戶顯示訂閱和儀表板連結 */}
                 {isAuth && (
                   <>
-                    <Nav.Link
-                      as={Link}
-                      href="/subscription"
-                      className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
-                    >
-                      訂閱
-                    </Nav.Link>
                     <Nav.Link
                       as={Link}
                       href="/dashboard"

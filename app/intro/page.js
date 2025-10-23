@@ -86,7 +86,7 @@ export default function IntroPage() {
 
   const pricingPlans = [
     {
-      name: '免費版',
+      name: '未註冊免費版',
       price: 'NT$ 0',
       period: '永久免費',
       features: [
@@ -95,7 +95,7 @@ export default function IntroPage() {
         '每小時 50 次 API 呼叫',
         '基礎時間記錄',
         '7 天資料保存',
-        '⚠️ 無法多裝置同步',
+        '⚠️ 未註冊無法多裝置同步',
         '🚦 每小時50次 API 呼叫',
         '🚦 每天120次資料庫查詢',
       ],
