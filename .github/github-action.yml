@@ -63,6 +63,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # 【新增步驟】將 repository 名稱轉為小寫     
+      - name: Set repository name to lowercase
+      - run: echo "REPO_LC=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      # 10. 【修改此步驟】推送到 GitHub Container Registry
+      - name: Push to GitHub Container Registry
+        run: |
+          # 使用新的 ${{ env.REPO_LC }} 變數
+          docker tag next-one-app ghcr.io/${{ env.REPO_LC }}/next-one-app:latest
+          docker tag next-one-app ghcr.io/${{ env.REPO_LC }}/next-one-app:${{ github.sha }}
+          docker push ghcr.io/${{ env.REPO_LC }}/next-one-app:latest
+
       # 10. 推送到 GitHub Container Registry
       - name: Push to GitHub Container Registry
         run: |

@@ -336,7 +336,7 @@ export default function LogIn() {
                             id="password"
                             name="password"
                             className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
-                            placeholder="請輸入您的密碼"
+                            placeholder="請輸入您包含英文大小寫、數字、特殊符號的密碼"
                             required
                             style={{
                               backdropFilter: 'blur(10px)',
