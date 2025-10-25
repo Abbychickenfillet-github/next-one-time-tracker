@@ -10,6 +10,10 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    # 設置 GitHub Container Registry 權限
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       # 1. 檢出程式碼
@@ -65,6 +69,7 @@ jobs:
           # github.actor 是觸發此工作流程的 GitHub 用戶名
           username: ${{ github.actor }}
           # GITHUB_TOKEN 是 GitHub 自動提供的認證令牌
+          # 需要設置 write:packages 權限
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # 10. 推送到 GitHub Container Registry
