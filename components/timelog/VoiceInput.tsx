@@ -16,6 +16,7 @@ export default function VoiceInput(
   // onResult: (text: string) => void
   // onVoiceToggle?: (toggleFn: () => void) => void
 ) {
+  // eslint-disable-next-line no-unused-vars
   const [isSupported, setIsSupported] = useState(false)
   const [isListening, setIsListening] = useState(false)
   const [error, setError] = useState('')
