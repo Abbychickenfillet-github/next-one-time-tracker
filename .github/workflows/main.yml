@@ -59,17 +59,32 @@ jobs:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
+          # ghcr.io 是 GitHub Container Registry 的官方域名
+          # 這是 GitHub 提供的免費容器映像存儲服務
           registry: ghcr.io
+          # github.actor 是觸發此工作流程的 GitHub 用戶名
           username: ${{ github.actor }}
+          # GITHUB_TOKEN 是 GitHub 自動提供的認證令牌
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # 10. 推送到 GitHub Container Registry
       - name: Push to GitHub Container Registry
         run: |
-          docker tag next-one-app ghcr.io/${{ github.repository }}/next-one-app:latest
-          docker tag next-one-app ghcr.io/${{ github.repository }}/next-one-app:${{ github.sha }}
-          docker push ghcr.io/${{ github.repository }}/next-one-app:latest
-          docker push ghcr.io/${{ github.repository }}/next-one-app:${{ github.sha }}
+          # 將 GitHub 倉庫名稱轉換為小寫
+          # tr '[:upper:]' '[:lower:]' 是 Linux/Unix 命令，用於字符轉換
+          # [:upper:] 代表所有大寫字母，[:lower:] 代表所有小寫字母
+          # 例如：Abbychickenfillet-github/next-one-time-tracker -> abbychickenfillet-github/next-one-time-tracker
+          REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+
+          # ghcr.io 是 GitHub Container Registry 的域名
+          # GitHub Container Registry 要求倉庫名稱必須全部小寫
+          # 格式：ghcr.io/用戶名/倉庫名/映像名:標籤
+          docker tag next-one-app ghcr.io/$REPO_NAME/next-one-app:latest
+          docker tag next-one-app ghcr.io/$REPO_NAME/next-one-app:${{ github.sha }}
+
+          # 推送 Docker 映像到 GitHub Container Registry
+          docker push ghcr.io/$REPO_NAME/next-one-app:latest
+          docker push ghcr.io/$REPO_NAME/next-one-app:${{ github.sha }}
 
       # 8. 成功後寄送通知郵件
       - name: Send success notification
@@ -95,7 +110,7 @@ jobs:
 
             🐳 Docker 映像：
             - Docker Hub: ${{ secrets.DOCKERHUB_USERNAME }}/next-one-app:latest
-            - GitHub Registry: ghcr.io/${{ github.repository }}/next-one-app:latest
+            - GitHub Registry: ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')/next-one-app:latest
             - 版本標籤: ${{ github.sha }}
 
             🔗 相關連結：
