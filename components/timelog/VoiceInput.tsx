@@ -3,8 +3,10 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 
 export default function VoiceInput(
   // eslint-disable-next-line
-  { onResult, onVoiceToggle }: { 
+  { onResult, onVoiceToggle }: {
+    // eslint-disable-next-line
     onResult: (text: string) => void
+    // eslint-disable-next-line
     onVoiceToggle?: (toggleFn: () => void) => void
   }
   //這裡的冒號 : 是 TypeScript 型別註解 (Type Annotation) 的語法。
