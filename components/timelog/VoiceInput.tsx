@@ -1,30 +1,25 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 
 export default function VoiceInput(
   // eslint-disable-next-line
-  { onResult }: { onResult: (_text: string) => void }
+  { onResult, onVoiceToggle }: { 
+    onResult: (text: string) => void
+    onVoiceToggle?: (toggleFn: () => void) => void
+  }
   //這裡的冒號 : 是 TypeScript 型別註解 (Type Annotation) 的語法。
   // onResult 是一個函數，接受字串參數並回傳 void (沒有回傳值)
   // 這個函數用來通知父組件語音識別的結果
+  // onVoiceToggle 是一個可選函數，用來接收語音切換函數
   // onResult: (text: string) => void
+  // onVoiceToggle?: (toggleFn: () => void) => void
 ) {
   const [isSupported, setIsSupported] = useState(false)
   const [isListening, setIsListening] = useState(false)
   const [error, setError] = useState('')
+  const recognizerRef = useRef<any>(null)
 
   useEffect(() => {
-    // 檢查是否為手機裝置
-    const isMobile =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      )
-
-    if (isMobile) {
-      setError('手機裝置請使用鍵盤的語音輸入功能')
-      return
-    }
-
     // 檢查電腦裝置是否支援語音識別
     const Recognition =
       (window as any).SpeechRecognition ||
@@ -43,6 +38,9 @@ export default function VoiceInput(
 
     setIsSupported(true)
     const recognizer = new Recognition()
+
+    // 將 recognizer 實例存儲到 ref 中，方便除錯
+    recognizerRef.current = recognizer
 
     // 設定語音識別參數
     recognizer.lang = 'zh-TW'
@@ -94,50 +92,32 @@ export default function VoiceInput(
       }
     }
 
-    // 綁定按鈕點擊事件
-    const voiceBtn = document.getElementById('voiceBtn')
-    if (voiceBtn) {
-      voiceBtn.addEventListener('click', async () => {
-        try {
-          // 檢查是否正在聆聽
-          if (isListening) {
-            recognizer.stop()
-          } else {
-            recognizer.start()
-          }
-        } catch (err) {
-          console.error('啟動語音識別失敗:', err)
-          setError('無法啟動語音識別，請檢查麥克風權限')
-        }
-      })
-    }
-
     // 清理函數
     return () => {
-      if (voiceBtn) {
-        voiceBtn.removeEventListener('click', () => {})
-      }
+      recognizerRef.current = null
     }
-  }, [onResult, isListening])
+  }, [onResult])
 
-  // 更新按鈕狀態
-  useEffect(() => {
-    const voiceBtn = document.getElementById('voiceBtn')
-    if (voiceBtn) {
-      if (!isSupported) {
-        ;(voiceBtn as HTMLButtonElement).disabled = true
-        voiceBtn.title = error || '不支援語音識別'
-      } else if (isListening) {
-        ;(voiceBtn as HTMLButtonElement).innerHTML = '🎤 聆聽中...'
-        voiceBtn.classList.add('btn-warning')
-        voiceBtn.classList.remove('btn-outline-info')
+  // 處理語音切換
+  const handleVoiceToggle = useCallback(async () => {
+    try {
+      if (isListening) {
+        recognizerRef.current?.stop()
       } else {
-        voiceBtn.innerHTML = '🎤 語音'
-        voiceBtn.classList.add('btn-outline-info')
-        voiceBtn.classList.remove('btn-warning')
+        recognizerRef.current?.start()
       }
+    } catch (err) {
+      console.error('啟動語音識別失敗:', err)
+      setError('無法啟動語音識別，請檢查麥克風權限')
     }
-  }, [isSupported, isListening, error])
+  }, [isListening])
+
+  // 將語音切換函數傳遞給父組件
+  useEffect(() => {
+    if (onVoiceToggle) {
+      onVoiceToggle(handleVoiceToggle)
+    }
+  }, [onVoiceToggle, handleVoiceToggle])
 
   // 顯示錯誤訊息
   useEffect(() => {
@@ -148,11 +128,6 @@ export default function VoiceInput(
       return () => clearTimeout(timeout)
     }
   }, [error])
-
-  // 清除錯誤訊息的函數
-  const clearError = () => {
-    setError('')
-  }
 
   return (
     <>
@@ -170,7 +145,7 @@ export default function VoiceInput(
           <button
             type="button"
             className="btn-close"
-            onClick={clearError}
+            onClick={() => setError('')}
           ></button>
         </div>
       )}

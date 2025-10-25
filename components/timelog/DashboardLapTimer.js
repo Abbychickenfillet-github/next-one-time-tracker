@@ -19,6 +19,7 @@ export default function DashboardLapTimer() {
   const [pausePeriods, setPausePeriods] = useState([])
   const [currentLapStartTime, setCurrentLapStartTime] = useState(null)
   const [currentPauseStart, setCurrentPauseStart] = useState(null)
+  const [isLapRunning, setIsLapRunning] = useState(false) // 新增：追蹤當前分圈是否進行中
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
 
@@ -61,6 +62,12 @@ export default function DashboardLapTimer() {
           setPausePeriods(lapData.pausePeriods || [])
           setIsRunning(lapData.isRunning || false)
           setIsPaused(lapData.isPaused || false)
+          setIsLapRunning(lapData.isLapRunning || false)
+          setCurrentLapStartTime(
+            lapData.currentLapStartTime
+              ? new Date(lapData.currentLapStartTime)
+              : null
+          )
         }
       }
     } catch (error) {
@@ -150,7 +157,7 @@ export default function DashboardLapTimer() {
     return dateObj.toLocaleDateString('zh-TW')
   }
 
-  // 計算當前經過時間
+  // 計算當前經過時間（淨時間，排除暫停時間）
   const getCurrentElapsedTime = () => {
     if (!startTime) return 0
 
@@ -171,11 +178,54 @@ export default function DashboardLapTimer() {
     return totalDuration - totalPauseDuration
   }
 
+  // 計算當前分圈經過時間（不包含暫停時間）
+  const getCurrentLapElapsedTime = () => {
+    if (!currentLapStartTime || !isLapRunning) return 0
+
+    const now = currentTime
+    const lapDuration = now.getTime() - currentLapStartTime.getTime()
+
+    // 計算當前分圈期間的暫停時間
+    let lapPauseDuration = 0
+    if (isPaused && currentPauseStart) {
+      // 如果當前正在暫停，且暫停開始時間在分圈開始時間之後
+      if (currentPauseStart >= currentLapStartTime) {
+        lapPauseDuration = now.getTime() - currentPauseStart.getTime()
+      }
+    }
+
+    // 計算分圈期間的歷史暫停時間
+    const historicalPauseDuration = pausePeriods.reduce((sum, period) => {
+      // 只計算與當前分圈重疊的暫停時間
+      const pauseStart = new Date(period.start)
+      const pauseEnd = new Date(period.end)
+
+      if (pauseStart >= currentLapStartTime) {
+        return sum + period.duration
+      } else if (pauseEnd > currentLapStartTime) {
+        // 部分重疊的情況
+        const overlapStart = currentLapStartTime
+        const overlapEnd = pauseEnd
+        return sum + (overlapEnd.getTime() - overlapStart.getTime())
+      }
+      return sum
+    }, 0)
+
+    return lapDuration - lapPauseDuration - historicalPauseDuration
+  }
+
   // 獲取活動狀態
   const getActivityStatus = () => {
     if (!isRunning) return '準備中'
     if (isPaused) return '已暫停'
     return '進行中'
+  }
+
+  // 獲取分圈狀態
+  const getLapStatus = () => {
+    if (!isLapRunning) return '無進行中分圈'
+    if (isPaused) return '分圈已暫停'
+    return '分圈進行中'
   }
 
   // 開始活動
@@ -271,15 +321,50 @@ export default function DashboardLapTimer() {
     })
   }
 
-  // 記錄分圈
-  const handleRecordLap = async () => {
+  // 開始分圈
+  const handleStartLap = async () => {
     if (!isRunning || isPaused) {
       alert('請先開始活動且不能處於暫停狀態')
       return
     }
 
+    if (isLapRunning) {
+      alert('已有進行中的分圈，請先結束當前分圈')
+      return
+    }
+
     const now = new Date()
-    const lapDuration = now.getTime() - currentLapStartTime.getTime()
+    setCurrentLapStartTime(now)
+    setIsLapRunning(true)
+
+    await saveLapTimerData({
+      title,
+      desc,
+      startTime,
+      endTime,
+      laps,
+      pausePeriods,
+      isRunning: true,
+      isPaused,
+      currentLapStartTime: now,
+      isLapRunning: true,
+    })
+  }
+
+  // 結束分圈
+  const handleEndLap = async () => {
+    if (!isRunning || isPaused) {
+      alert('請先開始活動且不能處於暫停狀態')
+      return
+    }
+
+    if (!isLapRunning || !currentLapStartTime) {
+      alert('沒有進行中的分圈')
+      return
+    }
+
+    const now = new Date()
+    const lapDuration = getCurrentLapElapsedTime()
 
     const newLap = {
       id: Date.now(),
@@ -293,7 +378,8 @@ export default function DashboardLapTimer() {
 
     const newLaps = [...laps, newLap]
     setLaps(newLaps)
-    setCurrentLapStartTime(now)
+    setCurrentLapStartTime(null)
+    setIsLapRunning(false)
     setDesc('') // 清空描述輸入框
 
     await saveLapTimerData({
@@ -305,6 +391,8 @@ export default function DashboardLapTimer() {
       pausePeriods,
       isRunning: true,
       isPaused,
+      currentLapStartTime: null,
+      isLapRunning: false,
     })
   }
 
@@ -331,6 +419,22 @@ export default function DashboardLapTimer() {
       ]
     }
 
+    // 如果有進行中的分圈，先結束它
+    let finalLaps = laps
+    if (isLapRunning && currentLapStartTime) {
+      const lapDuration = getCurrentLapElapsedTime()
+      const finalLap = {
+        id: Date.now(),
+        lapNumber: laps.length + 1,
+        startTime: currentLapStartTime,
+        endTime: now,
+        duration: lapDuration,
+        description: desc || `分圈 ${laps.length + 1}`,
+        timestamp: now,
+      }
+      finalLaps = [...laps, finalLap]
+    }
+
     // 計算總時間
     const totalDuration = now.getTime() - startTime.getTime()
     const totalPauseDuration = finalPausePeriods.reduce(
@@ -342,16 +446,20 @@ export default function DashboardLapTimer() {
     setEndTime(now)
     setIsRunning(false)
     setIsPaused(false)
+    setIsLapRunning(false)
+    setCurrentLapStartTime(null)
 
     await saveLapTimerData({
       title,
       desc,
       startTime,
       endTime: now,
-      laps,
+      laps: finalLaps,
       pausePeriods: finalPausePeriods,
       isRunning: false,
       isPaused: false,
+      isLapRunning: false,
+      currentLapStartTime: null,
       totalElapsedTime: totalDuration,
       netElapsedTime: netDuration,
     })
@@ -369,6 +477,8 @@ export default function DashboardLapTimer() {
         pausePeriods: [],
         isRunning: false,
         isPaused: false,
+        isLapRunning: false,
+        currentLapStartTime: null,
         totalElapsedTime: 0,
         netElapsedTime: 0,
       }
@@ -380,6 +490,7 @@ export default function DashboardLapTimer() {
       setCurrentLapStartTime(null)
       setIsRunning(false)
       setIsPaused(false)
+      setIsLapRunning(false)
       setCurrentPauseStart(null)
       setPausePeriods([])
       setLaps([])
@@ -422,14 +533,40 @@ export default function DashboardLapTimer() {
               disabled={isRunning}
             />
           </div>
+          <div className="mb-3 text-center">
+            {getActivityStatus() === '準備中' && (
+              <Button
+                variant="success"
+                size="lg"
+                onClick={handleStart}
+                disabled={!title.trim() || isLoading}
+              >
+                🚀 開始計時
+              </Button>
+            )}
+          </div>
           <div className="mb-3">
             <label className="form-label fw-semibold">分圈描述</label>
             <input
               type="text"
               className="form-control"
-              placeholder="輸入分圈描述..."
+              placeholder={
+                isLapRunning
+                  ? '按 Enter 結束分圈...'
+                  : '輸入分圈描述，按 Enter 開始...'
+              }
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  // 根據當前分圈狀態決定操作
+                  if (isLapRunning) {
+                    handleEndLap()
+                  } else {
+                    handleStartLap()
+                  }
+                }
+              }}
             />
           </div>
         </div>
@@ -450,22 +587,29 @@ export default function DashboardLapTimer() {
                 </Badge>
               )}
             </div>
+
+            {/* 當前分圈時間顯示 */}
+            {isLapRunning && (
+              <div className="mt-3">
+                <div className="display-6 text-primary fw-bold mb-2">
+                  {formatTime(getCurrentLapElapsedTime())}
+                </div>
+                <div className="d-flex justify-content-center gap-2 flex-wrap">
+                  <Badge bg="primary" className="fs-6">
+                    當前分圈: {formatTime(getCurrentLapElapsedTime())}
+                  </Badge>
+                  <Badge bg="secondary" className="fs-6">
+                    {getLapStatus()}
+                  </Badge>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
         {/* 控制按鈕 */}
         <div className="text-center mb-4">
           <div className="btn-group" role="group">
-            {getActivityStatus() === '準備中' && (
-              <Button
-                variant="success"
-                size="lg"
-                onClick={handleStart}
-                disabled={!title.trim() || isLoading}
-              >
-                🚀 開始計時
-              </Button>
-            )}
             {getActivityStatus() === '進行中' && (
               <>
                 <Button
@@ -476,14 +620,25 @@ export default function DashboardLapTimer() {
                 >
                   ⏸️ 暫停
                 </Button>
-                <Button
-                  variant="info"
-                  size="lg"
-                  onClick={handleRecordLap}
-                  disabled={isLoading}
-                >
-                  🏁 記錄分圈
-                </Button>
+                {!isLapRunning ? (
+                  <Button
+                    variant="info"
+                    size="lg"
+                    onClick={handleStartLap}
+                    disabled={isLoading}
+                  >
+                    🏁 開始分圈
+                  </Button>
+                ) : (
+                  <Button
+                    variant="success"
+                    size="lg"
+                    onClick={handleEndLap}
+                    disabled={isLoading}
+                  >
+                    ✅ 結束分圈
+                  </Button>
+                )}
                 <Button
                   variant="danger"
                   size="lg"

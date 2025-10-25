@@ -8,7 +8,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// 以下為資料表定義
+// 以下為資料表定義
+// 分享
 model Blog {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now()) @map("created_at")

@@ -15,14 +15,15 @@ import { isDev, convertToCamelCase } from '../lib/utils.js'
 // const oneToOne = ['User:Profile'] // 已註解掉，因為移除了 Profile 表
 // foreignKey is in the second table
 const oneToMany = [
-  'Category:Product',
-  'Brand:Product',
   'User:TimeLog',
   'User:Step',
   'TimeLog:Step',
+  'User:PaymentOrder',
+  'User:FeaturedShare',
+  'TimeLog:FeaturedShare',
 ]
 // foreignKey is in the third table
-const manyToMany = ['User:Product:Favorite']
+const manyToMany = [] // 目前沒有多對多關聯
 
 // seed檔案種類(副檔名) seed files extension (csv| json)
 const fileExtension = 'json'
@@ -51,7 +52,7 @@ async function main() {
 
   // console.log(relationFileList)
   // sort relationFileList with oneToOne, oneToMany, manyToMany table sequence
-  // 依照關聯表順序排序種子檔案
+  // 依照關聯表順序排序種子檔案，以避免外鍵約束問題
   relationFileList.sort(function (a, b) {
     for (let i = 0; i < relations.length; i++) {
       const tmp = relations[i].split(':')
@@ -107,13 +108,20 @@ async function main() {
 
   // 逐一讀取種子檔案，並匯入資料 json or csv
   for (const filename of seedFileList) {
+    // 檢查檔案是否存在
+    const filePath = path.join(process.cwd(), `./${seedsFolder}/${filename}`)
+    try {
+      await fs.promises.access(filePath)
+    } catch {
+      console.log(`⚠️  跳過不存在的檔案: ${filename}`)
+      continue
+    }
+
     let data = []
 
     // json file
     if (fileExtension === 'json') {
-      const jsonData = await readFile(
-        path.join(process.cwd(), `./${seedsFolder}/${filename}`)
-      )
+      const jsonData = await readFile(filePath)
       // allData is an array of objects
       const allData = JSON.parse(jsonData)
 

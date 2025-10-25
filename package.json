@@ -12,7 +12,7 @@
     "install-only": "npm install --ignore-scripts",
     "postinstall": "prisma generate",
     "deploy": "prisma generate && prisma migrate deploy",
-    "seed": "prisma generate && prisma db push --force-reset && prisma db seed",
+    "seed": "prisma generate && prisma db seed",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --force-exit --detectOpenHandles"
   },
   "prisma": {
