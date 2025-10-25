@@ -38,5 +38,13 @@
     "phone": "0912345682",
     "birthdate": "1995-03-15",
     "gender": "male"
+  },
+  {
+    "name": "christine",
+    "password": "abc123ABC@",
+    "email": "christine@gmail.com",
+    "phone": "0912345683",
+    "birthdate": "1996-04-16",
+    "gender": "female"
   }
 ]

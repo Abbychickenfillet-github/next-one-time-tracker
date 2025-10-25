@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useTimeLogStore } from '@/stores/useTimeLogStore'
 import VoiceInput from './VoiceInput'
@@ -147,11 +147,8 @@ export default function TimeLogClient() {
     }
   }
 
-  // ===== 語音輸入處理 =====
-  // 對應: 語音輸入元件
-  const handleVoiceResultWrapper = (text: string) => {
-    handleVoiceResult(text) // 將語音識別結果填入描述輸入框
-  }
+  // 語音切換函數
+  const [voiceToggleFn, setVoiceToggleFn] = useState<(() => void) | null>(null)
 
   return (
     <div className="card border-0 shadow-sm mb-4">
@@ -226,13 +223,16 @@ export default function TimeLogClient() {
           語法說明：
           - VoiceInput 是我們自定義的 React 組件
           - onResult 是我們定義的 props 屬性，型別為 (text: string) => void
-          - handleVoiceResultWrapper 是父組件傳入的函數
+          - handleVoiceResult 是父組件傳入的函數
           - 當語音識別完成時，子組件會調用 onResult(text) 通知父組件
 
           數據流向：
           子組件 (VoiceInput) → 語音識別結果 → 父組件 (TimeLogClient) → 更新狀態
         */}
-        <VoiceInput onResult={handleVoiceResultWrapper} />
+        <VoiceInput
+          onResult={handleVoiceResult}
+          onVoiceToggle={setVoiceToggleFn}
+        />
         {/* ===== 主要控制區域 ===== */}
         <div className="mb-4">
           {/* 四個按鈕並排 */}
@@ -465,7 +465,6 @@ export default function TimeLogClient() {
           <Col xs={12} sm={3} md={4}>
             <div className="d-flex gap-2 justify-content-start justify-content-sm-end">
               <button
-                id="voiceBtn"
                 className="btn btn-outline-info"
                 type="button"
                 disabled={!startTime || getActivityStatus() === '已結束'}
@@ -474,6 +473,12 @@ export default function TimeLogClient() {
                 style={{
                   whiteSpace: 'nowrap',
                   minWidth: 'fit-content',
+                }}
+                onClick={() => {
+                  // 調用語音切換函數
+                  if (voiceToggleFn) {
+                    voiceToggleFn()
+                  }
                 }}
               >
                 🎤 語音
