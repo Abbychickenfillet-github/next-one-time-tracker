@@ -250,8 +250,18 @@ export async function POST(request) {
     }
   } catch (error) {
     console.error('保存分圈計時器資料失敗:', error)
+    console.error('錯誤詳情:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    })
     return NextResponse.json(
-      { status: 'error', message: '保存分圈計時器資料失敗' },
+      {
+        status: 'error',
+        message: error.message || '保存分圈計時器資料失敗',
+        error:
+          process.env.NODE_ENV === 'development' ? error.message : undefined,
+      },
       { status: 500 }
     )
   }

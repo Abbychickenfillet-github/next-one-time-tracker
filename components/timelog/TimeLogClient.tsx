@@ -3,7 +3,7 @@ import React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useTimeLogStore } from '@/stores/useTimeLogStore'
-import VoiceInput from './VoiceInput'
+import VoiceInputComponent from './VoiceInput'
 import { Tooltip, OverlayTrigger, Col } from 'react-bootstrap'
 export default function TimeLogClient() {
   // ===== 用戶認證 =====
@@ -29,7 +29,7 @@ export default function TimeLogClient() {
     endActivity,
     addStep,
     endSubStep,
-    handleVoiceResult,
+    // handleVoiceResult,
     saveToDB,
     clearStorage,
     reset,
@@ -38,6 +38,14 @@ export default function TimeLogClient() {
   } = useTimeLogStore()
 
   const stepListRef = useRef<HTMLOListElement | null>(null) // 步驟列表的 DOM 引用
+
+  // 新增 ref 來引用輸入框
+  const titleInputRef = useRef<HTMLInputElement>(null)
+  const descInputRef = useRef<HTMLInputElement>(null)
+
+  // 追蹤目前聚焦的輸入框：'title' 或 'desc'
+  // eslint-disable-next-line no-unused-vars
+  const [focusedInput, setFocusedInput] = useState<'title' | 'desc'>('desc')
 
   /*
     ===== TypeScript 型別註解說明 =====
@@ -120,6 +128,14 @@ export default function TimeLogClient() {
       alert('已清除所有活動記錄')
     }
   }
+  // 簡化 handleVoiceResult，只負責更新狀態
+  const handleVoiceResult = (text: string, inputType: 'title' | 'desc') => {
+    if (inputType === 'title') {
+      setTitle(text)
+    } else {
+      setDesc(text)
+    }
+  }
 
   // ===== 新增階段步驟 =====
   // 對應: 記錄時間點按鈕 (藍色按鈕)
@@ -147,8 +163,7 @@ export default function TimeLogClient() {
     }
   }
 
-  // 語音切換函數
-  const [voiceToggleFn, setVoiceToggleFn] = useState<(() => void) | null>(null)
+  // 語音切換函數已移除，改由子元件直接綁定按鈕 id
 
   return (
     <div className="card border-0 shadow-sm mb-4">
@@ -190,15 +205,29 @@ export default function TimeLogClient() {
 
           {/* 輸入框區域 */}
           <Col xs={12} sm={8} md={6}>
-            <input
-              type="text"
-              id="titleInput"
-              className="form-control"
-              placeholder="輸入活動名稱"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              aria-label="活動名稱輸入框"
-            />
+            <div className="d-flex gap-2">
+              <input
+                type="text"
+                id="titleInput"
+                className="form-control"
+                placeholder="輸入活動名稱"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                onFocus={() => setFocusedInput('title')}
+                ref={titleInputRef} // 綁定 ref
+                aria-label="活動名稱輸入框"
+              />
+              {/* 引入新的 VoiceInput 元件 */}
+              <VoiceInputComponent
+                onResult={(text) => {
+                  console.log('[Voice][title] result:', text)
+                  handleVoiceResult(text, 'title')
+                }}
+                targetInputRef={titleInputRef}
+                inputType="title"
+                title="🎤" // 縮小標題
+              />
+            </div>
           </Col>
 
           {/* 狀態區域 - 只在桌面版顯示 */}
@@ -217,22 +246,9 @@ export default function TimeLogClient() {
       </div>
       <div className="card-body">
         {/*
-          ===== 語音輸入元件說明 =====
-          onResult 是自定義的屬性，不是內建的
-
-          語法說明：
-          - VoiceInput 是我們自定義的 React 組件
-          - onResult 是我們定義的 props 屬性，型別為 (text: string) => void
-          - handleVoiceResult 是父組件傳入的函數
-          - 當語音識別完成時，子組件會調用 onResult(text) 通知父組件
-
-          數據流向：
-          子組件 (VoiceInput) → 語音識別結果 → 父組件 (TimeLogClient) → 更新狀態
+          ===== 語音輸入元件說明 (新的) =====
+          新的 VoiceInput 是獨立的按鈕，不需要放在這裡
         */}
-        <VoiceInput
-          onResult={handleVoiceResult}
-          onVoiceToggle={setVoiceToggleFn}
-        />
         {/* ===== 主要控制區域 ===== */}
         <div className="mb-4">
           {/* 四個按鈕並排 */}
@@ -452,6 +468,8 @@ export default function TimeLogClient() {
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
               onKeyDown={handleKeyDown}
+              onFocus={() => setFocusedInput('desc')}
+              ref={descInputRef} // 綁定 ref
               disabled={!startTime || getActivityStatus() === '已結束'}
               aria-label="階段描述輸入框"
               style={{
@@ -464,25 +482,16 @@ export default function TimeLogClient() {
           {/* 按鈕區域 */}
           <Col xs={12} sm={3} md={4}>
             <div className="d-flex gap-2 justify-content-start justify-content-sm-end">
-              <button
-                className="btn btn-outline-info"
-                type="button"
-                disabled={!startTime || getActivityStatus() === '已結束'}
-                title="語音輸入功能"
-                aria-label="語音輸入功能"
-                style={{
-                  whiteSpace: 'nowrap',
-                  minWidth: 'fit-content',
+              {/* 將舊的 🎤 語音按鈕替換為新的 VoiceInput 元件 */}
+              <VoiceInputComponent
+                onResult={(text) => {
+                  console.log('[Voice][desc] result:', text)
+                  handleVoiceResult(text, 'desc')
                 }}
-                onClick={() => {
-                  // 調用語音切換函數
-                  if (voiceToggleFn) {
-                    voiceToggleFn()
-                  }
-                }}
-              >
-                🎤 語音
-              </button>
+                targetInputRef={descInputRef}
+                inputType="desc"
+                title="🎤 語音"
+              />
               <button
                 className="btn"
                 type="button"

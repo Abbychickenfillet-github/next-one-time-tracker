@@ -1,12 +1,12 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Button, Alert, Row, Col, Badge, ListGroup } from 'react-bootstrap'
 import { useAuth } from '@/hooks/use-auth'
+import VoiceInputComponent from './VoiceInput'
 
 export default function DashboardLapTimer() {
   const { isAuth } = useAuth()
   // const { user } = useAuth() // 暫時未使用，保留供未來使用
-
   // 狀態管理
   const [title, setTitle] = useState('')
   const [desc, setDesc] = useState('')
@@ -22,6 +22,9 @@ export default function DashboardLapTimer() {
   const [isLapRunning, setIsLapRunning] = useState(false) // 新增：追蹤當前分圈是否進行中
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const focusedInputRef = useRef('desc') // 追蹤目前聚焦的輸入框
+  const titleInputRef = useRef(null) // title 輸入框的 ref
+  const descInputRef = useRef(null) // desc 輸入框的 ref
 
   // 即時時間更新
   useEffect(() => {
@@ -90,7 +93,15 @@ export default function DashboardLapTimer() {
       })
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        // 嘗試取得後端錯誤訊息
+        let errorMessage = `HTTP error! status: ${response.status}`
+        try {
+          const errorData = await response.json()
+          errorMessage = errorData.message || errorData.error || errorMessage
+        } catch {
+          // 無法解析 JSON，使用預設訊息
+        }
+        throw new Error(errorMessage)
       }
 
       const result = await response.json()
@@ -99,7 +110,12 @@ export default function DashboardLapTimer() {
       }
     } catch (error) {
       console.error('保存分圈計時器資料失敗:', error)
-      setError(error.message)
+      // 顯示更詳細的錯誤訊息
+      let displayError = error.message
+      if (error.message.includes('500')) {
+        displayError = '伺服器內部錯誤，請檢查伺服器日誌或連絡管理員'
+      }
+      setError(displayError)
     }
   }
 
@@ -321,6 +337,16 @@ export default function DashboardLapTimer() {
     })
   }
 
+  // 語音輸入處理
+  // 只需要一個簡單的函數來更新狀態
+  const handleVoiceResult = (text, inputType) => {
+    if (inputType === 'title') {
+      setTitle(text)
+    } else if (inputType === 'desc') {
+      setDesc(text)
+    }
+  }
+
   // 開始分圈
   const handleStartLap = async () => {
     if (!isRunning || isPaused) {
@@ -524,14 +550,30 @@ export default function DashboardLapTimer() {
         <div className="mb-4">
           <div className="mb-3">
             <label className="form-label fw-semibold">活動名稱</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="輸入活動名稱..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              disabled={isRunning}
-            />
+            <div className="d-flex gap-2">
+              <input
+                type="text"
+                id="lapTitleInput"
+                className="form-control"
+                placeholder="輸入活動名稱..."
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                onFocus={() => {
+                  focusedInputRef.current = 'title'
+                }}
+                ref={titleInputRef} // 使用 useRef
+                disabled={isRunning}
+              />
+              <VoiceInputComponent // 使用新的 VoiceInput
+                onResult={(text) => {
+                  console.log('[Voice][title] result:', text)
+                  handleVoiceResult(text, 'title')
+                }}
+                targetInputRef={titleInputRef}
+                inputType="title"
+                title="🎤 語音輸入名稱"
+              />
+            </div>
           </div>
           <div className="mb-3 text-center">
             {getActivityStatus() === '準備中' && (
@@ -547,27 +589,43 @@ export default function DashboardLapTimer() {
           </div>
           <div className="mb-3">
             <label className="form-label fw-semibold">分圈描述</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder={
-                isLapRunning
-                  ? '按 Enter 結束分圈...'
-                  : '輸入分圈描述，按 Enter 開始...'
-              }
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  // 根據當前分圈狀態決定操作
-                  if (isLapRunning) {
-                    handleEndLap()
-                  } else {
-                    handleStartLap()
-                  }
+            <div className="d-flex gap-2">
+              <input
+                type="text"
+                id="lapDescInput"
+                className="form-control"
+                placeholder={
+                  isLapRunning
+                    ? '按 Enter 結束分圈...'
+                    : '輸入分圈描述，按 Enter 開始...'
                 }
-              }}
-            />
+                value={desc}
+                onChange={(e) => setDesc(e.target.value)}
+                onFocus={() => {
+                  focusedInputRef.current = 'desc'
+                }}
+                ref={descInputRef}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    // 根據當前分圈狀態決定操作
+                    if (isLapRunning) {
+                      handleEndLap()
+                    } else {
+                      handleStartLap()
+                    }
+                  }
+                }}
+              />
+              <Button
+                variant="outline-info"
+                disabled={isLapRunning}
+                data-voice-btn="true"
+                data-input-type="desc"
+                data-input-id="lapDescInput"
+              >
+                🎤
+              </Button>
+            </div>
           </div>
         </div>
 
