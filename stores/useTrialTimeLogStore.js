@@ -3,6 +3,60 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+// ===== 時間處理工具函數（避免時區問題） =====
+/**
+ * 將 Date 物件轉換為本地時間字串格式（用於儲存）
+ *
+ * 為什麼不能用 toLocaleString()？
+ * - toLocaleString() 格式不標準，例如："2025/11/1 上午11:28:00"
+ * - 無法直接用 new Date() 解析回 Date 物件
+ *
+ * 為什麼不能用 new Date(dateString)？
+ * - new Date('2025-11-01T11:28:00') 沒有時區信息時，不同瀏覽器行為可能不同
+ * - 可能被當作 UTC 時間解析，造成時差
+ *
+ * 解決方案：使用標準格式但手動解析為本地時間
+ */
+const formatDateForStorage = (date) => {
+  if (!date) return null
+  // 使用標準格式：YYYY-MM-DDTHH:mm:ss（不包含時區信息）
+  // 這樣儲存時不會被 JSON.stringify 轉為 UTC
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
+}
+
+/**
+ * 將本地時間字串轉換回 Date 物件（用於讀取）
+ *
+ * 為什麼不能直接用 new Date(dateString)？
+ * - new Date('2025-11-01T11:28:00') 沒有時區時，可能被解析為 UTC
+ * - 需要明確指定這是本地時間
+ */
+const parseLocalDate = (dateString) => {
+  if (!dateString || typeof dateString !== 'string') return null
+
+  // 如果已經是 ISO 格式（包含 Z 或時區），直接解析
+  if (dateString.includes('Z') || dateString.match(/[+-]\d{2}:\d{2}$/)) {
+    return new Date(dateString)
+  }
+
+  // 否則視為本地時間字串，使用 new Date() 的構造函數形式手動解析
+  // new Date(year, month, day, hours, minutes, seconds) 會創建本地時間
+  const [datePart, timePart] = dateString.split('T')
+  if (!datePart || !timePart) return new Date(dateString)
+
+  const [year, month, day] = datePart.split('-').map(Number)
+  const [hours, minutes, seconds] = timePart.split(':').map(Number)
+
+  // 使用 new Date() 構造函數形式（明確指定本地時間）
+  return new Date(year, month - 1, day, hours, minutes, seconds || 0)
+}
+
 // Trial TimeLog Zustand Store
 export const useTrialTimeLogStore = create(
   persist(
@@ -192,19 +246,6 @@ export const useTrialTimeLogStore = create(
         set({ desc: text }) // set() 函數：更新 desc 狀態為語音識別結果
       },
 
-      // 重置狀態
-      reset: () =>
-        set({
-          // set() 函數：批量重置所有狀態為初始值
-          title: '',
-          desc: '',
-          startTime: null,
-          endTime: null,
-          steps: [],
-          currentTime: null,
-          lastStepTime: null,
-        }),
-
       // 清除 localStorage 中的資料
       clearStorage: () => {
         // 清除主要的 trial-timelog-storage
@@ -269,27 +310,59 @@ export const useTrialTimeLogStore = create(
           return false
         }
 
+        // 檢查實際的 localStorage 狀態，找到第一個空缺或下一個序號
+        // 這樣可以避免覆蓋現有記錄
+
+        // 邏輯 1：找第一個空缺（找到就停止，提高效率）
+        let nextIndex = null
+        for (let i = 1; i <= 10; i++) {
+          const key = `trial-activity-${i}`
+          if (!localStorage.getItem(key)) {
+            nextIndex = i // 找到第一個空缺
+            break // 找到就停止，不需要繼續檢查
+          }
+        }
+
+        // 邏輯 2：計算實際存在的總數（需要遍歷所有）
+        let actualCount = 0
+        for (let i = 1; i <= 10; i++) {
+          const key = `trial-activity-${i}`
+          if (localStorage.getItem(key)) {
+            actualCount++ // 每找到一個存在的就 +1
+          }
+        }
+
+        // 如果沒有空缺（全部都有），使用下一個序號
+        if (nextIndex === null) {
+          nextIndex = actualCount + 1
+        }
+
         // 檢查是否已達10筆限制
-        if (state.savedActivities.length >= 10) {
+        if (nextIndex > 10) {
           alert('已達到試用版10筆記錄限制，請註冊升級享受無限記錄！')
           return false
         }
 
         // 創建活動記錄
+        // 使用本地時間字串格式儲存，避免時區轉換問題
         const activityRecord = {
           id: Date.now(), // 使用時間戳作為唯一ID
           title: state.title,
           desc: state.desc,
           memo: state.memo,
-          startTime: state.startTime,
-          endTime: state.endTime,
-          steps: state.steps,
-          createdAt: new Date(),
+          // 使用本地時間字串格式儲存，避免 UTC 轉換問題
+          startTime: formatDateForStorage(state.startTime),
+          endTime: formatDateForStorage(state.endTime),
+          // steps 中的時間也需要轉換
+          steps: state.steps.map((step) => ({
+            ...step,
+            startTime: formatDateForStorage(step.startTime),
+            endTime: formatDateForStorage(step.endTime),
+          })),
+          createdAt: formatDateForStorage(new Date()),
           duration: state.endTime.getTime() - state.startTime.getTime(),
         }
 
-        // 使用帶序數的 localStorage key 儲存
-        const nextIndex = state.savedActivities.length + 1
         const storageKey = `trial-activity-${nextIndex}`
 
         try {
@@ -339,34 +412,24 @@ export const useTrialTimeLogStore = create(
 
             if (data) {
               const activity = JSON.parse(data)
-              // 轉換時間字串為 Date 物件
-              if (
-                activity.startTime &&
-                typeof activity.startTime === 'string'
-              ) {
-                activity.startTime = new Date(activity.startTime)
+
+              // 轉換本地時間字串為 Date 物件（避免時區問題）
+              if (activity.startTime) {
+                activity.startTime = parseLocalDate(activity.startTime)
               }
-              if (activity.endTime && typeof activity.endTime === 'string') {
-                activity.endTime = new Date(activity.endTime)
+              if (activity.endTime) {
+                activity.endTime = parseLocalDate(activity.endTime)
               }
-              if (
-                activity.createdAt &&
-                typeof activity.createdAt === 'string'
-              ) {
-                activity.createdAt = new Date(activity.createdAt)
+              if (activity.createdAt) {
+                activity.createdAt = parseLocalDate(activity.createdAt)
               }
+
               // 處理 steps 中的時間
               if (activity.steps && Array.isArray(activity.steps)) {
                 activity.steps = activity.steps.map((step) => ({
                   ...step,
-                  startTime:
-                    step.startTime && typeof step.startTime === 'string'
-                      ? new Date(step.startTime)
-                      : step.startTime,
-                  endTime:
-                    step.endTime && typeof step.endTime === 'string'
-                      ? new Date(step.endTime)
-                      : step.endTime,
+                  startTime: parseLocalDate(step.startTime),
+                  endTime: parseLocalDate(step.endTime),
                 }))
               }
 
@@ -397,14 +460,29 @@ export const useTrialTimeLogStore = create(
           const storageKey = `trial-activity-${activityIndex + 1}`
           localStorage.removeItem(storageKey)
 
-          // 重新整理 localStorage 中的序數
-          this.reorganizeStorage()
+          // 重新整理 localStorage 中的序數，確保序號連續
+          state.reorganizeStorage()
 
-          // 從狀態中移除
+          // 重新載入所有活動，確保狀態與 localStorage 同步
+          const updatedActivities = []
+          for (let i = 1; i <= 10; i++) {
+            const key = `trial-activity-${i}`
+            const data = localStorage.getItem(key)
+            if (data) {
+              const activity = JSON.parse(data)
+
+              // 轉換本地時間字串為 Date 物件（避免時區問題）
+              activity.startTime = parseLocalDate(activity.startTime)
+              activity.endTime = parseLocalDate(activity.endTime)
+              activity.createdAt = parseLocalDate(activity.createdAt)
+
+              updatedActivities.push(activity)
+            }
+          }
+
+          // 更新狀態（從實際的 localStorage 載入）
           set({
-            savedActivities: state.savedActivities.filter(
-              (activity) => activity.id !== activityId
-            ),
+            savedActivities: updatedActivities,
           })
         }
       },
@@ -460,19 +538,19 @@ export const useTrialTimeLogStore = create(
       onRehydrateStorage: () => (state) => {
         // 檢查 state 是否存在（防止空值錯誤）
         if (state) {
-          // 處理 startTime：如果存在且為字串，轉換為 Date 物件
+          // 處理 startTime：如果存在且為字串，轉換為 Date 物件（使用本地時間解析）
           if (state.startTime && typeof state.startTime === 'string') {
-            state.startTime = new Date(state.startTime)
+            state.startTime = parseLocalDate(state.startTime)
           }
 
-          // 處理 endTime：如果存在且為字串，轉換為 Date 物件
+          // 處理 endTime：如果存在且為字串，轉換為 Date 物件（使用本地時間解析）
           if (state.endTime && typeof state.endTime === 'string') {
-            state.endTime = new Date(state.endTime)
+            state.endTime = parseLocalDate(state.endTime)
           }
 
-          // 處理 lastStepTime：如果存在且為字串，轉換為 Date 物件
+          // 處理 lastStepTime：如果存在且為字串，轉換為 Date 物件（使用本地時間解析）
           if (state.lastStepTime && typeof state.lastStepTime === 'string') {
-            state.lastStepTime = new Date(state.lastStepTime)
+            state.lastStepTime = parseLocalDate(state.lastStepTime)
           }
 
           // 處理 steps 陣列中的時間欄位
@@ -483,12 +561,12 @@ export const useTrialTimeLogStore = create(
               // 處理 step.startTime：如果為字串則轉換為 Date，否則保持原值
               startTime:
                 step.startTime && typeof step.startTime === 'string'
-                  ? new Date(step.startTime) // 字串轉 Date
+                  ? parseLocalDate(step.startTime) // 使用本地時間解析
                   : step.startTime, // 保持原值（可能是 null 或已經是 Date）
               // 處理 step.endTime：如果為字串則轉換為 Date，否則保持原值
               endTime:
                 step.endTime && typeof step.endTime === 'string'
-                  ? new Date(step.endTime) // 字串轉 Date
+                  ? parseLocalDate(step.endTime) // 使用本地時間解析
                   : step.endTime, // 保持原值（可能是 null 或已經是 Date）
             }))
           }
@@ -499,15 +577,15 @@ export const useTrialTimeLogStore = create(
               ...activity,
               startTime:
                 activity.startTime && typeof activity.startTime === 'string'
-                  ? new Date(activity.startTime)
+                  ? parseLocalDate(activity.startTime)
                   : activity.startTime,
               endTime:
                 activity.endTime && typeof activity.endTime === 'string'
-                  ? new Date(activity.endTime)
+                  ? parseLocalDate(activity.endTime)
                   : activity.endTime,
               createdAt:
                 activity.createdAt && typeof activity.createdAt === 'string'
-                  ? new Date(activity.createdAt)
+                  ? parseLocalDate(activity.createdAt)
                   : activity.createdAt,
               // 處理 steps 中的時間
               steps:
@@ -516,11 +594,11 @@ export const useTrialTimeLogStore = create(
                       ...step,
                       startTime:
                         step.startTime && typeof step.startTime === 'string'
-                          ? new Date(step.startTime)
+                          ? parseLocalDate(step.startTime)
                           : step.startTime,
                       endTime:
                         step.endTime && typeof step.endTime === 'string'
-                          ? new Date(step.endTime)
+                          ? parseLocalDate(step.endTime)
                           : step.endTime,
                     }))
                   : activity.steps,

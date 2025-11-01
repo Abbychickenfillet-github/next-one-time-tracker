@@ -61,6 +61,8 @@ export default function TrialPage() {
   }, [isClient, updateCurrentTime])
 
   // ===== 檢查 localStorage 使用量 =====
+  // 目前問題是刪除localStorage的trial-activity-${i}之後，會導致序號不連續，需要重新整理序號
+  // 作法：在deleteSavedActivity中加入reorganizeStorage()函式，重新整理序號
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const checkLocalStorageUsage = () => {
@@ -181,7 +183,7 @@ export default function TrialPage() {
 
       <Container className="py-4">
         {/* localStorage 使用量指示器 */}
-        <Alert variant="info" className="mb-4">
+        <Alert variant="info" className="mb-1">
           <div className="d-flex justify-content-between align-items-center">
             <span>📊 localStorage 使用量: {localStorageCount}/10 筆記錄</span>
             <Button
@@ -208,208 +210,234 @@ export default function TrialPage() {
               <div className="text-muted">{formatDate(currentTime)}</div>
             </div>
 
-            {/* 活動資訊輸入 */}
-            <Row className="mb-4">
-              <Col md={6}>
-                <div className="mb-3">
-                  <label className="form-label fw-semibold">活動名稱</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="輸入活動名稱..."
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                </div>
-              </Col>
-              <Col md={6}>
-                <div className="mb-3">
-                  <label className="form-label fw-semibold">活動描述</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="輸入活動描述..."
-                    value={desc}
-                    onChange={(e) => setDesc(e.target.value)}
-                  />
-                </div>
-              </Col>
-            </Row>
-
-            {/* 語音輸入 */}
-            <div className="mb-4">
-              <VoiceInput onResult={handleVoiceInput} />
-            </div>
-
-            {/* 控制按鈕 */}
-            <div className="text-center mb-4">
-              <div className="btn-group" role="group">
-                {getActivityStatus() === '準備中' && (
-                  <Button
-                    variant="success"
-                    size="lg"
-                    onClick={handleStart}
-                    disabled={!title.trim()}
-                  >
-                    🚀 開始記錄
-                  </Button>
-                )}
-                {getActivityStatus() === '進行中' && (
-                  <>
-                    <Button variant="info" size="lg" onClick={handleAddStep}>
-                      📝 記錄時間點
-                    </Button>
-                    <Button variant="warning" size="lg" onClick={endActivity}>
-                      ⏹️ 結束活動
-                    </Button>
-                  </>
-                )}
-                {getActivityStatus() === '已結束' && (
-                  <>
-                    <Button variant="primary" size="lg" onClick={handleStart}>
-                      🔄 重新開始
-                    </Button>
-                    <Button
-                      variant="success"
-                      size="lg"
-                      onClick={handleSaveActivity}
-                      disabled={localStorageCount >= 10}
-                    >
-                      💾 儲存活動
-                    </Button>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* 活動狀態顯示 */}
-            {startTime && (
-              <div className="text-center mb-4">
-                <div className="alert alert-info">
-                  <strong>活動狀態:</strong> {getActivityStatus()}
-                  {startTime && (
-                    <div className="mt-2">
-                      <strong>開始時間:</strong> {formatTime(startTime)}
-                      {endTime && (
-                        <>
-                          <br />
-                          <strong>結束時間:</strong> {formatTime(endTime)}
-                          <br />
-                          <strong>持續時間:</strong> {getElapsedMinutes()} 分鐘
-                        </>
-                      )}
+            {/* 左右兩欄佈局 */}
+            <Row>
+              {/* 左半邊：輸入框、按鈕組、活動狀態、升級提示 */}
+              <Col sm={12} md={6}>
+                {/* 活動資訊輸入 */}
+                <Row className="mb-1">
+                  <Col sm={12} md={12}>
+                    <div className="mb-3">
+                      <label className="form-label fw-semibold">活動名稱</label>
+                      <input
+                        type="text"
+                        className="form-control form-control-lg"
+                        placeholder="輸入活動名稱..."
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                      />
                     </div>
-                  )}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col sm={12} md={9}>
+                    <div className="mb-3">
+                      <label className="form-label fw-semibold">活動描述</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="輸入活動描述..."
+                        value={desc}
+                        onChange={(e) => setDesc(e.target.value)}
+                      />
+                    </div>
+                  </Col>
+                  {/* 語音輸入 */}
+                  <Col sm={12} md={3} className="d-flex align-items-end">
+                    <div className="mb-3 w-100 text-center">
+                      <VoiceInput onResult={handleVoiceInput} />
+                    </div>
+                  </Col>
+                </Row>
+                {/* 控制按鈕 */}
+                <div className="text-center mb-4">
+                  <div className="btn-group" role="group">
+                    {getActivityStatus() === '準備中' && (
+                      <Button
+                        variant="success"
+                        size="lg"
+                        onClick={handleStart}
+                        disabled={!title.trim()}
+                      >
+                        🚀 開始記錄
+                      </Button>
+                    )}
+                    {getActivityStatus() === '進行中' && (
+                      <>
+                        <Button
+                          variant="info"
+                          size="lg"
+                          onClick={handleAddStep}
+                        >
+                          📝 記錄時間點
+                        </Button>
+                        <Button
+                          variant="warning"
+                          size="lg"
+                          onClick={endActivity}
+                        >
+                          ⏹️ 結束活動
+                        </Button>
+                      </>
+                    )}
+                    {getActivityStatus() === '已結束' && (
+                      <>
+                        <Button
+                          variant="primary"
+                          size="lg"
+                          onClick={handleStart}
+                        >
+                          🔄 重新開始
+                        </Button>
+                        <Button
+                          variant="success"
+                          size="lg"
+                          onClick={handleSaveActivity}
+                          disabled={localStorageCount >= 10}
+                        >
+                          💾 儲存活動
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
-
-            {/* 步驟列表 */}
-            {steps.length > 0 && (
-              <div className="mb-4">
-                <h5 className="mb-3">📋 記錄步驟</h5>
-                <div className="list-group">
-                  {steps.map((step, index) => (
-                    <div key={index} className="list-group-item">
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div>
-                          <strong>步驟 {index + 1}:</strong>{' '}
-                          {step.title || step.name}
-                          {step.description && (
-                            <div className="text-muted small">
-                              {step.description}
-                            </div>
+                {/* 活動狀態顯示 */}
+                {startTime && (
+                  <div className="text-center mb-4">
+                    <div className="alert alert-info">
+                      <strong>活動狀態:</strong> {getActivityStatus()}
+                      {startTime && (
+                        <div className="mt-2">
+                          <strong>開始時間:</strong> {formatTime(startTime)}
+                          {endTime && (
+                            <>
+                              <br />
+                              <strong>結束時間:</strong> {formatTime(endTime)}
+                              <br />
+                              <strong>
+                                持續時間:
+                              </strong> {getElapsedMinutes()} 分鐘
+                            </>
                           )}
                         </div>
-                        <div className="text-end">
-                          <div className="small text-muted">
-                            開始: {formatTime(step.startTime)}
-                          </div>
-                          {step.endTime ? (
-                            <div className="small text-muted">
-                              結束: {formatTime(step.endTime)}
+                      )}
+                    </div>
+                  </div>
+                )}
+                {/* 升級提示 */}
+                <Alert variant="success" className="mt-4">
+                  <h5>🚀 升級到完整版享受更多功能！</h5>
+                  <ul className="mb-3">
+                    <li>✅ 雲端同步 - 多裝置無縫切換</li>
+                    <li>✅ 無限記錄 - 不再受 localStorage 限制</li>
+                    <li>✅ AI 分析 - Gemini 2.5 Flash 智能洞察</li>
+                    <li>✅ 數據匯出 - 支援多種格式</li>
+                  </ul>
+                  <div className="d-flex gap-2">
+                    <Button variant="success" as={Link} href="/user/register">
+                      立即註冊
+                    </Button>
+                    <Button
+                      variant="outline-success"
+                      as={Link}
+                      href="/subscription"
+                    >
+                      查看方案
+                    </Button>
+                  </div>
+                </Alert>
+              </Col>
+
+              {/* 右半邊：記錄步驟、已儲存活動 */}
+              <Col sm={12} md={6}>
+                {/* 步驟列表 */}
+                {steps.length > 0 && (
+                  <div className="mb-4">
+                    <h5 className="mb-3">📋 記錄步驟</h5>
+                    <div className="list-group">
+                      {steps.map((step, index) => (
+                        <div key={index} className="list-group-item">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <div>
+                              <strong>步驟 {index + 1}:</strong>{' '}
+                              {step.title || step.name}
+                              {step.description && (
+                                <div className="text-muted small">
+                                  {step.description}
+                                </div>
+                              )}
                             </div>
-                          ) : (
+                            <div className="text-end">
+                              <div className="small text-muted">
+                                開始: {formatTime(step.startTime)}
+                              </div>
+                              {step.endTime ? (
+                                <div className="small text-muted">
+                                  結束: {formatTime(step.endTime)}
+                                </div>
+                              ) : (
+                                <Button
+                                  variant="outline-danger"
+                                  size="sm"
+                                  onClick={() => handleEndSubStep(index)}
+                                >
+                                  結束
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 已儲存活動列表 */}
+                {savedActivities.length > 0 && (
+                  <div className="mb-4">
+                    <h5 className="mb-3">📚 已儲存的活動</h5>
+                    <div className="list-group">
+                      {savedActivities.map((activity, index) => (
+                        <div key={activity.id} className="list-group-item">
+                          <div className="d-flex justify-content-between align-items-center">
+                            <div>
+                              <strong>活動 {index + 1}:</strong>{' '}
+                              {activity.title}
+                              {activity.desc && (
+                                <div className="text-muted small">
+                                  描述: {activity.desc}
+                                </div>
+                              )}
+                              <div className="text-muted small">
+                                開始: {formatTime(activity.startTime)} | 結束:{' '}
+                                {formatTime(activity.endTime)} | 持續:{' '}
+                                {Math.floor(activity.duration / 1000 / 60)} 分鐘
+                              </div>
+                            </div>
                             <Button
                               variant="outline-danger"
                               size="sm"
-                              onClick={() => handleEndSubStep(index)}
+                              onClick={() => {
+                                if (confirm('確定要刪除此活動記錄嗎？')) {
+                                  deleteSavedActivity(activity.id)
+                                  // 重新載入已儲存的活動並更新計數
+                                  loadSavedActivities()
+                                  setLocalStorageCount(
+                                    getSavedActivitiesCount()
+                                  )
+                                }
+                              }}
                             >
-                              結束
+                              刪除
                             </Button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* 已儲存活動列表 */}
-            {savedActivities.length > 0 && (
-              <div className="mb-4">
-                <h5 className="mb-3">📚 已儲存的活動</h5>
-                <div className="list-group">
-                  {savedActivities.map((activity, index) => (
-                    <div key={activity.id} className="list-group-item">
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div>
-                          <strong>活動 {index + 1}:</strong> {activity.title}
-                          {activity.desc && (
-                            <div className="text-muted small">
-                              描述: {activity.desc}
-                            </div>
-                          )}
-                          <div className="text-muted small">
-                            開始: {formatTime(activity.startTime)} | 結束:{' '}
-                            {formatTime(activity.endTime)} | 持續:{' '}
-                            {Math.floor(activity.duration / 1000 / 60)} 分鐘
                           </div>
                         </div>
-                        <Button
-                          variant="outline-danger"
-                          size="sm"
-                          onClick={() => {
-                            if (confirm('確定要刪除此活動記錄嗎？')) {
-                              deleteSavedActivity(activity.id)
-                              // 重新載入已儲存的活動並更新計數
-                              loadSavedActivities()
-                              setLocalStorageCount(getSavedActivitiesCount())
-                            }
-                          }}
-                        >
-                          刪除
-                        </Button>
-                      </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* 升級提示 */}
-            <Alert variant="success" className="mt-4">
-              <h5>🚀 升級到完整版享受更多功能！</h5>
-              <ul className="mb-3">
-                <li>✅ 雲端同步 - 多裝置無縫切換</li>
-                <li>✅ 無限記錄 - 不再受 localStorage 限制</li>
-                <li>✅ AI 分析 - Gemini 2.5 Flash 智能洞察</li>
-                <li>✅ 數據匯出 - 支援多種格式</li>
-              </ul>
-              <div className="d-flex gap-2">
-                <Button variant="success" as={Link} href="/user/register">
-                  立即註冊
-                </Button>
-                <Button
-                  variant="outline-success"
-                  as={Link}
-                  href="/subscription"
-                >
-                  查看方案
-                </Button>
-              </div>
-            </Alert>
+                  </div>
+                )}
+              </Col>
+            </Row>
           </Card.Body>
         </Card>
       </Container>
