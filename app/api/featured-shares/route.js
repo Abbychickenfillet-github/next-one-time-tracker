@@ -4,13 +4,47 @@ import { cookies } from 'next/headers'
 import prisma from '@/lib/prisma.js'
 
 // GET - 獲取精選分享列表
-export async function GET() {
+export async function GET(request) {
   try {
-    // 查詢公開的精選分享，按星星數量和創建時間排序
+    const { searchParams } = new URL(request.url)
+    const userIdParam = searchParams.get('userId') // 可選：查詢特定用戶的分享
+
+    // 嘗試獲取當前登入用戶（如果有的話）
+    let currentUserId = null
+    try {
+      const cookie = (await cookies()).get('ACCESS_TOKEN')?.value
+      if (cookie) {
+        const session = await decrypt(cookie)
+        currentUserId = session?.payload?.userId
+      }
+    } catch {
+      // 未登入用戶也可以查看公開分享
+      console.log('未登入用戶查看公開分享')
+    }
+
+    // 構建查詢條件
+    let whereClause
+    if (userIdParam) {
+      const requestedUserId = parseInt(userIdParam)
+      // 只能查詢自己的分享，或查詢公開分享
+      if (currentUserId && currentUserId === requestedUserId) {
+        // 查詢自己的分享（包括非公開的）
+        whereClause = { userId: requestedUserId }
+      } else {
+        // 查詢其他用戶的公開分享
+        whereClause = {
+          userId: requestedUserId,
+          isPublic: true,
+        }
+      }
+    } else {
+      // 預設：只查詢公開分享（未登入用戶也可以查看）
+      whereClause = { isPublic: true }
+    }
+
+    // 查詢精選分享，按星星數量和創建時間排序
     const featuredShares = await prisma.featuredShare.findMany({
-      where: {
-        isPublic: true,
-      },
+      where: whereClause,
       include: {
         user: {
           select: {
@@ -43,6 +77,27 @@ export async function GET() {
       starCount: share.starCount,
       createdAt: share.createdAt,
       sharedAt: share.createdAt, // 使用 createdAt 作為分享時間
+      // 扁平化用戶資訊
+      userName: share.user.name,
+      userAvatar: share.user.avatar,
+      userId: share.user.user_id,
+      // 扁平化時間記錄資訊，方便前端直接使用
+      startTime: share.timeLog.startTime,
+      endTime: share.timeLog.endTime,
+      duration: share.timeLog.endTime
+        ? (share.timeLog.endTime.getTime() -
+            share.timeLog.startTime.getTime()) /
+          (1000 * 60 * 60)
+        : null,
+      // 步驟數據
+      steps: share.timeLog.steps.map((step) => ({
+        id: step.id,
+        title: step.title,
+        description: step.description,
+        startTime: step.startTime,
+        endTime: step.endTime,
+      })),
+      // 保留完整結構供未來使用
       user: {
         id: share.user.user_id,
         name: share.user.name,

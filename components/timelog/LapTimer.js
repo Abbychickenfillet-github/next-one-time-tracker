@@ -115,17 +115,55 @@ export default function LapTimer() {
     endActivity()
   }
 
-  const handleReset = () => {
-    if (confirm('確定要重置所有記錄嗎？此操作無法復原。')) {
+  const handleReset = async () => {
+    const { default: Swal } = await import('sweetalert2')
+    const result = await Swal.fire({
+      title: '確認重置',
+      text: '確定要重置所有記錄嗎？此操作無法復原。',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '重置',
+      cancelButtonText: '取消',
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+    })
+
+    if (result.isConfirmed) {
       resetActivity()
       setDisplayTime('00:00')
+      Swal.fire({
+        title: '已重置',
+        text: '所有記錄已重置',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false,
+      })
     }
   }
 
-  const handleClearStorage = () => {
-    if (confirm('確定要清除所有記錄嗎？此操作無法復原。')) {
+  const handleClearStorage = async () => {
+    const { default: Swal } = await import('sweetalert2')
+    const result = await Swal.fire({
+      title: '確認清除',
+      text: '確定要清除所有記錄嗎？此操作無法復原。',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '清除',
+      cancelButtonText: '取消',
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+    })
+
+    if (result.isConfirmed) {
       clearStorage()
       setDisplayTime('00:00')
+      Swal.fire({
+        title: '已清除',
+        text: '所有記錄已清除',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false,
+      })
     }
   }
 

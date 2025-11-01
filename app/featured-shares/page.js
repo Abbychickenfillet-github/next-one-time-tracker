@@ -208,7 +208,7 @@ export default function FeaturedShares() {
                         </div>
 
                         {/* 步驟記錄 */}
-                        {share.steps && share.steps.length > 0 && (
+                        {share.steps && share.steps.length > 0 ? (
                           <div className="mb-3">
                             <h6 className="text-primary">
                               📋 詳細步驟 ({share.steps.length} 步驟)
@@ -219,19 +219,21 @@ export default function FeaturedShares() {
                             >
                               {share.steps.map((step, index) => (
                                 <div
-                                  key={index}
+                                  key={step.id || index}
                                   className="list-group-item px-0 py-2"
                                 >
                                   <div className="d-flex justify-content-between align-items-start">
-                                    <div>
-                                      <strong>{step.title}</strong>
+                                    <div className="flex-grow-1">
+                                      <strong>
+                                        {step.title || '未命名步驟'}
+                                      </strong>
                                       {step.description && (
-                                        <div className="small text-muted">
+                                        <div className="small text-muted mt-1">
                                           {step.description}
                                         </div>
                                       )}
                                     </div>
-                                    <div className="text-end">
+                                    <div className="text-end ms-2">
                                       <div className="small text-muted">
                                         {formatDate(step.startTime)}
                                       </div>
@@ -256,6 +258,13 @@ export default function FeaturedShares() {
                                 </div>
                               ))}
                             </div>
+                          </div>
+                        ) : (
+                          <div className="mb-3">
+                            <h6 className="text-muted">📋 詳細步驟</h6>
+                            <p className="text-muted small mb-0">
+                              此記錄尚無詳細步驟
+                            </p>
                           </div>
                         )}
 

@@ -38,6 +38,8 @@ export default function UnifiedNavbar() {
 
   // 判斷是否為 TimeLog 相關頁面（排除主頁）
   const isTimeLogPage = pathname?.includes('/timelog') && pathname !== '/'
+  // 判斷是否為 trial 頁面
+  const isTrialPage = pathname === '/trial'
 
   const handleLogout = async () => {
     const result = await Swal.fire({
@@ -212,7 +214,7 @@ export default function UnifiedNavbar() {
                       <Nav.Link
                         as={Link}
                         href="/user/register"
-                        className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
+                        className={`nav-link nav-link-custom ${styles['nav-link-arrow']} ${isTrialPage ? 'active' : ''}`}
                         style={{ cursor: 'help' }}
                       >
                         註冊
@@ -263,7 +265,7 @@ export default function UnifiedNavbar() {
                       <Nav.Link
                         as={Link}
                         href="/user/login"
-                        className={`nav-link nav-link-custom ${styles['nav-link-arrow']}`}
+                        className={`nav-link nav-link-custom ${styles['nav-link-arrow']} ${isTrialPage ? 'active' : ''}`}
                         style={{ cursor: 'help' }}
                       >
                         登入

@@ -60,7 +60,19 @@ export default function EcpayPage() {
 
       if (isDev) console.log(payForm)
 
-      if (window.confirm('確認要導向至ECPay(綠界金流)進行付款?')) {
+      const { default: Swal } = await import('sweetalert2')
+      const result = await Swal.fire({
+        title: '確認付款',
+        text: '確認要導向至ECPay(綠界金流)進行付款?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '確認',
+        cancelButtonText: '取消',
+        confirmButtonColor: '#198754',
+        cancelButtonColor: '#6c757d',
+      })
+
+      if (result.isConfirmed) {
         //送出表單
         payForm.submit()
       }

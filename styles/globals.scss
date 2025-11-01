@@ -79,7 +79,7 @@ body {
 :root[data-theme='green'] {
   --primary-bg: linear-gradient(135deg, #1a1a1a, #2d2d2d, #0a0a0a);
   --secondary-bg: linear-gradient(135deg, #4d8691, #0aa2c0);
-  --accent-color: #5fcce2;
+  --accent-color: #49c1d9;
   --accent-hover: #0aa2c0;
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.9);
@@ -117,7 +117,7 @@ body {
     rgba(255, 107, 157, 0.3),
     rgba(255, 139, 171, 0.3)
   );
-  --accent-color: #ff6b9d;
+  --accent-color: #e589ea5c;
   --accent-hover: #ff1744;
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.9);
@@ -266,17 +266,17 @@ body {
       transparent 60%
     ),
     linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(26, 10, 26, 0.8));
-  --accent-color: #ff6b9d;
+  --accent-color: #d3517c9e;
   --accent-hover: #ff1744;
   --text-primary: #ffffff; // 改為白色，提高對比度
   --text-secondary: rgba(255, 107, 157, 0.8);
   --form-bg: rgba(255, 107, 157, 0.1);
   --form-border: rgba(255, 107, 157, 0.3);
-  --button-bg: linear-gradient(45deg, #ff6b9d, #ff8fab);
+  --button-bg: linear-gradient(45deg, #bd446d73, #ff8fab);
   --button-bg2: linear-gradient(
     45deg,
-    #28a745,
-    #20c997
+    #d94040b0,
+    #d56d927b
   ); // 綠色系，與 logo 同色
   --button-hover: linear-gradient(45deg, #ff1744, #e91e63);
   --button-hover2: linear-gradient(45deg, #20c997, #17a2b8); // 綠色系懸停效果
@@ -690,8 +690,21 @@ body {
     }
 
     &.active {
-      background-color: var(--accent-color, #04aa6d) !important;
-      color: var(--text-primary, white) !important;
+      background-color: var(
+        --accent-color,
+        rgba(255, 255, 255, 0.2)
+      ) !important;
+      color: var(--text-primary, #fff) !important;
+      text-shadow:
+        0 0 8px var(--glow-color, #2dc7e625),
+        0 0 12px var(--glow-color, #0dcaf023);
+      box-shadow:
+        0 0 10px rgba(212, 226, 229, 0.5),
+        inset 0 0 10px rgba(0, 0, 0, 0.2),
+        0 6px 20px rgba(0, 0, 0, 0.3);
+      animation: glowPulse 2s ease-in-out infinite alternate;
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
     }
   }
 

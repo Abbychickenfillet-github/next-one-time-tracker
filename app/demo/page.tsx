@@ -71,15 +71,39 @@ export default function TimeLogClient() {
   // 對應: 儲存活動資訊到資料庫按鈕 (藍色按鈕)
   // trial 版本不支援儲存到資料庫
   const handleSaveToDB = async () => {
-    alert('trial 版本不支援儲存到資料庫，請註冊後使用完整版本')
+    const { default: Swal } = await import('sweetalert2')
+    Swal.fire({
+      title: '提示',
+      text: 'trial 版本不支援儲存到資料庫，請註冊後使用完整版本',
+      icon: 'info',
+      confirmButtonText: '了解',
+    })
   }
 
   // ===== 清除 localStorage =====
   // 對應: 清除活動記錄按鈕
-  const handleClearStorage = () => {
-    if (confirm('確定要清除所有活動記錄嗎？此操作無法復原。')) {
+  const handleClearStorage = async () => {
+    const { default: Swal } = await import('sweetalert2')
+    const result = await Swal.fire({
+      title: '確認清除',
+      text: '確定要清除所有活動記錄嗎？此操作無法復原。',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '清除',
+      cancelButtonText: '取消',
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+    })
+
+    if (result.isConfirmed) {
       clearStorage()
-      alert('已清除所有活動記錄')
+      Swal.fire({
+        title: '已清除',
+        text: '所有活動記錄已清除',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false,
+      })
     }
   }
 

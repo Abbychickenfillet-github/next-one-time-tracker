@@ -8,6 +8,13 @@ const useSpeechRecognition = () => {
   // 用useState來接
 
   useEffect(() => {
+    // 檢測是否為移動設備（屏幕寬度 < 768px），移動設備不初始化語音識別
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+    if (isMobile) {
+      // 移動設備不支援或會頻繁彈出提示，直接返回
+      return
+    }
+
     const Recognition =
       window.SpeechRecognition || window.webkitSpeechRecognition
     if (!Recognition) {

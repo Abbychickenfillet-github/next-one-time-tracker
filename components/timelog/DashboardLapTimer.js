@@ -247,11 +247,23 @@ export default function DashboardLapTimer() {
   // 開始活動
   const handleStart = async () => {
     if (!title.trim()) {
-      alert('請先輸入活動名稱')
+      const { default: Swal } = await import('sweetalert2')
+      Swal.fire({
+        title: '提示',
+        text: '請先輸入活動名稱',
+        icon: 'warning',
+        confirmButtonText: '了解',
+      })
       return
     }
     if (isRunning) {
-      alert('活動已在進行中')
+      const { default: Swal } = await import('sweetalert2')
+      Swal.fire({
+        title: '提示',
+        text: '活動已在進行中',
+        icon: 'info',
+        confirmButtonText: '了解',
+      })
       return
     }
 
@@ -283,7 +295,13 @@ export default function DashboardLapTimer() {
   // 暫停活動
   const handlePause = async () => {
     if (!isRunning || isPaused) {
-      alert('活動未在進行中或已暫停')
+      const { default: Swal } = await import('sweetalert2')
+      Swal.fire({
+        title: '提示',
+        text: '活動未在進行中或已暫停',
+        icon: 'warning',
+        confirmButtonText: '了解',
+      })
       return
     }
 
@@ -307,7 +325,13 @@ export default function DashboardLapTimer() {
   // 恢復活動
   const handleResume = async () => {
     if (!isRunning || !isPaused) {
-      alert('活動未在進行中或未暫停')
+      const { default: Swal } = await import('sweetalert2')
+      Swal.fire({
+        title: '提示',
+        text: '活動未在進行中或未暫停',
+        icon: 'warning',
+        confirmButtonText: '了解',
+      })
       return
     }
 
@@ -350,12 +374,24 @@ export default function DashboardLapTimer() {
   // 開始分圈
   const handleStartLap = async () => {
     if (!isRunning || isPaused) {
-      alert('請先開始活動且不能處於暫停狀態')
+      const { default: Swal } = await import('sweetalert2')
+      Swal.fire({
+        title: '提示',
+        text: '請先開始活動且不能處於暫停狀態',
+        icon: 'warning',
+        confirmButtonText: '了解',
+      })
       return
     }
 
     if (isLapRunning) {
-      alert('已有進行中的分圈，請先結束當前分圈')
+      const { default: Swal } = await import('sweetalert2')
+      Swal.fire({
+        title: '提示',
+        text: '已有進行中的分圈，請先結束當前分圈',
+        icon: 'warning',
+        confirmButtonText: '了解',
+      })
       return
     }
 
@@ -380,12 +416,24 @@ export default function DashboardLapTimer() {
   // 結束分圈
   const handleEndLap = async () => {
     if (!isRunning || isPaused) {
-      alert('請先開始活動且不能處於暫停狀態')
+      const { default: Swal } = await import('sweetalert2')
+      Swal.fire({
+        title: '提示',
+        text: '請先開始活動且不能處於暫停狀態',
+        icon: 'warning',
+        confirmButtonText: '了解',
+      })
       return
     }
 
     if (!isLapRunning || !currentLapStartTime) {
-      alert('沒有進行中的分圈')
+      const { default: Swal } = await import('sweetalert2')
+      Swal.fire({
+        title: '提示',
+        text: '沒有進行中的分圈',
+        icon: 'warning',
+        confirmButtonText: '了解',
+      })
       return
     }
 
@@ -425,7 +473,13 @@ export default function DashboardLapTimer() {
   // 結束活動
   const handleEnd = async () => {
     if (!isRunning) {
-      alert('請先開始活動')
+      const { default: Swal } = await import('sweetalert2')
+      Swal.fire({
+        title: '提示',
+        text: '請先開始活動',
+        icon: 'warning',
+        confirmButtonText: '了解',
+      })
       return
     }
 
@@ -493,7 +547,19 @@ export default function DashboardLapTimer() {
 
   // 重置活動
   const handleReset = async () => {
-    if (confirm('確定要重置所有記錄嗎？此操作無法復原。')) {
+    const { default: Swal } = await import('sweetalert2')
+    const result = await Swal.fire({
+      title: '確認重置',
+      text: '確定要重置所有記錄嗎？此操作無法復原。',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '重置',
+      cancelButtonText: '取消',
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+    })
+
+    if (result.isConfirmed) {
       const resetData = {
         title: '',
         desc: '',
