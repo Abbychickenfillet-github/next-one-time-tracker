@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, lazy, Suspense } from 'react'
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useLoader } from '@/hooks/use-loader'
 import { useRouter } from 'next/navigation'
@@ -8,8 +8,7 @@ import Image from 'next/image'
 import { Accordion, Col, Nav, Tab, Container } from 'react-bootstrap'
 import TimeLogClient from '@/components/timelog/TimeLogClient'
 import DashboardLapTimer from '@/components/timelog/DashboardLapTimer'
-
-// 動態載入非關鍵元件，減少首屏 bundle
+import Icon from 'bs-icon'
 // ========================================
 // 🔍 lazy() 空參數說明
 // ========================================
@@ -33,8 +32,6 @@ export default function Dashboard() {
 
   // 時間記錄狀態
   const [timeLogs, setTimeLogs] = useState([])
-  // eslint-disable-next-line no-unused-vars
-  const [result, setResult] = useState(undefined)
   const [statistics, setStatistics] = useState({
     totalLogs: 0,
     totalDuration: 0,
@@ -44,6 +41,9 @@ export default function Dashboard() {
   })
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  // 追蹤已分享的時間記錄 ID
+  const [sharedLogIds, setSharedLogIds] = useState(new Set())
+  const [sharingLogId, setSharingLogId] = useState(null) // 正在分享的記錄ID
 
   // 定義不同頁籤對應的左側導航配置
   const sideNavConfigs = {
@@ -158,7 +158,7 @@ export default function Dashboard() {
         {error ? (
           <div className="text-center py-5">
             <div className="text-danger">
-              <i className="bi bi-exclamation-triangle fs-1"></i>
+              <Icon className="exclamation-lg" />
               <p className="mt-3">載入失敗: {error}</p>
               <button
                 className="btn btn-outline-danger"
@@ -186,13 +186,50 @@ export default function Dashboard() {
                       <h6 className="mb-0 fw-semibold">{log.title}</h6>
                       <small className="text-muted">{log.description}</small>
                     </div>
-                    <div className="d-flex gap-2">
+                    <div className="d-flex gap-2 align-items-center">
                       <span className="badge bg-info">
                         {log.duration ? `${log.duration} 小時` : '進行中'}
                       </span>
                       <span className="badge bg-secondary">
                         {log.steps.length} 步驟
                       </span>
+                      {/* 分享圖標 - 只有已登入用戶才顯示 */}
+                      {isAuth && (
+                        <button
+                          type="button"
+                          className={`btn btn-link p-0 border-0 ${
+                            sharedLogIds.has(log.id)
+                              ? 'text-warning'
+                              : 'text-muted'
+                          }`}
+                          style={{
+                            fontSize: '1.2rem',
+                            lineHeight: '1',
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleShareTimeLog(log)
+                          }}
+                          title={
+                            sharedLogIds.has(log.id)
+                              ? '已分享到精選分享'
+                              : '分享到精選分享'
+                          }
+                          aria-label={
+                            sharedLogIds.has(log.id)
+                              ? '已分享到精選分享'
+                              : '分享到精選分享'
+                          }
+                        >
+                          <Icon
+                            name={
+                              sharedLogIds.has(Number(log.id))
+                                ? 'bookmark-heart-fill'
+                                : 'bookmark-heart'
+                            }
+                          />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </Accordion.Header>
@@ -263,24 +300,37 @@ export default function Dashboard() {
                     </Col>
                   </div>
                   <div className="mt-3 pt-3 border-top">
-                    <div className="btn-group btn-group-sm">
-                      <button className="btn btn-outline-primary" title="編輯">
-                        <i className="bi bi-pencil"></i> 編輯
-                      </button>
-                      <button
-                        className="btn btn-outline-danger"
-                        title="刪除"
-                        onClick={() => handleDeleteTimeLog(log.id, log.title)}
-                      >
-                        <i className="bi bi-trash"></i> 刪除
-                      </button>
-                      <button
-                        className="btn btn-outline-info"
-                        title="查看詳情"
-                        onClick={() => analyzeTimeLog(log)}
-                      >
-                        <i className="bi bi-eye"></i> 分析
-                      </button>
+                    <div className="d-flex justify-content-between align-items-center">
+                      {/* 分享按鈕 - 只有已登入用戶才顯示 */}
+                      {isAuth && (
+                        <button
+                          className={`btn btn-sm ${
+                            sharedLogIds.has(log.id)
+                              ? 'btn-warning'
+                              : 'btn-outline-warning'
+                          }`}
+                          title={
+                            sharedLogIds.has(log.id)
+                              ? '已分享到精選分享'
+                              : '分享到精選分享'
+                          }
+                          onClick={() => handleShareTimeLog(log)}
+                          disabled={sharingLogId === log.id}
+                        >
+                          <Icon
+                            name={
+                              sharedLogIds.has(Number(log.id))
+                                ? 'bookmark-heart-fill'
+                                : 'bookmark-heart'
+                            }
+                          />{' '}
+                          {sharedLogIds.has(Number(log.id))
+                            ? '已分享'
+                            : sharingLogId === log.id
+                              ? '分享中...'
+                              : '分享'}
+                        </button>
+                      )}
                     </div>
                   </div>
                 </Accordion.Body>
@@ -494,23 +544,39 @@ export default function Dashboard() {
     }
   }, [])
 
-  // 獲取真實的時間戳記錄數據
-  useEffect(() => {
-    if (isAuth) {
-      fetchTimeLogs()
-    }
-  }, [isAuth])
+  // 獲取已分享的記錄 ID
+  const fetchSharedLogIds = useCallback(async () => {
+    try {
+      if (!user?.user_id) return
 
-  // 當頁面載入時顯示全域 loader
-  useEffect(() => {
-    showLoader()
-    // 當認證檢查完成且已登入時隱藏 loader
-    if (auth.hasChecked && isAuth) {
-      hideLoader()
+      // 通過 GET featured-shares 獲取當前用戶已分享的記錄
+      const response = await fetch(
+        `/api/featured-shares?userId=${user.user_id}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+        }
+      )
+
+      if (response.ok) {
+        const result = await response.json()
+        if (result.status === 'success' && result.data) {
+          // 提取已分享的 timeLogId，確保都是數字類型
+          const sharedIds = result.data
+            .map((share) => share.timeLog?.id)
+            .filter(Boolean)
+            .map((id) => Number(id)) // 確保轉換為數字
+
+          setSharedLogIds(new Set(sharedIds))
+        }
+      }
+    } catch (error) {
+      console.error('獲取已分享記錄失敗:', error)
     }
-  }, [auth.hasChecked, isAuth, showLoader, hideLoader])
+  }, [user])
+
   // 前端是從哪一句code帶使用者id給後端的？是透過 JWT Token 的方式：
-  const fetchTimeLogs = async () => {
+  const fetchTimeLogs = useCallback(async () => {
     try {
       setIsLoading(true)
       setError(null)
@@ -560,6 +626,11 @@ export default function Dashboard() {
           總時數: result.data.statistics.totalDuration,
           今日記錄: result.data.statistics.todayLogs,
         })
+
+        // 載入已分享的記錄 ID（僅已登入用戶）
+        if (isAuth && user?.user_id) {
+          await fetchSharedLogIds()
+        }
       } else {
         throw new Error(result.message || '獲取時間戳記錄失敗')
       }
@@ -570,65 +641,23 @@ export default function Dashboard() {
       // finally確保無論成功或失敗，資料庫連線都會被正確關閉，避免記憶體洩漏與連線池耗盡
       setIsLoading(false)
     }
-  }
+  }, [isAuth, user, fetchSharedLogIds])
 
-  const handleDeleteTimeLog = async (logId, logTitle) => {
-    // 動態載入 SweetAlert2，避免首屏阻塞
-    const { default: Swal } = await import('sweetalert2')
-    const result = await Swal.fire({
-      title: '確認刪除',
-      text: `您確定要刪除「${logTitle}」這個時間戳記錄嗎？`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: '刪除',
-      cancelButtonText: '取消',
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-    })
-
-    if (result.isConfirmed) {
-      try {
-        const response = await fetch(`/api/timelog/${logId}`, {
-          method: 'DELETE',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-
-        const result = await response.json()
-        console.log('刪除時間戳記錄:', result)
-
-        if (result.status === 'success') {
-          const { default: Swal } = await import('sweetalert2')
-          Swal.fire({
-            title: '刪除成功',
-            text: '時間戳記錄已成功刪除',
-            icon: 'success',
-            timer: 2000,
-            showConfirmButton: false,
-          })
-
-          // 重新載入資料
-          await fetchTimeLogs()
-        } else {
-          throw new Error(result.message || '刪除時間戳記錄失敗')
-        }
-      } catch (error) {
-        console.error('刪除失敗:', error)
-        const { default: Swal } = await import('sweetalert2')
-        Swal.fire({
-          title: '刪除失敗',
-          text: '刪除時間戳記錄時發生錯誤',
-          icon: 'error',
-        })
-      }
+  // 獲取真實的時間戳記錄數據
+  useEffect(() => {
+    if (isAuth) {
+      fetchTimeLogs()
     }
-  }
+  }, [isAuth, fetchTimeLogs])
+
+  // 當頁面載入時顯示全域 loader
+  useEffect(() => {
+    showLoader()
+    // 當認證檢查完成且已登入時隱藏 loader
+    if (auth.hasChecked && isAuth) {
+      hideLoader()
+    }
+  }, [auth.hasChecked, isAuth, showLoader, hideLoader])
 
   const formatDate = (dateString) => {
     if (!dateString) return '-'
@@ -655,29 +684,115 @@ export default function Dashboard() {
     if (minutes < 60) return `${minutes}分`
     return `${hours}小時${minutes % 60}分`
   }
-  const analyzeTimeLog = async (log) => {
-    const payload = {
-      activities: [
-        {
-          id: log.id,
-          type: 'timelog',
-          label: log.title,
-          timestamp: log.startTime,
-          endTime: log.endTime,
-        },
-      ],
+
+  // 處理分享時間記錄
+  const handleShareTimeLog = async (log) => {
+    if (!isAuth) {
+      const { default: Swal } = await import('sweetalert2')
+      Swal.fire({
+        title: '需要登入',
+        text: '只有已登入用戶才能分享時間記錄',
+        icon: 'warning',
+        confirmButtonText: '前往登入',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push('/user/login')
+        }
+      })
+      return
     }
-    const response = await fetch(`/api/ai/analyze-activities`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
+
+    // 檢查是否已經分享過（確保類型一致）
+    if (sharedLogIds.has(Number(log.id))) {
+      const { default: Swal } = await import('sweetalert2')
+      Swal.fire({
+        title: '已分享',
+        text: '此時間記錄已經分享過了',
+        icon: 'info',
+      })
+      return
+    }
+
+    // 動態載入 SweetAlert2 用於輸入分享資訊
+    const { default: Swal } = await import('sweetalert2')
+    const { value: formValues } = await Swal.fire({
+      title: '分享時間記錄',
+      html: `
+        <input id="share-title" class="swal2-input" placeholder="分享標題" value="${
+          log.title
+        }">
+        <textarea id="share-description" class="swal2-textarea" placeholder="分享描述（可選）">${
+          log.description || ''
+        }</textarea>
+        <textarea id="share-reason" class="swal2-textarea" placeholder="分享原因（可選）"></textarea>
+      `,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: '分享',
+      cancelButtonText: '取消',
+      preConfirm: () => {
+        return {
+          title: document.getElementById('share-title').value,
+          description: document.getElementById('share-description').value,
+          shareReason: document.getElementById('share-reason').value,
+        }
       },
-      body: JSON.stringify(payload),
     })
-    const data = await response.json()
-    if (data?.status !== 'success') throw new Error(data?.message || '分析失敗')
-    setResult(data?.data)
+
+    if (!formValues) return
+
+    if (!formValues.title?.trim()) {
+      Swal.fire({
+        title: '錯誤',
+        text: '請輸入分享標題',
+        icon: 'error',
+      })
+      return
+    }
+
+    try {
+      setSharingLogId(log.id)
+      const response = await fetch('/api/featured-shares', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          timeLogId: log.id,
+          title: formValues.title.trim(),
+          description: formValues.description?.trim() || null,
+          shareReason: formValues.shareReason?.trim() || null,
+          isPublic: true,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (result.status === 'success') {
+        // 添加到已分享列表（確保是數字類型）
+        setSharedLogIds((prev) => new Set([...prev, Number(log.id)]))
+
+        Swal.fire({
+          title: '分享成功',
+          text: '您的時間記錄已成功分享到精選分享頁面',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+        })
+      } else {
+        throw new Error(result.message || '分享失敗')
+      }
+    } catch (error) {
+      console.error('分享失敗:', error)
+      Swal.fire({
+        title: '分享失敗',
+        text: error.message || '分享時間記錄時發生錯誤',
+        icon: 'error',
+      })
+    } finally {
+      setSharingLogId(null)
+    }
   }
 
   if (!auth.hasChecked || isLoading) {

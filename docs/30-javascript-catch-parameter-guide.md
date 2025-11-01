@@ -285,12 +285,3 @@ try {
 - **Document complex error handling** for future maintainers
 
 The key is to write code that clearly communicates your intent: if you're not using the error information, don't declare it.
-
-
-
-
-
-
-
-
-

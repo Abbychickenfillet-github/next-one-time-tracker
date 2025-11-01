@@ -27,16 +27,15 @@ export default function TrialPage() {
     endActivity,
     addStep,
     endSubStep,
-    handleVoiceResult,
     clearStorage,
     getElapsedMinutes,
     getActivityStatus,
     saveCurrentActivity,
-    getSavedActivitiesCount,
     deleteSavedActivity,
     loadSavedActivities,
   } = useTrialTimeLogStore()
 
+  // 由於 savedActivities 已經是 Zustand 的狀態，我們可以使用它來計算數量
   const [localStorageCount, setLocalStorageCount] = useState(0)
 
   // ===== 客戶端渲染標記 =====
@@ -60,31 +59,12 @@ export default function TrialPage() {
     return () => clearInterval(timer)
   }, [isClient, updateCurrentTime])
 
-  // ===== 檢查 localStorage 使用量 =====
-  // 目前問題是刪除localStorage的trial-activity-${i}之後，會導致序號不連續，需要重新整理序號
-  // 作法：在deleteSavedActivity中加入reorganizeStorage()函式，重新整理序號
+  // ===== 檢查 localStorage 使用量 (當 savedActivities 改變時執行) =====
+  // 依賴 savedActivities 變化來自動更新計數
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const checkLocalStorageUsage = () => {
-        try {
-          let count = 0
-          // 檢查所有帶序數的活動記錄
-          for (let i = 1; i <= 10; i++) {
-            const key = `trial-activity-${i}`
-            if (localStorage.getItem(key)) {
-              count++
-            }
-          }
-          setLocalStorageCount(count)
-        } catch (error) {
-          console.log('檢查 localStorage 使用量失敗:', error)
-        }
-      }
-
-      checkLocalStorageUsage()
-      // 每5秒檢查一次
-      const interval = setInterval(checkLocalStorageUsage, 5000)
-      return () => clearInterval(interval)
+      const count = savedActivities.length // 直接使用 Zustand 狀態的長度
+      setLocalStorageCount(count)
     }
   }, [savedActivities]) // 當 savedActivities 改變時重新檢查
 
@@ -97,19 +77,34 @@ export default function TrialPage() {
   const handleSaveActivity = () => {
     const success = saveCurrentActivity()
     if (success) {
-      alert('活動已成功儲存！')
-      // 重新載入已儲存的活動並更新計數
-      loadSavedActivities()
-      setLocalStorageCount(getSavedActivitiesCount())
+      // TODO: 替換為自訂彈出視窗
+      console.log('活動已成功儲存！')
     }
   }
 
   // ===== 清除 localStorage =====
-  const handleClearStorage = () => {
-    if (confirm('確定要清除所有活動記錄嗎？此操作無法復原。')) {
+  const handleClearStorage = async () => {
+    const { default: Swal } = await import('sweetalert2')
+    const result = await Swal.fire({
+      title: '確認清除',
+      text: '確定要清除所有活動記錄嗎？此操作無法復原。',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '清除',
+      cancelButtonText: '取消',
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+    })
+
+    if (result.isConfirmed) {
       clearStorage()
-      setLocalStorageCount(0)
-      alert('已清除所有活動記錄')
+      Swal.fire({
+        title: '已清除',
+        text: '所有活動記錄已清除',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false,
+      })
     }
   }
 
@@ -124,13 +119,18 @@ export default function TrialPage() {
   }
 
   // ===== 語音輸入處理 =====
-  const handleVoiceInput = (result) => {
-    handleVoiceResult(result)
+  const handleVoiceInput = (result, inputType) => {
+    if (inputType === 'title') {
+      setTitle(result)
+    } else {
+      // 預設或 inputType === 'desc' 時，設置到活動描述
+      setDesc(result)
+    }
   }
 
   // ===== 格式化時間 =====
   const formatTime = (date) => {
-    if (!date) return '--:--:--'
+    if (!date) return '--:----'
     return date.toLocaleTimeString('zh-TW', {
       hour12: false,
       hour: '2-digit',
@@ -152,71 +152,48 @@ export default function TrialPage() {
   return (
     <div className="min-vh-100 bg-light">
       {/* Trial Banner */}
-      <div className="bg-warning text-dark py-3">
-        <Container>
-          <Row className="align-items-center">
-            <Col md={8}>
-              <h4 className="mb-1">🎯 免費試用版</h4>
-              <p className="mb-0">
-                使用 localStorage 儲存，最多 10
-                筆記錄。註冊後可享受雲端同步與無限記錄！
-              </p>
-            </Col>
-            <Col md={4} className="text-end">
-              <div className="d-flex gap-2 justify-content-end">
-                <Button
-                  variant="outline-dark"
-                  size="sm"
-                  as={Link}
-                  href="/user/register"
-                >
-                  立即註冊
-                </Button>
-                <Button variant="dark" size="sm" as={Link} href="/user/login">
-                  登入帳號
-                </Button>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-
       <Container className="py-4">
-        {/* localStorage 使用量指示器 */}
-        <Alert variant="info" className="mb-1">
-          <div className="d-flex justify-content-between align-items-center">
-            <span>📊 localStorage 使用量: {localStorageCount}/10 筆記錄</span>
-            <Button
-              variant="outline-danger"
-              size="sm"
-              onClick={handleClearStorage}
-            >
-              清除記錄
-            </Button>
-          </div>
-        </Alert>
-
         {/* 主要 TimeLog 介面 */}
         <Card className="shadow-sm">
-          <Card.Header className="bg-primary text-white">
+          <Card.Header
+            className="text-white"
+            style={{
+              background:
+                'var(--button-bg, linear-gradient(45deg, #0dcaf0, #0aa2c0))',
+            }}
+          >
             <h4 className="mb-0">⏰ TimeLog 試用版</h4>
+            <div className="d-flex justify-content-between align-items-center">
+              <span className="small">
+                📊 localStorage 使用量: {localStorageCount}/10 筆記錄
+              </span>
+              {/* localStorage 使用量指示器 */}
+              <Button
+                className="btn-sm text-white"
+                variant="outline-white"
+                size="sm"
+                onClick={handleClearStorage}
+              >
+                清除記錄
+              </Button>
+            </div>
           </Card.Header>
           <Card.Body className="p-4">
-            {/* 目前時間顯示 */}
-            <div className="text-center mb-4">
-              <div className="display-6 text-primary fw-bold">
-                {formatTime(currentTime)}
-              </div>
-              <div className="text-muted">{formatDate(currentTime)}</div>
-            </div>
-
-            {/* 左右兩欄佈局 */}
+            {/* 導入響應式 Row & Col */}
             <Row>
-              {/* 左半邊：輸入框、按鈕組、活動狀態、升級提示 */}
-              <Col sm={12} md={6}>
-                {/* 活動資訊輸入 */}
+              {/* ===== 左側欄：即時活動控制與步驟 (md=7, 佔用較多空間) ===== */}
+              <Col md={7} className="border-end pe-md-4 mb-4 mb-md-0">
+                {/* 1. 目前時間顯示 */}
+                <div className="text-center mb-4">
+                  <div className="display-6 text-primary fw-bold">
+                    {formatTime(currentTime)}
+                  </div>
+                  <div className="text-muted">{formatDate(currentTime)}</div>
+                </div>
+
+                {/* 2. 活動資訊輸入 */}
                 <Row className="mb-1">
-                  <Col sm={12} md={12}>
+                  <Col>
                     <div className="mb-3">
                       <label className="form-label fw-semibold">活動名稱</label>
                       <input
@@ -228,9 +205,23 @@ export default function TrialPage() {
                       />
                     </div>
                   </Col>
+                  <Col md={3}>
+                    <div className="mb-3">
+                      <label className="form-label fw-semibold invisible">
+                        活動名稱語音輸入
+                      </label>
+                      <div className="text-center w-100 d-flex justify-content-center">
+                        <VoiceInput
+                          onResult={handleVoiceInput}
+                          inputType="title"
+                        />
+                      </div>
+                    </div>
+                  </Col>
                 </Row>
-                <Row>
-                  <Col sm={12} md={9}>
+
+                <Row className="mb-4">
+                  <Col md={9}>
                     <div className="mb-3">
                       <label className="form-label fw-semibold">活動描述</label>
                       <input
@@ -242,14 +233,23 @@ export default function TrialPage() {
                       />
                     </div>
                   </Col>
-                  {/* 語音輸入 */}
-                  <Col sm={12} md={3} className="d-flex align-items-end">
-                    <div className="mb-3 w-100 text-center">
-                      <VoiceInput onResult={handleVoiceInput} />
+                  {/* 3. 語音輸入 */}
+                  <Col md={3}>
+                    <div className="mb-3">
+                      <label className="form-label fw-semibold invisible">
+                        活動描述語音輸入
+                      </label>
+                      <div className="text-center w-100 d-flex justify-content-center">
+                        <VoiceInput
+                          onResult={handleVoiceInput}
+                          inputType="desc"
+                        />
+                      </div>
                     </div>
                   </Col>
                 </Row>
-                {/* 控制按鈕 */}
+
+                {/* 4. 控制按鈕 */}
                 <div className="text-center mb-4">
                   <div className="btn-group" role="group">
                     {getActivityStatus() === '準備中' && (
@@ -257,7 +257,7 @@ export default function TrialPage() {
                         variant="success"
                         size="lg"
                         onClick={handleStart}
-                        disabled={!title.trim()}
+                        disabled={!isClient || !title.trim()}
                       >
                         🚀 開始記錄
                       </Button>
@@ -293,7 +293,7 @@ export default function TrialPage() {
                           variant="success"
                           size="lg"
                           onClick={handleSaveActivity}
-                          disabled={localStorageCount >= 10}
+                          disabled={isClient && localStorageCount >= 10}
                         >
                           💾 儲存活動
                         </Button>
@@ -301,7 +301,8 @@ export default function TrialPage() {
                     )}
                   </div>
                 </div>
-                {/* 活動狀態顯示 */}
+
+                {/* 5. 活動狀態顯示 */}
                 {startTime && (
                   <div className="text-center mb-4">
                     <div className="alert alert-info">
@@ -324,33 +325,8 @@ export default function TrialPage() {
                     </div>
                   </div>
                 )}
-                {/* 升級提示 */}
-                <Alert variant="success" className="mt-4">
-                  <h5>🚀 升級到完整版享受更多功能！</h5>
-                  <ul className="mb-3">
-                    <li>✅ 雲端同步 - 多裝置無縫切換</li>
-                    <li>✅ 無限記錄 - 不再受 localStorage 限制</li>
-                    <li>✅ AI 分析 - Gemini 2.5 Flash 智能洞察</li>
-                    <li>✅ 數據匯出 - 支援多種格式</li>
-                  </ul>
-                  <div className="d-flex gap-2">
-                    <Button variant="success" as={Link} href="/user/register">
-                      立即註冊
-                    </Button>
-                    <Button
-                      variant="outline-success"
-                      as={Link}
-                      href="/subscription"
-                    >
-                      查看方案
-                    </Button>
-                  </div>
-                </Alert>
-              </Col>
 
-              {/* 右半邊：記錄步驟、已儲存活動 */}
-              <Col sm={12} md={6}>
-                {/* 步驟列表 */}
+                {/* 6. 步驟列表 */}
                 {steps.length > 0 && (
                   <div className="mb-4">
                     <h5 className="mb-3">📋 記錄步驟</h5>
@@ -391,11 +367,14 @@ export default function TrialPage() {
                     </div>
                   </div>
                 )}
+              </Col>
 
-                {/* 已儲存活動列表 */}
+              {/* ===== 右側欄：活動歷史與升級提示 (md=5, 較窄空間) ===== */}
+              <Col md={5} className="ps-md-4">
+                {/* 7. 已儲存活動列表 */}
                 {savedActivities.length > 0 && (
                   <div className="mb-4">
-                    <h5 className="mb-3">📚 已儲存的活動</h5>
+                    <h5 className="mb-3">📚 已儲存的活動 (歷史)</h5>
                     <div className="list-group">
                       {savedActivities.map((activity, index) => (
                         <div key={activity.id} className="list-group-item">
@@ -417,14 +396,30 @@ export default function TrialPage() {
                             <Button
                               variant="outline-danger"
                               size="sm"
-                              onClick={() => {
-                                if (confirm('確定要刪除此活動記錄嗎？')) {
+                              onClick={async () => {
+                                const { default: Swal } = await import(
+                                  'sweetalert2'
+                                )
+                                const result = await Swal.fire({
+                                  title: '確認刪除',
+                                  text: '確定要刪除此活動記錄嗎？',
+                                  icon: 'warning',
+                                  showCancelButton: true,
+                                  confirmButtonText: '刪除',
+                                  cancelButtonText: '取消',
+                                  confirmButtonColor: '#dc3545',
+                                  cancelButtonColor: '#6c757d',
+                                })
+
+                                if (result.isConfirmed) {
                                   deleteSavedActivity(activity.id)
-                                  // 重新載入已儲存的活動並更新計數
-                                  loadSavedActivities()
-                                  setLocalStorageCount(
-                                    getSavedActivitiesCount()
-                                  )
+                                  Swal.fire({
+                                    title: '已刪除',
+                                    text: '活動記錄已刪除',
+                                    icon: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                  })
                                 }
                               }}
                             >
@@ -436,8 +431,32 @@ export default function TrialPage() {
                     </div>
                   </div>
                 )}
+
+                {/* 8. 升級提示 (保持在右側欄底部，優先於歷史紀錄) */}
+                <Alert variant="success" className="mt-4 mt-md-0">
+                  <h5>🚀 升級到完整版享受更多功能！</h5>
+                  <ul className="mb-3">
+                    <li>✅ 雲端同步 - 多裝置無縫切換</li>
+                    <li>✅ 無限記錄 - 不再受 localStorage 限制</li>
+                    <li>✅ AI 分析 - Gemini 2.5 Flash 智能洞察</li>
+                    <li>✅ 數據匯出 - 支援多種格式</li>
+                  </ul>
+                  <div className="d-flex gap-2">
+                    <Button variant="success" as={Link} href="/user/register">
+                      立即註冊
+                    </Button>
+                    <Button
+                      variant="outline-success"
+                      as={Link}
+                      href="/subscription"
+                    >
+                      查看方案
+                    </Button>
+                  </div>
+                </Alert>
               </Col>
             </Row>
+            {/* 結束 Row */}
           </Card.Body>
         </Card>
       </Container>
