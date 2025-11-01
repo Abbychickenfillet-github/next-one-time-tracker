@@ -5,17 +5,58 @@ import 'server-only' // 限制只能在伺服器端使用
 
 // env: development | production
 const env = process.env.NODE_ENV || 'development'
-console.log('🔧 [DEBUG] server.config.js - env:', env)
 
 // 判斷是否為開發環境
 export const isDev = process.env.NODE_ENV === 'development'
-console.log('🔧 [DEBUG] server.config.js - isDev:', isDev)
 
 // baseUrl: 開發or營運環境的網址 - 含備援網域
 export const baseUrl = isDev
   ? 'http://localhost:3001'
   : 'https://insightful-timelog.zeabur.app'
-console.log('🔧 [DEBUG] server.config.js - baseUrl:', baseUrl)
+
+// ===== 日誌等級系統 =====
+// 日誌等級定義（數字越大越重要）
+const LOG_LEVELS = {
+  DEBUG: 0,
+  INFO: 1,
+  WARN: 2,
+  ERROR: 3,
+}
+
+// 從環境變數讀取日誌等級，預設值：
+// - 開發環境：DEBUG（顯示所有日誌）
+// - 生產環境：INFO（只顯示 INFO, WARN, ERROR）
+const LOG_LEVEL_ENV =
+  process.env.LOG_LEVEL?.toUpperCase() || (isDev ? 'DEBUG' : 'INFO')
+const currentLogLevel = LOG_LEVELS[LOG_LEVEL_ENV] ?? LOG_LEVELS.INFO
+
+// 判斷是否應該輸出指定等級的日誌
+function shouldLog(level) {
+  // 等級數字 >= 當前設定的等級，就輸出
+  return LOG_LEVELS[level] >= currentLogLevel
+}
+
+// 統一的日誌輸出函式
+function logWithLevel(level, prefix, ...args) {
+  if (shouldLog(level)) {
+    const emoji =
+      {
+        DEBUG: '🔧',
+        INFO: 'ℹ️',
+        WARN: '⚠️',
+        ERROR: '❌',
+      }[level] || '📝'
+    console.log(`${emoji} [${level}] ${prefix}`, ...args)
+  }
+}
+
+// 導出不同等級的日誌函式
+export const logger = {
+  debug: (...args) => logWithLevel('DEBUG', 'server.config.js -', ...args),
+  info: (...args) => logWithLevel('INFO', 'server.config.js -', ...args),
+  warn: (...args) => logWithLevel('WARN', 'server.config.js -', ...args),
+  error: (...args) => logWithLevel('ERROR', 'server.config.js -', ...args),
+}
 
 export const serverConfig = {
   // 前端網址
@@ -107,28 +148,37 @@ export const serverConfig = {
   },
 }
 
-console.log('🔧 [DEBUG] server.config.js - serverConfig 初始化完成')
-console.log(
-  '🔧 [DEBUG] server.config.js - process.env.LINE_PAY_CHANNEL_ID:',
+// 日誌輸出 - 使用不同等級
+logger.debug('env:', env)
+logger.debug('isDev:', isDev)
+logger.debug('baseUrl:', baseUrl)
+logger.info('serverConfig 初始化完成')
+logger.debug(
+  'process.env.LINE_PAY_CHANNEL_ID:',
   process.env.LINE_PAY_CHANNEL_ID
 )
-console.log(
-  '🔧 [DEBUG] server.config.js - process.env.LINE_PAY_CHANNEL_SECRET:',
+logger.debug(
+  'process.env.LINE_PAY_CHANNEL_SECRET:',
   process.env.LINE_PAY_CHANNEL_SECRET ? '已設定' : '未設定'
 )
-console.log(
-  '🔧 [DEBUG] server.config.js - serverConfig.linePay.development.channelId:',
+logger.debug(
+  'serverConfig.linePay.development.channelId:',
   serverConfig.linePay.development.channelId
 )
-console.log(
-  '🔧 [DEBUG] server.config.js - serverConfig.linePay.development.channelSecret:',
+logger.debug(
+  'serverConfig.linePay.development.channelSecret:',
   serverConfig.linePay.development.channelSecret ? '已設定' : '未設定'
 )
-console.log(
-  '🔧 [DEBUG] server.config.js - serverConfig.linePay.development.confirmUrl:',
+logger.debug(
+  'serverConfig.linePay.development.confirmUrl:',
   serverConfig.linePay.development.confirmUrl
 )
-console.log(
-  '🔧 [DEBUG] server.config.js - serverConfig.linePay.development.cancelUrl:',
+logger.debug(
+  'serverConfig.linePay.development.cancelUrl:',
   serverConfig.linePay.development.cancelUrl
 )
+
+// 如果敏感資訊未設定，發出警告
+if (!process.env.LINE_PAY_CHANNEL_SECRET) {
+  logger.warn('LINE_PAY_CHANNEL_SECRET 未設定，使用預設值')
+}
