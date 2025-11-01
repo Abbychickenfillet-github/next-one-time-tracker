@@ -12,6 +12,15 @@ import { getSession, setSession, deleteSession } from '../lib/iron-session'
 import { serverConfig } from '../config/server.config.js'
 import { isDev } from '../lib/utils.js'
 
+// 只在開發環境或有 DEBUG_SERVER_CONFIG 環境變數時輸出 debug
+const shouldDebug = isDev || process.env.DEBUG_SERVER_CONFIG === 'true'
+
+function debugLog(...args) {
+  if (shouldDebug) {
+    console.log(...args)
+  }
+}
+
 // NOTE: 這裡是服務層，負責處理商品相關的邏輯
 // 不會使用throw錯誤，而是回傳物件，物件包含status, message, payload
 // status: 'success' | 'error'
@@ -115,13 +124,15 @@ const redirectUrls = {
     : serverConfig.linePay.production.cancelUrl,
 }
 
-console.log('🔧 [DEBUG] redirectUrls 設定:', redirectUrls)
+debugLog('🔧 [DEBUG] redirectUrls 設定:', redirectUrls)
 
 // 環境配置說明
 if (isDev) {
-  console.log('🚀 運行在開發環境 (npm run dev)')
+  debugLog('🚀 運行在開發環境 (npm run dev)')
 } else {
-  console.log('🚀 運行在生產環境 (npm start)，使用 LINE Pay 正式環境 IP 白名單')
+  debugLog(
+    '🚀 運行在生產環境 (npm start)，已經不用 LINE Pay 正式環境 IP 白名單'
+  )
 }
 // 回應line-pay交易網址到前端，由前端導向line pay付款頁面
 // 資料格式參考 https://enylin.github.io/line-pay-merchant/api-reference/request.html#example
