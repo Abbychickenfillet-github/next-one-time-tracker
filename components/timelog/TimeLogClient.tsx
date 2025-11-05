@@ -508,7 +508,7 @@ export default function TimeLogClient() {
                 }}
                 targetInputRef={descInputRef}
                 inputType="desc"
-                title="🎤 語音"
+                title="🎤"
               />
               <button
                 className="btn"

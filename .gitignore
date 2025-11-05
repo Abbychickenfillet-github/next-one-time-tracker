@@ -49,3 +49,5 @@ pnpm-lock.yaml
 /logs
 /testing/
 /tests/
+# CI
+sonar-project.properties

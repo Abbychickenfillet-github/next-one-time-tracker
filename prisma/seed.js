@@ -33,6 +33,10 @@ const seedsFolder = 'seeds'
 const bcryptFields = ['password']
 // 需要先轉換為日期的欄位名稱 date format fields
 const dateFields = ['birthdate'] // 改為 birthdate，因為 User 表中的欄位名稱
+
+// 安全模式：只處理實際存在的 seed 檔案，不會根據關聯自動生成檔案列表
+// 這樣可以確保只有你明確建立的 seed 檔案才會被處理
+const SAFE_MODE = true // 設為 true 時，只處理 seeds/ 資料夾中實際存在的檔案
 // 啟動類型檔案，會自動載入環境變數
 async function main() {
   // seed 檔案存放路徑(相對於專案根目錄)
@@ -106,8 +110,18 @@ async function main() {
 
   // console.log(seedFileList)
 
+  // 安全模式：只處理實際存在的檔案
+  const finalSeedFileList = SAFE_MODE
+    ? filenames.filter((f) => f.includes(fileExtension) && f !== '.DS_Store')
+    : seedFileList
+
+  console.log(
+    `📋 Seed 模式: ${SAFE_MODE ? '安全模式（只處理實際存在的檔案）' : '標準模式（包含關聯檔案）'}`
+  )
+  console.log(`📁 將處理的檔案: ${finalSeedFileList.join(', ')}`)
+
   // 逐一讀取種子檔案，並匯入資料 json or csv
-  for (const filename of seedFileList) {
+  for (const filename of finalSeedFileList) {
     // 檢查檔案是否存在
     const filePath = path.join(process.cwd(), `./${seedsFolder}/${filename}`)
     try {
@@ -124,6 +138,14 @@ async function main() {
       const jsonData = await readFile(filePath)
       // allData is an array of objects
       const allData = JSON.parse(jsonData)
+
+      // 檢查資料是否為空陣列
+      if (!Array.isArray(allData) || allData.length === 0) {
+        console.log(
+          `⚠️  跳過空資料檔案: ${filename} (資料為空陣列，不會影響現有資料)`
+        )
+        continue
+      }
 
       for (let i = 0; i < allData.length; i++) {
         const newItem = JSON.parse(JSON.stringify(allData[i]))
@@ -149,6 +171,14 @@ async function main() {
       const allData = await csv().fromFile(
         path.join(process.cwd(), `./${seedsFolder}/${filename}`)
       )
+
+      // 檢查資料是否為空陣列
+      if (!Array.isArray(allData) || allData.length === 0) {
+        console.log(
+          `⚠️  跳過空資料檔案: ${filename} (資料為空陣列，不會影響現有資料)`
+        )
+        continue
+      }
 
       // transform to correct object data type
       for (let i = 0; i < allData.length; i++) {
@@ -203,18 +233,37 @@ async function main() {
     const model = filename.split('.')[0]
     const prop = convertToCamelCase(model)
 
-    // console.log('prop', prop, 'data', data)
+    // 如果沒有資料，跳過（雙重檢查）
+    if (!data || data.length === 0) {
+      console.log(
+        `⚠️  跳過空資料檔案: ${filename} (處理後資料為空，不會影響現有資料)`
+      )
+      continue
+    }
 
     // TODO: this maybe anti typescript type check
     // 執行 Prisma createMany 方法，將資料匯入資料庫
+    // ⚠️ 重要：createMany 只會新增資料，不會覆蓋或刪除現有資料
+    // skipDuplicates: true 表示如果資料違反唯一約束（如 email），會跳過該筆資料，不會報錯
+    // 這確保了用戶輸入的真實資料不會被覆蓋
     const result = await prisma[prop].createMany({
       data,
-      skipDuplicates: true,
+      skipDuplicates: true, // 跳過重複資料（基於唯一約束），不會覆蓋現有資料
     })
 
     // 如果是開發環境，顯示訊息
-    if (isDev)
-      console.log(`Created ${result.count} seeds for "${model}" Model.`)
+    if (isDev) {
+      const skippedCount = data.length - result.count
+      console.log(
+        `✅ Created ${result.count} seeds for "${model}" Model.` +
+          (skippedCount > 0 ? ` (跳過 ${skippedCount} 筆重複資料)` : '')
+      )
+      if (result.count === 0 && data.length > 0) {
+        console.log(
+          `   ℹ️  所有資料都已存在（可能是唯一約束衝突），現有資料保持不變`
+        )
+      }
+    }
   }
 }
 

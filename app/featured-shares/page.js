@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Card, Button, Badge, Col, Alert, Spinner } from 'react-bootstrap'
 // import { useAuth } from '@/hooks/use-auth' // 暫時未使用，保留供未來使用
 import Image from 'next/image'
-
+import Swal from 'sweetalert2'
 export default function FeaturedShares() {
   // const { isAuth } = useAuth() // 暫時未使用，保留供未來使用
   const [featuredShares, setFeaturedShares] = useState([])
@@ -80,6 +80,65 @@ export default function FeaturedShares() {
     if (seconds < 60) return `${seconds}秒`
     if (minutes < 60) return `${minutes}分`
     return `${hours}小時${minutes % 60}分`
+  }
+
+  const handleLike = async (shareId) => {
+    try {
+      // shareId 是 FeaturedShare 的 UUID (PK)
+      // 檢查是否已經按讚，決定使用新增或刪除
+      const share = featuredShares.find((s) => s.id === shareId)
+      const isLiked = share?.isLiked || false
+
+      let response
+      if (isLiked) {
+        // 取消按讚：使用 DELETE
+        response = await fetch(`/api/favorites?featuredShareId=${shareId}`, {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      } else {
+        // 新增按讚：使用 POST
+        response = await fetch('/api/favorites', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            featuredShareId: shareId,
+          }),
+        })
+      }
+
+      if (!response.ok) throw new Error('Failed to toggle like')
+      const result = await response.json()
+      if (result.status === 'success') {
+        // 更新本地狀態
+        setFeaturedShares((prev) =>
+          prev.map((s) =>
+            s.id === shareId
+              ? {
+                  ...s,
+                  starCount: result.data.starCount,
+                  isLiked: !isLiked,
+                }
+              : s
+          )
+        )
+      } else {
+        throw new Error(result.message || 'Failed to toggle like')
+      }
+    } catch (error) {
+      console.error('Failed to toggle like:', error)
+      Swal.fire({
+        title: error.message === '已經按讚過了' ? '已按讚過了' : '操作發生錯誤',
+        text: error.message || '操作發生錯誤',
+        icon: 'error',
+      })
+    }
   }
 
   return (
@@ -285,11 +344,18 @@ export default function FeaturedShares() {
                           </small>
                           <div>
                             <Button
-                              variant="outline-primary"
+                              variant={
+                                share.isLiked ? 'primary' : 'outline-primary'
+                              }
                               size="sm"
                               className="me-2"
+                              onClick={() => handleLike(share.id)}
                             >
-                              <i className="bi bi-heart"></i> 讚
+                              <i
+                                className={`bi bi-heart${share.isLiked ? '-fill' : ''}`}
+                              ></i>{' '}
+                              {share.isLiked ? '已讚' : '讚'} ({share.starCount}
+                              )
                             </Button>
                             <Button variant="outline-secondary" size="sm">
                               <i className="bi bi-share"></i> 分享

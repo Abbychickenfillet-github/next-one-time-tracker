@@ -178,7 +178,6 @@ export async function POST(request) {
         await prisma.step.createMany({
           data: laps.map((lap) => ({
             timeLogId: existingData.id,
-            userId: userId,
             title: lap.description || `分圈 ${lap.lapNumber}`,
             description: lap.description,
             startTime: new Date(lap.startTime),
@@ -221,7 +220,6 @@ export async function POST(request) {
         await prisma.step.createMany({
           data: laps.map((lap) => ({
             timeLogId: newTimeLog.id,
-            userId: userId,
             title: lap.description || `分圈 ${lap.lapNumber}`,
             description: lap.description,
             startTime: new Date(lap.startTime),

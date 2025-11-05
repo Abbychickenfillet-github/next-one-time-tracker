@@ -52,7 +52,7 @@ export async function POST(request) {
       // ========================================
       // 先查詢用戶等級
       const user = await prisma.user.findUnique({
-        where: { user_id: parseInt(userId) },
+        where: { user_id: userId }, // UUID 已經是字串，不需要轉換
         select: { level: true },
       })
 

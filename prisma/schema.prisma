@@ -9,42 +9,32 @@ datasource db {
 }
 
 // 以下為資料表定義
-// 分享
-model Blog {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  title     String
-  content   String?
-  published Boolean  @default(false)
-}
+
 
 model TimeLog {
-  id        Int       @id @default(autoincrement())
+  id        String        @id @default(uuid()) @db.Uuid
   title     String
-  startTime DateTime  @map("start_time")
-  endTime   DateTime? @map("end_time")
-  userId    Int?      @map("user_id")
+  startTime DateTime      @map("start_time")
+  endTime   DateTime?     @map("end_time")
+  userId    String?       @map("user_id") @db.Uuid
   memo      String?
   steps     Step[]
-  user      User?     @relation(fields: [userId], references: [user_id], onDelete: Cascade)
+  user      User?         @relation(fields: [userId], references: [user_id], onDelete: Cascade)
   featuredShares FeaturedShare[]
 }
 
 model Step {
-  id          Int       @id @default(autoincrement())
-  timeLogId   Int       @map("time_log_id")
-  userId      Int?      @map("user_id")
+  id          String    @id @default(uuid()) @db.Uuid
+  timeLogId   String    @map("time_log_id") @db.Uuid
   title       String
   description String?
   startTime   DateTime  @map("start_time")
   endTime     DateTime? @map("end_time")
   timeLog     TimeLog   @relation(fields: [timeLogId], references: [id], onDelete: Cascade)
-  user        User?     @relation(fields: [userId], references: [user_id], onDelete: Cascade)
 }
 
 model Otp {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid()) @db.Uuid
   email     String   @unique
   token     String
   hash      String?
@@ -53,37 +43,41 @@ model Otp {
 }
 
 model User {
-  user_id           Int            @id @default(autoincrement())
+  user_id           String          @id @default(uuid()) @map("user_id") @db.Uuid
   name              String?
   password          String
-  email             String         @unique
+  email             String          @unique
   phone             String?
   birthdate         DateTime?
   gender            String?
   avatar            String?
-  level             Int            @default(0)
-  valid             Boolean        @default(true)
-  createdAt         DateTime       @default(now()) @map("created_at")
-  googleUid         String?        @unique @map("google_uid")
-  lineUid           String?        @unique @map("line_uid")
+  level             Int             @default(0)
+  valid             Boolean         @default(true)
+  createdAt         DateTime        @default(now()) @map("created_at")
+  googleUid         String?         @unique @map("google_uid")
+  lineUid           String?         @unique @map("line_uid")
   lineAccessToken   String?
   refreshToken      String?
   iat               String?
   exp               String?
-  current_log_count Int            @default(0) @map("current_log_count")
-  due_date          DateTime?      @map("due_date")
-  paid              Boolean        @default(false)
-  paid_date         DateTime?      @map("paid_date")
+  current_log_count Int             @default(0) @map("current_log_count")
+  due_date          DateTime?       @map("due_date")
+  paid              Boolean         @default(false)
+  paid_date         DateTime?       @map("paid_date")
   paymentOrders     PaymentOrder[]
-  steps             Step[]
   timeLogs          TimeLog[]
   featuredShares    FeaturedShare[]
+  favorites         Favorite[]
+
+  @@index([email])
+  @@index([googleUid])
+  @@index([lineUid])
 }
 
 model PaymentOrder {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(uuid()) @db.Uuid
   orderId            String    @unique
-  userId             Int?      @map("user_id")
+  userId             String?   @map("user_id") @db.Uuid
   amount             Int
   currency           String    @default("TWD")
   status             String    @default("PENDING")
@@ -103,9 +97,9 @@ model PaymentOrder {
 }
 
 model FeaturedShare {
-  id            Int       @id @default(autoincrement())
-  userId        Int       @map("user_id")
-  timeLogId     Int       @map("time_log_id")
+  id            String    @id @default(uuid()) @db.Uuid
+  userId        String    @map("user_id") @db.Uuid
+  timeLogId     String    @map("time_log_id") @db.Uuid
   title         String    // 分享標題
   description   String?   // 分享描述
   shareReason   String?   @map("share_reason") // 分享原因
@@ -115,8 +109,23 @@ model FeaturedShare {
   updatedAt     DateTime  @updatedAt @map("updated_at")
   user          User      @relation(fields: [userId], references: [user_id], onDelete: Cascade)
   timeLog       TimeLog   @relation(fields: [timeLogId], references: [id], onDelete: Cascade)
+  favorites     Favorite[]
 
   @@index([userId]) // 索引：用戶ID，用於查詢用戶的分享
   @@index([isPublic, createdAt]) // 複合索引：公開狀態 + 創建時間，用於查詢公開分享
   @@index([starCount]) // 索引：星星數量，用於排序
+}
+
+model Favorite {
+  id              String        @id @default(uuid()) @db.Uuid
+  userId          String        @map("user_id") @db.Uuid
+  featuredShareId String        @map("featured_share_id") @db.Uuid
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  user            User          @relation(fields: [userId], references: [user_id], onDelete: Cascade)
+  featuredShare   FeaturedShare @relation(fields: [featuredShareId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, featuredShareId]) // 防止重複按讚
+  @@index([userId]) // 快速查詢用戶的所有最愛
+  @@index([featuredShareId]) // 快速查詢分享被按讚的次數
 }

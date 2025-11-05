@@ -637,7 +637,7 @@ export default function DashboardLapTimer() {
                 }}
                 targetInputRef={titleInputRef}
                 inputType="title"
-                title="🎤 語音輸入名稱"
+                title="🎤"
               />
             </div>
           </div>
@@ -682,15 +682,15 @@ export default function DashboardLapTimer() {
                   }
                 }}
               />
-              <Button
-                variant="outline-info"
-                disabled={isLapRunning}
-                data-voice-btn="true"
-                data-input-type="desc"
-                data-input-id="lapDescInput"
-              >
-                🎤
-              </Button>
+              <VoiceInputComponent
+                onResult={(text) => {
+                  console.log('[Voice][desc] result:', text)
+                  handleVoiceResult(text, 'desc')
+                }}
+                targetInputRef={descInputRef}
+                inputType="desc"
+                title="🎤"
+              />
             </div>
           </div>
         </div>
