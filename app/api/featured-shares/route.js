@@ -25,7 +25,7 @@ export async function GET(request) {
     // 構建查詢條件
     let whereClause
     if (userIdParam) {
-      const requestedUserId = parseInt(userIdParam)
+      const requestedUserId = userIdParam // UUID 已經是字串，不需要轉換
       // 只能查詢自己的分享，或查詢公開分享
       if (currentUserId && currentUserId === requestedUserId) {
         // 查詢自己的分享（包括非公開的）
@@ -63,6 +63,16 @@ export async function GET(request) {
             },
           },
         },
+        favorites: currentUserId
+          ? {
+              where: {
+                userId: currentUserId,
+              },
+              select: {
+                id: true,
+              },
+            }
+          : false, // 如果有登入用戶，查詢是否已按讚
       },
       orderBy: [{ starCount: 'desc' }, { createdAt: 'desc' }],
       take: 20, // 限制返回數量
@@ -77,6 +87,13 @@ export async function GET(request) {
       starCount: share.starCount,
       createdAt: share.createdAt,
       sharedAt: share.createdAt, // 使用 createdAt 作為分享時間
+      // isLiked: 檢查當前用戶是否已按讚此分享
+      // 因為查詢時已經過濾了只包含當前用戶的 favorites（第 66-75 行）
+      // 所以 share.favorites 只會包含當前用戶的按讚記錄（如果有的話）
+      // 因此 share.favorites.length > 0 就代表當前用戶已經按讚了
+      isLiked: currentUserId
+        ? share.favorites && share.favorites.length > 0
+        : false,
       // 扁平化用戶資訊
       userName: share.user.name,
       userAvatar: share.user.avatar,
@@ -251,7 +268,8 @@ export async function POST(request) {
   }
 }
 
-// PUT - 更新星星數量（點讚）
+// PUT - 更新星星數量（點讚）- 已廢棄，請使用 /api/favorites API
+// 保留此 API 以維持向後兼容性，但建議使用新的 Favorite API
 export async function PUT(request) {
   try {
     // 從 Cookie 中取得 JWT Token
@@ -272,6 +290,7 @@ export async function PUT(request) {
       )
     }
 
+    const userId = session.payload.userId
     const body = await request.json()
     const { shareId, action } = body // action: 'star' 或 'unstar'
 
@@ -296,29 +315,126 @@ export async function PUT(request) {
       )
     }
 
-    // 更新星星數量
-    const newStarCount =
-      action === 'star' ? share.starCount + 1 : Math.max(0, share.starCount - 1)
+    // 使用新的 Favorite API 邏輯
+    if (action === 'star') {
+      // 檢查是否已經按讚
+      const existingFavorite = await prisma.favorite.findUnique({
+        where: {
+          userId_featuredShareId: {
+            userId: userId,
+            featuredShareId: shareId,
+          },
+        },
+      })
 
-    const updatedShare = await prisma.featuredShare.update({
-      where: {
-        id: shareId,
-      },
-      data: {
-        starCount: newStarCount,
-      },
-    })
+      if (existingFavorite) {
+        return NextResponse.json({
+          status: 'success',
+          data: {
+            id: share.id,
+            starCount: share.starCount,
+          },
+          message: '已經按讚過了',
+        })
+      }
 
-    return NextResponse.json({
-      status: 'success',
-      data: {
-        id: updatedShare.id,
-        starCount: updatedShare.starCount,
-      },
-      message: action === 'star' ? '已點讚' : '已取消點讚',
-    })
+      // 使用事務：同時新增 Favorite 記錄和更新 starCount
+      const result = await prisma.$transaction(async (tx) => {
+        await tx.favorite.create({
+          data: {
+            userId: userId,
+            featuredShareId: shareId,
+          },
+        })
+
+        const updatedShare = await tx.featuredShare.update({
+          where: {
+            id: shareId,
+          },
+          data: {
+            starCount: {
+              increment: 1,
+            },
+          },
+        })
+
+        return updatedShare
+      })
+
+      return NextResponse.json({
+        status: 'success',
+        data: {
+          id: result.id,
+          starCount: result.starCount,
+        },
+        message: '已點讚',
+      })
+    } else if (action === 'unstar') {
+      // 檢查最愛記錄是否存在
+      const favorite = await prisma.favorite.findUnique({
+        where: {
+          userId_featuredShareId: {
+            userId: userId,
+            featuredShareId: shareId,
+          },
+        },
+      })
+
+      if (!favorite) {
+        return NextResponse.json({
+          status: 'success',
+          data: {
+            id: share.id,
+            starCount: share.starCount,
+          },
+          message: '尚未按讚',
+        })
+      }
+
+      // 使用事務：同時刪除 Favorite 記錄和更新 starCount
+      const result = await prisma.$transaction(async (tx) => {
+        await tx.favorite.delete({
+          where: {
+            id: favorite.id,
+          },
+        })
+
+        const updatedShare = await tx.featuredShare.update({
+          where: {
+            id: shareId,
+          },
+          data: {
+            starCount: {
+              decrement: 1,
+            },
+          },
+        })
+
+        return updatedShare
+      })
+
+      return NextResponse.json({
+        status: 'success',
+        data: {
+          id: result.id,
+          starCount: Math.max(0, result.starCount),
+        },
+        message: '已取消點讚',
+      })
+    } else {
+      return NextResponse.json(
+        { status: 'error', message: '無效的操作' },
+        { status: 400 }
+      )
+    }
   } catch (error) {
     console.error('更新星星數量失敗:', error)
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { status: 'error', message: '已經按讚過了' },
+        { status: 409 }
+      )
+    }
     return NextResponse.json(
       { status: 'error', message: '更新星星數量失敗' },
       { status: 500 }
@@ -361,7 +477,7 @@ export async function DELETE(request) {
     // 檢查分享是否存在且屬於當前用戶
     const share = await prisma.featuredShare.findFirst({
       where: {
-        id: parseInt(shareId),
+        id: shareId, // UUID 已經是字串，不需要轉換
         userId: userId,
       },
     })
@@ -376,7 +492,7 @@ export async function DELETE(request) {
     // 刪除分享
     await prisma.featuredShare.delete({
       where: {
-        id: parseInt(shareId),
+        id: shareId, // UUID 已經是字串，不需要轉換
       },
     })
 

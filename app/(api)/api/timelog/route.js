@@ -63,7 +63,7 @@ export async function POST(request) {
     // ========================================
     // 先查詢用戶等級
     const user = await prisma.user.findUnique({
-      where: { user_id: parseInt(userId) },
+      where: { user_id: userId }, // UUID 已經是字串，不需要轉換
       select: { level: true },
     })
 
@@ -105,11 +105,28 @@ export async function POST(request) {
     // ========================================
     // 📊 7. 創建時間戳記錄並更新用戶的 current_log_count
     // ========================================
+    // 解析本地時間字串為 Date 物件
+    // 如果字串格式是 YYYY-MM-DDTHH:mm:ss（沒有時區），視為本地時間
+    const parseLocalTime = (timeString) => {
+      if (!timeString) return null
+      // 如果包含 Z 或時區偏移，直接用 new Date() 解析
+      if (timeString.includes('Z') || timeString.match(/[+-]\d{2}:\d{2}$/)) {
+        return new Date(timeString)
+      }
+      // 否則視為本地時間字串，手動解析
+      const [datePart, timePart] = timeString.split('T')
+      if (!datePart || !timePart) return new Date(timeString)
+      const [year, month, day] = datePart.split('-').map(Number)
+      const [hours, minutes, seconds] = timePart.split(':').map(Number)
+      // 使用 new Date() 構造函數形式（明確指定本地時間）
+      return new Date(year, month - 1, day, hours, minutes, seconds || 0)
+    }
+
     const timeLog = await prisma.timeLog.create({
       data: {
         title: body.title,
-        startTime: new Date(body.startTime),
-        endTime: body.endTime ? new Date(body.endTime) : null,
+        startTime: parseLocalTime(body.startTime),
+        endTime: body.endTime ? parseLocalTime(body.endTime) : null,
         userId: userId,
         memo: body.memo || null, // 新增備註欄位支援
       },

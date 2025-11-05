@@ -3,6 +3,24 @@
 import { create } from 'zustand' // 導入 Zustand 的核心函數，用於創建狀態管理 store
 import { persist } from 'zustand/middleware' // 導入持久化中間件，用於將狀態保存到 localStorage
 
+// ===== 時間處理工具函數（避免時區問題） =====
+/**
+ * 將 Date 物件轉換為本地時間字串格式（用於儲存到資料庫）
+ * 避免 JSON.stringify 自動轉為 UTC ISOString
+ */
+const formatDateForStorage = (date) => {
+  if (!date) return null
+  // 使用標準格式：YYYY-MM-DDTHH:mm:ss（不包含時區信息）
+  // 這樣儲存時不會被 JSON.stringify 轉為 UTC
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
+}
+
 // TimeLog Zustand Store
 export const useTimeLogStore = create(
   // create() 函數：創建一個新的 Zustand store
@@ -243,14 +261,15 @@ export const useTimeLogStore = create(
             return
           }
           // 儲存主活動到 TimeLog 資料表
+          // 使用本地時間字串格式儲存，避免 UTC 轉換問題
           const timeLogRes = await fetch('/api/timelog', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include', // 包含 cookies，讓伺服器能從 session 取得 userId
             body: JSON.stringify({
               title: state.title,
-              startTime: state.startTime,
-              endTime: state.endTime,
+              startTime: formatDateForStorage(state.startTime),
+              endTime: formatDateForStorage(state.endTime),
               memo: state.memo || null, // 新增備註欄位
             }),
           })
@@ -266,6 +285,7 @@ export const useTimeLogStore = create(
           console.log('✅ TimeLog 創建成功:', newLog)
 
           // 儲存所有步驟到 Step 資料表
+          // 使用本地時間字串格式儲存，避免 UTC 轉換問題
           for (const step of state.steps) {
             if (step.type === 'step') {
               const stepRes = await fetch('/api/step', {
@@ -275,8 +295,8 @@ export const useTimeLogStore = create(
                   timeLogId: newLog.id,
                   title: step.title || step.text,
                   description: step.description || step.text,
-                  startTime: step.startTime || new Date(),
-                  endTime: step.endTime,
+                  startTime: formatDateForStorage(step.startTime || new Date()),
+                  endTime: formatDateForStorage(step.endTime),
                 }),
               })
 

@@ -24,7 +24,7 @@ export async function GET() {
     // 📊 2. 查詢用戶資訊和實際記錄數量
     // ========================================
     const user = await prisma.user.findUnique({
-      where: { user_id: parseInt(userId) }, // 根據用戶ID查詢
+      where: { user_id: userId }, // UUID 已經是字串，不需要轉換
       select: {
         // select: 指定要查詢的欄位，只返回需要的資料
         user_id: true, // 用戶ID
@@ -51,7 +51,7 @@ export async function GET() {
     // 📋 3. 查詢最近的 TimeLog 記錄
     // ========================================
     const recentLogs = await prisma.timeLog.findMany({
-      where: { userId: parseInt(userId) }, // 查詢該用戶的記錄
+      where: { userId: userId }, // UUID 已經是字串，不需要轉換
       select: {
         // select: 指定要查詢的欄位
         id: true, // 記錄ID

@@ -29,7 +29,7 @@ export async function GET() {
 
     // 查詢用戶的等級和當前活動記錄數量（使用 current_log_count 欄位，避免 COUNT 查詢）
     const user = await prisma.user.findUnique({
-      where: { user_id: parseInt(userId) },
+      where: { user_id: userId }, // UUID 已經是字串，不需要轉換
       select: {
         level: true,
         current_log_count: true,
@@ -102,9 +102,9 @@ export async function GET() {
     return NextResponse.json({
       status: 'success',
       data: {
-        userId: parseInt(userId),
+        userId: userId, // UUID 已經是字串，不需要轉換
         level,
-        currentCount: parseInt(current_log_count),
+        currentCount: current_log_count, // 已經是數字，不需要轉換
         limit,
         canSave,
         message:
@@ -125,8 +125,18 @@ export async function GET() {
     })
   } catch (error) {
     console.error('檢查限制時發生錯誤:', error)
+    console.error('錯誤詳情:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    })
     return NextResponse.json(
-      { status: 'error', message: '伺服器錯誤' },
+      {
+        status: 'error',
+        message: '伺服器錯誤',
+        error:
+          process.env.NODE_ENV === 'development' ? error.message : undefined,
+      },
       { status: 500 }
     )
   }

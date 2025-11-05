@@ -34,7 +34,7 @@ export async function DELETE(request, { params }) {
     // ========================================
     const existingLog = await prisma.timeLog.findFirst({
       where: {
-        id: parseInt(id),
+        id: id, // UUID 已經是字串，不需要轉換
         userId: userId,
       },
     })
@@ -48,7 +48,7 @@ export async function DELETE(request, { params }) {
     // 🗑️ 5. 刪除時間戳記錄
     // ========================================
     const timeLog = await prisma.timeLog.delete({
-      where: { id: parseInt(id) },
+      where: { id: id }, // UUID 已經是字串，不需要轉換
     })
 
     // ========================================

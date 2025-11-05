@@ -44,6 +44,6 @@ export const updatePasswordSchema = z.object({
 
 // 我的最愛的驗証用的schema
 export const favoriteSchema = z.object({
-  userId: z.number(), // 數字，必要
-  productId: z.number(), // 數字，必要
+  userId: z.string().uuid(), // UUID字串，必要
+  productId: z.string().uuid(), // UUID字串，必要
 })

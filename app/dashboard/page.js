@@ -448,33 +448,284 @@ export default function Dashboard() {
     </div>
   )
 
+  // 我的最愛狀態
+  const [favorites, setFavorites] = useState([])
+  const [isLoadingFavorites, setIsLoadingFavorites] = useState(true)
+  const [errorFavorites, setErrorFavorites] = useState(null)
+
+  // 載入我的最愛
+  const fetchFavorites = useCallback(async () => {
+    if (!isAuth) {
+      setIsLoadingFavorites(false)
+      return
+    }
+
+    try {
+      setIsLoadingFavorites(true)
+      setErrorFavorites(null)
+
+      const response = await fetch('/api/favorites', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      if (result.status === 'success') {
+        setFavorites(result.data || [])
+      } else {
+        throw new Error(result.message || '載入我的最愛失敗')
+      }
+    } catch (error) {
+      console.error('載入我的最愛失敗:', error)
+      setErrorFavorites(error.message)
+    } finally {
+      setIsLoadingFavorites(false)
+    }
+  }, [isAuth])
+
+  // 當切換到我的最愛頁籤時載入資料
+  useEffect(() => {
+    if (activeKey === 'favorite' && isAuth) {
+      fetchFavorites()
+    }
+  }, [activeKey, isAuth, fetchFavorites])
+
+  // 格式化時間
+  const formatFavoriteDate = (dateString) => {
+    if (!dateString) return '未知時間'
+    const date = new Date(dateString)
+    return date.toLocaleString('zh-TW', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  }
+
+  // 計算時間差
+  const calculateFavoriteDuration = (startTime, endTime) => {
+    if (!endTime) return '進行中'
+    const start = new Date(startTime)
+    const end = new Date(endTime)
+    const hours = Math.floor((end - start) / (1000 * 60 * 60))
+    const minutes = Math.floor(((end - start) % (1000 * 60 * 60)) / (1000 * 60))
+    if (hours > 0) {
+      return `${hours}小時${minutes}分鐘`
+    }
+    return `${minutes}分鐘`
+  }
+
   // 我的最愛組件
-  const FavoriteListSection = () => (
-    <div className="card border-0 shadow-sm">
-      <div
-        className="card-header border-bottom"
-        style={{
-          background:
-            'var(--primary-bg, linear-gradient(135deg, #0dcaf0, #0aa2c0))',
-          color: 'var(--text-primary, #ffffff)',
-          borderBottom: '1px solid var(--accent-color, #0dcaf0)',
-        }}
-      >
-        <h6 className="mb-0" style={{ color: 'var(--text-primary, #ffffff)' }}>
-          ❤️ 我的最愛
-        </h6>
-      </div>
-      <div className="card-body">
-        <div className="text-center py-5">
-          <div className="text-muted">
-            <i className="bi bi-heart fs-1"></i>
-            <p className="mt-3">尚無收藏項目</p>
-            <p className="small">開始收藏您喜歡的內容吧！</p>
+  const FavoriteListSection = () => {
+    if (!isAuth) {
+      return (
+        <div className="card border-0 shadow-sm">
+          <div className="card-body text-center py-5">
+            <div className="text-muted">
+              <i className="bi bi-lock fs-1"></i>
+              <p className="mt-3">請先登入以查看我的最愛</p>
+            </div>
           </div>
         </div>
+      )
+    }
+
+    return (
+      <div className="card border-0 shadow-sm">
+        <div
+          className="card-header border-bottom d-flex justify-content-between align-items-center"
+          style={{
+            background:
+              'var(--primary-bg, linear-gradient(135deg, #0dcaf0, #0aa2c0))',
+            color: 'var(--text-primary, #ffffff)',
+            borderBottom: '1px solid var(--accent-color, #0dcaf0)',
+          }}
+        >
+          <h6
+            className="mb-0"
+            style={{ color: 'var(--text-primary, #ffffff)' }}
+          >
+            ❤️ 我的最愛
+          </h6>
+          <button
+            className="btn btn-outline-light btn-sm"
+            onClick={fetchFavorites}
+            disabled={isLoadingFavorites}
+          >
+            <i className="bi bi-arrow-clockwise"></i> 重新載入
+          </button>
+        </div>
+        <div className="card-body">
+          {errorFavorites ? (
+            <div className="text-center py-5">
+              <div className="text-danger">
+                <i className="bi bi-exclamation-triangle fs-1"></i>
+                <p className="mt-3">載入失敗: {errorFavorites}</p>
+                <button
+                  className="btn btn-outline-danger"
+                  onClick={fetchFavorites}
+                >
+                  <i className="bi bi-arrow-clockwise"></i> 重新載入
+                </button>
+              </div>
+            </div>
+          ) : isLoadingFavorites ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">載入中...</span>
+              </div>
+              <p className="mt-3 text-muted">載入我的最愛中...</p>
+            </div>
+          ) : favorites.length === 0 ? (
+            <div className="text-center py-5">
+              <div className="text-muted">
+                <i className="bi bi-heart fs-1"></i>
+                <p className="mt-3">尚無收藏項目</p>
+                <p className="small">
+                  前往{' '}
+                  <a href="/featured-shares" className="text-primary">
+                    精選分享
+                  </a>{' '}
+                  開始收藏您喜歡的內容吧！
+                </p>
+              </div>
+            </div>
+          ) : (
+            <Accordion className="border-0">
+              {favorites.map((favorite, index) => {
+                const share = favorite.featuredShare
+                return (
+                  <Accordion.Item key={favorite.id} eventKey={index.toString()}>
+                    <Accordion.Header>
+                      <div className="d-flex justify-content-between align-items-center w-100 me-3">
+                        <div>
+                          <h6 className="mb-0 fw-semibold">{share.title}</h6>
+                          {share.description && (
+                            <small className="text-muted">
+                              {share.description}
+                            </small>
+                          )}
+                        </div>
+                        <div className="d-flex gap-2 align-items-center">
+                          <span className="badge bg-info">
+                            {calculateFavoriteDuration(
+                              share.startTime,
+                              share.endTime
+                            )}
+                          </span>
+                          <span className="badge bg-warning">
+                            ⭐ {share.starCount || 0}
+                          </span>
+                          <span className="badge bg-secondary">
+                            {share.steps?.length || 0} 步驟
+                          </span>
+                        </div>
+                      </div>
+                    </Accordion.Header>
+                    <Accordion.Body>
+                      <div className="row">
+                        <Col md={4}>
+                          <h6>📅 時間資訊</h6>
+                          <ul className="list-unstyled">
+                            <li>
+                              <strong>開始時間:</strong>{' '}
+                              {formatFavoriteDate(share.startTime)}
+                            </li>
+                            <li>
+                              <strong>結束時間:</strong>{' '}
+                              {formatFavoriteDate(share.endTime)}
+                            </li>
+                            <li>
+                              <strong>持續時間:</strong>
+                              <span className="badge bg-info ms-2">
+                                {calculateFavoriteDuration(
+                                  share.startTime,
+                                  share.endTime
+                                )}
+                              </span>
+                            </li>
+                            <li>
+                              <strong>收藏時間:</strong>{' '}
+                              {formatFavoriteDate(favorite.createdAt)}
+                            </li>
+                          </ul>
+                        </Col>
+                        <Col md={8}>
+                          <h6>📋 詳細步驟</h6>
+                          {share.steps && share.steps.length > 0 ? (
+                            <div className="list-group list-group-flush">
+                              {share.steps.map((step, stepIndex) => (
+                                <React.Fragment key={stepIndex}>
+                                  <div className="list-group-item px-0 py-2">
+                                    <div className="d-flex justify-content-between align-items-start">
+                                      <div>
+                                        <strong>{step.title}</strong>
+                                        {step.description && (
+                                          <div className="small text-muted">
+                                            {step.description}
+                                          </div>
+                                        )}
+                                      </div>
+                                      <div className="text-end">
+                                        <div className="small text-muted">
+                                          {formatFavoriteDate(step.startTime)}
+                                        </div>
+                                        {step.endTime && (
+                                          <div className="small text-muted">
+                                            至{' '}
+                                            {formatFavoriteDate(step.endTime)}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </React.Fragment>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-muted">尚無詳細步驟記錄</p>
+                          )}
+                        </Col>
+                      </div>
+                      {share.shareReason && (
+                        <div className="mt-3">
+                          <h6>💭 分享原因</h6>
+                          <p className="text-muted">{share.shareReason}</p>
+                        </div>
+                      )}
+                      <div className="mt-3 d-flex justify-content-between align-items-center">
+                        <div>
+                          <small className="text-muted">
+                            分享者: {share.userName || '匿名用戶'}
+                          </small>
+                        </div>
+                        <div>
+                          <a
+                            href={`/featured-shares`}
+                            className="btn btn-sm btn-outline-primary"
+                          >
+                            查看完整分享
+                          </a>
+                        </div>
+                      </div>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                )
+              })}
+            </Accordion>
+          )}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 
   // 付款紀錄組件
   const PaymentHistorySection = () => (
