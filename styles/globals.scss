@@ -822,6 +822,17 @@ body {
   color: var(--text-secondary, rgba(255, 255, 255, 0.6));
 }
 
+// 強制覆蓋注册頁面的 placeholder
+#name.form-control::placeholder,
+#email.form-control::placeholder,
+#password.form-control::placeholder,
+#confirmpassword.form-control::placeholder,
+#phone.form-control::placeholder,
+#birthdate.form-control::placeholder {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
 // Pink 主題專用表單樣式 - 增強對比度
 :root[data-theme='pink'] .form-control {
   background-color: rgba(0, 0, 0, 0.4);

@@ -725,8 +725,94 @@ export default function RegisterPage() {
           box-shadow: 0 0 0 0.2rem rgba(224, 176, 255, 0.25) !important;
         }
 
-        .form-control::placeholder {
-          color: rgba(255, 255, 255, 0.6) !important;
+        /* Placeholder styling fix - CSS selector specificity was not high enough */
+        /* The global styles in globals.scss were overriding the placeholder color */
+        /* Using ID selectors and type selectors to increase CSS specificity */
+        /* 最強制的 placeholder 樣式 - 使用更高優先級 */
+        #name.form-control::placeholder,
+        #email.form-control::placeholder,
+        #password.form-control::placeholder,
+        #confirmpassword.form-control::placeholder,
+        #phone.form-control::placeholder,
+        #birthdate.form-control::placeholder,
+        input#name.form-control::placeholder,
+        input#email.form-control::placeholder,
+        input#password.form-control::placeholder,
+        input#confirmpassword.form-control::placeholder,
+        input#phone.form-control::placeholder,
+        input#birthdate.form-control::placeholder {
+          color: #ffffff !important;
+          opacity: 1 !important;
+        }
+
+        {/* webkit瀏覽器 */}
+        #name.form-control::-webkit-input-placeholder,
+        #email.form-control::-webkit-input-placeholder,
+        #password.form-control::-webkit-input-placeholder,
+        #confirmpassword.form-control::-webkit-input-placeholder,
+        #phone.form-control::-webkit-input-placeholder,
+        #birthdate.form-control::-webkit-input-placeholder,
+        input#name.form-control::-webkit-input-placeholder,
+        input#email.form-control::-webkit-input-placeholder,
+        input#password.form-control::-webkit-input-placeholder,
+        input#confirmpassword.form-control::-webkit-input-placeholder,
+        input#phone.form-control::-webkit-input-placeholder,
+        input#birthdate.form-control::-webkit-input-placeholder {
+          color: #ffffff !important;
+          opacity: 1 !important;
+        }
+
+        #name.form-control::-moz-placeholder,
+        #email.form-control::-moz-placeholder,
+        #password.form-control::-moz-placeholder,
+        #confirmpassword.form-control::-moz-placeholder,
+        #phone.form-control::-moz-placeholder,
+        #birthdate.form-control::-moz-placeholder,
+        input#name.form-control::-moz-placeholder,
+        input#email.form-control::-moz-placeholder,
+        input#password.form-control::-moz-placeholder,
+        input#confirmpassword.form-control::-moz-placeholder,
+        input#phone.form-control::-moz-placeholder,
+        input#birthdate.form-control::-moz-placeholder {
+          color: #ffffff !important;
+          opacity: 1 !important;
+        }
+
+        /* 通用 placeholder 樣式 */
+        input.form-control::placeholder,
+        input.form-control::-webkit-input-placeholder,
+        input.form-control::-moz-placeholder,
+        input.form-control:-ms-input-placeholder,
+        input.form-control:-moz-placeholder {
+          color: #ffffff !important;
+          opacity: 1 !important;
+        }
+
+        input[type='text'].form-control::placeholder,
+        input[type='email'].form-control::placeholder,
+        input[type='password'].form-control::placeholder,
+        input[type='tel'].form-control::placeholder,
+        input[type='date'].form-control::placeholder {
+          color: #ffffff !important;
+          opacity: 1 !important;
+        }
+
+        input[type='text'].form-control::-webkit-input-placeholder,
+        input[type='email'].form-control::-webkit-input-placeholder,
+        input[type='password'].form-control::-webkit-input-placeholder,
+        input[type='tel'].form-control::-webkit-input-placeholder,
+        input[type='date'].form-control::-webkit-input-placeholder {
+          color: #ffffff !important;
+          opacity: 1 !important;
+        }
+
+        input[type='text'].form-control::-moz-placeholder,
+        input[type='email'].form-control::-moz-placeholder,
+        input[type='password'].form-control::-moz-placeholder,
+        input[type='tel'].form-control::-moz-placeholder,
+        input[type='date'].form-control::-moz-placeholder {
+          color: #ffffff !important;
+          opacity: 1 !important;
         }
 
         .btn-outline-light.active {
