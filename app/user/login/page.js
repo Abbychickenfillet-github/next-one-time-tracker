@@ -262,6 +262,7 @@ export default function LogIn() {
                         <div className="position-relative">
                           <input
                             type="email"
+                            id="login-email"
                             value={email}
                             onChange={(e) => {
                               setEmail(e.target.value)
@@ -333,7 +334,7 @@ export default function LogIn() {
                             onChange={(e) => {
                               setPassword(e.target.value)
                             }}
-                            id="password"
+                            id="login-password"
                             name="password"
                             className="form-control form-control-lg bg-white bg-opacity-10 border-white border-opacity-25 text-white"
                             placeholder="請輸入您包含英文大小寫、數字、特殊符號的密碼"
@@ -447,6 +448,33 @@ export default function LogIn() {
           color: red;
           font-size: 16px;
           margin-top: 0.25rem;
+        }
+
+        /* Placeholder styling fix - CSS selector specificity was not high enough */
+        /* The global styles in globals.scss were overriding the placeholder color */
+        /* Using ID selectors and type selectors to increase CSS specificity */
+        #login-email.form-control::placeholder,
+        #login-email.form-control::-webkit-input-placeholder,
+        #login-email.form-control::-moz-placeholder,
+        #login-email.form-control:-ms-input-placeholder,
+        #login-password.form-control::placeholder,
+        #login-password.form-control::-webkit-input-placeholder,
+        #login-password.form-control::-moz-placeholder,
+        #login-password.form-control:-ms-input-placeholder,
+        input[type='email'].form-control::placeholder,
+        input[type='email'].form-control::-webkit-input-placeholder,
+        input[type='email'].form-control::-moz-placeholder,
+        input[type='email'].form-control:-ms-input-placeholder,
+        input[type='password'].form-control::placeholder,
+        input[type='password'].form-control::-webkit-input-placeholder,
+        input[type='password'].form-control::-moz-placeholder,
+        input[type='password'].form-control:-ms-input-placeholder,
+        input.form-control::placeholder,
+        input.form-control::-webkit-input-placeholder,
+        input.form-control::-moz-placeholder,
+        input.form-control:-ms-input-placeholder {
+          color: #ffffff !important;
+          opacity: 1 !important;
         }
       `}</style>
     </>

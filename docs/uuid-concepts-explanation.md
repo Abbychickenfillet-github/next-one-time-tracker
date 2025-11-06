@@ -259,3 +259,4 @@ id = '550e8400-e29b-41d4-a716-446655440000' // 16 bytes + 字串格式開銷
 - [Prisma UUID 文檔](https://www.prisma.io/docs/concepts/components/prisma-schema/data-model#defining-an-id-field)
 
 
+
