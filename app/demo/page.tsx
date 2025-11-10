@@ -379,7 +379,7 @@ export default function TimeLogClient() {
                 <span className="fw-bold">
                   {isClient
                     ? currentTime
-                      ? currentTime.toLocaleTimeString()
+                      ? currentTime.toLocaleString()
                       : '載入中...'
                     : '載入中...'}
                 </span>
@@ -408,7 +408,7 @@ export default function TimeLogClient() {
                   <small className="text-muted">開始時間</small>
                   <div className="fw-bold">
                     {startTime instanceof Date
-                      ? startTime.toLocaleTimeString()
+                      ? startTime.toLocaleString()
                       : '未開始'}
                   </div>
                 </div>
@@ -422,7 +422,7 @@ export default function TimeLogClient() {
                   <small className="text-muted">結束時間</small>
                   <div className="fw-bold">
                     {endTime instanceof Date
-                      ? endTime.toLocaleTimeString()
+                      ? endTime.toLocaleString()
                       : '進行中...'}
                   </div>
                 </div>

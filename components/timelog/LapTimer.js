@@ -11,6 +11,8 @@ import {
   Row,
   Col,
   Badge,
+  OverlayTrigger,
+  Tooltip,
 } from 'react-bootstrap'
 
 export default function LapTimer() {
@@ -77,8 +79,11 @@ export default function LapTimer() {
   // ===== 格式化時間顯示 =====
   const formatTimeDisplay = (date) => {
     if (!date) return '--:--:--'
-    return date.toLocaleTimeString('zh-TW', {
+    return date.toLocaleString('zh-TW', {
       hour12: false,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
@@ -274,9 +279,37 @@ export default function LapTimer() {
                         >
                           🏁 記錄分圈
                         </Button>
-                        <Button variant="danger" size="lg" onClick={handleEnd}>
-                          ⏹️ 結束
-                        </Button>
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip
+                              id="lap-end-tooltip-running"
+                              style={{
+                                backgroundColor: 'var(--tooltip-bg, #2d3748)',
+                                color: 'var(--tooltip-text, #ffffff)',
+                                border:
+                                  '1px solid var(--tooltip-border, #4a5568)',
+                                borderRadius: '8px',
+                                fontSize: '0.8rem',
+                                padding: '0.75rem 1rem',
+                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                                maxWidth: '280px',
+                                textAlign: 'center',
+                                lineHeight: '1.4',
+                              }}
+                            >
+                              一旦結束當即儲存至資料庫
+                            </Tooltip>
+                          }
+                        >
+                          <Button
+                            variant="danger"
+                            size="lg"
+                            onClick={handleEnd}
+                          >
+                            ⏹️ 結束
+                          </Button>
+                        </OverlayTrigger>
                       </>
                     )}
                     {getActivityStatus() === '已暫停' && (
@@ -288,9 +321,37 @@ export default function LapTimer() {
                         >
                           ▶️ 恢復
                         </Button>
-                        <Button variant="danger" size="lg" onClick={handleEnd}>
-                          ⏹️ 結束
-                        </Button>
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip
+                              id="lap-end-tooltip-paused"
+                              style={{
+                                backgroundColor: 'var(--tooltip-bg, #2d3748)',
+                                color: 'var(--tooltip-text, #ffffff)',
+                                border:
+                                  '1px solid var(--tooltip-border, #4a5568)',
+                                borderRadius: '8px',
+                                fontSize: '0.8rem',
+                                padding: '0.75rem 1rem',
+                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                                maxWidth: '280px',
+                                textAlign: 'center',
+                                lineHeight: '1.4',
+                              }}
+                            >
+                              一旦結束當即儲存至資料庫
+                            </Tooltip>
+                          }
+                        >
+                          <Button
+                            variant="danger"
+                            size="lg"
+                            onClick={handleEnd}
+                          >
+                            ⏹️ 結束
+                          </Button>
+                        </OverlayTrigger>
                       </>
                     )}
                     {getActivityStatus() === '已結束' && (
