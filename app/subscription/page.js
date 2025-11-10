@@ -33,6 +33,8 @@ export default function SubscriptionPage() {
         '✅ 資料永久保存',
         '✅ 基礎統計分析',
         '📱 手機、平板、電腦同步',
+        'Gemini 2.5 Flash AI 勾選活動並 分析',
+        '輸入Prompt全站與AI互動',
         '🚦 每小時120次 API 呼叫',
         '🚦 每天520次資料庫查詢',
       ],

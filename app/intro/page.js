@@ -115,6 +115,8 @@ export default function IntroPage() {
         '📱 手機、平板、電腦同步',
         '🚦 每小時120次 API 呼叫',
         '🚦 每天520次資料庫查詢',
+        'Gemini 2.5 Flash AI 勾選活動並 分析',
+        '輸入Prompt全站與AI互動',
       ],
       buttonText: '開始訂閱',
       buttonVariant: 'primary',
@@ -125,8 +127,6 @@ export default function IntroPage() {
       period: '每月',
       features: [
         '包含基礎版所有功能',
-        '進階數據分析',
-        'Gemini 2.5 Flash AI 分析',
         'AI 時間洞察與建議',
         '自定義報告',
         '資料匯出功能',
@@ -188,6 +188,32 @@ export default function IntroPage() {
                   付費版每小時120次API呼叫，解鎖多裝置同步與無限記錄，更提供
                   Gemini 2.5 Flash AI 分析，讓你的時間管理更智能、更高效。
                 </p>
+                {/* 廣告意象卡片 */}
+                <div
+                  className="bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 mb-4 border border-white border-opacity-25"
+                  style={{
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                    animation: 'fadeInUp 0.8s ease-out',
+                  }}
+                >
+                  <h4 className="text-white fw-semibold mb-3">
+                    <span className="d-inline-block me-2">💭</span>
+                    就算是I人
+                  </h4>
+                  <p
+                    className="text-white fs-5 lh-lg mb-0"
+                    style={{ opacity: 0.95 }}
+                  >
+                    這邊也能傾聽您所有的狀態，
+                    <br />
+                    並以您希望的方式給予建議
+                  </p>
+                  <div className="mt-3 pt-3 border-top border-white border-opacity-25">
+                    <p className="text-white-50 small mb-0">
+                      ✨ 在這裡，每個人都能找到屬於自己的空間
+                    </p>
+                  </div>
+                </div>
                 <div className={styles.heroButtons}>
                   <Button
                     variant="primary"

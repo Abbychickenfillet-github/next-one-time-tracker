@@ -561,10 +561,58 @@ export default function RegisterPage() {
         <div className="container-fluid position-relative">
           <div className="row mt-5 align-items-center justify-content-center">
             {/* 左側歡迎區域 */}
+            <Col
+              lg={6}
+              md={12}
+              sm={12}
+              className="d-flex align-items-center justify-content-center mb-4 mb-lg-0"
+            >
+              <div
+                className="text-center text-lg-start px-4 px-lg-5"
+                style={{ zIndex: 100 }}
+              >
+                <div className="mb-4">
+                  <h1
+                    className="display-4 fw-bold text-white mb-4"
+                    style={{
+                      textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+                    }}
+                  >
+                    歡迎加入我們
+                  </h1>
+                  <div
+                    className="bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 p-md-5 border border-white border-opacity-25"
+                    style={{
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    <div className="mb-3">
+                      <h3 className="text-white fw-semibold mb-3">
+                        <span className="d-inline-block me-2">💭</span>
+                        就算是I人
+                      </h3>
+                      <p
+                        className="text-white fs-5 lh-lg mb-0"
+                        style={{ opacity: 0.95 }}
+                      >
+                        這邊也能接納您所有的心情活動狀態，
+                        <br />
+                        並給予您想聽到的回饋
+                      </p>
+                    </div>
+                    <div className="mt-4 pt-3 border-top border-white border-opacity-25">
+                      <p className="text-white-50 small mb-0">
+                        ✨ any time, any thought, sharing everything you want
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Col>
 
             {/* 右側註冊表單 */}
             <Col
-              lg={8}
+              lg={6}
               md={9}
               sm={10}
               className="d-flex align-items-center justify-content-center"

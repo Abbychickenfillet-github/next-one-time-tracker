@@ -195,10 +195,11 @@ export default function Dashboard() {
                       </span>
                       {/* 分享圖標 - 只有已登入用戶才顯示 */}
                       {isAuth && (
-                        <button
-                          type="button"
+                        <span
+                          role="button"
+                          tabIndex={0}
                           className={`btn btn-link p-0 border-0 ${
-                            sharedLogIds.has(log.id)
+                            log.id && sharedLogIds.has(log.id)
                               ? 'text-warning'
                               : 'text-muted'
                           }`}
@@ -210,25 +211,32 @@ export default function Dashboard() {
                             e.stopPropagation()
                             handleShareTimeLog(log)
                           }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              handleShareTimeLog(log)
+                            }
+                          }}
                           title={
-                            sharedLogIds.has(log.id)
+                            log.id && sharedLogIds.has(log.id)
                               ? '已分享到精選分享'
                               : '分享到精選分享'
                           }
                           aria-label={
-                            sharedLogIds.has(log.id)
+                            log.id && sharedLogIds.has(log.id)
                               ? '已分享到精選分享'
                               : '分享到精選分享'
                           }
                         >
                           <Icon
                             name={
-                              sharedLogIds.has(Number(log.id))
+                              log.id && sharedLogIds.has(log.id)
                                 ? 'bookmark-heart-fill'
                                 : 'bookmark-heart'
                             }
                           />
-                        </button>
+                        </span>
                       )}
                     </div>
                   </div>
@@ -324,7 +332,7 @@ export default function Dashboard() {
                                 : 'bookmark-heart'
                             }
                           />{' '}
-                          {sharedLogIds.has(Number(log.id))
+                          {log.id && sharedLogIds.has(log.id)
                             ? '已分享'
                             : sharingLogId === log.id
                               ? '分享中...'
@@ -812,11 +820,10 @@ export default function Dashboard() {
       if (response.ok) {
         const result = await response.json()
         if (result.status === 'success' && result.data) {
-          // 提取已分享的 timeLogId，確保都是數字類型
+          // ✅ 將精選分享中屬於當前用戶的 timeLogId 收集成 Set（UUID 字串）
           const sharedIds = result.data
             .map((share) => share.timeLog?.id)
-            .filter(Boolean)
-            .map((id) => Number(id)) // 確保轉換為數字
+            .filter((id) => typeof id === 'string' && id.length > 0)
 
           setSharedLogIds(new Set(sharedIds))
         }
@@ -953,8 +960,20 @@ export default function Dashboard() {
       return
     }
 
-    // 檢查是否已經分享過（確保類型一致）
-    if (sharedLogIds.has(Number(log.id))) {
+    const timeLogId = typeof log.id === 'string' ? log.id : null
+    if (!timeLogId) {
+      console.warn('分享時間記錄缺少有效的 UUID，跳過分享流程', log)
+      const { default: Swal } = await import('sweetalert2')
+      Swal.fire({
+        title: '無法分享',
+        text: '尚未生成時間記錄的唯一識別碼，請稍後再試或重新整理頁面後再試一次。',
+        icon: 'warning',
+      })
+      return
+    }
+
+    // 檢查是否已經分享過（使用 UUID 比對）
+    if (sharedLogIds.has(timeLogId)) {
       const { default: Swal } = await import('sweetalert2')
       Swal.fire({
         title: '已分享',
@@ -1010,7 +1029,7 @@ export default function Dashboard() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          timeLogId: log.id,
+          timeLogId,
           title: formValues.title.trim(),
           description: formValues.description?.trim() || null,
           shareReason: formValues.shareReason?.trim() || null,
@@ -1021,8 +1040,8 @@ export default function Dashboard() {
       const result = await response.json()
 
       if (result.status === 'success') {
-        // 添加到已分享列表（確保是數字類型）
-        setSharedLogIds((prev) => new Set([...prev, Number(log.id)]))
+        // ✅ 分享成功後即時更新 Set（以 UUID 字串為 key）
+        setSharedLogIds((prev) => new Set([...prev, timeLogId]))
 
         Swal.fire({
           title: '分享成功',

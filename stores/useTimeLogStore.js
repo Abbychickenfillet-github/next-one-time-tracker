@@ -124,9 +124,9 @@ export const useTimeLogStore = create(
               ...step,
               ended: true,
               endTime: now,
-              text: step.text + ` (結束於: ${now.toLocaleTimeString()})`,
+              text: step.text + ` (結束於: ${now.toLocaleString()})`,
               description:
-                step.description + ` (結束於: ${now.toLocaleTimeString()})`,
+                step.description + ` (結束於: ${now.toLocaleString()})`,
             }
           }
           return step
@@ -206,10 +206,9 @@ export const useTimeLogStore = create(
                     ...step, // 展開運算符：複製原步驟的所有屬性
                     ended: true,
                     endTime: now,
-                    text: step.text + ` (結束於: ${now.toLocaleTimeString()})`,
+                    text: step.text + ` (結束於: ${now.toLocaleString()})`,
                     description:
-                      step.description +
-                      ` (結束於: ${now.toLocaleTimeString()})`,
+                      step.description + ` (結束於: ${now.toLocaleString()})`,
                   }
                 : step // 如果不匹配，返回原步驟不變
           ),

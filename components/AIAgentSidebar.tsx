@@ -170,7 +170,7 @@ ${isAuth ? `👤 已登入為：${user?.name || user?.email || '用戶'}` : '�
                 </div>
                 <div>{message.content}</div>
                 <div className="small opacity-75 mt-1">
-                  {message.timestamp.toLocaleTimeString()}
+                  {message.timestamp.toLocaleString()}
                 </div>
               </div>
             </div>

@@ -3,8 +3,18 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import { useTrialTimeLogStore } from '@/stores/useTrialTimeLogStore'
 import VoiceInput from '@/components/timelog/VoiceInput'
+import LocaleSwitcher from '@/components/common/LocaleSwitcher'
 import { Container, Card, Button, Alert, Row, Col } from 'react-bootstrap'
 import Link from 'next/link'
+
+const SUPPORTED_LOCALES = [
+  { value: 'zh-TW', label: '中文（台灣）' },
+  { value: 'zh-CN', label: '中文（中國大陸）' },
+  { value: 'en-US', label: 'English (United States)' },
+  { value: 'ja-JP', label: '日本語（日本）' },
+  { value: 'ko-KR', label: '한국어 (대한민국)' },
+  { value: 'fr-FR', label: 'Français (France)' },
+]
 
 export default function TrialPage() {
   // ===== Zustand 狀態管理 =====
@@ -34,6 +44,36 @@ export default function TrialPage() {
     deleteSavedActivity,
     loadSavedActivities,
   } = useTrialTimeLogStore()
+
+  // ===== 語系切換狀態 =====
+  const [locale, setLocale] = useState('zh-TW')
+  const [hour12, setHour12] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const preferred =
+      (navigator.languages && navigator.languages.length > 0
+        ? navigator.languages[0]
+        : navigator.language) || 'zh-TW'
+
+    const isSupported = SUPPORTED_LOCALES.some(
+      (option) => option.value === preferred
+    )
+
+    setLocale(isSupported ? preferred : 'zh-TW')
+  }, [])
+
+  useEffect(() => {
+    try {
+      const { hour12: resolvedHour12 } = new Intl.DateTimeFormat(locale, {
+        hour: 'numeric',
+      }).resolvedOptions()
+      setHour12(resolvedHour12 ?? false)
+    } catch (error) {
+      console.warn('無法解析所選語系的時間格式，改用 24 小時制', error)
+      setHour12(false)
+    }
+  }, [locale])
 
   // 由於 savedActivities 已經是 Zustand 的狀態，我們可以使用它來計算數量
   const [localStorageCount, setLocalStorageCount] = useState(0)
@@ -130,23 +170,45 @@ export default function TrialPage() {
 
   // ===== 格式化時間 =====
   const formatTime = (date) => {
-    if (!date) return '--:----'
-    return date.toLocaleTimeString('zh-TW', {
-      hour12: false,
+    if (!date) return '--:--:--'
+
+    const dateObj = date instanceof Date ? date : new Date(date)
+    if (Number.isNaN(dateObj.getTime())) return '--:--:--'
+
+    const options = {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-    })
+      hour12,
+    }
+
+    try {
+      return dateObj.toLocaleString(locale, options)
+    } catch (error) {
+      console.warn('toLocaleString 解析失敗，使用瀏覽器預設語系', error)
+      return dateObj.toLocaleString(undefined, options)
+    }
   }
 
   // ===== 格式化日期 =====
   const formatDate = (date) => {
     if (!date) return '--'
-    return date.toLocaleDateString('zh-TW', {
+
+    const dateObj = date instanceof Date ? date : new Date(date)
+    if (Number.isNaN(dateObj.getTime())) return '--'
+
+    const options = {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
-    })
+    }
+
+    try {
+      return dateObj.toLocaleDateString(locale, options)
+    } catch (error) {
+      console.warn('toLocaleDateString 解析失敗，使用瀏覽器預設語系', error)
+      return dateObj.toLocaleDateString(undefined, options)
+    }
   }
 
   return (
@@ -162,20 +224,34 @@ export default function TrialPage() {
                 'var(--button-bg, linear-gradient(45deg, #0dcaf0, #0aa2c0))',
             }}
           >
-            <h4 className="mb-0">⏰ TimeLog 試用版</h4>
-            <div className="d-flex justify-content-between align-items-center">
-              <span className="small">
-                📊 localStorage 使用量: {localStorageCount}/10 筆記錄
-              </span>
-              {/* localStorage 使用量指示器 */}
-              <Button
-                className="btn-sm text-white"
-                variant="outline-white"
-                size="sm"
-                onClick={handleClearStorage}
-              >
-                清除記錄
-              </Button>
+            <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+              <div>
+                <h4 className="mb-1">⏰ TimeLog 試用版</h4>
+                <span className="small">
+                  📊 localStorage 使用量: {localStorageCount}/10 筆記錄
+                </span>
+              </div>
+              <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
+                <div className="d-flex align-items-center gap-2">
+                  <span className="small text-white-50">🌐 顯示語系</span>
+                  <LocaleSwitcher
+                    value={locale}
+                    onChange={setLocale}
+                    options={SUPPORTED_LOCALES}
+                    className="bg-white bg-opacity-75 text-dark"
+                    style={{ minWidth: '190px' }}
+                  />
+                </div>
+                {/* localStorage 使用量指示器 */}
+                <Button
+                  className="btn-sm text-white mt-2 mt-md-0"
+                  variant="outline-white"
+                  size="sm"
+                  onClick={handleClearStorage}
+                >
+                  清除記錄
+                </Button>
+              </div>
             </div>
           </Card.Header>
           <Card.Body className="p-4">
