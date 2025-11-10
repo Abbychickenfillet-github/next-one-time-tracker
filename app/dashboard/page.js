@@ -43,6 +43,7 @@ export default function Dashboard() {
   const [error, setError] = useState(null)
   // 追蹤已分享的時間記錄 ID
   const [sharedLogIds, setSharedLogIds] = useState(new Set())
+  const [sharedShareMap, setSharedShareMap] = useState(new Map()) // timeLogId -> featuredShareId
   const [sharingLogId, setSharingLogId] = useState(null) // 正在分享的記錄ID
 
   // 定義不同頁籤對應的左側導航配置
@@ -193,7 +194,7 @@ export default function Dashboard() {
                       <span className="badge bg-secondary">
                         {log.steps.length} 步驟
                       </span>
-                      {/* 分享圖標 - 只有已登入用戶才顯示 */}
+                      {/* 分享圖標 - 只有當前用戶的時間記錄才顯示 */}
                       {isAuth && (
                         <span
                           role="button"
@@ -220,12 +221,12 @@ export default function Dashboard() {
                           }}
                           title={
                             log.id && sharedLogIds.has(log.id)
-                              ? '已分享到精選分享'
+                              ? '取消分享'
                               : '分享到精選分享'
                           }
                           aria-label={
                             log.id && sharedLogIds.has(log.id)
-                              ? '已分享到精選分享'
+                              ? '取消分享'
                               : '分享到精選分享'
                           }
                         >
@@ -313,13 +314,13 @@ export default function Dashboard() {
                       {isAuth && (
                         <button
                           className={`btn btn-sm ${
-                            sharedLogIds.has(log.id)
+                            log.id && sharedLogIds.has(log.id)
                               ? 'btn-warning'
                               : 'btn-outline-warning'
                           }`}
                           title={
-                            sharedLogIds.has(log.id)
-                              ? '已分享到精選分享'
+                            log.id && sharedLogIds.has(log.id)
+                              ? '取消分享'
                               : '分享到精選分享'
                           }
                           onClick={() => handleShareTimeLog(log)}
@@ -327,15 +328,17 @@ export default function Dashboard() {
                         >
                           <Icon
                             name={
-                              sharedLogIds.has(Number(log.id))
+                              log.id && sharedLogIds.has(log.id)
                                 ? 'bookmark-heart-fill'
                                 : 'bookmark-heart'
                             }
                           />{' '}
-                          {log.id && sharedLogIds.has(log.id)
-                            ? '已分享'
-                            : sharingLogId === log.id
-                              ? '分享中...'
+                          {sharingLogId === log.id
+                            ? log.id && sharedLogIds.has(log.id)
+                              ? '取消中...'
+                              : '分享中...'
+                            : log.id && sharedLogIds.has(log.id)
+                              ? '取消分享'
                               : '分享'}
                         </button>
                       )}
@@ -821,11 +824,26 @@ export default function Dashboard() {
         const result = await response.json()
         if (result.status === 'success' && result.data) {
           // ✅ 將精選分享中屬於當前用戶的 timeLogId 收集成 Set（UUID 字串）
-          const sharedIds = result.data
-            .map((share) => share.timeLog?.id)
-            .filter((id) => typeof id === 'string' && id.length > 0)
+          const sharedIds = []
+          const sharePairs = []
+          console.log(`result 為被解析過的response,${result.data}`)
+          console.log('[FeaturedShare]原始資料：', JSON.stringify(result))
+          result.data.forEach((share) => {
+            const timeLogId = share.timeLog?.id
+            if (typeof timeLogId === 'string' && timeLogId.length > 0) {
+              sharedIds.push(timeLogId)
+              if (typeof share.id === 'string' && share.id.length > 0) {
+                sharePairs.push([timeLogId, share.id])
+              }
+            }
+          })
+
+          console.log('[FeaturedShare] 原始資料：', result.data)
+          console.log('[FeaturedShare] timeLogId 列表：', sharedIds)
+          console.log('[FeaturedShare] timeLogId ↔ shareId 對應：', sharePairs)
 
           setSharedLogIds(new Set(sharedIds))
+          setSharedShareMap(new Map(sharePairs))
         }
       }
     } catch (error) {
@@ -972,14 +990,80 @@ export default function Dashboard() {
       return
     }
 
-    // 檢查是否已經分享過（使用 UUID 比對）
+    // ✅ 檢查是否已已分享：若再點擊則改為取消分享（true → false）
     if (sharedLogIds.has(timeLogId)) {
+      const shareId = sharedShareMap.get(timeLogId)
       const { default: Swal } = await import('sweetalert2')
-      Swal.fire({
-        title: '已分享',
-        text: '此時間記錄已經分享過了',
-        icon: 'info',
+
+      const confirmResult = await Swal.fire({
+        title: '取消分享？',
+        text: '此時間記錄將從精選分享中移除，確定要取消分享嗎？',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '是，取消分享',
+        cancelButtonText: '保留分享',
+        reverseButtons: true,
       })
+
+      if (!confirmResult.isConfirmed) {
+        return
+      }
+
+      if (!shareId) {
+        console.warn('找不到對應的分享紀錄，無法取消分享', {
+          timeLogId,
+          log,
+        })
+        Swal.fire({
+          title: '取消分享失敗',
+          text: '找不到對應的分享紀錄，請重新整理頁面後再試一次。',
+          icon: 'error',
+        })
+        return
+      }
+
+      try {
+        setSharingLogId(log.id)
+        const response = await fetch(`/api/featured-shares?id=${shareId}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        })
+
+        const result = await response.json()
+
+        if (response.ok && result.status === 'success') {
+          setSharedLogIds((prev) => {
+            const next = new Set(prev)
+            next.delete(timeLogId)
+            return next
+          })
+          setSharedShareMap((prev) => {
+            const next = new Map(prev)
+            next.delete(timeLogId)
+            return next
+          })
+
+          Swal.fire({
+            title: '已取消分享',
+            text: '此時間記錄已從精選分享中移除。',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false,
+          })
+        } else {
+          throw new Error(result.message || '取消分享失敗')
+        }
+      } catch (error) {
+        console.error('取消分享失敗:', error)
+        Swal.fire({
+          title: '取消分享失敗',
+          text: error.message || '取消分享時發生錯誤',
+          icon: 'error',
+        })
+      } finally {
+        setSharingLogId(null)
+      }
+
       return
     }
 
@@ -1042,6 +1126,13 @@ export default function Dashboard() {
       if (result.status === 'success') {
         // ✅ 分享成功後即時更新 Set（以 UUID 字串為 key）
         setSharedLogIds((prev) => new Set([...prev, timeLogId]))
+        if (result.data?.id) {
+          setSharedShareMap((prev) => {
+            const next = new Map(prev)
+            next.set(timeLogId, result.data.id)
+            return next
+          })
+        }
 
         Swal.fire({
           title: '分享成功',
