@@ -19,6 +19,7 @@ export default function LocaleSwitcher({
   size = 'sm',
   className = '',
   style,
+  ariaLabel = '切換顯示語系',
 }) {
   const handleChange = (event) => {
     onChange?.(event.target.value)
@@ -26,7 +27,7 @@ export default function LocaleSwitcher({
 
   return (
     <Form.Select
-      aria-label="切換顯示語系"
+      aria-label={ariaLabel}
       value={value}
       onChange={handleChange}
       size={size}

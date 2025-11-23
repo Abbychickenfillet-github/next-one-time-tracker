@@ -1,0 +1,114 @@
+/* 圖片上傳測試頁面樣式 */
+.imageUploadCropTest {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px 0;
+}
+
+.imageUploadCropTest .card {
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.imageUploadCropTest .cardHeader {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 20px;
+}
+
+.imageUploadCropTest .cardHeader h2 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.imageUploadCropTest .cardBody {
+  padding: 30px;
+}
+
+/* 裁切區域樣式 */
+.imageUploadCropTest .ReactCrop {
+  max-width: 100%;
+}
+
+.imageUploadCropTest .ReactCrop__cropSelection {
+  border: 2px solid #667eea;
+  box-shadow: 0 0 0 9999em rgba(0, 0, 0, 0.5);
+}
+
+.imageUploadCropTest .ReactCrop__dragHandle {
+  background: #667eea;
+  border: 2px solid white;
+  width: 12px;
+  height: 12px;
+}
+
+.imageUploadCropTest .ReactCrop__dragHandle::after {
+  background: white;
+}
+
+/* 預覽區域樣式 */
+.imageUploadCropTest .previewContainer {
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  background: #f8f9fa;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageUploadCropTest .previewContainer img {
+  max-width: 100%;
+  max-height: 500px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 按鈕樣式 */
+.imageUploadCropTest .btnPrimary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.imageUploadCropTest .btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.imageUploadCropTest .btnPrimary:disabled {
+  opacity: 0.6;
+  transform: none;
+}
+
+/* 上傳結果樣式 */
+.imageUploadCropTest .uploadResult {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.imageUploadCropTest .uploadResult img {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .imageUploadCropTest .cardBody {
+    padding: 20px;
+  }
+
+  .imageUploadCropTest .previewContainer {
+    min-height: 200px;
+  }
+}

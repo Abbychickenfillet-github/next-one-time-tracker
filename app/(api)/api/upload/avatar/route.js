@@ -65,8 +65,15 @@ export async function POST(request) {
     const buffer = Buffer.from(bytes) // ← 將 ArrayBuffer 轉為 Buffer
 
     // 6. 上傳到 Cloudinary
+    // ========================================
+    // 📁 資料夾設定說明
+    // ========================================
+    // folder: 'avatars' - 這是頭貼上傳的資料夾名稱
+    // 位置：app/(api)/api/upload/avatar/route.js 第 69 行
+    // 所有頭貼都會上傳到 Cloudinary 的 'avatars' 資料夾
+    // 換密鑰不會影響資料夾，因為資料夾名稱是在程式碼中設定的
     const uploadResult = await uploadImage(buffer, {
-      folder: 'avatars',
+      folder: 'avatars', // ← 資料夾名稱在這裡設定
       publicId: `user_${payload.payload.userId}`,
       overwrite: true,
       transformations: AVATAR_TRANSFORMATIONS,

@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useTrialTimeLogStore } from '@/stores/useTrialTimeLogStore'
 import VoiceInput from '@/components/timelog/VoiceInput'
 import LocaleSwitcher from '@/components/common/LocaleSwitcher'
@@ -16,7 +17,14 @@ const SUPPORTED_LOCALES = [
   { value: 'fr-FR', label: 'Français (France)' },
 ]
 
+// 舊的翻譯對象已移除，改用 react-i18next 和 JSON 檔案
+// 翻譯資源位於 locales/ 目錄下
+
 export default function TrialPage() {
+  // ===== react-i18next 翻譯 =====
+  const { t, i18n } = useTranslation()
+  const locale = i18n.language || 'zh-TW'
+
   // ===== Zustand 狀態管理 =====
   const {
     // 狀態
@@ -45,23 +53,22 @@ export default function TrialPage() {
     loadSavedActivities,
   } = useTrialTimeLogStore()
 
-  // ===== 語系切換狀態 =====
-  const [locale, setLocale] = useState('zh-TW')
+  // ===== 時間格式狀態 =====
   const [hour12, setHour12] = useState(false)
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    const preferred =
-      (navigator.languages && navigator.languages.length > 0
-        ? navigator.languages[0]
-        : navigator.language) || 'zh-TW'
+  // ===== 語言切換處理 =====
+  const handleLocaleChange = (newLocale) => {
+    i18n.changeLanguage(newLocale)
+  }
 
-    const isSupported = SUPPORTED_LOCALES.some(
-      (option) => option.value === preferred
-    )
-
-    setLocale(isSupported ? preferred : 'zh-TW')
-  }, [])
+  // ===== 活動狀態翻譯 =====
+  const getTranslatedActivityStatus = () => {
+    const status = getActivityStatus()
+    if (status === '準備中') return t('statusReady')
+    if (status === '進行中') return t('statusInProgress')
+    if (status === '已結束') return t('statusCompleted')
+    return status
+  }
 
   useEffect(() => {
     try {
@@ -118,7 +125,7 @@ export default function TrialPage() {
     const success = saveCurrentActivity()
     if (success) {
       // TODO: 替換為自訂彈出視窗
-      console.log('活動已成功儲存！')
+      console.log(t('saveActivity') + ' - Success')
     }
   }
 
@@ -126,12 +133,12 @@ export default function TrialPage() {
   const handleClearStorage = async () => {
     const { default: Swal } = await import('sweetalert2')
     const result = await Swal.fire({
-      title: '確認清除',
-      text: '確定要清除所有活動記錄嗎？此操作無法復原。',
+      title: t('confirmClear'),
+      text: t('confirmClearText'),
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: '清除',
-      cancelButtonText: '取消',
+      confirmButtonText: t('clear'),
+      cancelButtonText: t('cancel'),
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
     })
@@ -139,8 +146,8 @@ export default function TrialPage() {
     if (result.isConfirmed) {
       clearStorage()
       Swal.fire({
-        title: '已清除',
-        text: '所有活動記錄已清除',
+        title: t('cleared'),
+        text: t('clearedText'),
         icon: 'success',
         timer: 2000,
         showConfirmButton: false,
@@ -226,20 +233,24 @@ export default function TrialPage() {
           >
             <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
               <div>
-                <h4 className="mb-1">⏰ TimeLog 試用版</h4>
+                <h4 className="mb-1">{t('pageTitle')}</h4>
                 <span className="small">
-                  📊 localStorage 使用量: {localStorageCount}/10 筆記錄
+                  {t('localStorageUsage')}: {localStorageCount}/10{' '}
+                  {t('records')}
                 </span>
               </div>
               <div className="d-flex flex-column flex-md-row align-items-md-center gap-2">
                 <div className="d-flex align-items-center gap-2">
-                  <span className="small text-white-50">🌐 顯示語系</span>
+                  <span className="small text-white-50">
+                    {t('displayLanguage')}
+                  </span>
                   <LocaleSwitcher
                     value={locale}
-                    onChange={setLocale}
+                    onChange={handleLocaleChange}
                     options={SUPPORTED_LOCALES}
                     className="bg-white bg-opacity-75 text-dark"
                     style={{ minWidth: '190px' }}
+                    ariaLabel={t('displayLanguage')}
                   />
                 </div>
                 {/* localStorage 使用量指示器 */}
@@ -249,7 +260,7 @@ export default function TrialPage() {
                   size="sm"
                   onClick={handleClearStorage}
                 >
-                  清除記錄
+                  {t('clearRecords')}
                 </Button>
               </div>
             </div>
@@ -271,11 +282,13 @@ export default function TrialPage() {
                 <Row className="mb-1">
                   <Col>
                     <div className="mb-3">
-                      <label className="form-label fw-semibold">活動名稱</label>
+                      <label className="form-label fw-semibold">
+                        {t('activityName')}
+                      </label>
                       <input
                         type="text"
                         className="form-control form-control-lg"
-                        placeholder="輸入活動名稱..."
+                        placeholder={t('activityNamePlaceholder')}
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                       />
@@ -284,7 +297,7 @@ export default function TrialPage() {
                   <Col md={3}>
                     <div className="mb-3">
                       <label className="form-label fw-semibold invisible">
-                        活動名稱語音輸入
+                        {t('activityNameVoiceInput')}
                       </label>
                       <div className="text-center w-100 d-flex justify-content-center">
                         <VoiceInput
@@ -299,11 +312,13 @@ export default function TrialPage() {
                 <Row className="mb-4">
                   <Col md={9}>
                     <div className="mb-3">
-                      <label className="form-label fw-semibold">活動描述</label>
+                      <label className="form-label fw-semibold">
+                        {t('activityDesc')}
+                      </label>
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="輸入活動描述..."
+                        placeholder={t('activityDescPlaceholder')}
                         value={desc}
                         onChange={(e) => setDesc(e.target.value)}
                       />
@@ -313,7 +328,7 @@ export default function TrialPage() {
                   <Col md={3}>
                     <div className="mb-3">
                       <label className="form-label fw-semibold invisible">
-                        活動描述語音輸入
+                        {t('activityDescVoiceInput')}
                       </label>
                       <div className="text-center w-100 d-flex justify-content-center">
                         <VoiceInput
@@ -335,7 +350,7 @@ export default function TrialPage() {
                         onClick={handleStart}
                         disabled={!isClient || !title.trim()}
                       >
-                        🚀 開始記錄
+                        {t('startRecording')}
                       </Button>
                     )}
                     {getActivityStatus() === '進行中' && (
@@ -345,14 +360,14 @@ export default function TrialPage() {
                           size="lg"
                           onClick={handleAddStep}
                         >
-                          📝 記錄時間點
+                          {t('recordTimePoint')}
                         </Button>
                         <Button
                           variant="warning"
                           size="lg"
                           onClick={endActivity}
                         >
-                          ⏹️ 結束活動
+                          {t('endActivity')}
                         </Button>
                       </>
                     )}
@@ -363,7 +378,7 @@ export default function TrialPage() {
                           size="lg"
                           onClick={handleStart}
                         >
-                          🔄 重新開始
+                          {t('restart')}
                         </Button>
                         <Button
                           variant="success"
@@ -371,7 +386,7 @@ export default function TrialPage() {
                           onClick={handleSaveActivity}
                           disabled={isClient && localStorageCount >= 10}
                         >
-                          💾 儲存活動
+                          {t('saveActivity')}
                         </Button>
                       </>
                     )}
@@ -382,18 +397,20 @@ export default function TrialPage() {
                 {startTime && (
                   <div className="text-center mb-4">
                     <div className="alert alert-info">
-                      <strong>活動狀態:</strong> {getActivityStatus()}
+                      <strong>{t('activityStatus')}:</strong>{' '}
+                      {getTranslatedActivityStatus()}
                       {startTime && (
                         <div className="mt-2">
-                          <strong>開始時間:</strong> {formatTime(startTime)}
+                          <strong>{t('startTime')}:</strong>{' '}
+                          {formatTime(startTime)}
                           {endTime && (
                             <>
                               <br />
-                              <strong>結束時間:</strong> {formatTime(endTime)}
+                              <strong>{t('endTime')}:</strong>{' '}
+                              {formatTime(endTime)}
                               <br />
-                              <strong>
-                                持續時間:
-                              </strong> {getElapsedMinutes()} 分鐘
+                              <strong>{t('duration')}:</strong>{' '}
+                              {getElapsedMinutes()} {t('minutes')}
                             </>
                           )}
                         </div>
@@ -405,13 +422,15 @@ export default function TrialPage() {
                 {/* 6. 步驟列表 */}
                 {steps.length > 0 && (
                   <div className="mb-4">
-                    <h5 className="mb-3">📋 記錄步驟</h5>
+                    <h5 className="mb-3">{t('recordedSteps')}</h5>
                     <div className="list-group">
                       {steps.map((step, index) => (
                         <div key={index} className="list-group-item">
                           <div className="d-flex justify-content-between align-items-center">
                             <div>
-                              <strong>步驟 {index + 1}:</strong>{' '}
+                              <strong>
+                                {t('step')} {index + 1}:
+                              </strong>{' '}
                               {step.title || step.name}
                               {step.description && (
                                 <div className="text-muted small">
@@ -421,11 +440,11 @@ export default function TrialPage() {
                             </div>
                             <div className="text-end">
                               <div className="small text-muted">
-                                開始: {formatTime(step.startTime)}
+                                {t('start')}: {formatTime(step.startTime)}
                               </div>
                               {step.endTime ? (
                                 <div className="small text-muted">
-                                  結束: {formatTime(step.endTime)}
+                                  {t('end')}: {formatTime(step.endTime)}
                                 </div>
                               ) : (
                                 <Button
@@ -433,7 +452,7 @@ export default function TrialPage() {
                                   size="sm"
                                   onClick={() => handleEndSubStep(index)}
                                 >
-                                  結束
+                                  {t('end')}
                                 </Button>
                               )}
                             </div>
@@ -450,23 +469,27 @@ export default function TrialPage() {
                 {/* 7. 已儲存活動列表 */}
                 {savedActivities.length > 0 && (
                   <div className="mb-4">
-                    <h5 className="mb-3">📚 已儲存的活動 (歷史)</h5>
+                    <h5 className="mb-3">{t('savedActivities')}</h5>
                     <div className="list-group">
                       {savedActivities.map((activity, index) => (
                         <div key={activity.id} className="list-group-item">
                           <div className="d-flex justify-content-between align-items-center">
                             <div>
-                              <strong>活動 {index + 1}:</strong>{' '}
+                              <strong>
+                                {t('activity')} {index + 1}:
+                              </strong>{' '}
                               {activity.title}
                               {activity.desc && (
                                 <div className="text-muted small">
-                                  描述: {activity.desc}
+                                  {t('description')}: {activity.desc}
                                 </div>
                               )}
                               <div className="text-muted small">
-                                開始: {formatTime(activity.startTime)} | 結束:{' '}
-                                {formatTime(activity.endTime)} | 持續:{' '}
-                                {Math.floor(activity.duration / 1000 / 60)} 分鐘
+                                {t('start')}: {formatTime(activity.startTime)} |{' '}
+                                {t('end')}: {formatTime(activity.endTime)} |{' '}
+                                {t('duration')}:{' '}
+                                {Math.floor(activity.duration / 1000 / 60)}{' '}
+                                {t('minutes')}
                               </div>
                             </div>
                             <Button
@@ -477,12 +500,12 @@ export default function TrialPage() {
                                   'sweetalert2'
                                 )
                                 const result = await Swal.fire({
-                                  title: '確認刪除',
-                                  text: '確定要刪除此活動記錄嗎？',
+                                  title: t('confirmDelete'),
+                                  text: t('confirmDeleteText'),
                                   icon: 'warning',
                                   showCancelButton: true,
-                                  confirmButtonText: '刪除',
-                                  cancelButtonText: '取消',
+                                  confirmButtonText: t('delete'),
+                                  cancelButtonText: t('cancel'),
                                   confirmButtonColor: '#dc3545',
                                   cancelButtonColor: '#6c757d',
                                 })
@@ -490,8 +513,8 @@ export default function TrialPage() {
                                 if (result.isConfirmed) {
                                   deleteSavedActivity(activity.id)
                                   Swal.fire({
-                                    title: '已刪除',
-                                    text: '活動記錄已刪除',
+                                    title: t('deleted'),
+                                    text: t('deletedText'),
                                     icon: 'success',
                                     timer: 2000,
                                     showConfirmButton: false,
@@ -499,7 +522,7 @@ export default function TrialPage() {
                                 }
                               }}
                             >
-                              刪除
+                              {t('delete')}
                             </Button>
                           </div>
                         </div>
@@ -510,23 +533,23 @@ export default function TrialPage() {
 
                 {/* 8. 升級提示 (保持在右側欄底部，優先於歷史紀錄) */}
                 <Alert variant="success" className="mt-4 mt-md-0">
-                  <h5>🚀 升級到完整版享受更多功能！</h5>
+                  <h5>{t('upgradeTitle')}</h5>
                   <ul className="mb-3">
-                    <li>✅ 雲端同步 - 多裝置無縫切換</li>
-                    <li>✅ 無限記錄 - 不再受 localStorage 限制</li>
-                    <li>✅ AI 分析 - Gemini 2.5 Flash 智能洞察</li>
-                    <li>✅ 數據匯出 - 支援多種格式</li>
+                    <li>{t('upgradeFeature1')}</li>
+                    <li>{t('upgradeFeature2')}</li>
+                    <li>{t('upgradeFeature3')}</li>
+                    <li>{t('upgradeFeature4')}</li>
                   </ul>
                   <div className="d-flex gap-2">
                     <Button variant="success" as={Link} href="/user/register">
-                      立即註冊
+                      {t('registerNow')}
                     </Button>
                     <Button
                       variant="outline-success"
                       as={Link}
                       href="/subscription"
                     >
-                      查看方案
+                      {t('viewPlans')}
                     </Button>
                   </div>
                 </Alert>

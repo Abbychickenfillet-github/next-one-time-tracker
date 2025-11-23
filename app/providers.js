@@ -4,6 +4,9 @@
 
 'use client'
 
+// 初始化 i18n（必须在其他导入之前）
+import '@/lib/i18n'
+
 // 載入購物車context
 import { CartProvider } from '@/hooks/use-cart-state'
 //  載入認証用context

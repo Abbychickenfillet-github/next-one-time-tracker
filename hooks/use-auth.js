@@ -10,6 +10,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import axios from '@/lib/line-pay-axios'
 import { useTimeLogStore } from '@/stores/useTimeLogStore'
 import { useTrialTimeLogStore } from '@/stores/useTrialTimeLogStore'
+// 這邊引入是為了清空TimeLog相關狀態，避免下一個用戶看到上一個用戶的數據
 // import { getFavs } from '@/services/user'
 
 // ========================================

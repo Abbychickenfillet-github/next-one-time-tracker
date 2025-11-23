@@ -21,7 +21,14 @@ export async function POST(request) {
     // 2. 解析請求
     const formData = await request.formData()
     const file = formData.get('image')
-    const folder = formData.get('folder') || 'general'
+    // ========================================
+    // 📁 資料夾設定說明
+    // ========================================
+    // folder: 一般圖片上傳的資料夾名稱
+    // 位置：app/(api)/api/upload/image/route.js 第 24 行
+    // 預設為 'general'，可以透過 formData 自訂
+    // 與頭貼上傳的 'avatars' 資料夾不同
+    const folder = formData.get('folder') || 'general' // ← 資料夾名稱在這裡設定
     const customTransformations = formData.get('transformations')
 
     if (!file) {
