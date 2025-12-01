@@ -11,6 +11,7 @@ import { getSession, setSession, deleteSession } from '../lib/iron-session'
 
 import { serverConfig } from '../config/server.config.js'
 import { isDev } from '../lib/utils.js'
+import { LINE_PAY_IPS, getLinePayOutboundIPs } from '../lib/ip-whitelist.js'
 
 // 只在開發環境或有 DEBUG_SERVER_CONFIG 環境變數時輸出 debug
 const shouldDebug = isDev || process.env.DEBUG_SERVER_CONFIG === 'true'
@@ -43,7 +44,28 @@ const linePayConfig = {
 }
 
 // Line Pay API 基礎 URL - 使用 v3 API
-const LINE_PAY_API_URL = 'https://sandbox-api-pay.line.me'
+// 根據環境變數切換 sandbox 或 production
+// 注意：使用正式環境會進行真實扣款！
+const isLinePayProduction =
+  process.env.LINE_PAY_ENV === 'production' ||
+  (process.env.NODE_ENV === 'production' &&
+    process.env.LINE_PAY_ENV !== 'sandbox')
+
+const LINE_PAY_API_URL = isLinePayProduction
+  ? 'https://api-pay.line.me' // 正式環境（真實扣款）
+  : 'https://sandbox-api-pay.line.me' // 測試環境（假付款）
+
+// 記錄 IP 白名單資訊
+const outboundIPs = getLinePayOutboundIPs()
+debugLog('🌐 LINE Pay 設定:', {
+  environment: isLinePayProduction ? 'production' : 'sandbox',
+  apiUrl: LINE_PAY_API_URL,
+  channelId: linePayConfig.channelId,
+  outboundIPs: outboundIPs, // 商家伺服器 IP（需在 LINE Pay 後台加入白名單）
+  inboundIPs: isDev
+    ? LINE_PAY_IPS.inbound.test
+    : LINE_PAY_IPS.inbound.production, // LINE Pay 官方 IP
+})
 
 // 環境配置 (已移除未使用的變數)
 
@@ -68,7 +90,9 @@ const createLinePayRequest = async (endpoint, method, body = null) => {
     Accept: 'application/json',
     'Accept-Language': 'zh-TW',
     'X-LINE-Request-Id': crypto.randomUUID(),
-    'X-LINE-Environment': 'sandbox',
+    'X-LINE-Environment': LINE_PAY_API_URL.includes('sandbox')
+      ? 'sandbox'
+      : 'production',
   }
 
   const options = {

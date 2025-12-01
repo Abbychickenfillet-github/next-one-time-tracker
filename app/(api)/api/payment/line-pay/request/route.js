@@ -171,11 +171,11 @@ export async function POST(request) {
         expiresAt: new Date(Date.now() + 30 * 60 * 1000), // 30分鐘後過期
       })
 
-      // 設定 session cookie
+      // 設定 session cookie（最鬆散設定）
       const cookieStore = await cookies()
       cookieStore.set('PENDING_ORDER', orderSession, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: false, // 最鬆散：允許 HTTP 和 HTTPS
         sameSite: 'lax',
         maxAge: 30 * 60, // 30分鐘
         path: '/',

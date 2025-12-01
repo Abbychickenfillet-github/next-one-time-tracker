@@ -128,11 +128,16 @@ export const AuthProvider = ({ children }) => {
           console.log('🔄 登入成功，跳轉到 dashboard...')
           router.replace('/dashboard') // 跳轉到儀表板
         } else {
-          console.error('登入失敗:', result.message || result)
+          // 登入失敗時拋出錯誤，讓上層 catch 可以處理並顯示 Swal
+          const errorMessage = result.message || '登入失敗，請檢查帳號密碼'
+          console.error('登入失敗:', errorMessage)
+          throw new Error(errorMessage)
         }
       } catch (error) {
         console.error('登入錯誤：', error)
         console.error('錯誤詳情:', error.message)
+        // 重新拋出錯誤，讓上層可以處理
+        throw error
       }
     },
     [router]
