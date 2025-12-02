@@ -10,9 +10,19 @@ import { GoogleGenAI } from '@google/genai'
 import { checkRateLimit } from '@/lib/rate-limit.js'
 
 // The client gets the API key from the environment variable `GEMINI_API_KEY`.
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-})
+// 延遲初始化，避免在模組載入時就驗證 API key
+let ai = null
+function getAIClient() {
+  if (!ai) {
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error('GEMINI_API_KEY 未設定')
+    }
+    ai = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+    })
+  }
+  return ai
+}
 
 function buildPrompt(activities, customPrompt = null) {
   const activitiesJson = JSON.stringify(activities)
@@ -123,10 +133,23 @@ export async function POST(request) {
       }
     }
 
+    // 檢查 API key 並初始化 AI 客戶端
+    let aiClient
+    try {
+      aiClient = getAIClient()
+    } catch (error) {
+      console.error('❌ GEMINI_API_KEY 未設定或無效')
+      return errorResponse(
+        res,
+        new Error('AI 服務未正確配置，請聯繫管理員'),
+        500
+      )
+    }
+
     const customPrompt = body?.customPrompt
     const prompt = buildPrompt(activities, customPrompt)
 
-    const response = await ai.models.generateContent({
+    const response = await aiClient.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
@@ -171,6 +194,27 @@ export async function POST(request) {
       result: parsed,
     })
   } catch (error) {
+    console.error('AI Analyze Activities API Error:', error)
+
+    // 處理 API key 相關錯誤
+    if (error?.error?.code === 403 && error?.error?.message?.includes('leaked')) {
+      console.error('❌ GEMINI_API_KEY 已被標記為洩露，需要重新生成')
+      return errorResponse(
+        res,
+        new Error('AI 服務暫時無法使用，請聯繫管理員更新 API 金鑰'),
+        500
+      )
+    }
+
+    if (error?.error?.code === 403 || error?.error?.status === 'PERMISSION_DENIED') {
+      console.error('❌ GEMINI_API_KEY 權限被拒絕')
+      return errorResponse(
+        res,
+        new Error('AI 服務權限錯誤，請聯繫管理員檢查 API 金鑰設定'),
+        500
+      )
+    }
+
     return errorResponse(res, error, 200)
   }
 }

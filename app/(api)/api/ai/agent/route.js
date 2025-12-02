@@ -6,10 +6,19 @@ import prisma from '@/lib/prisma.js'
 import { GoogleGenAI } from '@google/genai'
 // import { checkRateLimit } from '@/lib/rate-limit.js'
 
-// Gemini AI 客戶端
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-})
+// Gemini AI 客戶端 - 延遲初始化，避免在模組載入時就驗證 API key
+let ai = null
+function getAIClient() {
+  if (!ai) {
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error('GEMINI_API_KEY 未設定')
+    }
+    ai = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+    })
+  }
+  return ai
+}
 
 // 網站資料和功能說明
 const WEBSITE_DATA = {
@@ -279,7 +288,20 @@ ${
 
 請用繁體中文回答，提供實用且友善的建議。如果用戶問到個人化問題但未登入，請引導他們登入以獲得更好的體驗。`
 
-    const response = await ai.models.generateContent({
+    // 檢查 API key 並初始化 AI 客戶端
+    let aiClient
+    try {
+      aiClient = getAIClient()
+    } catch (error) {
+      console.error('❌ GEMINI_API_KEY 未設定或無效')
+      return errorResponse(
+        res,
+        new Error('AI 服務未正確配置，請聯繫管理員'),
+        500
+      )
+    }
+
+    const response = await aiClient.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: `${systemPrompt}\n\n${userPrompt}`,
       config: {
@@ -301,6 +323,26 @@ ${
     })
   } catch (error) {
     console.error('AI Chatbox API Error:', error)
+
+    // 處理 API key 相關錯誤
+    if (error?.error?.code === 403 && error?.error?.message?.includes('leaked')) {
+      console.error('❌ GEMINI_API_KEY 已被標記為洩露，需要重新生成')
+      return errorResponse(
+        res,
+        new Error('AI 服務暫時無法使用，請聯繫管理員更新 API 金鑰'),
+        500
+      )
+    }
+
+    if (error?.error?.code === 403 || error?.error?.status === 'PERMISSION_DENIED') {
+      console.error('❌ GEMINI_API_KEY 權限被拒絕')
+      return errorResponse(
+        res,
+        new Error('AI 服務權限錯誤，請聯繫管理員檢查 API 金鑰設定'),
+        500
+      )
+    }
+
     return errorResponse(res, error, 500)
   }
 }
