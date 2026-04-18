@@ -29,5 +29,8 @@ RUN npm run build
 # 設定環境變數
 ENV NODE_ENV=production
 
+# 告知平台 app 監聽的 port
+EXPOSE 8080
+
 # 啟動應用程式
 CMD ["npm", "start"]
