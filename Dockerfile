@@ -26,12 +26,8 @@ COPY . .
 # 建置應用程式
 RUN npm run build
 
-# 暴露端口
-EXPOSE 3001
-
 # 設定環境變數
 ENV NODE_ENV=production
-ENV PORT=3001
 
 # 啟動應用程式
 CMD ["npm", "start"]

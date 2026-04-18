@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ssh:*)",
+      "Bash(node *)",
+      "Bash(claude plugin *)",
+      "Read(//c/Users/User/.claude/**)",
+      "Bash(zeabur --version)",
+      "Bash(npx -y zeabur@latest --help)",
+      "Bash(git filter-repo *)",
+      "Bash(pip --version)",
+      "Bash(pip3 --version)"
+    ]
+  }
+}
