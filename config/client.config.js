@@ -14,12 +14,14 @@ const local = {
   nextUrl: 'http://localhost:3001',
 }
 
-// 營運環境設定(部署至Zeabur) - 含備援網域
+// 營運環境設定(部署至Zeabur)
+// 正式網域：insightful-timestamp（service 692d684b...3e，LINE PAY 固定 IP 主機，已驗證 HTTP 200）
+// 舊網域 insightful-timelog 已淘汰（502），請勿再指向它
 const production = {
-  apiURL: 'https://insightful-timelog.zeabur.app/api',
-  serverURL: 'https://insightful-timelog.zeabur.app',
-  avatarURL: 'https://insightful-timelog.zeabur.app/avatar',
-  nextUrl: 'https://insightful-timelog.zeabur.app',
+  apiURL: 'https://insightful-timestamp.zeabur.app/api',
+  serverURL: 'https://insightful-timestamp.zeabur.app',
+  avatarURL: 'https://insightful-timestamp.zeabur.app/avatar',
+  nextUrl: 'https://insightful-timestamp.zeabur.app',
 }
 
 export const apiURL = isDev ? local.apiURL : production.apiURL
