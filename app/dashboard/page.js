@@ -13,6 +13,7 @@ import DashboardLapTimer from '@/components/timelog/DashboardLapTimer'
 // 元件，渲染 <Icon> 時丟出 React #130（dev 正常、部署後才崩）。取出真正的元件。
 import IconImport from 'bs-icon'
 const Icon = IconImport?.default || IconImport
+import styles from '@/styles/dashboard.module.scss'
 // ========================================
 // 🔍 lazy() 空參數說明
 // ========================================
@@ -129,26 +130,13 @@ export default function Dashboard() {
 
   // 時間記錄列表組件
   const TimeLogList = () => (
-    <div className="card border-0 shadow-sm">
-      <div
-        className="card-header border-bottom"
-        style={{
-          background:
-            'var(--primary-bg, linear-gradient(135deg, #0dcaf0, #0aa2c0))',
-          color: 'var(--text-primary, #ffffff)',
-          borderBottom: '1px solid var(--accent-color, #0dcaf0)',
-        }}
-      >
+    <div className={styles.card}>
+      <div className="card-header">
         <div className="d-flex justify-content-between align-items-center">
-          <h5
-            className="mb-0"
-            style={{ color: 'var(--text-primary, #ffffff)' }}
-          >
-            📋 時間戳記錄
-          </h5>
+          <h5 className="mb-0">📋 時間戳記錄</h5>
           <div className="btn-group">
             <button
-              className="btn btn-outline-primary btn-sm"
+              className="btn btn-outline-light btn-sm"
               onClick={fetchTimeLogs}
             >
               <i className="bi bi-arrow-clockwise"></i> 重新載入
@@ -359,19 +347,9 @@ export default function Dashboard() {
 
   // 頭貼上傳組件
   const AvatarUploadSection = () => (
-    <div className="card border-0 shadow-sm">
-      <div
-        className="card-header border-bottom"
-        style={{
-          background:
-            'var(--primary-bg, linear-gradient(135deg, #0dcaf0, #0aa2c0))',
-          color: 'var(--text-primary, #ffffff)',
-          borderBottom: '1px solid var(--accent-color, #0dcaf0)',
-        }}
-      >
-        <h6 className="mb-0" style={{ color: 'var(--text-primary, #ffffff)' }}>
-          🔧 頭貼管理
-        </h6>
+    <div className={styles.card}>
+      <div className="card-header">
+        <h6 className="mb-0">🔧 頭貼管理</h6>
       </div>
       <div className="card-body">
         <div className="row">
@@ -408,19 +386,9 @@ export default function Dashboard() {
 
   // 個人資訊組件
   const UserInfoSection = () => (
-    <div className="card border-0 shadow-sm">
-      <div
-        className="card-header border-bottom"
-        style={{
-          background:
-            'var(--primary-bg, linear-gradient(135deg, #0dcaf0, #0aa2c0))',
-          color: 'var(--text-primary, #ffffff)',
-          borderBottom: '1px solid var(--accent-color, #0dcaf0)',
-        }}
-      >
-        <h6 className="mb-0" style={{ color: 'var(--text-primary, #ffffff)' }}>
-          👤 個人資訊
-        </h6>
+    <div className={styles.card}>
+      <div className="card-header">
+        <h6 className="mb-0">👤 個人資訊</h6>
       </div>
       <div className="card-body">
         <div className="row">
@@ -542,7 +510,7 @@ export default function Dashboard() {
   const FavoriteListSection = () => {
     if (!isAuth) {
       return (
-        <div className="card border-0 shadow-sm">
+        <div className={styles.card}>
           <div className="card-body text-center py-5">
             <div className="text-muted">
               <i className="bi bi-lock fs-1"></i>
@@ -554,22 +522,9 @@ export default function Dashboard() {
     }
 
     return (
-      <div className="card border-0 shadow-sm">
-        <div
-          className="card-header border-bottom d-flex justify-content-between align-items-center"
-          style={{
-            background:
-              'var(--primary-bg, linear-gradient(135deg, #0dcaf0, #0aa2c0))',
-            color: 'var(--text-primary, #ffffff)',
-            borderBottom: '1px solid var(--accent-color, #0dcaf0)',
-          }}
-        >
-          <h6
-            className="mb-0"
-            style={{ color: 'var(--text-primary, #ffffff)' }}
-          >
-            ❤️ 我的最愛
-          </h6>
+      <div className={styles.card}>
+        <div className="card-header d-flex justify-content-between align-items-center">
+          <h6 className="mb-0">❤️ 我的最愛</h6>
           <button
             className="btn btn-outline-light btn-sm"
             onClick={fetchFavorites}
@@ -744,19 +699,9 @@ export default function Dashboard() {
 
   // 付款紀錄組件
   const PaymentHistorySection = () => (
-    <div className="card border-0 shadow-sm">
-      <div
-        className="card-header border-bottom"
-        style={{
-          background:
-            'var(--primary-bg, linear-gradient(135deg, #0dcaf0, #0aa2c0))',
-          color: 'var(--text-primary, #ffffff)',
-          borderBottom: '1px solid var(--accent-color, #0dcaf0)',
-        }}
-      >
-        <h6 className="mb-0" style={{ color: 'var(--text-primary, #ffffff)' }}>
-          💳 付款紀錄
-        </h6>
+    <div className={styles.card}>
+      <div className="card-header">
+        <h6 className="mb-0">💳 付款紀錄</h6>
       </div>
       <div className="card-body">
         <div className="text-center py-5">
@@ -1175,13 +1120,14 @@ export default function Dashboard() {
         <title>Dashboard - TimeLog & Analysis</title>
       </Head>
 
-      <div className="min-vh-100 bg-light">
+      <div className={styles.page}>
         <Container className="py-4">
           <Tab.Container activeKey={activeKey} onSelect={setActiveKey}>
             <div className="row">
               {/* 左側導航 */}
               <div className="col-md-2">
-                <Nav className="flex-column">
+                <Nav className={`flex-column ${styles.sideNav}`}>
+                  <div className={styles.sideNavLabel}>選單</div>
                   {getCurrentSideNav().map((item) => (
                     <Nav.Item key={item.key}>
                       <Nav.Link
@@ -1189,9 +1135,7 @@ export default function Dashboard() {
                           handleSideNavClick(item.key)
                           setSubActiveKey(item.key)
                         }}
-                        className={`text-center ${
-                          subActiveKey === item.key ? 'active' : ''
-                        }`}
+                        className={subActiveKey === item.key ? 'active' : ''}
                       >
                         {item.label}
                       </Nav.Link>
@@ -1203,12 +1147,7 @@ export default function Dashboard() {
               {/* 主要內容區域 */}
               <div className="col-md-10">
                 {/* 上方導航 */}
-                <Nav
-                  variant="tabs"
-                  className="mb-3"
-                  fill
-                  style={{ '--bs-nav-link-color': '#805AF5' }}
-                >
+                <Nav variant="tabs" fill className={styles.tabs}>
                   <Nav.Item>
                     <Nav.Link eventKey="timelog">時間記錄</Nav.Link>
                   </Nav.Item>
@@ -1226,24 +1165,16 @@ export default function Dashboard() {
                 {/* 內容區域 */}
                 <Tab.Content className="mb-5">
                   <Tab.Pane eventKey="timelog">
-                    <div className="row justify-content-end">
-                      {renderTimelog(subActiveKey)}
-                    </div>
+                    <div>{renderTimelog(subActiveKey)}</div>
                   </Tab.Pane>
                   <Tab.Pane eventKey="profile">
-                    <div className="row justify-content-end">
-                      {renderProfile(subActiveKey)}
-                    </div>
+                    <div>{renderProfile(subActiveKey)}</div>
                   </Tab.Pane>
                   <Tab.Pane eventKey="favorite">
-                    <div className="row justify-content-end">
-                      {renderFavorite(subActiveKey)}
-                    </div>
+                    <div>{renderFavorite(subActiveKey)}</div>
                   </Tab.Pane>
                   <Tab.Pane eventKey="history">
-                    <div className="row justify-content-end">
-                      {renderHistory(subActiveKey)}
-                    </div>
+                    <div>{renderHistory(subActiveKey)}</div>
                   </Tab.Pane>
                 </Tab.Content>
               </div>

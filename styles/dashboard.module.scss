@@ -1,0 +1,293 @@
+// ========================================
+// 🗂️ Dashboard 主題化玻璃風樣式
+// ----------------------------------------
+// 設計脈絡：個人時間管理工具，華麗 / 沉浸 / 精緻。
+// 沿用全站六套多主題系統，所有顏色走 CSS 變數，
+// 卡片採「帶主題 accent 色調的深色玻璃」，六套主題自動適配。
+// 參見專案根目錄 .impeccable.md
+// ========================================
+
+// 4pt 間距節奏
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 12px;
+$space-lg: 16px;
+$space-xl: 24px;
+$space-2xl: 32px;
+$space-3xl: 48px;
+
+// 統一的玻璃卡片底（帶該主題 accent 色調的深色半透明）
+@mixin glass-surface($accent-mix: 10%, $base: rgba(15, 16, 24, 0.62)) {
+  background: color-mix(
+    in oklab,
+    var(--accent-color, #49c1d9) $accent-mix,
+    $base
+  );
+  backdrop-filter: blur(16px) saturate(1.25);
+  -webkit-backdrop-filter: blur(16px) saturate(1.25);
+}
+
+.page {
+  position: relative;
+  min-height: 100%;
+  // 不再用 bg-light，讓 main 的 --secondary-bg 主題漸層透出來
+  background: transparent;
+  padding-block: $space-xl;
+
+  // 統一淺色文字基準（深玻璃卡片上安全）
+  --dash-text: rgba(255, 255, 255, 0.94);
+  --dash-text-dim: rgba(255, 255, 255, 0.62);
+  --dash-border: color-mix(in oklab, var(--accent-color, #49c1d9) 26%, transparent);
+  --dash-border-soft: color-mix(in oklab, var(--accent-color, #49c1d9) 14%, transparent);
+}
+
+// ----------------------------------------
+// 主頁籤（時間記錄 / 個人中心 / 我的最愛 / 付款紀錄）
+// ----------------------------------------
+.tabs {
+  --bs-nav-tabs-border-color: transparent;
+  --bs-nav-tabs-link-active-bg: transparent;
+  --bs-nav-tabs-link-active-border-color: transparent;
+  border: none;
+  gap: $space-xs;
+  margin-bottom: $space-xl !important;
+
+  :global(.nav-link) {
+    position: relative;
+    border: none;
+    border-radius: 12px;
+    padding: $space-md $space-lg;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--dash-text-dim);
+    background: transparent;
+    transition:
+      color 0.25s ease,
+      background 0.25s ease,
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+
+    &:hover {
+      color: var(--dash-text);
+      background: var(--dash-border-soft);
+      transform: translateY(-1px);
+    }
+
+    &:global(.active) {
+      color: var(--dash-text);
+      background: color-mix(in oklab, var(--accent-color, #49c1d9) 22%, transparent);
+      box-shadow:
+        inset 0 0 0 1px var(--dash-border),
+        0 6px 18px -8px var(--glow-color, #49c1d9);
+    }
+
+    // active 底部的主題色強調線（非左側色條）
+    &:global(.active)::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -6px;
+      width: 28px;
+      height: 3px;
+      border-radius: 999px;
+      transform: translateX(-50%);
+      background: var(--accent-color, #49c1d9);
+      box-shadow: 0 0 10px var(--glow-color, #49c1d9);
+    }
+  }
+}
+
+// ----------------------------------------
+// 左側子導航
+// ----------------------------------------
+.sideNav {
+  position: sticky;
+  top: $space-xl;
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  padding: $space-sm;
+  border-radius: 16px;
+  @include glass-surface(8%, rgba(15, 16, 24, 0.45));
+  border: 1px solid var(--dash-border-soft);
+
+  :global(.nav-link) {
+    text-align: left !important;
+    border-radius: 10px;
+    padding: $space-md $space-md;
+    font-size: 0.92rem;
+    color: var(--dash-text-dim);
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: var(--dash-text);
+      background: var(--dash-border-soft);
+    }
+
+    &:global(.active) {
+      color: var(--dash-text);
+      font-weight: 600;
+      background: color-mix(in oklab, var(--accent-color, #49c1d9) 18%, transparent);
+    }
+  }
+}
+
+.sideNavLabel {
+  padding: $space-sm $space-md $space-xs;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dash-text-dim);
+}
+
+// ----------------------------------------
+// 玻璃卡片
+// ----------------------------------------
+.card {
+  position: relative;
+  border: 1px solid var(--dash-border) !important;
+  border-radius: 18px !important;
+  overflow: hidden;
+  color: var(--dash-text);
+  @include glass-surface(10%);
+  box-shadow: 0 18px 48px -24px rgba(0, 0, 0, 0.7);
+  animation: cardRise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  // 卡片內所有 Bootstrap card 結構也跟著主題走
+  :global(.card-body) {
+    color: var(--dash-text);
+  }
+
+  // 標題列：透明底 + 細分隔線（不用寫死漸層）
+  :global(.card-header) {
+    background: color-mix(in oklab, var(--accent-color, #49c1d9) 8%, transparent) !important;
+    border-bottom: 1px solid var(--dash-border-soft) !important;
+    color: var(--dash-text) !important;
+    padding: $space-lg $space-xl;
+
+    h5,
+    h6 {
+      color: var(--dash-text) !important;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+  }
+
+  // 文字階層
+  :global(strong) {
+    color: var(--dash-text);
+  }
+  :global(.text-muted),
+  :global(small) {
+    color: var(--dash-text-dim) !important;
+  }
+  :global(h6) {
+    color: var(--dash-text);
+  }
+
+  // Accordion 主題化
+  :global(.accordion) {
+    --bs-accordion-bg: transparent;
+    --bs-accordion-color: var(--dash-text);
+    --bs-accordion-border-color: var(--dash-border-soft);
+    --bs-accordion-btn-color: var(--dash-text);
+    --bs-accordion-active-bg: color-mix(in oklab, var(--accent-color, #49c1d9) 14%, transparent);
+    --bs-accordion-active-color: var(--dash-text);
+    --bs-accordion-btn-focus-box-shadow: none;
+  }
+  :global(.accordion-button) {
+    background: transparent;
+    color: var(--dash-text);
+    &:not(.collapsed) {
+      box-shadow: none;
+    }
+    &::after {
+      filter: invert(1) opacity(0.7);
+    }
+  }
+  :global(.list-group-item) {
+    background: transparent;
+    color: var(--dash-text);
+    border-color: var(--dash-border-soft);
+  }
+
+  // badge 主題化（取代寫死的 bg-info / bg-secondary）
+  :global(.badge.bg-info) {
+    background: color-mix(in oklab, var(--accent-color, #49c1d9) 30%, transparent) !important;
+    color: var(--dash-text) !important;
+    border: 1px solid var(--dash-border);
+    font-weight: 500;
+  }
+  :global(.badge.bg-secondary) {
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: var(--dash-text) !important;
+    font-weight: 500;
+  }
+}
+
+// 卡片間距
+.card + .card {
+  margin-top: $space-xl;
+}
+
+// ----------------------------------------
+// 空 / 載入 / 錯誤狀態
+// ----------------------------------------
+.stateWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-md;
+  padding: $space-3xl $space-xl;
+  text-align: center;
+  color: var(--dash-text-dim);
+
+  :global(.bi),
+  :global([class^='bi-']) {
+    color: var(--accent-color, #49c1d9);
+    filter: drop-shadow(0 0 12px var(--glow-color, #49c1d9));
+  }
+}
+
+// ----------------------------------------
+// 載入動畫
+// ----------------------------------------
+@keyframes cardRise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+  }
+  .tabs :global(.nav-link),
+  .sideNav :global(.nav-link) {
+    transition: none;
+  }
+}
+
+// ----------------------------------------
+// 響應式：小螢幕把左側導航變橫向捲動列
+// ----------------------------------------
+@media (max-width: 767.98px) {
+  .sideNav {
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+    margin-bottom: $space-lg;
+
+    :global(.nav-link) {
+      white-space: nowrap;
+    }
+  }
+  .sideNavLabel {
+    display: none;
+  }
+}
