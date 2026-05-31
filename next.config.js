@@ -8,6 +8,11 @@
 const nextConfig = {
   // 關閉React Strict Mode工具(避免useEffect執行兩次)
   reactStrictMode: false,
+  // bs-icon 是 CommonJS 第三方套件，在 App Router 的 production build 做模組 interop
+  // 時，預設匯入(import Icon from 'bs-icon')會被解析成物件而非元件，導致 React #130
+  // (Element type is invalid)。dev 模式 interop 方式不同所以正常，部署後才崩潰。
+  // 加入 transpilePackages 讓 Next 以 SWC 正確轉譯該套件，修正此問題。
+  transpilePackages: ['bs-icon'],
   // eslint設定
   eslint: {
     // 警告: 開啟以下的設定將會忽略所有在build時的eslint錯誤與警告，不建議在部署時直接使用，或請先自行修正eslint相關錯誤與警告
