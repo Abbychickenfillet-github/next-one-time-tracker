@@ -8,7 +8,11 @@ import Image from 'next/image'
 import { Accordion, Col, Nav, Tab, Container } from 'react-bootstrap'
 import TimeLogClient from '@/components/timelog/TimeLogClient'
 import DashboardLapTimer from '@/components/timelog/DashboardLapTimer'
-import Icon from 'bs-icon'
+// Next.js 的 App Router production build 會把 bs-icon (CJS) 的預設匯出
+// 雙層包裹成 { default: fn }，導致 `import Icon from 'bs-icon'` 拿到的是物件而非
+// 元件，渲染 <Icon> 時丟出 React #130（dev 正常、部署後才崩）。取出真正的元件。
+import IconImport from 'bs-icon'
+const Icon = IconImport?.default || IconImport
 // ========================================
 // 🔍 lazy() 空參數說明
 // ========================================
