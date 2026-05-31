@@ -196,7 +196,7 @@ export default function Dashboard() {
                         {log.duration ? `${log.duration} 小時` : '進行中'}
                       </span>
                       <span className="badge bg-secondary">
-                        {log.steps.length} 步驟
+                        {log.steps?.length || 0} 步驟
                       </span>
                       {/* 分享圖標 - 只有當前用戶的時間記錄才顯示 */}
                       {isAuth && (
@@ -274,7 +274,7 @@ export default function Dashboard() {
                               <div className="list-group-item px-0 py-2">
                                 <div className="d-flex justify-content-between align-items-start">
                                   <div>
-                                    <strong>{step.name}</strong>
+                                    <strong>{step.title}</strong>
                                     {step.description && (
                                       <div className="small text-muted">
                                         {step.description}
