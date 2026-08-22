@@ -1,0 +1,63 @@
+# ============================================================
+# .dockerignore — 不要被複製進 Docker 映像檔的東西
+# 建立日期：2026-08-22
+#
+# 為什麼需要這個檔案：
+#   Dockerfile 裡的 COPY . . 會把整個專案目錄複製進映像檔。
+#   沒有這個檔案的話，.env 和整個 .git 歷史都會被烤進去，
+#   任何拿到映像檔的人都能把金鑰挖出來。
+# ============================================================
+
+# ── 金鑰與環境變數（最重要的一段）────────────────────────
+.env
+.env.*
+!.env.example
+!.env.template
+.env.production
+
+# ── Git 歷史（含所有舊 commit 裡的金鑰）──────────────────
+.git
+.gitignore
+.github
+
+# ── 依賴與建置產物（映像檔裡會重新安裝與 build）──────────
+node_modules
+.next
+out
+dist
+build
+
+# ── 日誌與除錯輸出 ────────────────────────────────────────
+console.txt
+debug.log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── 編輯器與 AI 工具的本機設定 ────────────────────────────
+.vscode
+.idea
+.cursor
+.claude
+_cursor-logs
+.zeabur
+
+# ── 測試與文件（production 映像檔不需要）──────────────────
+test
+tests
+__tests__
+coverage
+docs
+*.md
+!README.md
+
+# ── 作業系統雜檔 ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── 其他 ──────────────────────────────────────────────────
+Dockerfile*
+.dockerignore
+demo-*.js
