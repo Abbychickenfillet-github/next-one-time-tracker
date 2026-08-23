@@ -51,3 +51,20 @@ pnpm-lock.yaml
 /tests/
 # CI
 sonar-project.properties
+.gstack/
+
+# 診斷用 log（Cursor）
+_cursor-logs/
+console.txt
+debug.log
+
+# 草稿與暫存檔
+*.new
+tmp-*
+
+# Obsidian 個人工作區（每台電腦不同）
+docs/.obsidian/workspace.json
+docs/.obsidian/graph.json
+
+# Claude Code 本機設定
+.claude/settings.local.json
