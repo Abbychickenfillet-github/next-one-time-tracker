@@ -63,15 +63,15 @@ graph TD
 
 ## 📊 詳細差異分析
 
-| 特性 | Cookie 認證 (Express.js) | Session 認證 (Next.js) |
-|------|-------------------------|----------------------|
-| **Token 存儲** | `req.cookies.accessToken` | `cookies().get('ACCESS_TOKEN')` |
-| **解析方式** | `jwt.verify(token, secret)` | `decrypt(cookie)` |
-| **用戶資料** | `req.user.user_id` | `session.payload.userId` |
-| **中間件** | 需要 `authenticate` 中間件 | 每個 API 自行處理 |
-| **錯誤處理** | 中間件統一處理 | 每個 API 自行處理 |
-| **性能** | 較快（中間件快取） | 較慢（每次解密） |
-| **安全性** | 中等 | 較高（額外加密層） |
+| 特性           | Cookie 認證 (Express.js)      | Session 認證 (Next.js)            |
+| ------------ | --------------------------- | ------------------------------- |
+| **Token 存儲** | `req.cookies.accessToken`   | `cookies().get('ACCESS_TOKEN')` |
+| **解析方式**     | `jwt.verify(token, secret)` | `decrypt(cookie)`               |
+| **用戶資料**     | `req.user.user_id`          | `session.payload.userId`        |
+| **中間件**      | 需要 `authenticate` 中間件       | 每個 API 自行處理                     |
+| **錯誤處理**     | 中間件統一處理                     | 每個 API 自行處理                     |
+| **性能**       | 較快（中間件快取）                   | 較慢（每次解密）                        |
+| **安全性**      | 中等                          | 較高（額外加密層）                       |
 
 ## 🔐 安全性對比
 
