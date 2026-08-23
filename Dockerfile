@@ -1,35 +1,30 @@
-# 使用 Node.js 18 Alpine 作為基礎映像
+
 FROM node:18-alpine AS base
-
-# 安裝必要的系統依賴
+# 使用 Node.js 18 Alpine 作為基礎映像
 RUN apk add --no-cache libc6-compat
-
-# 設定工作目錄
 WORKDIR /app
 
-# 複製 Prisma schema（在安裝依賴之前）
 COPY prisma ./prisma/
-
-# 複製 package.json 和 package-lock.json
 COPY package*.json ./
 
-# 安裝所有依賴（包括 devDependencies，因為需要 Prisma CLI）
-RUN npm install && npm cache clean --force
+# 改動一：用 npm ci 取代 npm install
+#   ci = Clean Install，它「嚴格照著 package-lock.json 安裝」，
+#   不會因為 ^ 版本範圍而偷偷升級到被投毒的新版本
+# 改動二：加上 --ignore-scripts，禁止任何套件執行安裝腳本
+RUN npm ci --ignore-scripts && npm cache clean --force
 
-# 生成 Prisma client
+# prisma generate 需要單獨呼叫，因為上面把 postinstall 關掉了
 RUN npx prisma generate
 
-# 複製應用程式碼
 COPY . .
-
-# 建置應用程式
 RUN npm run build
 
-# 設定環境變數
 ENV NODE_ENV=production
-
-# 告知平台 app 監聽的 port
-EXPOSE 3001
-
+EXPOSE 8080
 # 啟動應用程式
 CMD ["npm", "start"]
+
+
+# 告知平台 app 監聽的 port
+# Zeabur 會注入 PORT=8080，next start 會綁到 8080；EXPOSE 必須與實際監聽的 port 一致，
+# 否則 Zeabur 閘道把流量導到錯的 port，服務雖 RUNNING 卻整站 502。

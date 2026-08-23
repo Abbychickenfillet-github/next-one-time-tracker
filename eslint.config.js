@@ -27,9 +27,11 @@ export default [
       '**/eslint.config.js',
       '**/dist',
       '**/pnpm-lock.yaml',
-      // '**/yarn.lock',
       '**/.temp',
       '**/prisma/generated/**',
+      '**/*.backup.js',      // 所有 .backup.js 備份檔
+      '**/*.bak',            // 所有 .bak
+      'test/**',             // 整個 test 目錄（裡面只有備份檔跟截圖）
     ],
   },
   ...fixupConfigRules(
