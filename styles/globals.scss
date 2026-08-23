@@ -266,7 +266,7 @@ body {
       transparent 60%
     ),
     linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(26, 10, 26, 0.8));
-  --accent-color: #d3517c9e;
+  --accent-color: #d3517c;
   --accent-hover: #ff1744;
   --text-primary: #ffffff; // 改為白色，提高對比度
   --text-secondary: rgba(255, 107, 157, 0.8);
@@ -485,6 +485,26 @@ main::-webkit-scrollbar-corner {
   background: var(--button-hover) !important;
   transform: translateY(-2px) !important;
   box-shadow: var(--button-shadow) !important;
+}
+
+// 主題化 callout（取代 Bootstrap alert-info，跟主題色一致）
+.theme-callout {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: color-mix(in oklab, var(--accent-color, #d3517c) 12%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--accent-color, #d3517c) 40%, transparent);
+  color: #fff;
+}
+
+.theme-callout-icon {
+  color: var(--accent-color, #d3517c);
+  margin-top: 2px;
+}
+
+.theme-callout-body {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
 }
 
 // Mint 主題時確保容器不覆蓋背景
@@ -813,13 +833,15 @@ body {
 }
 
 .form-control:focus {
-  background-color: var(--form-bg, rgba(255, 255, 255, 0.15));
-  border-color: var(--accent-color, #007bff);
-  box-shadow: 0 0 0 0.2rem rgba(13, 202, 240, 0.25);
+  background-color: var(--form-bg, rgba(255, 255, 255, 0.15)) !important;
+  border-color: var(--accent-color, #007bff) !important;
+  box-shadow: 0 0 0 0.2rem
+    color-mix(in oklab, var(--accent-color, #007bff) 40%, transparent) !important;
 }
 
 .form-control::placeholder {
   color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  letter-spacing: 1px;
 }
 
 // 強制覆蓋注册頁面的 placeholder

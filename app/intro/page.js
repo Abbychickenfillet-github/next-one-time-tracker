@@ -95,9 +95,9 @@ export default function IntroPage() {
         '每小時 50 次 API 呼叫',
         '基礎時間記錄',
         '7 天資料保存',
-        '⚠️ 未註冊無法多裝置同步',
-        '🚦 每小時50次 API 呼叫',
-        '🚦 每天120次資料庫查詢',
+        '未註冊無法多裝置同步',
+        '每小時50次 API 呼叫',
+        '每天120次資料庫查詢',
       ],
       buttonText: '立即註冊',
       buttonVariant: 'outline-primary',
@@ -107,14 +107,14 @@ export default function IntroPage() {
       price: 'NT$ 99',
       period: '每月',
       features: [
-        '✅ 解鎖多裝置同步',
-        '✅ 50筆記錄數量',
-        '✅ 雲端資料庫儲存',
-        '✅ 資料永久保存',
-        '✅ 基礎統計分析',
-        '📱 手機、平板、電腦同步',
-        '🚦 每小時120次 API 呼叫',
-        '🚦 每天520次資料庫查詢',
+        '解鎖多裝置同步',
+        '50筆記錄數量',
+        '雲端資料庫儲存',
+        '資料永久保存',
+        '基礎統計分析',
+        '手機、平板、電腦同步',
+        '每小時120次 API 呼叫',
+        '每天520次資料庫查詢',
         'Gemini 2.5 Flash AI 勾選活動並 分析',
         '輸入Prompt全站與AI互動',
       ],
@@ -196,10 +196,7 @@ export default function IntroPage() {
                     animation: 'fadeInUp 0.8s ease-out',
                   }}
                 >
-                  <h4 className="text-white fw-semibold mb-3">
-                    <span className="d-inline-block me-2">💭</span>
-                    就算是I人
-                  </h4>
+                  <h4 className="text-white fw-semibold mb-3">就算是I人</h4>
                   <p
                     className="text-white fs-5 lh-lg mb-0"
                     style={{ opacity: 0.95 }}
@@ -210,7 +207,7 @@ export default function IntroPage() {
                   </p>
                   <div className="mt-3 pt-3 border-top border-white border-opacity-25">
                     <p className="text-white-50 small mb-0">
-                      ✨ 在這裡，每個人都能找到屬於自己的空間
+                      在這裡，每個人都能找到屬於自己的空間
                     </p>
                   </div>
                 </div>
@@ -275,11 +272,11 @@ export default function IntroPage() {
             <Col lg={12} className="mx-auto">
               <Card className={styles.problemCard}>
                 <Card.Body>
-                  <h4 className="text-center mb-4">🔍 現有工具的不足</h4>
+                  <h4 className="text-center mb-4">現有工具的不足</h4>
                   <Row>
                     <Col md={4} className="mb-3">
                       <div className={styles.problemItem}>
-                        <h6>📅 Google Calendar</h6>
+                        <h6>Google Calendar</h6>
                         <p className="text-muted small">
                           只能記錄事件，無法精確到秒的時間戳
                         </p>
@@ -287,7 +284,7 @@ export default function IntroPage() {
                     </Col>
                     <Col md={4} className="mb-3">
                       <div className={styles.problemItem}>
-                        <h6>⏰ 手機計時器</h6>
+                        <h6>手機計時器</h6>
                         <p className="text-muted small">
                           功能單一，無法記錄多步驟流程
                           <br />
@@ -297,7 +294,7 @@ export default function IntroPage() {
                     </Col>
                     <Col md={4} className="mb-3">
                       <div className={styles.problemItem}>
-                        <h6>📝 筆記軟體</h6>
+                        <h6>筆記軟體</h6>
                         <p className="text-muted small">
                           缺乏時間追蹤和統計分析功能
                           <br />
@@ -307,7 +304,7 @@ export default function IntroPage() {
                     </Col>
                     <Col md={4} className="mb-3">
                       <div className={styles.problemItem}>
-                        <h6>💼 剪貼到AI</h6>
+                        <h6>剪貼到AI</h6>
                         <p className="text-muted small">
                           AI對時間的認知會錯誤，需要手動修正時間格式
                         </p>
@@ -315,7 +312,7 @@ export default function IntroPage() {
                     </Col>
                     <Col md={4} className="mb-3">
                       <div className={styles.problemItem}>
-                        <h6>🔍 鏡頭監控分析</h6>
+                        <h6>鏡頭監控分析</h6>
                         <p className="text-muted small">
                           需要昂貴的監控設備，成本高且複雜
                         </p>
@@ -323,7 +320,7 @@ export default function IntroPage() {
                     </Col>
                     <Col md={4} className="mb-3">
                       <div className={styles.problemItem}>
-                        <h6>💕 專門社群</h6>
+                        <h6>專門社群</h6>
                         <p className="text-muted small">
                           缺乏專業的時間管理工具，無法有效分享時間分配
                         </p>
@@ -332,11 +329,11 @@ export default function IntroPage() {
                   </Row>
                   <div className="text-center mt-4">
                     <div className={styles.solutionBox}>
-                      <h5 className="text-white">✨ TimeLog 的解決方案</h5>
+                      <h5 className="text-white">TimeLog 的解決方案</h5>
                       <Row className="mt-3">
                         <Col md={3} className="mb-2">
                           <div className="text-white">
-                            <strong>⏱️ 精確到秒</strong>
+                            <strong>精確到秒</strong>
                             <br />
                             <small>
                               解決 Google Calendar 無法精確記錄的問題
@@ -345,21 +342,21 @@ export default function IntroPage() {
                         </Col>
                         <Col md={3} className="mb-2">
                           <div className="text-white">
-                            <strong>📋 多步驟管理</strong>
+                            <strong>多步驟管理</strong>
                             <br />
                             <small>解決手機計時器功能單一的問題</small>
                           </div>
                         </Col>
                         <Col md={3} className="mb-2">
                           <div className="text-white">
-                            <strong>📊 數據分析</strong>
+                            <strong>數據分析</strong>
                             <br />
                             <small>解決筆記軟體缺乏統計功能的問題</small>
                           </div>
                         </Col>
                         <Col md={3} className="mb-2">
                           <div className="text-white">
-                            <strong>☁️ 雲端同步</strong>
+                            <strong>雲端同步</strong>
                             <br />
                             <small>解決 AI 時間認知錯誤的問題</small>
                           </div>

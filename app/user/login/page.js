@@ -184,10 +184,17 @@ export default function LogIn() {
               >
                 {/* 3 日登入持久化提示 */}
                 <div
-                  className="alert alert-info d-flex align-items-start gap-2 mb-4"
-                  role="alert"
+                  className="theme-callout d-flex align-items-start gap-2 mb-4"
+                  role="note"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    className="theme-callout-icon flex-shrink-0"
+                    aria-hidden="true"
+                  >
                     <circle
                       cx="12"
                       cy="12"
@@ -204,8 +211,10 @@ export default function LogIn() {
                     <circle cx="12" cy="16" r="1.25" fill="currentColor" />
                   </svg>
                   <div>
-                    <div className="fw-semibold">登入狀態將維持 3 天</div>
-                    <small className="text-muted">
+                    <div className="fw-semibold text-white">
+                      登入狀態將維持 3 天
+                    </div>
+                    <small className="theme-callout-body">
                       為了方便使用，除非您主動登出，系統會保持登入狀態 3 天。
                     </small>
                   </div>
