@@ -293,7 +293,7 @@ ${
     try {
       aiClient = getAIClient()
     } catch (error) {
-      console.error('❌ GEMINI_API_KEY 未設定或無效')
+      console.error('❌ GEMINI_API_KEY 未設定或無效',error)
       return errorResponse(
         res,
         new Error('AI 服務未正確配置，請聯繫管理員'),
@@ -325,7 +325,9 @@ ${
     console.error('AI Chatbox API Error:', error)
 
     // 處理 API key 相關錯誤
-    if (error?.error?.code === 403 && error?.error?.message?.includes('leaked')) {
+    if (
+      error?.error?.code === 403 &&
+       error?.error?.message?.includes('leaked')) {
       console.error('❌ GEMINI_API_KEY 已被標記為洩露，需要重新生成')
       return errorResponse(
         res,
@@ -334,7 +336,9 @@ ${
       )
     }
 
-    if (error?.error?.code === 403 || error?.error?.status === 'PERMISSION_DENIED') {
+    if (
+      error?.error?.status === 'PERMISSION_DENIED' ||
+      error?.error?.status === '403') {
       console.error('❌ GEMINI_API_KEY 權限被拒絕')
       return errorResponse(
         res,

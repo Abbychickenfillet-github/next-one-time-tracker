@@ -197,7 +197,10 @@ export async function POST(request) {
     console.error('AI Analyze Activities API Error:', error)
 
     // 處理 API key 相關錯誤
-    if (error?.error?.code === 403 && error?.error?.message?.includes('leaked')) {
+    if (
+      error?.error?.code === 403 &&
+      error?.error?.message?.includes('leaked')
+    ) {
       console.error('❌ GEMINI_API_KEY 已被標記為洩露，需要重新生成')
       return errorResponse(
         res,
@@ -206,7 +209,10 @@ export async function POST(request) {
       )
     }
 
-    if (error?.error?.code === 403 || error?.error?.status === 'PERMISSION_DENIED') {
+    if (
+      error?.error?.code === 403 ||
+      error?.error?.status === 'PERMISSION_DENIED'
+    ) {
       console.error('❌ GEMINI_API_KEY 權限被拒絕')
       return errorResponse(
         res,
