@@ -10,7 +10,7 @@ const TextLoader = dynamic(() => import('./loaders/text-loader'), {
   ssr: false,
 })
 // 可以取得目前的pathname和searchParams
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname} from 'next/navigation'
 
 // 全站的Context狀態
 const LoaderContext = createContext(null)
@@ -44,7 +44,6 @@ export const LoaderProvider = ({
   text = '', // 純文字訊息
 }) => {
   const pathname = usePathname()
-  const searchParams = useSearchParams()
 
   const [show, setShow] = useState(false)
 
@@ -68,7 +67,7 @@ export const LoaderProvider = ({
       handleChangeEnd()
     }
     // eslint-disable-next-line
-  }, [pathname, searchParams])
+  }, [pathname])
 
   return (
     <LoaderContext.Provider
