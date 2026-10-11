@@ -1,10 +1,13 @@
 import { NextResponse as res } from 'next/server'
 import { cookies } from 'next/headers'
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 import { decrypt } from '@/lib/jwt-session'
 import prisma from '@/lib/prisma.js'
 import { GoogleGenAI } from '@google/genai'
 // import { checkRateLimit } from '@/lib/rate-limit.js'
+
+// gemini-2.5-flash 對新專案已下架（404 NOT_FOUND），改用 gemini-3.5-flash
+const GEMINI_MODEL = 'gemini-3.5-flash'
 
 // Gemini AI 客戶端 - 延遲初始化，避免在模組載入時就驗證 API key
 let ai = null
@@ -242,8 +245,8 @@ export async function POST(request) {
             }
           }
         }
-      } catch (error) {
-        if (isDev) console.log('獲取用戶資料失敗:', error.message)
+      } catch {
+        // 取不到使用者資料時略過，改用沒有個人化資料的回答
       }
     }
 
@@ -293,7 +296,7 @@ ${
     try {
       aiClient = getAIClient()
     } catch (error) {
-      console.error('❌ GEMINI_API_KEY 未設定或無效',error)
+      console.error('❌ GEMINI_API_KEY 未設定或無效', error)
       return errorResponse(
         res,
         new Error('AI 服務未正確配置，請聯繫管理員'),
@@ -302,7 +305,7 @@ ${
     }
 
     const response = await aiClient.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: GEMINI_MODEL,
       contents: `${systemPrompt}\n\n${userPrompt}`,
       config: {
         thinkingConfig: {
@@ -317,7 +320,7 @@ ${
 
     return successResponse(res, {
       response: aiResponse,
-      model: 'gemini-2.5-flash',
+      model: GEMINI_MODEL,
       hasPersonalData: !!userPersonalData,
       timestamp: new Date().toISOString(),
     })
@@ -327,7 +330,8 @@ ${
     // 處理 API key 相關錯誤
     if (
       error?.error?.code === 403 &&
-       error?.error?.message?.includes('leaked')) {
+      error?.error?.message?.includes('leaked')
+    ) {
       console.error('❌ GEMINI_API_KEY 已被標記為洩露，需要重新生成')
       return errorResponse(
         res,
@@ -338,7 +342,8 @@ ${
 
     if (
       error?.error?.status === 'PERMISSION_DENIED' ||
-      error?.error?.status === '403') {
+      error?.error?.status === '403'
+    ) {
       console.error('❌ GEMINI_API_KEY 權限被拒絕')
       return errorResponse(
         res,

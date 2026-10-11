@@ -1,13 +1,16 @@
 import { NextResponse as res } from 'next/server'
 import { cookies } from 'next/headers'
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 import { decrypt } from '@/lib/jwt-session'
 import prisma from '@/lib/prisma.js'
 // → 假如第一次import prisma, global.prisma 不存在
 // → 創建 new PrismaClient()
 // → 儲存到 global.prisma
-import { GoogleGenAI } from '@google/genai'
+import { GoogleGenAI, Type } from '@google/genai'
 import { checkRateLimit } from '@/lib/rate-limit.js'
+
+// gemini-2.5-flash 對新專案已下架（404 NOT_FOUND），改用 gemini-3.5-flash
+const GEMINI_MODEL = 'gemini-3.5-flash'
 
 // The client gets the API key from the environment variable `GEMINI_API_KEY`.
 // 延遲初始化，避免在模組載入時就驗證 API key
@@ -39,7 +42,25 @@ function buildPrompt(activities, customPrompt = null) {
       ' Focus on time efficiency, productivity patterns, and provide actionable recommendations for improvement.'
   }
 
-  return basePrompt + '\n\nActivities JSON: ' + activitiesJson
+  // 不論有沒有自訂提示詞都附上輸出格式，前端依這三個欄位排版
+  const formatRule =
+    '\n\n請用繁體中文回答，只輸出 JSON，欄位如下：' +
+    'timeDeltaDays（數字，活動時間跨度的天數，無法判斷填 null）、' +
+    'keyFactors（字串陣列，3 到 5 個關鍵因素，每項一句話）、' +
+    'summary（字串，2 到 3 句總結與建議）。'
+
+  return basePrompt + formatRule + '\n\nActivities JSON: ' + activitiesJson
+}
+
+// 讓 Gemini 以 schema 強制輸出結構化 JSON，避免回傳 Markdown 文字
+const RESPONSE_SCHEMA = {
+  type: Type.OBJECT,
+  properties: {
+    timeDeltaDays: { type: Type.NUMBER, nullable: true },
+    keyFactors: { type: Type.ARRAY, items: { type: Type.STRING } },
+    summary: { type: Type.STRING },
+  },
+  required: ['timeDeltaDays', 'keyFactors', 'summary'],
 }
 
 export async function POST(request) {
@@ -150,12 +171,14 @@ export async function POST(request) {
     const prompt = buildPrompt(activities, customPrompt)
 
     const response = await aiClient.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: GEMINI_MODEL,
       contents: prompt,
       config: {
         thinkingConfig: {
           thinkingBudget: 0, // Disables thinking
         },
+        responseMimeType: 'application/json',
+        responseSchema: RESPONSE_SCHEMA,
       },
     })
 
@@ -171,8 +194,6 @@ export async function POST(request) {
     } catch (e) {
       // 如果直接解析失敗，嘗試從文字中提取 JSON 片段
       // 因為 AI 有時會回傳包含 markdown 程式碼區塊的內容
-      if (isDev)
-        console.log('JSON parse failed, try extract substring:', e?.message)
 
       // 使用正則表達式尋找 JSON 物件格式 { ... }
       const match = text.match(/\{[\s\S]*\}/)
@@ -181,26 +202,27 @@ export async function POST(request) {
           // 嘗試解析找到的 JSON 片段
           parsed = JSON.parse(match[0])
         } catch (e2) {
-          // 如果還是解析失敗，在開發環境顯示錯誤訊息
-          // isDev 檢查確保生產環境不會顯示內部錯誤資訊
-          if (isDev) console.log('Substring JSON parse failed:', e2?.message)
+          // 還是解析失敗就保留 parsed 原狀，不對外顯示內部錯誤資訊
         }
       }
     }
 
     return successResponse(res, {
-      model: 'gemini-2.5-flash',
+      model: GEMINI_MODEL,
       raw: text,
       result: parsed,
     })
   } catch (error) {
     console.error('AI Analyze Activities API Error:', error)
 
+    // @google/genai 拋出的 ApiError 把 HTTP 狀態放在 error.status，
+    // 錯誤本文是 JSON 字串放在 error.message，沒有 error.error 這個屬性
+    const httpStatus = error?.status ?? error?.error?.code
+    const apiMessage = String(error?.message ?? error?.error?.message ?? '')
+
     // 處理 API key 相關錯誤
-    if (
-      error?.error?.code === 403 &&
-      error?.error?.message?.includes('leaked')
-    ) {
+    // 注意：apiMessage 內含完整金鑰字串，只能記在伺服器 log，不可回傳給瀏覽器
+    if (httpStatus === 403 && apiMessage.includes('leaked')) {
       console.error('❌ GEMINI_API_KEY 已被標記為洩露，需要重新生成')
       return errorResponse(
         res,
@@ -210,8 +232,9 @@ export async function POST(request) {
     }
 
     if (
-      error?.error?.code === 403 ||
-      error?.error?.status === 'PERMISSION_DENIED'
+      httpStatus === 403 ||
+      error?.error?.status === 'PERMISSION_DENIED' ||
+      apiMessage.includes('PERMISSION_DENIED')
     ) {
       console.error('❌ GEMINI_API_KEY 權限被拒絕')
       return errorResponse(
