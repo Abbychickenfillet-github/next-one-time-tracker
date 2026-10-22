@@ -6,51 +6,41 @@
 }
 .card1 {
   border: 0.5px dashed #b25f5f32;
-  background: transparent;
-  color: #ffffff;
-  text-shadow:
-    0 0 10px rgba(255, 255, 255, 0.8),
-    0 0 20px rgba(255, 255, 255, 0.6),
-    0 0 30px rgba(255, 255, 255, 0.4),
-    0 0 40px rgba(255, 255, 255, 0.2);
-
-  .card-title {
-    color: #ffffff !important;
-    text-shadow:
-      0 0 15px rgba(255, 255, 255, 0.9),
-      0 0 25px rgba(255, 255, 255, 0.7),
-      0 0 35px rgba(255, 255, 255, 0.5),
-      0 0 45px rgba(255, 255, 255, 0.3),
-      0 0 55px rgba(255, 255, 255, 0.1);
-    animation: glow-pulse 2s ease-in-out infinite alternate;
-  }
-
-  .card-text {
-    color: #ffffff !important;
-    text-shadow:
-      0 0 8px rgba(255, 255, 255, 0.7),
-      0 0 16px rgba(255, 255, 255, 0.5),
-      0 0 24px rgba(255, 255, 255, 0.3),
-      0 0 32px rgba(255, 255, 255, 0.1);
-  }
 }
 
-@keyframes glow-pulse {
-  from {
-    text-shadow:
-      0 0 15px rgba(255, 255, 255, 0.9),
-      0 0 25px rgba(255, 255, 255, 0.7),
-      0 0 35px rgba(255, 255, 255, 0.5),
-      0 0 45px rgba(255, 255, 255, 0.3),
-      0 0 55px rgba(255, 255, 255, 0.1);
+// 本頁所有卡片：透明底、白字、不發光
+.aboutPage :global(.card) {
+  --bs-card-bg: transparent;
+  --bs-card-color: #ffffff;
+  --bs-card-title-color: #ffffff;
+  background: transparent;
+  color: #ffffff;
+  text-shadow: none;
+  border-color: rgba(255, 255, 255, 0.35);
+
+  // 表格、清單、折疊面板、小字都跟著用白字透明底
+  :global(.table) {
+    --bs-table-color: #ffffff;
+    --bs-table-bg: transparent;
+    --bs-table-striped-color: #ffffff;
+    --bs-table-striped-bg: rgba(255, 255, 255, 0.08);
+    --bs-table-border-color: rgba(255, 255, 255, 0.35);
   }
-  to {
-    text-shadow:
-      0 0 20px rgba(255, 255, 255, 1),
-      0 0 30px rgba(255, 255, 255, 0.8),
-      0 0 40px rgba(255, 255, 255, 0.6),
-      0 0 50px rgba(255, 255, 255, 0.4),
-      0 0 60px rgba(255, 255, 255, 0.2);
+  :global(.list-group) {
+    --bs-list-group-bg: transparent;
+    --bs-list-group-color: #ffffff;
+    --bs-list-group-border-color: rgba(255, 255, 255, 0.35);
+  }
+  :global(.accordion) {
+    --bs-accordion-bg: transparent;
+    --bs-accordion-color: #ffffff;
+    --bs-accordion-btn-color: #ffffff;
+    --bs-accordion-active-bg: rgba(255, 255, 255, 0.1);
+    --bs-accordion-active-color: #ffffff;
+    --bs-accordion-border-color: rgba(255, 255, 255, 0.35);
+  }
+  :global(.text-muted) {
+    color: rgba(255, 255, 255, 0.75) !important;
   }
 }
 
