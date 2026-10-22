@@ -34,13 +34,14 @@ const STEPS = [
 ]
 
 // dur 是動畫秒數，rt 是表格裡的實際時間（距 10:00:00 的秒數）。
-// 髮中區拆成上藥與 7 圈測試兩段，兩段合起來剛好是表格的 10:08:30 到 10:14:45
+// 髮中區與髮尾區都拆成上藥與 7 圈測試兩段，兩段合起來剛好是表格裡各自的起訖時間
 const SCENE_DEFS = [
   { id: 'spray', step: 0, dur: 5, rt: [0, 135] },
   { id: 'root', step: 1, dur: 5, rt: [135, 510] },
   { id: 'mid', step: 2, dur: 5, rt: [510, 690] },
-  { id: 'test', step: 2, dur: 24, rt: [690, 885] },
-  { id: 'tip', step: 3, dur: 5, rt: [885, 1200] },
+  { id: 'test', step: 2, dur: 24, rt: [690, 885], zone: '髮中' },
+  { id: 'tip', step: 3, dur: 5, rt: [885, 1000] },
+  { id: 'tipTest', step: 3, dur: 24, rt: [1000, 1200], zone: '髮尾' },
   { id: 'wash', step: 4, dur: 5, rt: [1200, 1530] },
   { id: 'dry', step: 5, dur: 5, rt: [1530, 2100] },
   { id: 'second', step: 6, dur: 5, rt: [2100, 2540] },
@@ -158,7 +159,7 @@ function clockText(sec) {
 }
 
 // 7 圈回彈測試：lt 是這個場景自己的時間（0 到 24 秒）
-function CoilTest({ lt }) {
+function CoilTest({ lt, zone }) {
   let coils = 0
   if (lt < 12) coils = clamp(lt / 5) * 7
   else coils = 7 * (1 - ease(clamp((lt - 12) / 2.5)))
@@ -184,6 +185,9 @@ function CoilTest({ lt }) {
 
   return (
     <g>
+      <text className={styles.zoneActive} x={20} y={40} opacity={ramp(lt, 0, 0.4, 23.4, 24)}>
+        {`測試${zone}的軟化程度`}
+      </text>
       <g opacity={visDiagram}>
         <line className={styles.hairLine} x1={COIL_X} y1={20} x2={COIL_X} y2={COIL_TOP} />
         <polygon className={styles.tool} points="170,174 520,180 170,186" />
@@ -364,9 +368,14 @@ export default function StraighteningStepsAnimation() {
   const cover2 = clamp((t - S.second.start) / S.second.dur)
   const cream2 = 1 - clamp((t - S.done.start) / 1.5)
 
-  const testEnd = S.test.start + S.test.dur
-  const hairVis = 1 - ramp(t, S.test.start, S.test.start + 0.6, testEnd - 0.6, testEnd)
-  const testVis = 1 - hairVis
+  // 髮中與髮尾各有一段 7 圈測試：測試場景時頭髮淡出、測試圖淡入
+  const fade = (id) => {
+    const s = S[id]
+    const end = s.start + s.dur
+    return ramp(t, s.start, s.start + 0.6, end - 0.6, end)
+  }
+  const testVis = Math.max(fade('test'), fade('tipTest'))
+  const hairVis = 1 - testVis
   const prop = (id) => {
     const s = S[id]
     return ramp(t, s.start, s.start + 0.4, s.start + s.dur - 0.4, s.start + s.dur)
@@ -376,8 +385,9 @@ export default function StraighteningStepsAnimation() {
   const doneIn = sc.id === 'done' ? lt : 0
   const rtSec = lerp(sc.rt[0], sc.rt[1], lp)
 
+  const isTest = sc.id === 'test' || sc.id === 'tipTest'
   let caption = step.note
-  if (sc.id === 'test') {
+  if (isTest) {
     if (lt < 5) caption = '用尖尾梳把髮絲纏繞 7 圈'
     else if (lt < 12) caption = '拉一下，停 7 秒'
     else if (lt < 19) caption = '放開，看有沒有回彈回去'
@@ -605,13 +615,13 @@ export default function StraighteningStepsAnimation() {
           </g>
         </g>
 
-        {/* 7 圈回彈測試（髮中區的後半段） */}
-        <g opacity={testVis}>{sc.id === 'test' && <CoilTest lt={lt} />}</g>
+        {/* 7 圈回彈測試（髮中區與髮尾區各一段） */}
+        <g opacity={testVis}>{isTest && <CoilTest lt={lt} zone={sc.zone} />}</g>
       </svg>
 
       <p className={styles.caption}>
         <strong>{step.name}</strong>
-        {sc.id === 'test' ? '（7 圈回彈測試）' : ''}：{caption}
+        {isTest ? `（測試${sc.zone}：7 圈回彈）` : ''}：{caption}
       </p>
 
       <div className={styles.controls}>
