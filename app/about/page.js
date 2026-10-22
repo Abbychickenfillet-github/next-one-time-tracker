@@ -2,6 +2,7 @@
 import styles from '@/styles/about.module.scss'
 import DecorativeIcons from '@/components/DecorativeIcons'
 import InspirationAnimation from '@/components/InspirationAnimation'
+import SmoothHairAnimation from '@/components/SmoothHairAnimation'
 export default function About() {
   return (
     <div className={`container py-5 ${styles.aboutPage}`}>
@@ -84,6 +85,7 @@ export default function About() {
                 每一個步驟的結束都可以在按下結束按鈕，步驟運行時間有可能重疊，符合生活中多工的實際情形。
               </p>
               <InspirationAnimation />
+              <SmoothHairAnimation />
             </div>
           </div>
 
