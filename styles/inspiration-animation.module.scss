@@ -1,0 +1,155 @@
+.wrap {
+  margin-top: 1rem;
+  color: #ffffff;
+}
+
+.stage {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.hair {
+  stroke: #f6d7b8;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.hairShape {
+  stroke: #f6d7b8;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.comb {
+  fill: #e8e8f2;
+}
+
+.accent {
+  fill: #ffd166;
+}
+
+.label {
+  fill: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.labelSm {
+  fill: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+}
+
+.count {
+  fill: #ffffff;
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.ringTrack {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.25);
+  stroke-width: 6;
+}
+
+.ring {
+  fill: none;
+  stroke: #ffd166;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.dotFull {
+  fill: #ffd166;
+  stroke: #ffd166;
+  stroke-width: 2;
+}
+
+.dotHalf {
+  fill: rgba(255, 209, 102, 0.3);
+  stroke: #ffd166;
+  stroke-width: 2;
+}
+
+.barTrack {
+  fill: rgba(255, 255, 255, 0.25);
+}
+
+.barFill {
+  fill: #ffd166;
+}
+
+.clockFace {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 4;
+}
+
+.clockHand {
+  stroke: #ffd166;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.caption {
+  margin: 0.75rem 0 0.5rem;
+  min-height: 1.5em;
+  font-weight: 600;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  button {
+    padding: 0.25rem 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 999px;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(255, 255, 255, 0.18);
+    }
+  }
+
+  input[type='range'] {
+    flex: 1;
+    accent-color: #ffd166;
+  }
+}
+
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+
+  button {
+    padding: 0.15rem 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 6px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    cursor: pointer;
+
+    &[aria-current='step'] {
+      background: #ffd166;
+      border-color: #ffd166;
+      color: #2a1a2e;
+      font-weight: 600;
+    }
+  }
+}
