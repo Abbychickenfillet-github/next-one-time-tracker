@@ -1,7 +1,7 @@
 import { NextResponse as res } from 'next/server'
 import { decrypt, deleteSession } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
-import { successResponse, errorResponse } from '@/lib/utils'
+import { successResponse, errorResponse, corsHeaders } from '@/lib/utils'
 
 /**
  * 登出 API 路由
@@ -62,10 +62,6 @@ export async function POST() {
 export async function OPTIONS() {
   return new Response(null, {
     status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    },
+    headers: corsHeaders,
   })
 }

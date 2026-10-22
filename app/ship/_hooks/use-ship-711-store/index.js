@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { popupCenter, subscribe, unsubscribe, publish } from './popup-window'
-import { useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import useInterval from '@/hooks/use-interval'
 import useLocalStorage from '@/hooks/use-localstorage'
 
@@ -154,9 +154,9 @@ export function useShip711StoreCallback(keyLocalStorage = 'store711') {
 
   // const router = useRouter()
   // 取得路由的上的搜尋參數(查詢字串)
-  const searchParams = useSearchParams()
+  const Pathname = usePathname()
   // 轉為一般物件
-  const params = Object.fromEntries(searchParams)
+  const params = Object.fromEntries(Pathname)
 
   useEffect(() => {
     // 這裡確保能得到router.query值

@@ -1,0 +1,40 @@
+# ============================================================
+# .gitattributes — 統一行尾與二進位檔判定
+# 建立日期：2026-08-23
+#
+# 為什麼需要：Windows 用 CRLF、Linux/Mac 用 LF。沒有這個檔案的話，
+# 同一份程式碼在不同機器上會被 git 視為「整份都改了」，產生大量假差異。
+# ============================================================
+
+# 所有文字檔：repo 內一律存成 LF，工作目錄也用 LF
+# （與 Prettier 預設的 endOfLine: "lf" 一致）
+* text=auto eol=lf
+
+# ── 二進位檔：明確標記，避免 git 誤判而破壞內容 ──────────
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.ttf   binary
+*.otf   binary
+*.woff  binary
+*.woff2 binary
+*.pdf   binary
+*.zip   binary
+*.xlsx  binary
+*.docx  binary
+*.mp4   binary
+*.lottie binary
+
+# SVG 是文字格式，保留 diff 能力
+*.svg   text eol=lf
+
+# ── Windows 批次檔必須是 CRLF，否則 cmd.exe 執行會出錯 ───
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.ps1   text eol=crlf
+
+# ── GitHub 語言統計忽略自動產生的檔案 ────────────────────
+package-lock.json  linguist-generated=true

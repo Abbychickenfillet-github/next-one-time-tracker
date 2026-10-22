@@ -6,63 +6,47 @@
 }
 .card1 {
   border: 0.5px dashed #b25f5f32;
-  background:
-    linear-gradient(135deg, rgba(209, 137, 161, 0.8), rgba(184, 104, 127, 0.6)),
-    url('/blue-bg.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: #ffffff;
-  text-shadow:
-    0 0 10px rgba(255, 255, 255, 0.8),
-    0 0 20px rgba(255, 255, 255, 0.6),
-    0 0 30px rgba(255, 255, 255, 0.4),
-    0 0 40px rgba(255, 255, 255, 0.2);
-
-  .card-title {
-    color: #ffffff !important;
-    text-shadow:
-      0 0 15px rgba(255, 255, 255, 0.9),
-      0 0 25px rgba(255, 255, 255, 0.7),
-      0 0 35px rgba(255, 255, 255, 0.5),
-      0 0 45px rgba(255, 255, 255, 0.3),
-      0 0 55px rgba(255, 255, 255, 0.1);
-    animation: glow-pulse 2s ease-in-out infinite alternate;
-  }
-
-  .card-text {
-    color: #ffffff !important;
-    text-shadow:
-      0 0 8px rgba(255, 255, 255, 0.7),
-      0 0 16px rgba(255, 255, 255, 0.5),
-      0 0 24px rgba(255, 255, 255, 0.3),
-      0 0 32px rgba(255, 255, 255, 0.1);
-  }
 }
 
-@keyframes glow-pulse {
-  from {
-    text-shadow:
-      0 0 15px rgba(255, 255, 255, 0.9),
-      0 0 25px rgba(255, 255, 255, 0.7),
-      0 0 35px rgba(255, 255, 255, 0.5),
-      0 0 45px rgba(255, 255, 255, 0.3),
-      0 0 55px rgba(255, 255, 255, 0.1);
+// 本頁所有卡片：透明底、白字、不發光
+.aboutPage :global(.card) {
+  --bs-card-bg: transparent;
+  --bs-card-color: #ffffff;
+  --bs-card-title-color: #ffffff;
+  background: transparent;
+  color: #ffffff;
+  text-shadow: none;
+  border-color: rgba(255, 255, 255, 0.35);
+
+  // 表格、清單、折疊面板、小字都跟著用白字透明底
+  :global(.table) {
+    --bs-table-color: #ffffff;
+    --bs-table-bg: transparent;
+    --bs-table-striped-color: #ffffff;
+    --bs-table-striped-bg: rgba(255, 255, 255, 0.08);
+    --bs-table-border-color: rgba(255, 255, 255, 0.35);
   }
-  to {
-    text-shadow:
-      0 0 20px rgba(255, 255, 255, 1),
-      0 0 30px rgba(255, 255, 255, 0.8),
-      0 0 40px rgba(255, 255, 255, 0.6),
-      0 0 50px rgba(255, 255, 255, 0.4),
-      0 0 60px rgba(255, 255, 255, 0.2);
+  :global(.list-group) {
+    --bs-list-group-bg: transparent;
+    --bs-list-group-color: #ffffff;
+    --bs-list-group-border-color: rgba(255, 255, 255, 0.35);
+  }
+  :global(.accordion) {
+    --bs-accordion-bg: transparent;
+    --bs-accordion-color: #ffffff;
+    --bs-accordion-btn-color: #ffffff;
+    --bs-accordion-active-bg: rgba(255, 255, 255, 0.1);
+    --bs-accordion-active-color: #ffffff;
+    --bs-accordion-border-color: rgba(255, 255, 255, 0.35);
+  }
+  :global(.text-muted) {
+    color: rgba(255, 255, 255, 0.75) !important;
   }
 }
 
 // 左下角背景圖片
 .aboutPage {
   position: relative;
-  min-height: 100vh;
 
   &::before {
     content: '';
@@ -146,3 +130,203 @@
 // clockIcon 已移至 components/clock-icon
 // }
 // 小螢幕響應式設計已整合到上面的媒體查詢中
+
+// ===== 投影片版面 =====
+// main 是這個站的捲動容器：開啟 scroll-snap，一次停在一張投影片
+.snapMain {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+// --deck-h 由 page.js 量出 main 的可視高度，每張投影片至少填滿一個畫面
+.slide {
+  --anim-max-h: calc(var(--deck-h, 100svh) * 0.46);
+  min-height: var(--deck-h, 100svh);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.5rem, 2vh, 1.5rem) clamp(0.75rem, 4vw, 3rem);
+  // 字級跟著畫面高度縮放，內容才放得進一個畫面
+  font-size: clamp(0.78rem, 0.4rem + 1.25vh, 1.05rem);
+
+  > :global(.card) {
+    width: min(1100px, 100%);
+  }
+
+  :global(.card-body) {
+    padding: clamp(0.6rem, 2vh, 1.25rem) clamp(0.75rem, 2.5vw, 1.5rem);
+  }
+
+  h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+  }
+
+  h5 {
+    font-size: 1.05em;
+  }
+
+  p,
+  ul,
+  :global(.alert) {
+    margin-bottom: 0.6em;
+  }
+
+  :global(.alert) {
+    padding: 0.6em 0.9em;
+  }
+
+  li {
+    line-height: 1.5;
+  }
+
+  :global(.accordion-button) {
+    padding: 0.6em 1em;
+    font-size: 1em;
+  }
+
+  :global(.list-group-item) {
+    padding: 0.45em 0.75em;
+  }
+
+  :global(.table) {
+    font-size: 0.85em;
+  }
+
+  // 動畫高度不超過畫面的一半，剩下的空間留給標題、說明與控制列
+  svg[role='img'] {
+    max-height: var(--anim-max-h);
+  }
+}
+
+// 勾選後文字變淡並加刪除線，一眼看出還缺哪些
+.checkList {
+  list-style: none;
+  padding-left: 0;
+
+  li {
+    padding-left: 1.6em;
+  }
+
+  :global(.form-check-input) {
+    cursor: pointer;
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  :global(.form-check-label) {
+    cursor: pointer;
+  }
+
+  :global(.form-check-input:checked + .form-check-label) {
+    opacity: 0.6;
+    text-decoration: line-through;
+  }
+}
+
+.twoCol {
+  display: grid;
+  gap: 0.25rem 1.5rem;
+
+  @media (min-width: 992px) {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.cols2 {
+  @media (min-width: 576px) {
+    column-count: 2;
+    column-gap: 1.5rem;
+  }
+
+  :global(.list-group-item) {
+    break-inside: avoid;
+  }
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+
+  button {
+    padding: 0.2em 0.9em;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 999px;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+
+    &[aria-selected='true'] {
+      background: #ffd166;
+      border-color: #ffd166;
+      color: #2a1a2e;
+      font-weight: 600;
+    }
+  }
+}
+
+// 右側圓點導覽：點一下跳到那張投影片
+.dots {
+  position: fixed;
+  right: clamp(0.25rem, 1vw, 0.9rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  button {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border: 1.5px solid #ffffff;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+
+    &[aria-current='true'] {
+      background: #ffd166;
+      border-color: #ffd166;
+      transform: scale(1.35);
+    }
+  }
+}
+
+// 窄螢幕（手機直立）：欄位會堆成單欄，字級與行距再收緊一點
+@media (max-width: 575px) {
+  .slide {
+    --anim-max-h: calc(var(--deck-h, 100svh) * 0.34);
+    font-size: 0.74rem;
+    padding-inline: 0.5rem;
+
+    li {
+      line-height: 1.35;
+    }
+
+    p,
+    ul,
+    :global(.alert) {
+      margin-bottom: 0.4em;
+    }
+  }
+}
+
+// 矮螢幕（手機橫放）：縮小字級與邊距，仍保持一張投影片一個畫面
+@media (max-height: 520px) {
+  .slide {
+    padding-block: 0.25rem;
+    font-size: 0.72rem;
+  }
+}

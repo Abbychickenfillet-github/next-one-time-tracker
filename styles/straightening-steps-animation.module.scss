@@ -1,0 +1,248 @@
+.wrap {
+  margin: 0.5rem 0 1.25rem;
+  color: #ffffff;
+}
+
+.stage {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.hud {
+  fill: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.zone {
+  fill: rgba(255, 255, 255, 0.55);
+  font-size: 14px;
+}
+
+.zoneActive {
+  fill: #ffd166;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.hairBody {
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.strand {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.16);
+  stroke-width: 1.5;
+}
+
+.gloss {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.shine {
+  pointer-events: none;
+}
+
+.tool {
+  fill: #e8e8f2;
+}
+
+.toolLine {
+  stroke: #e8e8f2;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.brushHead {
+  stroke: #e8e8f2;
+  stroke-width: 2;
+}
+
+.water {
+  fill: #bfe6ff;
+}
+
+.waterLine {
+  stroke: #8fd3ff;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.windLine {
+  stroke: rgba(255, 255, 255, 0.75);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.foam {
+  fill: rgba(255, 255, 255, 0.82);
+}
+
+.hairLine {
+  stroke: #f6d7b8;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.hairShape {
+  stroke: #f6d7b8;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.accent {
+  fill: #ffd166;
+}
+
+.label {
+  fill: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.labelSm {
+  fill: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+}
+
+.count {
+  fill: #ffffff;
+  font-size: 34px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.ringTrack {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.25);
+  stroke-width: 6;
+}
+
+.ring {
+  fill: none;
+  stroke: #ffd166;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.dotFull {
+  fill: #ffd166;
+  stroke: #ffd166;
+  stroke-width: 2;
+}
+
+.dotHalf {
+  fill: rgba(255, 209, 102, 0.3);
+  stroke: #ffd166;
+  stroke-width: 2;
+}
+
+.barTrack {
+  fill: rgba(255, 255, 255, 0.25);
+}
+
+.barFill {
+  fill: #ffd166;
+}
+
+.clockFace {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 5;
+}
+
+.clockHand {
+  stroke: #ffd166;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.burst {
+  fill: #ffd166;
+  stroke: #ffffff;
+  stroke-width: 5;
+  stroke-linejoin: round;
+}
+
+.success {
+  stroke: #d6336c;
+  stroke-width: 9;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  font-size: 54px;
+  font-weight: 800;
+}
+
+.sub {
+  fill: #7a1f45;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.caption {
+  margin: 0.75rem 0 0.5rem;
+  min-height: 1.5em;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  button {
+    padding: 0.25rem 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 999px;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(255, 255, 255, 0.18);
+    }
+  }
+
+  input[type='range'] {
+    flex: 1;
+    accent-color: #ffd166;
+  }
+}
+
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+
+  button {
+    padding: 0.15rem 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 6px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    cursor: pointer;
+
+    &[aria-current='step'] {
+      background: #ffd166;
+      border-color: #ffd166;
+      color: #2a1a2e;
+      font-weight: 600;
+    }
+  }
+}
