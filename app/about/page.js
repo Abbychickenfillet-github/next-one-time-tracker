@@ -18,6 +18,42 @@ const SLIDES = [
   '燙髮紀錄',
 ]
 
+const BASIC_TOOLS = [
+  '直髮膏',
+  '護髮油',
+  '塑膠寬齒扁梳',
+  '尖尾梳(買藥水通常會附贈)',
+  '鬃毛梳(好像會導致靜電)',
+  '塑膠碗(買藥水通常會附贈)',
+]
+const PROTECT_GEAR = [
+  '耳罩(買藥水通常會附贈)',
+  '額頭貼紙',
+  '橡膠/塑膠手套',
+  '毛巾(第一劑洗完頭擦頭髮用)',
+  '一次性塑膠披肩',
+]
+
+// 準備清單：勾選只存在畫面上，重新整理就清空，不會儲存
+function CheckList({ prefix, items }) {
+  return (
+    <ul className={styles.checkList}>
+      {items.map((label, i) => (
+        <li key={label} className="form-check">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id={`${prefix}-${i}`}
+          />
+          <label className="form-check-label" htmlFor={`${prefix}-${i}`}>
+            {label}
+          </label>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 function Tabs({ tabs, value, onChange }) {
   return (
     <div className={styles.tabs} role="tablist">
@@ -448,24 +484,11 @@ export default function About() {
             <div className="row">
               <div className="col-md-6">
                 <h5>基本工具</h5>
-                <ul>
-                  <li>直髮膏</li>
-                  <li>護髮油</li>
-                  <li>塑膠寬齒扁梳</li>
-                  <li>尖尾梳(買藥水通常會附贈)</li>
-                  <li>鬃毛梳(好像會導致靜電)</li>
-                  <li>塑膠碗(買藥水通常會附贈)</li>
-                </ul>
+                <CheckList prefix="basic" items={BASIC_TOOLS} />
               </div>
               <div className="col-md-6">
                 <h5>保護用品</h5>
-                <ul>
-                  <li>耳罩(買藥水通常會附贈)</li>
-                  <li>額頭貼紙</li>
-                  <li>橡膠/塑膠手套</li>
-                  <li>毛巾(第一劑洗完頭擦頭髮用)</li>
-                  <li>一次性塑膠披肩</li>
-                </ul>
+                <CheckList prefix="protect" items={PROTECT_GEAR} />
               </div>
             </div>
           </div>

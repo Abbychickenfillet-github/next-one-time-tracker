@@ -201,6 +201,30 @@
   }
 }
 
+// 勾選後文字變淡並加刪除線，一眼看出還缺哪些
+.checkList {
+  list-style: none;
+  padding-left: 0;
+
+  li {
+    padding-left: 1.6em;
+  }
+
+  :global(.form-check-input) {
+    cursor: pointer;
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  :global(.form-check-label) {
+    cursor: pointer;
+  }
+
+  :global(.form-check-input:checked + .form-check-label) {
+    opacity: 0.6;
+    text-decoration: line-through;
+  }
+}
+
 .twoCol {
   display: grid;
   gap: 0.25rem 1.5rem;
