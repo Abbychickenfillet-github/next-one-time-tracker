@@ -3,7 +3,6 @@
 import React, { useState } from 'react'
 import { useCreateBlog } from '@/services/rest-client/use-blog'
 import Link from 'next/link'
-import { isDev } from '@/config/client.config'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -26,7 +25,6 @@ export default function AddPage() {
     const res = await createBlog(blogInput)
     const resData = await res.json()
     // 除錯用
-    if (isDev) console.log(resData)
 
     if (resData.status === 'success') {
       // 清除填寫資料

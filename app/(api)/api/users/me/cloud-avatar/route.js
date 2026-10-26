@@ -5,7 +5,7 @@ import { NextResponse as res } from 'next/server'
 import { decrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
 // 導入回應函式
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 // 導入服務層的類別
 import {
   updateAvatarByUserId,
@@ -36,8 +36,6 @@ export const POST = async (req) => {
   const cookie = (await cookies()).get('ACCESS_TOKEN')?.value
   const session = await decrypt(cookie)
 
-  if (isDev) console.log('ACCESS_TOKEN', session)
-
   if (!session?.payload?.userId) {
     return errorResponse(res, { message: '授權失敗，沒有存取令牌' })
   }
@@ -52,8 +50,6 @@ export const POST = async (req) => {
   //   const ext = path.extname(req.file.originalname)
   //   const newFilename = req.user.user_id + ext
   //   const userId = req.user.user_id
-
-  if (isDev) console.log(filename)
 
   try {
     // 將文件寫入指定目錄 (public/avatar) 並使用修改後的文件名
@@ -75,8 +71,6 @@ export const POST = async (req) => {
     })
     // 更新資料庫中會員資料中的頭像欄位
     const data = await updateAvatarByUserId(userId, blob.url)
-
-    if (isDev) console.log(data)
 
     // API回應
     if (data?.status === 'success') {

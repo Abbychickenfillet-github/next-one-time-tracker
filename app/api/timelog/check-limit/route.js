@@ -134,8 +134,6 @@ export async function GET() {
       {
         status: 'error',
         message: '伺服器錯誤',
-        error:
-          process.env.NODE_ENV === 'development' ? error.message : undefined,
       },
       { status: 500 }
     )

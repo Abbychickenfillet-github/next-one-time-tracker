@@ -2,7 +2,7 @@ import { NextResponse as res } from 'next/server'
 import { decrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
 import prisma from '@/lib/prisma.js'
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 
 // ========================================
 // 🗑️ 刪除時間戳記錄 API: DELETE /api/timelog/[id]
@@ -62,10 +62,6 @@ export async function DELETE(request, { params }) {
         },
       },
     })
-
-    if (isDev) {
-      console.log('✅ 時間戳記錄已成功刪除:', timeLog)
-    }
 
     return successResponse(res, { message: '時間戳記錄已成功刪除' })
   } catch (error) {

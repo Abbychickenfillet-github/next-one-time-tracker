@@ -4,7 +4,6 @@ import crypto from 'crypto'
 // 驗證資料用
 import { emailSchema } from './definitions/common'
 import { loginSchema, resetPasswordSchema } from './definitions/auth'
-import { isDev } from '../lib/utils.js'
 import { generateToken } from '../lib/otp.js'
 import { serverConfig } from '../config/server.config.js'
 
@@ -78,8 +77,6 @@ export const login = async (data) => {
       payload: { user },
     }
   } catch (error) {
-    isDev && console.log(error.message)
-
     return {
       status: 'error',
       message: '登入失敗',
@@ -172,8 +169,6 @@ export const generateOtp = async (data) => {
       },
     }
   } catch (error) {
-    isDev && console.log(error.message)
-
     return {
       status: 'error',
       message: '產生otp失敗',
@@ -268,8 +263,6 @@ export const resetPassword = async (data) => {
       payload: { user: updateUser },
     }
   } catch (error) {
-    isDev && console.log(error.message)
-
     return {
       status: 'error',
       message: '重設會員密碼失敗',

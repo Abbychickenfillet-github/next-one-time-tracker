@@ -257,8 +257,6 @@ export async function POST(request) {
       {
         status: 'error',
         message: error.message || '保存分圈計時器資料失敗',
-        error:
-          process.env.NODE_ENV === 'development' ? error.message : undefined,
       },
       { status: 500 }
     )

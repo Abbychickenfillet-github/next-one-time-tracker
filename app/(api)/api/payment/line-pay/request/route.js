@@ -3,7 +3,7 @@ import { NextResponse as res } from 'next/server'
 // 導入服務層的類別
 import { requestPayment } from '@/services/line-pay.service'
 // 導入回應函式
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 // 導入 JWT 認證
 import { decrypt, encrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
@@ -34,7 +34,6 @@ export async function GET(request) {
   console.log('🔍 [Line Pay v3] requestPayment 回應:', data)
 
   // 如果是開發環境，顯示詳細資料
-  if (isDev) console.log('🔧 [Line Pay v3] 開發環境詳細資料:', data)
 
   // API回應
   if (data.status === 'success') {
@@ -131,7 +130,6 @@ export async function POST(request) {
     console.log('🔍 [Line Pay v3] 訂閱付款請求回應:', data)
 
     // 如果是開發環境，顯示詳細資料
-    if (isDev) console.log('🔧 [Line Pay v3] 開發環境詳細資料:', data)
 
     // API回應
     if (data.status === 'success') {

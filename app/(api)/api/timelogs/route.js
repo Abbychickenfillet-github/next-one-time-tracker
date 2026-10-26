@@ -2,7 +2,7 @@ import { NextResponse as res } from 'next/server'
 import { decrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
 import prisma from '@/lib/prisma.js'
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 import { checkRateLimit } from '@/lib/rate-limit.js'
 
 // ========================================
@@ -182,16 +182,6 @@ export async function GET() {
         efficiency:
           totalLogs > 0 ? Math.min(95, Math.round((totalLogs / 10) * 100)) : 0, // 簡單的效率計算
       },
-    }
-
-    // 如果是開發環境，顯示查詢結果
-    if (isDev) {
-      console.log('時間戳記錄查詢結果:', {
-        總記錄數: totalLogs,
-        總時數: responseData.statistics.totalDuration,
-        今日記錄: todayLogs.length,
-        本週記錄: weekLogs.length,
-      })
     }
 
     return successResponse(res, responseData)

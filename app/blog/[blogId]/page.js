@@ -3,11 +3,10 @@
 import { useGetBlog } from '@/services/rest-client/use-blog'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { isDev, logPrefix } from '@/config/client.config'
+import { logPrefix } from '@/config/client.config'
 
 export default function BlogIdPage() {
   const params = useParams()
-  if (isDev) console.log(...logPrefix.log, params)
   const { blog, isLoading, isError } = useGetBlog(params.blogId)
 
   // 這裡的data是undefined，因為還在載入中

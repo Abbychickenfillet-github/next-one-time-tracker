@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 // 導入 IP 白名單檢查（支援 CIDR 格式）
 import { linePayIPMiddleware } from '@/lib/ip-whitelist.js'
 // 導入回應函式
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 
 /**
  * 處理 LINE Pay 通知
@@ -11,23 +11,17 @@ import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
  * 在 Zeabur 環境中，我們使用 IP 白名單來確保安全性
  */
 export async function POST(request) {
-  // 強制 IP 白名單檢查（生產環境必須）
+  // 強制 IP 白名單檢查（本機要跳過時，設環境變數 LINE_PAY_SKIP_IP_CHECK=true）
   // 使用 CIDR 格式支援 IP 範圍檢查（211.249.40.0/28）
-  if (process.env.NODE_ENV === 'production') {
-    const ipCheckResult = linePayIPMiddleware(request)
-    if (ipCheckResult) {
-      console.log('LINE Pay 通知被拒絕：IP 不在白名單中')
-      return ipCheckResult // 返回 403 Forbidden
-    }
+  const ipCheckResult = linePayIPMiddleware(request)
+  if (ipCheckResult) {
+    console.log('LINE Pay 通知被拒絕：IP 不在白名單中')
+    return ipCheckResult // 返回 403 Forbidden
   }
 
   try {
     // 解析 LINE Pay 通知資料
     const notificationData = await request.json()
-
-    if (isDev) {
-      console.log('收到 LINE Pay 通知:', notificationData)
-    }
 
     // 驗證通知資料的完整性
     if (!notificationData.transactionId) {
@@ -62,17 +56,14 @@ export async function POST(request) {
  * 處理 GET 請求（用於測試）
  */
 export async function GET(request) {
-  // 檢查 IP 白名單（生產環境）
-  if (process.env.NODE_ENV === 'production') {
-    const ipCheckResult = linePayIPMiddleware(request)
-    if (ipCheckResult) {
-      return ipCheckResult
-    }
+  // 檢查 IP 白名單
+  const ipCheckResult = linePayIPMiddleware(request)
+  if (ipCheckResult) {
+    return ipCheckResult
   }
 
   return successResponse(NextResponse, {
     message: 'LINE Pay 通知端點正常運作',
-    environment: process.env.NODE_ENV,
     timestamp: new Date().toISOString(),
   })
 }

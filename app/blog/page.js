@@ -2,7 +2,6 @@
 
 import { useGetBlogList, useDeleteBlog } from '@/services/rest-client/use-blog'
 import Link from 'next/link'
-import { isDev } from '@/config/client.config'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/navigation'
@@ -26,7 +25,6 @@ export default function ListPage() {
     const resData = await deleteBlog(blogId)
     const data = await resData.json()
     // 除錯用
-    if (isDev) console.log(data)
 
     if (data.status === 'success') {
       // 重新取得部落格列表

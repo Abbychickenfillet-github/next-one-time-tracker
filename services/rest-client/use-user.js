@@ -13,7 +13,7 @@
 // - 收藏功能 (useUserFavorite)
 
 import { useMutation, useQuery, fetcher } from './use-fetcher' // SWR 相關的 hooks
-import { apiURL, isDev } from '@/config/client.config' // API 基礎 URL 和開發環境設定
+import { apiURL } from '@/config/client.config' // API 基礎 URL 和開發環境設定
 
 // ========================================
 // 📋 預設用戶資料結構
@@ -303,7 +303,6 @@ export const lineLoginRequest = async () => {
   // 向後端(express/node)伺服器要求line登入的網址，因密鑰的關係需要由後端產生
   const resData = await fetcher(`${apiURL}/auth/line/login`)
 
-  if (isDev) console.log(resData)
   // 重定向到line 登入頁
   if (resData?.data?.url) {
     window.location.href = resData?.data?.url

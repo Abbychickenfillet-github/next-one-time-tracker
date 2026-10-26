@@ -5,7 +5,7 @@ import { writeFile } from 'fs/promises'
 import { decrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
 // 導入回應函式
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 // 導入服務層的類別
 import { updateAvatarByUserId } from '@/services/user.service'
 
@@ -30,8 +30,6 @@ export const POST = async (req) => {
   const cookie = (await cookies()).get('ACCESS_TOKEN')?.value
   const session = await decrypt(cookie)
 
-  if (isDev) console.log('ACCESS_TOKEN', session)
-
   if (!session?.payload?.userId) {
     return errorResponse(res, { message: '授權失敗，沒有存取令牌' })
   }
@@ -43,8 +41,6 @@ export const POST = async (req) => {
   const ext = file.name.split('.').pop()
   const filename = userId + '.' + ext
 
-  if (isDev) console.log(filename)
-
   try {
     // 將文件寫入指定目錄 (public/avatar) 並使用修改後的文件名
     await writeFile(
@@ -54,8 +50,6 @@ export const POST = async (req) => {
 
     // 更新資料庫中會員資料中的頭像欄位
     const data = await updateAvatarByUserId(userId, filename)
-
-    if (isDev) console.log(data)
 
     // API回應
     if (data?.status === 'success') {
