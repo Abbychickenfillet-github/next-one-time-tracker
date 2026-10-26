@@ -78,7 +78,6 @@
     "react-lottie-player": "^2.1.0",
     "react-toastify": "^11.0.5",
     "redis": "^4.7.0",
-    "scss": "^0.2.4",
     "secure-compare": "^3.0.1",
     "server-only": "^0.0.1",
     "sql-template-strings": "^2.2.2",

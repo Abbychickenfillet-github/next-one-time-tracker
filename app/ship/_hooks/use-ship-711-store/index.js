@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
 import { popupCenter, subscribe, unsubscribe, publish } from './popup-window'
-import { usePathname } from 'next/navigation'
 import useInterval from '@/hooks/use-interval'
 import useLocalStorage from '@/hooks/use-localstorage'
 
@@ -152,13 +151,12 @@ export function useShip711StoreCallback(keyLocalStorage = 'store711') {
     TempVar: '',
   })
 
-  // const router = useRouter()
-  // 取得路由的上的搜尋參數(查詢字串)
-  const Pathname = usePathname()
-  // 轉為一般物件
-  const params = Object.fromEntries(Pathname)
-
   useEffect(() => {
+    // 在瀏覽器端讀取搜尋參數(查詢字串)並轉為一般物件，避免 build 預渲染時無 window
+    const params = Object.fromEntries(
+      new URLSearchParams(window.location.search)
+    )
+
     // 這裡確保能得到router.query值
     // console.log(router.query)
 

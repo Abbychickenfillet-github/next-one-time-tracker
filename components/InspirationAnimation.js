@@ -22,7 +22,8 @@ const TAU = Math.PI * 2
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v))
 const ease = (x) => x * x * (3 - 2 * x)
 // 淡入 a→b，維持，淡出 c→d
-const ramp = (t, a, b, c, d) => clamp((t - a) / (b - a)) * (1 - clamp((t - c) / (d - c)))
+const ramp = (t, a, b, c, d) =>
+  clamp((t - a) / (b - a)) * (1 - clamp((t - c) / (d - c)))
 
 const HAIR_X = 250
 const STRIPE_GAP = 20
@@ -44,7 +45,8 @@ function sceneIndexAt(t) {
 function wavePoints(cx, top, bottom, amplitude, waves) {
   const pts = []
   for (let y = top; y <= bottom; y += 4) {
-    const x = cx + amplitude * Math.sin(((y - top) / (bottom - top)) * TAU * waves)
+    const x =
+      cx + amplitude * Math.sin(((y - top) / (bottom - top)) * TAU * waves)
     pts.push(`${x.toFixed(1)},${y}`)
   }
   return pts.join(' ')
@@ -66,7 +68,9 @@ export default function InspirationAnimation() {
   useEffect(() => {
     const el = rootRef.current
     if (!el) return
-    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting))
+    const io = new IntersectionObserver(([entry]) =>
+      setInView(entry.isIntersecting)
+    )
     io.observe(el)
     return () => io.disconnect()
   }, [])
@@ -133,10 +137,23 @@ export default function InspirationAnimation() {
       >
         {/* 場景一到三：尖尾梳纏繞髮絲 */}
         <g opacity={visDiagram}>
-          <line className={styles.hair} x1={HAIR_X} y1={20} x2={HAIR_X} y2={STRIPE_TOP} />
+          <line
+            className={styles.hair}
+            x1={HAIR_X}
+            y1={20}
+            x2={HAIR_X}
+            y2={STRIPE_TOP}
+          />
           <g transform={`translate(${combX} 0)`}>
             <polygon className={styles.comb} points="170,174 520,180 170,186" />
-            <rect className={styles.comb} x={20} y={166} width={150} height={28} rx={14} />
+            <rect
+              className={styles.comb}
+              x={20}
+              y={166}
+              width={150}
+              height={28}
+              rx={14}
+            />
           </g>
           {stripes.map(({ k, p, x }) => (
             <line
@@ -167,12 +184,7 @@ export default function InspirationAnimation() {
               className={styles.accent}
               points={`${endX - 9},${HAIR_END_Y + pull + 2} ${endX + 9},${HAIR_END_Y + pull + 2} ${endX},${HAIR_END_Y + pull + 18}`}
             />
-            <circle
-              className={styles.ringTrack}
-              cx={560}
-              cy={70}
-              r={RING_R}
-            />
+            <circle className={styles.ringTrack} cx={560} cy={70} r={RING_R} />
             <circle
               className={styles.ring}
               cx={560}
@@ -185,7 +197,12 @@ export default function InspirationAnimation() {
             <text className={styles.count} x={560} y={82} textAnchor="middle">
               {holdSec}
             </text>
-            <text className={styles.labelSm} x={560} y={126} textAnchor="middle">
+            <text
+              className={styles.labelSm}
+              x={560}
+              y={126}
+              textAnchor="middle"
+            >
               停 7 秒
             </text>
           </g>
@@ -230,8 +247,22 @@ export default function InspirationAnimation() {
           <text className={styles.label} x={320} y={96} textAnchor="middle">
             至少 80% 軟化成功
           </text>
-          <rect className={styles.barTrack} x={120} y={118} width={400} height={22} rx={11} />
-          <rect className={styles.barFill} x={120} y={118} width={400 * 0.8 * ease(rest)} height={22} rx={11} />
+          <rect
+            className={styles.barTrack}
+            x={120}
+            y={118}
+            width={400}
+            height={22}
+            rx={11}
+          />
+          <rect
+            className={styles.barFill}
+            x={120}
+            y={118}
+            width={400 * 0.8 * ease(rest)}
+            height={22}
+            rx={11}
+          />
           <circle className={styles.clockFace} cx={320} cy={236} r={46} />
           <line
             className={styles.clockHand}

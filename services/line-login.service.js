@@ -3,14 +3,12 @@ import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 // 驗證資料用
 import { lineLoginSchema } from './definitions/auth.js'
-import { isDev } from '../lib/utils.js'
 // lineLogin實例
 import lineLogin from '@/config/server.line-login'
 
 // data = { code, state }
 export const lineLoginAuthCallback = async (data) => {
   // 如果是開發環境，顯示訊息
-  if (isDev) console.log(data)
 
   // 驗證參數是否為正確的資料類型
   const validatedFields = lineLoginSchema.safeParse(data)
@@ -32,7 +30,6 @@ export const lineLoginAuthCallback = async (data) => {
     const result = await lineLogin.callback(code, state)
 
     // 如果是開發環境，顯示訊息
-    if (isDev) console.log('return result:', result)
 
     // accessToken = line access token 儲存於資料庫中，用於後續操作
     const accessToken = result.access_token
@@ -48,7 +45,6 @@ export const lineLoginAuthCallback = async (data) => {
 
     if (user) {
       // 如果是開發環境，顯示訊息
-      if (isDev) console.log('type1: 已有會員')
       // 更新lineAccessToken
       user = await prisma.user.update({
         where: {
@@ -62,7 +58,6 @@ export const lineLoginAuthCallback = async (data) => {
 
     if (!user) {
       // 如果是開發環境，顯示訊息
-      if (isDev) console.log('type2: 新會員')
 
       // 用亂數產生密碼，長度10(因為密碼是必要的，這裡並不會用到)
       const password = crypto.randomBytes(10).toString('hex')
@@ -87,8 +82,6 @@ export const lineLoginAuthCallback = async (data) => {
       })
     }
 
-    if (isDev) console.log('user', user)
-
     // 不回傳密碼，刪除密碼屬性
     delete user.password
 
@@ -108,8 +101,6 @@ export const lineLoginAuthCallback = async (data) => {
       payload: { user },
     }
   } catch (error) {
-    isDev && console.log(error.message)
-
     return {
       status: 'error',
       message: '資料庫認証失敗',
@@ -129,8 +120,6 @@ export const lineLoginGetAuthUrl = async () => {
       payload: { url },
     }
   } catch (error) {
-    isDev && console.log(error.message)
-
     return {
       status: 'error',
       message: '獲得登入網址失敗',
@@ -153,7 +142,6 @@ export const lineLoginLogout = async (lineUid) => {
     const result = await lineLogin.revokeAccessToken(user.lineAccessToken)
 
     // 如果是開發環境，顯示訊息
-    if (isDev) console.log('result:', result)
 
     // 清除資料庫的lineAccessToken
     await prisma.user.update({
@@ -171,8 +159,6 @@ export const lineLoginLogout = async (lineUid) => {
       payload: { result },
     }
   } catch (error) {
-    isDev && console.log(error.message)
-
     return {
       status: 'error',
       message: '註銷Line Access Token失敗',

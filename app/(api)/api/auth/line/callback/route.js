@@ -3,7 +3,7 @@ import { NextResponse as res } from 'next/server'
 // 導入服務層的類別
 import { lineLoginAuthCallback } from '@/services/line-login.service'
 // 導入回應函式
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 import { createSession } from '@/lib/jwt-session'
 
 // Line登入回調 GET 方法 /api/auth/line/callback
@@ -14,7 +14,6 @@ export async function GET(request) {
 
   const data = await lineLoginAuthCallback({ code, state })
   // 除錯用
-  if (isDev) console.log(data)
   // API回應
   if (data?.status === 'success') {
     const payload = { userId: data?.payload?.user?.id }

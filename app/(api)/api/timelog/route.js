@@ -2,7 +2,7 @@ import { NextResponse as res } from 'next/server'
 import { decrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
 import prisma from '@/lib/prisma.js'
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 import { checkRateLimit } from '@/lib/rate-limit.js'
 // ========================================
 // 📊 創建時間戳記錄 API: POST /api/timelog
@@ -15,15 +15,6 @@ export async function POST(request) {
     // 📥 1. 解析請求資料
     // ========================================
     const body = await request.json()
-    if (isDev) {
-      console.log('時間戳記錄請求資料:', {
-        ...body,
-        startTime: body.startTime
-          ? new Date(body.startTime).toISOString()
-          : '未提供',
-        endTime: body.endTime ? new Date(body.endTime).toISOString() : '未提供',
-      })
-    }
 
     // ========================================
     // 🍪 2. 從 Cookie 中取得 JWT Token
@@ -155,15 +146,6 @@ export async function POST(request) {
     // ========================================
     // 📤 9. 回傳 API 回應
     // ========================================
-    if (isDev) {
-      console.log('✅ 時間戳記錄創建成功:', {
-        ID: timeLog.id,
-        標題: timeLog.title,
-        開始時間: timeLog.startTime,
-        結束時間: timeLog.endTime,
-        用戶ID: timeLog.userId,
-      })
-    }
 
     return successResponse(res, {
       id: timeLog.id,
@@ -262,10 +244,6 @@ export async function DELETE(request, { params }) {
     const timeLog = await prisma.timeLog.delete({
       where: { id },
     })
-
-    if (isDev) {
-      console.log('✅ 時間戳記錄已成功刪除:', timeLog)
-    }
 
     return successResponse(res, { message: '時間戳記錄已成功刪除' })
   } catch (error) {

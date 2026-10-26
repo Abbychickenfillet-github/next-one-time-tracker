@@ -7,7 +7,7 @@ import { readFile } from 'fs/promises'
 import csv from 'csvtojson'
 // 需要額外安裝  bcrypt 套件
 import bcrypt from 'bcrypt'
-import { isDev, convertToCamelCase } from '../lib/utils.js'
+import { convertToCamelCase } from '../lib/utils.js'
 
 // 定義表關聯在這裡，目的是按正確順序的匯入種子資料，否則會出現外鍵約束錯誤或無法匯入的問題
 // 外鍵都是置於後面的資料表(外鍵來源表:外鍵所在目標表)
@@ -251,18 +251,16 @@ async function main() {
       skipDuplicates: true, // 跳過重複資料（基於唯一約束），不會覆蓋現有資料
     })
 
-    // 如果是開發環境，顯示訊息
-    if (isDev) {
-      const skippedCount = data.length - result.count
+    // 顯示匯入結果
+    const skippedCount = data.length - result.count
+    console.log(
+      `✅ Created ${result.count} seeds for "${model}" Model.` +
+        (skippedCount > 0 ? ` (跳過 ${skippedCount} 筆重複資料)` : '')
+    )
+    if (result.count === 0 && data.length > 0) {
       console.log(
-        `✅ Created ${result.count} seeds for "${model}" Model.` +
-          (skippedCount > 0 ? ` (跳過 ${skippedCount} 筆重複資料)` : '')
+        `   ℹ️  所有資料都已存在（可能是唯一約束衝突），現有資料保持不變`
       )
-      if (result.count === 0 && data.length > 0) {
-        console.log(
-          `   ℹ️  所有資料都已存在（可能是唯一約束衝突），現有資料保持不變`
-        )
-      }
     }
   }
 }
@@ -273,8 +271,7 @@ main()
     await prisma.$disconnect()
   })
   .catch(async (e) => {
-    // 如果是開發環境，顯示錯誤訊息
-    if (isDev) console.log(e)
+    console.error(e)
     // 關閉 Prisma 連線
     await prisma.$disconnect()
     // 結束 Node.js 程式

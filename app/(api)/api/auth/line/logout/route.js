@@ -1,7 +1,7 @@
 import { NextResponse as res } from 'next/server'
 
 // 導入回應函式
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 // 導入服務層的類別
 import { lineLoginLogout } from '@/services/line-login.service'
 import { deleteSession, decrypt } from '@/lib/jwt-session'
@@ -25,7 +25,6 @@ export async function POST() {
   // 獲得Line Login的網址
   const data = await lineLoginLogout(userId)
   // 如果是開發環境
-  if (isDev) console.log(data)
 
   // API回應
   if (data?.status === 'success') {

@@ -1,13 +1,14 @@
-// 介紹頁面樣式
+$intro-gradient: linear-gradient(135deg, #667eea 0%, pink 50%, #764ba2 100%);
+
+// 背景與文字顏色
 .introPage {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
+  background: $intro-gradient;
   color: white;
 }
 
 // Hero Section
 .heroSection {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: $intro-gradient;
   position: relative;
   overflow: hidden;
   height: calc(100vh - 59px); // 設定最小高度為視窗高度的 80%
@@ -595,3 +596,318 @@
 }
 
 // 滾動條樣式已由全域樣式 styles/globals.scss 中的 main::-webkit-scrollbar 處理
+
+
+// ===== 投影片版面 =====
+// main 是這個站的捲動容器：開啟 scroll-snap，一次停在一張投影片
+.snapMain {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+// --deck-h 由 use-slide-deck 量出 main 的可視高度，每張投影片至少填滿一個畫面。
+// 字級跟著畫面高度縮放，內容才放得進一個畫面；內文用 em，標題與卡片跟著縮
+.introPage .slide {
+  height: auto;
+  min-height: var(--deck-h, calc(100svh - 59px));
+  padding-block: clamp(0.5rem, 2.5vh, 2rem);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: clamp(0.74rem, 0.4rem + 1.2vh, 1rem);
+
+  h4 {
+    font-size: 1.3em;
+  }
+
+  h5 {
+    font-size: 1.15em;
+  }
+
+  h6 {
+    font-size: 1em;
+  }
+
+  p {
+    margin-bottom: 0.5em;
+  }
+}
+
+.sectionHead {
+  margin-bottom: clamp(0.5rem, 2vh, 1.5rem);
+
+  .sectionTitle {
+    font-size: clamp(1.4rem, 0.9rem + 2.2vh, 2.2rem);
+    margin-bottom: 0.3em;
+  }
+
+  .sectionDescription {
+    font-size: 1em;
+    margin-bottom: 0;
+  }
+}
+
+.adCard {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: clamp(0.6rem, 2vh, 1.5rem);
+  margin-bottom: clamp(0.5rem, 2vh, 1.5rem);
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.introPage .slide {
+  // Hero：標題與說明跟著畫面高度縮放，右邊四張浮動卡片改成自動高度
+  .heroTitle {
+    font-size: clamp(1.8rem, 1rem + 3.4vh, 3.5rem);
+    margin-bottom: clamp(0.5rem, 2vh, 1.5rem);
+  }
+
+  .heroDescription {
+    font-size: clamp(0.85rem, 0.5rem + 1.3vh, 1.25rem);
+    margin-bottom: clamp(0.5rem, 2vh, 2rem);
+  }
+
+  .heroImage {
+    height: auto;
+    gap: clamp(0.5rem, 2vh, 2rem);
+    padding: 0;
+  }
+
+  .floatingCard {
+    padding: clamp(0.6rem, 2vh, 2rem);
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  // 為什麼需要：六張問題卡與解決方案收進一個畫面
+  .problemCard :global(.card-body) {
+    padding: clamp(0.6rem, 2vh, 1.5rem);
+  }
+
+  .problemItem {
+    padding: clamp(0.5rem, 1.5vh, 1.5rem);
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .solutionBox {
+    padding: clamp(0.6rem, 2vh, 2.5rem);
+
+    h5 {
+      margin-bottom: 0.5em;
+    }
+  }
+
+  // 為什麼選擇我們：五張功能卡排成一列，窄螢幕自動換成多列
+  .featureRow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+    gap: clamp(0.5rem, 2vh, 1.25rem);
+    margin: 0;
+
+    > [class*='col-'] {
+      width: auto;
+      max-width: none;
+      padding: 0;
+      margin: 0 !important;
+    }
+  }
+
+  .featureIcon {
+    font-size: clamp(1.5rem, 1rem + 2vh, 2.5rem);
+    margin-bottom: 0.3em;
+  }
+
+  .featureCard :global(.card-body) {
+    padding: clamp(0.5rem, 2vh, 1rem);
+  }
+
+  // 方案：價格與清單縮小，窄螢幕改成可左右滑動的三張卡片
+  .price {
+    margin: clamp(0.5rem, 1.5vh, 2rem) 0;
+  }
+
+  .priceAmount {
+    font-size: clamp(1.8rem, 1rem + 3vh, 3rem);
+  }
+
+  .pricingCard :global(.card-body) {
+    padding: clamp(0.6rem, 2vh, 1.25rem);
+  }
+
+  .featureList {
+    margin-top: 0.5em !important;
+    font-size: 0.9em;
+
+    li {
+      padding: 0.1em 0;
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .pricingCard :global(.btn) {
+    margin-top: clamp(0.5rem, 1.5vh, 1.5rem) !important;
+    padding-block: 0.3em;
+  }
+
+  // 如何使用
+  .stepCard {
+    padding: clamp(0.5rem, 2vh, 1.5rem);
+  }
+
+  .stepNumber {
+    width: 2.6em;
+    height: 2.6em;
+    line-height: 2.6em;
+    font-size: 1em;
+    margin-bottom: 0.4em;
+  }
+
+  .stepIcon {
+    font-size: 1.5em;
+    margin-top: 0.4em;
+  }
+
+  // 清除本地儲存：輪播卡片收緊
+  .stepsCarousel {
+    padding: clamp(0.5rem, 2vh, 3rem);
+  }
+
+  .carouselContent {
+    padding: clamp(0.5rem, 2vh, 2rem);
+  }
+
+  .stepIndicator {
+    width: 3.4em;
+    height: 3.4em;
+    line-height: 3.4em;
+    font-size: 1.3em;
+    margin-bottom: 0.5em;
+  }
+
+  .stepProgress {
+    margin-top: 0.8em;
+  }
+
+  .ctaTitle {
+    font-size: clamp(1.6rem, 1rem + 2.6vh, 2.5rem);
+  }
+
+  .ctaDescription {
+    font-size: 1.1em;
+    margin-bottom: clamp(0.5rem, 2vh, 2rem);
+  }
+}
+
+// 平板直立與手機：右邊四張浮動卡片只是示意，直接省略，保留標題、說明與按鈕。
+// 方案卡橫向滑動，每張佔大半個畫面寬，列高不超過一個畫面，過高時卡片區自己捲動
+@media (max-width: 991px) {
+  .introPage .slide {
+    .heroImage {
+      display: none;
+    }
+
+    .planRow {
+      flex-wrap: nowrap;
+      overflow: auto;
+      max-height: calc(var(--deck-h, 80svh) - 7rem);
+      scroll-snap-type: x mandatory;
+      padding-block: 0.75rem 0.25rem;
+
+      > [class*='col-'] {
+        flex: 0 0 82%;
+        scroll-snap-align: center;
+      }
+    }
+  }
+}
+
+// 手機：問題卡、步驟卡改兩欄，描述文字省略，只留名稱與標題
+@media (max-width: 575px) {
+  .introPage .slide {
+    .problemCard :global(.row),
+    .solutionBox :global(.row),
+    .stepRow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin: 0;
+
+      > [class*='col-'] {
+        width: auto;
+        max-width: none;
+        padding: 0;
+        margin: 0 !important;
+      }
+    }
+
+    .problemItem p,
+    .solutionBox small,
+    .featureCard small,
+    .stepIcon {
+      display: none;
+    }
+
+    // 為什麼選擇我們：五張功能卡改成單欄的橫列，圖示在左、標題與說明在右
+    .featureRow {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+
+    .featureCard :global(.card-body) {
+      display: grid;
+      grid-template-columns: 2.4em 1fr;
+      grid-template-areas:
+        'icon title'
+        'icon desc';
+      align-items: center;
+      column-gap: 0.6rem;
+      text-align: left !important;
+      padding: 0.4rem 0.75rem;
+
+      h5 {
+        grid-area: title;
+        margin: 0 !important;
+      }
+
+      p {
+        grid-area: desc;
+        margin: 0;
+      }
+    }
+
+    .featureIcon {
+      grid-area: icon;
+      margin: 0;
+      text-align: center;
+    }
+  }
+}
+
+// 矮螢幕：廣告意象卡只是行銷文案，先省略，保留標題、說明與按鈕
+@media (max-height: 700px) {
+  .adCard {
+    display: none;
+  }
+}
+
+// 矮螢幕（手機橫放）：縮小字級與邊距，仍保持一張投影片一個畫面
+@media (max-height: 520px) {
+  .introPage .slide {
+    padding-block: 0.25rem;
+    font-size: 0.72rem;
+
+    .heroImage {
+      display: none;
+    }
+  }
+}

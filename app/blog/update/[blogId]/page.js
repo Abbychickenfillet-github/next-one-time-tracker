@@ -6,7 +6,6 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { isDev } from '@/config/client.config'
 
 export default function UpdatePage() {
   // 記錄更新的title和content
@@ -41,7 +40,6 @@ export default function UpdatePage() {
     const res = await updateBlog(params.blogId, blogInput)
     const resData = await res.json()
     // 除錯用
-    if (isDev) console.log(resData)
 
     if (resData.status === 'success') {
       toast.success('更新成功')

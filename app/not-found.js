@@ -5,13 +5,6 @@ import { useEffect } from 'react'
 
 // Not Found 頁面 - 處理 404 錯誤
 export default function NotFound() {
-  useEffect(() => {
-    // 在開發環境中記錄 404 錯誤
-    if (process.env.NODE_ENV === 'development') {
-      console.log('404 - 頁面不存在')
-    }
-  }, [])
-
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">

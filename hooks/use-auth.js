@@ -409,13 +409,6 @@ export const AuthProvider = ({ children }) => {
   // ========================================
   // 🔄 狀態變化監聽器
   // ========================================
-  // 監聽 auth 狀態的變化，用於調試（僅在開發環境）
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Auth 狀態變化:', auth)
-    }
-  }, [auth])
-
   // 🚀 頁面載入時立即檢查認證狀態
   useEffect(() => {
     // 一進入主頁就檢查是否有登入

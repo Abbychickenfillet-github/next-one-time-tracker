@@ -1,7 +1,7 @@
 import { NextResponse as res } from 'next/server'
 
 // 導入回應函式
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 // 導入服務層的類別
 import { lineLoginGetAuthUrl } from '@/services/line-login.service'
 
@@ -10,7 +10,6 @@ export async function GET() {
   // 獲得Line Login的網址
   const data = await lineLoginGetAuthUrl()
   // 如果是開發環境
-  if (isDev) console.log(data)
 
   // API回應
   if (data?.status === 'success') {

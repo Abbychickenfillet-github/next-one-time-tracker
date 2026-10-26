@@ -203,6 +203,7 @@ export default function TrialPage() {
 
     const dateObj = date instanceof Date ? date : new Date(date)
     if (Number.isNaN(dateObj.getTime())) return '--'
+    // 所以這邊回傳true，它不是一個數字。
 
     const options = {
       year: 'numeric',

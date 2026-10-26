@@ -5,14 +5,13 @@ import { cookies } from 'next/headers'
 // 導入服務層的類別
 import { updateProfileByUserId } from '@/services/user.service'
 // 導入回應函式
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 
 // 更新個人資料API: PUT /api/users/me/profile
 export async function PUT(request) {
   // 取得新增的資料
   const body = await request.json()
   // 如果是開發環境，顯示新增的資料
-  if (isDev) console.log(body)
 
   // 從cookie中的ACCESS_TOKEN中取得會員ID
   const cookie = (await cookies()).get('ACCESS_TOKEN')?.value
@@ -31,7 +30,6 @@ export async function PUT(request) {
   // 進行登入(本地端)，驗證帳號密碼
   const data = await updateProfileByUserId(userId, body)
   // 如果是開發環境，顯示部落格列表
-  if (isDev) console.log(data)
 
   // API回應
   if (data?.status === 'success') {

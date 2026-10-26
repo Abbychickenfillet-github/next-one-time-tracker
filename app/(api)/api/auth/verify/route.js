@@ -1,4 +1,4 @@
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 import { NextResponse as res } from 'next/server'
 import { decrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
@@ -8,8 +8,6 @@ export async function GET() {
   try {
     const cookie = (await cookies()).get('ACCESS_TOKEN')?.value
     const session = await decrypt(cookie)
-
-    if (isDev) console.log('ACCESS_TOKEN', session)
 
     if (!session?.payload?.userId) {
       const error = { message: '授權失敗，沒有存取令牌' }

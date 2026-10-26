@@ -3,18 +3,16 @@ import { NextResponse as res } from 'next/server'
 // 導入服務層的類別
 import { googleLoginAuth } from '@/services/google.service.js'
 // 導入回應函式
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 import { createSession } from '@/lib/jwt-session'
 
 export async function POST(request) {
   // 取得新增的資料
   const body = await request.json()
   // 如果是開發環境，顯示新增的資料
-  if (isDev) console.log(body)
   // 進行登入(本地端)，驗證帳號密碼
   const data = await googleLoginAuth(body)
   // 如果是開發環境
-  if (isDev) console.log(data)
 
   // API回應
   if (data?.status === 'success') {

@@ -1,7 +1,9 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import styles from '@/styles/about.module.scss'
 import DecorativeIcons from '@/components/DecorativeIcons'
+import SlideDots from '@/components/SlideDots'
+import useSlideDeck from '@/hooks/use-slide-deck'
 import InspirationAnimation from '@/components/InspirationAnimation'
 import SmoothHairAnimation from '@/components/SmoothHairAnimation'
 import StraighteningStepsAnimation from '@/components/StraighteningStepsAnimation'
@@ -74,80 +76,18 @@ function Tabs({ tabs, value, onChange }) {
 
 export default function About() {
   const deckRef = useRef(null)
-  const [active, setActive] = useState(0)
   const [inspireTab, setInspireTab] = useState('coil')
   const [stepsTab, setStepsTab] = useState('anim')
 
-  // main 是這個站的捲動容器：量出它的高度當投影片高度，並開啟 scroll-snap
-  useEffect(() => {
-    const deck = deckRef.current
-    const main = deck?.closest('main')
-    if (!deck || !main) return
-    const apply = () => deck.style.setProperty('--deck-h', `${main.clientHeight}px`)
-    apply()
-    const ro = new ResizeObserver(apply)
-    ro.observe(main)
-    window.addEventListener('resize', apply)
-    main.classList.add(styles.snapMain)
-
-    const slides = [...deck.querySelectorAll('[data-slide]')]
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActive(Number(e.target.dataset.slide))
-        })
-      },
-      { root: main, threshold: 0.5 }
-    )
-    slides.forEach((s) => io.observe(s))
-
-    const onKey = (e) => {
-      const tag = e.target.tagName
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return
-      const dir = { ArrowDown: 1, PageDown: 1, ArrowUp: -1, PageUp: -1 }[e.key]
-      if (!dir) return
-      e.preventDefault()
-      const cur = slides.findIndex((s) => {
-        const r = s.getBoundingClientRect()
-        const m = main.getBoundingClientRect()
-        return r.top - m.top > -m.height / 2
-      })
-      slides[Math.min(slides.length - 1, Math.max(0, cur + dir))]?.scrollIntoView({ behavior: 'smooth' })
-    }
-    window.addEventListener('keydown', onKey)
-
-    return () => {
-      ro.disconnect()
-      io.disconnect()
-      window.removeEventListener('resize', apply)
-      window.removeEventListener('keydown', onKey)
-      main.classList.remove(styles.snapMain)
-    }
-  }, [])
-
-  const goTo = (i) => {
-    deckRef.current
-      ?.querySelector(`[data-slide="${i}"]`)
-      ?.scrollIntoView({ behavior: 'smooth' })
-  }
+  // main 是這個站的捲動容器：投影片放映機量它的高度、開啟 scroll-snap、追蹤目前是哪一張
+  const { active, goTo } = useSlideDeck(deckRef, styles.snapMain)
 
   return (
     <div className={styles.aboutPage} ref={deckRef}>
       {/* 像素風裝飾圖示 */}
       <DecorativeIcons />
 
-      <nav className={styles.dots} aria-label="頁面區塊">
-        {SLIDES.map((name, i) => (
-          <button
-            key={name}
-            type="button"
-            title={name}
-            aria-label={name}
-            aria-current={i === active ? 'true' : undefined}
-            onClick={() => goTo(i)}
-          />
-        ))}
-      </nav>
+      <SlideDots labels={SLIDES} active={active} onSelect={goTo} />
 
       <section className={styles.slide} data-slide={0}>
         <div className={`card ${styles.card1} ${styles.cardZindex}`}>
@@ -243,7 +183,11 @@ export default function About() {
                   value={inspireTab}
                   onChange={setInspireTab}
                 />
-                {inspireTab === 'coil' ? <InspirationAnimation /> : <SmoothHairAnimation />}
+                {inspireTab === 'coil' ? (
+                  <InspirationAnimation />
+                ) : (
+                  <SmoothHairAnimation />
+                )}
               </div>
             </div>
           </div>
@@ -365,7 +309,7 @@ export default function About() {
                   </table>
                 </div>
                 <small className="text-muted">
-                  <strong>總耗時：</strong>約 47 分鐘　<strong>注意：</strong>
+                  <strong>總耗時：</strong>約 47 分鐘&emsp;<strong>注意：</strong>
                   第二劑建議使用乳狀或霜狀，有重量更可以將頭髮往下帶
                 </small>
               </>

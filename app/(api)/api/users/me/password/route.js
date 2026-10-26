@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 // 導入服務層的類別
 import { updateUserPasswordById } from '@/services/user.service'
 // 導入回應函式
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 
 // ========================================
 // 🔐 更新用戶密碼 API: PUT /api/users/me/password
@@ -20,14 +20,6 @@ export async function PUT(request) {
   // ========================================
   // 從請求體中取得密碼更新資料
   const body = await request.json()
-  // 如果是開發環境，顯示請求資料（不包含密碼明文）
-  if (isDev) {
-    console.log('密碼更新請求資料:', {
-      ...body,
-      currentPassword: body.currentPassword ? '[已隱藏]' : '未提供',
-      newPassword: body.newPassword ? '[已隱藏]' : '未提供',
-    })
-  }
 
   // ========================================
   // 🍪 2. 從 Cookie 中取得 JWT Token
@@ -71,7 +63,6 @@ export async function PUT(request) {
   // 服務層會驗證舊密碼是否正確，並將新密碼加密後存入資料庫
   const data = await updateUserPasswordById(userId, body)
   // 如果是開發環境，顯示更新結果
-  if (isDev) console.log('密碼更新結果:', data)
 
   // ========================================
   // 📤 7. 回傳 API 回應

@@ -2,7 +2,6 @@ import prisma from '../lib/prisma.js'
 import bcrypt from 'bcrypt'
 import {
   // dateToStringWithTimeZone,
-  isDev,
   isEmpty,
 } from '../lib/utils.js'
 // 驗證資料用
@@ -35,7 +34,6 @@ export const getUsers = async () => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
     return {
       status: 'error',
       message: '取得會員列表失敗',
@@ -103,7 +101,6 @@ export const getUserById = async (id) => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
 
     return {
       status: 'error',
@@ -164,7 +161,6 @@ export const getUserByField = async (where = {}) => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
 
     return {
       status: 'error',
@@ -279,7 +275,6 @@ export const createUser = async (data) => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    if (isDev) console.log(error.message)
 
     return {
       status: 'error',
@@ -353,7 +348,6 @@ export const updateUserById = async (id, data) => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
 
     return {
       status: 'error',
@@ -429,7 +423,6 @@ export const updateProfileByUserId = async (id, data) => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
 
     return {
       status: 'error',
@@ -477,7 +470,6 @@ export const getAvatarByUserId = async (id) => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
 
     return {
       status: 'error',
@@ -549,7 +541,6 @@ export const updateAvatarByUserId = async (id, avatar) => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
 
     return {
       status: 'error',
@@ -644,7 +635,6 @@ export const updateUserPasswordById = async (id, data) => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
 
     return {
       status: 'error',
@@ -686,7 +676,6 @@ export const isUserFavorite = async (data) => {
     return favorite ? true : false
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
 
     return false
   }
@@ -727,7 +716,6 @@ export const getFavoritesByUserId = async (id) => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
 
     return {
       status: 'error',
@@ -785,7 +773,6 @@ export const addFavorite = async (data) => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
 
     return {
       status: 'error',
@@ -844,7 +831,6 @@ export const deleteFavorite = async (data) => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
 
     return {
       status: 'error',
@@ -884,7 +870,6 @@ export const deleteUserById = async (id) => {
     }
   } catch (error) {
     // 如果是開發環境，顯示錯誤訊息
-    isDev && console.log(error.message)
 
     return {
       status: 'error',

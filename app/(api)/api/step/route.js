@@ -2,7 +2,7 @@ import { NextResponse as res } from 'next/server'
 import { decrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
 import prisma from '@/lib/prisma.js'
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 
 // ========================================
 // 📊 創建步驟記錄 API: POST /api/step
@@ -15,15 +15,6 @@ export async function POST(request) {
     // 📥 1. 解析請求資料
     // ========================================
     const body = await request.json()
-    if (isDev) {
-      console.log('步驟記錄請求資料:', {
-        ...body,
-        startTime: body.startTime
-          ? new Date(body.startTime).toISOString()
-          : '未提供',
-        endTime: body.endTime ? new Date(body.endTime).toISOString() : '未提供',
-      })
-    }
 
     // ========================================
     // 🍪 2. 從 Cookie 中取得 JWT Token
@@ -110,15 +101,6 @@ export async function POST(request) {
     // ========================================
     // 📤 8. 回傳 API 回應
     // ========================================
-    if (isDev) {
-      console.log('✅ 步驟記錄創建成功:', {
-        ID: step.id,
-        標題: step.title,
-        開始時間: step.startTime,
-        結束時間: step.endTime,
-        關聯TimeLog: step.timeLogId,
-      })
-    }
 
     return successResponse(res, {
       id: step.id,

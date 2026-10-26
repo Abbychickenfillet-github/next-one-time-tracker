@@ -6,10 +6,13 @@ import styles from '@/styles/smooth-hair-animation.module.scss'
 // 後髮、前面兩束側髮、瀏海：同一組輪廓給「髮色」與「高光裁切」共用
 const BACK_HAIR =
   'M 168 150 C 164 64, 214 30, 240 30 C 266 30, 316 64, 312 150 C 316 230, 326 292, 306 334 L 174 334 C 154 292, 164 230, 168 150 Z'
-const LOCK_L = 'M 170 112 C 168 200, 176 280, 164 332 L 192 332 C 202 270, 196 190, 194 120 Z'
-const LOCK_R = 'M 310 112 C 312 200, 304 280, 316 332 L 288 332 C 278 270, 284 190, 286 120 Z'
+const LOCK_L =
+  'M 170 112 C 168 200, 176 280, 164 332 L 192 332 C 202 270, 196 190, 194 120 Z'
+const LOCK_R =
+  'M 310 112 C 312 200, 304 280, 316 332 L 288 332 C 278 270, 284 190, 286 120 Z'
 const BANGS = 'M 176 124 C 178 62, 240 36, 304 112 C 280 84, 228 80, 196 120 Z'
-const SHOULDERS = 'M 168 360 C 174 262, 214 244, 240 244 C 266 244, 306 262, 312 360 Z'
+const SHOULDERS =
+  'M 168 360 C 174 262, 214 244, 240 244 C 266 244, 306 262, 312 360 Z'
 
 const STAR = 'M 0 -14 L 3 -3 L 14 0 L 3 3 L 0 14 L -3 3 L -14 0 L -3 -3 Z'
 const SPARKLES = [
@@ -38,7 +41,9 @@ export default function SmoothHairAnimation() {
   useEffect(() => {
     const el = rootRef.current
     if (!el) return
-    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting))
+    const io = new IntersectionObserver(([entry]) =>
+      setInView(entry.isIntersecting)
+    )
     io.observe(el)
     return () => io.disconnect()
   }, [])
@@ -76,7 +81,14 @@ export default function SmoothHairAnimation() {
         <g className={styles.sway}>
           <path className={styles.hair} d={BACK_HAIR} />
         </g>
-        <rect className={styles.skin} x={222} y={196} width={36} height={56} rx={10} />
+        <rect
+          className={styles.skin}
+          x={222}
+          y={196}
+          width={36}
+          height={56}
+          rx={10}
+        />
         <path className={styles.shirt} d={SHOULDERS} />
         <ellipse className={styles.skin} cx={240} cy={140} rx={62} ry={66} />
 
@@ -123,11 +135,21 @@ export default function SmoothHairAnimation() {
             <polygon className={styles.burst} points={BURST} />
           </g>
           <g className={styles.flash}>
-            <text className={styles.success} x={BURST_CX} y={BURST_CY + 18} textAnchor="middle">
+            <text
+              className={styles.success}
+              x={BURST_CX}
+              y={BURST_CY + 18}
+              textAnchor="middle"
+            >
               成功
             </text>
           </g>
-          <text className={styles.sub} x={BURST_CX} y={BURST_CY + 50} textAnchor="middle">
+          <text
+            className={styles.sub}
+            x={BURST_CX}
+            y={BURST_CY + 50}
+            textAnchor="middle"
+          >
             柔順直髮
           </text>
         </g>

@@ -2,7 +2,7 @@ import { NextResponse as res } from 'next/server'
 import { decrypt } from '@/lib/jwt-session'
 import { cookies } from 'next/headers'
 import prisma from '@/lib/prisma.js'
-import { successResponse, errorResponse, isDev } from '@/lib/utils.js'
+import { successResponse, errorResponse } from '@/lib/utils.js'
 
 // ========================================
 // 📊 獲取使用者活動名稱歷史 API: GET /api/timelog/titles
@@ -78,12 +78,6 @@ export async function GET() {
     // ========================================
     // 📤 6. 回傳 API 回應
     // ========================================
-    if (isDev) {
-      console.log('✅ 獲取活動名稱歷史成功:', {
-        總數: uniqueTitles.length,
-        前5名: uniqueTitles.slice(0, 5).map((t) => `${t.title} (${t.count}次)`),
-      })
-    }
 
     return successResponse(res, {
       titles: uniqueTitles,
