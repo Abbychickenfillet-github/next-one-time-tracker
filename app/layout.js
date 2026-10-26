@@ -14,7 +14,7 @@ import Footer from '@/components/footer'
 // 思源黑體 - 支援繁體中文
 const notoSansTC = Noto_Sans_TC({
   subsets: ['latin'],
-  weight: [ '400', '700'],
+  weight: ['400', '700'],
   display: 'swap',
   variable: '--font-noto-sans-tc',
 })
