@@ -10,7 +10,7 @@ const TextLoader = dynamic(() => import('./loaders/text-loader'), {
   ssr: false,
 })
 // 可以取得目前的pathname和searchParams
-import { usePathname} from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 // 全站的Context狀態
 const LoaderContext = createContext(null)

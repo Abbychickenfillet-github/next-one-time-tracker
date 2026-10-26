@@ -8,28 +8,46 @@ import styles from '@/styles/straightening-steps-animation.module.scss'
 const TAU = Math.PI * 2
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v))
 const ease = (x) => x * x * (3 - 2 * x)
-const easeOutBack = (x) => 1 + 2.7 * Math.pow(x - 1, 3) + 1.7 * Math.pow(x - 1, 2)
+const easeOutBack = (x) =>
+  1 + 2.7 * Math.pow(x - 1, 3) + 1.7 * Math.pow(x - 1, 2)
 const lerp = (a, b, u) => a + (b - a) * u
 // 淡入 a→b，維持，淡出 c→d
-const ramp = (t, a, b, c, d) => clamp((t - a) / (b - a)) * (1 - clamp((t - c) / (d - c)))
+const ramp = (t, a, b, c, d) =>
+  clamp((t - a) / (b - a)) * (1 - clamp((t - c) / (d - c)))
 
 const hexToRgb = (c) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16))
 const mixColor = (a, b, u) => {
   const A = hexToRgb(a)
   const B = hexToRgb(b)
-  return `#${A.map((v, i) => Math.round(lerp(v, B[i], u)).toString(16).padStart(2, '0')).join('')}`
+  return `#${A.map((v, i) =>
+    Math.round(lerp(v, B[i], u))
+      .toString(16)
+      .padStart(2, '0')
+  ).join('')}`
 }
 
 // 表格裡的九個步驟（名稱、說明、耗時都來自 about 頁的步驟表格）
 const STEPS = [
   { name: '噴濕頭髮', short: '噴濕', note: '目的：讓毛鱗片打開' },
   { name: '上第一劑 髮根區', short: '髮根', note: '從最捲的地方開始' },
-  { name: '上第一劑 髮中區', short: '髮中', note: '逐步上藥水，測試 7 圈回彈效果' },
-  { name: '上第一劑 髮尾區', short: '髮尾', note: '髮尾用較弱藥水，用尖尾梳測試整頭軟化程度' },
+  {
+    name: '上第一劑 髮中區',
+    short: '髮中',
+    note: '逐步上藥水，測試 7 圈回彈效果',
+  },
+  {
+    name: '上第一劑 髮尾區',
+    short: '髮尾',
+    note: '髮尾用較弱藥水，用尖尾梳測試整頭軟化程度',
+  },
   { name: '用洗髮精洗頭', short: '洗頭', note: '徹底清潔第一劑殘留' },
   { name: '吹乾頭髮', short: '吹乾', note: '完全吹乾，準備上第二劑' },
   { name: '上第二劑', short: '第二劑', note: '乳狀第二劑，讓頭髮充分吸收藥水' },
-  { name: '等待吸收', short: '等待', note: '讓第二劑充分滲透，濃稠度適中，用途是定型' },
+  {
+    name: '等待吸收',
+    short: '等待',
+    note: '讓第二劑充分滲透，濃稠度適中，用途是定型',
+  },
   { name: '完成', short: '完成', note: '整個流程完成，總耗時約 47 分鐘' },
 ]
 
@@ -88,7 +106,8 @@ function ampAt(t) {
 const HX = 170
 const HTOP = 30
 const HBOT = 340
-const halfWidth = (y) => (44 + (10 * (y - HTOP)) / (HBOT - HTOP)) * Math.sqrt(clamp((y - HTOP) / 16))
+const halfWidth = (y) =>
+  (44 + (10 * (y - HTOP)) / (HBOT - HTOP)) * Math.sqrt(clamp((y - HTOP) / 16))
 const wave = (y, amp) => amp * Math.sin((y - HTOP) / 38)
 function hairPath(amp) {
   const left = []
@@ -130,7 +149,8 @@ const RING_C = TAU * RING_R
 function wavePoints(cx, top, bottom, amplitude, waves) {
   const pts = []
   for (let y = top; y <= bottom; y += 4) {
-    const x = cx + amplitude * Math.sin(((y - top) / (bottom - top)) * TAU * waves)
+    const x =
+      cx + amplitude * Math.sin(((y - top) / (bottom - top)) * TAU * waves)
     pts.push(`${x.toFixed(1)},${y}`)
   }
   return pts.join(' ')
@@ -174,7 +194,8 @@ function CoilTest({ lt, zone }) {
   const endP = full >= 7 ? 1 : frac
   const endX = COIL_X + endIdx * COIL_GAP + COIL_W * endP
   const endY = COIL_TOP + (COIL_BOTTOM - COIL_TOP) * endP
-  const pull = 28 * ease(clamp((lt - 5) / 0.8)) * (1 - ease(clamp((lt - 12) / 0.6)))
+  const pull =
+    28 * ease(clamp((lt - 5) / 0.8)) * (1 - ease(clamp((lt - 12) / 0.6)))
   const holdSec = clamp(Math.ceil(7 - (lt - 5)), 1, 7)
   const spring = ease(clamp((lt - 15) / 1.5))
   const rest = clamp((lt - 19.5) / 1.5)
@@ -185,13 +206,31 @@ function CoilTest({ lt, zone }) {
 
   return (
     <g>
-      <text className={styles.zoneActive} x={20} y={40} opacity={ramp(lt, 0, 0.4, 23.4, 24)}>
+      <text
+        className={styles.zoneActive}
+        x={20}
+        y={40}
+        opacity={ramp(lt, 0, 0.4, 23.4, 24)}
+      >
         {`測試${zone}的軟化程度`}
       </text>
       <g opacity={visDiagram}>
-        <line className={styles.hairLine} x1={COIL_X} y1={20} x2={COIL_X} y2={COIL_TOP} />
+        <line
+          className={styles.hairLine}
+          x1={COIL_X}
+          y1={20}
+          x2={COIL_X}
+          y2={COIL_TOP}
+        />
         <polygon className={styles.tool} points="170,174 520,180 170,186" />
-        <rect className={styles.tool} x={20} y={166} width={150} height={28} rx={14} />
+        <rect
+          className={styles.tool}
+          x={20}
+          y={166}
+          width={150}
+          height={28}
+          rx={14}
+        />
         {stripes.map(({ k, p, x }) => (
           <line
             key={k}
@@ -204,7 +243,13 @@ function CoilTest({ lt, zone }) {
             strokeDasharray={`${p} 1`}
           />
         ))}
-        <line className={styles.hairLine} x1={endX} y1={endY} x2={endX} y2={COIL_END_Y + pull} />
+        <line
+          className={styles.hairLine}
+          x1={endX}
+          y1={endY}
+          x2={endX}
+          y2={COIL_END_Y + pull}
+        />
         <g opacity={ramp(lt, 0, 0.4, 4.7, 5.2)}>
           <text className={styles.label} x={420} y={86}>
             {`第 ${Math.min(7, full + 1)} 圈，共 7 圈`}
@@ -238,11 +283,17 @@ function CoilTest({ lt, zone }) {
         <text className={styles.labelSm} x={190} y={36} textAnchor="middle">
           沒有回彈（已軟化）
         </text>
-        <polyline className={styles.hairShape} points={wavePoints(190, 56, 200, 5 * spring, 1)} />
+        <polyline
+          className={styles.hairShape}
+          points={wavePoints(190, 56, 200, 5 * spring, 1)}
+        />
         <text className={styles.labelSm} x={450} y={36} textAnchor="middle">
           回彈（還沒軟化）
         </text>
-        <polyline className={styles.hairShape} points={wavePoints(450, 56, 200, 42 * spring, 2)} />
+        <polyline
+          className={styles.hairShape}
+          points={wavePoints(450, 56, 200, 42 * spring, 2)}
+        />
         {Array.from({ length: 7 }, (_, k) => (
           <circle
             key={k}
@@ -262,7 +313,14 @@ function CoilTest({ lt, zone }) {
         <text className={styles.label} x={320} y={96} textAnchor="middle">
           至少 80% 軟化成功
         </text>
-        <rect className={styles.barTrack} x={120} y={118} width={400} height={22} rx={11} />
+        <rect
+          className={styles.barTrack}
+          x={120}
+          y={118}
+          width={400}
+          height={22}
+          rx={11}
+        />
         <rect
           className={styles.barFill}
           x={120}
@@ -298,8 +356,23 @@ function applyProps(y, creamColor, label) {
         {label}
       </text>
       <g transform={`translate(240 ${y})`}>
-        <rect x={0} y={-5} width={90} height={10} rx={5} className={styles.tool} />
-        <rect x={-14} y={-14} width={16} height={28} rx={4} fill={creamColor} className={styles.brushHead} />
+        <rect
+          x={0}
+          y={-5}
+          width={90}
+          height={10}
+          rx={5}
+          className={styles.tool}
+        />
+        <rect
+          x={-14}
+          y={-14}
+          width={16}
+          height={28}
+          rx={4}
+          fill={creamColor}
+          className={styles.brushHead}
+        />
       </g>
     </g>
   )
@@ -321,7 +394,9 @@ export default function StraighteningStepsAnimation() {
   useEffect(() => {
     const el = rootRef.current
     if (!el) return
-    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting))
+    const io = new IntersectionObserver(([entry]) =>
+      setInView(entry.isIntersecting)
+    )
     io.observe(el)
     return () => io.disconnect()
   }, [])
@@ -364,7 +439,8 @@ export default function StraighteningStepsAnimation() {
     clamp((t - S.mid.start) / S.mid.dur),
     clamp((t - S.tip.start) / S.tip.dur),
   ]
-  const cream1 = t < S.wash.start ? 1 : 1 - ease(clamp((t - S.wash.start) / S.wash.dur))
+  const cream1 =
+    t < S.wash.start ? 1 : 1 - ease(clamp((t - S.wash.start) / S.wash.dur))
   const cover2 = clamp((t - S.second.start) / S.second.dur)
   const cream2 = 1 - clamp((t - S.done.start) / 1.5)
 
@@ -378,7 +454,13 @@ export default function StraighteningStepsAnimation() {
   const hairVis = 1 - testVis
   const prop = (id) => {
     const s = S[id]
-    return ramp(t, s.start, s.start + 0.4, s.start + s.dur - 0.4, s.start + s.dur)
+    return ramp(
+      t,
+      s.start,
+      s.start + 0.4,
+      s.start + s.dur - 0.4,
+      s.start + s.dur
+    )
   }
 
   const activeZone = { root: 0, mid: 1, tip: 2 }[sc.id]
@@ -437,7 +519,11 @@ export default function StraighteningStepsAnimation() {
           <g transform={`translate(${shift} 0)`}>
             <path d={hairD} fill={hairColor} className={styles.hairBody} />
             {[-0.65, -0.3, 0.05, 0.4, 0.7].map((f) => (
-              <polyline key={f} className={styles.strand} points={strandPoints(f, amp)} />
+              <polyline
+                key={f}
+                className={styles.strand}
+                points={strandPoints(f, amp)}
+              />
             ))}
             <polyline
               className={styles.gloss}
@@ -497,9 +583,30 @@ export default function StraighteningStepsAnimation() {
 
         {/* 各場景右邊的道具 */}
         <g opacity={prop('spray')}>
-          <rect className={styles.tool} x={400} y={150} width={50} height={110} rx={12} />
-          <rect className={styles.tool} x={410} y={132} width={30} height={20} rx={4} />
-          <rect className={styles.tool} x={380} y={134} width={40} height={14} rx={6} />
+          <rect
+            className={styles.tool}
+            x={400}
+            y={150}
+            width={50}
+            height={110}
+            rx={12}
+          />
+          <rect
+            className={styles.tool}
+            x={410}
+            y={132}
+            width={30}
+            height={20}
+            rx={4}
+          />
+          <rect
+            className={styles.tool}
+            x={380}
+            y={134}
+            width={40}
+            height={14}
+            rx={6}
+          />
           {Array.from({ length: 12 }, (_, i) => {
             const u = (lt * 0.9 + i / 12) % 1
             return (
@@ -522,7 +629,11 @@ export default function StraighteningStepsAnimation() {
           {applyProps(ZONES[1].top + ZONES[1].h * lp, '#ffe08a', '第一劑')}
         </g>
         <g opacity={prop('tip')}>
-          {applyProps(ZONES[2].top + ZONES[2].h * lp, '#fff3c4', '第一劑（髮尾用較弱藥水）')}
+          {applyProps(
+            ZONES[2].top + ZONES[2].h * lp,
+            '#fff3c4',
+            '第一劑（髮尾用較弱藥水）'
+          )}
         </g>
         <g opacity={prop('second')}>
           {applyProps(HTOP + (HBOT - HTOP) * lp, '#ffffff', '乳狀第二劑')}
@@ -546,10 +657,34 @@ export default function StraighteningStepsAnimation() {
           })}
         </g>
 
-        <g opacity={prop('dry')} transform={`translate(0 ${Math.sin(lt * 20) * 1.2})`}>
-          <rect className={styles.tool} x={430} y={150} width={100} height={40} rx={14} />
-          <rect className={styles.tool} x={405} y={156} width={28} height={28} rx={4} />
-          <rect className={styles.tool} x={472} y={188} width={24} height={52} rx={8} />
+        <g
+          opacity={prop('dry')}
+          transform={`translate(0 ${Math.sin(lt * 20) * 1.2})`}
+        >
+          <rect
+            className={styles.tool}
+            x={430}
+            y={150}
+            width={100}
+            height={40}
+            rx={14}
+          />
+          <rect
+            className={styles.tool}
+            x={405}
+            y={156}
+            width={28}
+            height={28}
+            rx={4}
+          />
+          <rect
+            className={styles.tool}
+            x={472}
+            y={188}
+            width={24}
+            height={52}
+            rx={8}
+          />
           {[0, 1, 2, 3].map((k) => (
             <line
               key={k}
@@ -609,7 +744,12 @@ export default function StraighteningStepsAnimation() {
             >
               成功
             </text>
-            <text className={styles.sub} x={BURST_CX} y={BURST_CY + 50} textAnchor="middle">
+            <text
+              className={styles.sub}
+              x={BURST_CX}
+              y={BURST_CY + 50}
+              textAnchor="middle"
+            >
               柔順直髮
             </text>
           </g>
