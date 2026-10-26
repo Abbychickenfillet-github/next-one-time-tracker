@@ -276,34 +276,6 @@
   }
 }
 
-// 右側圓點導覽：點一下跳到那張投影片
-.dots {
-  position: fixed;
-  right: clamp(0.25rem, 1vw, 0.9rem);
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-
-  button {
-    width: 10px;
-    height: 10px;
-    padding: 0;
-    border: 1.5px solid #ffffff;
-    border-radius: 50%;
-    background: transparent;
-    cursor: pointer;
-
-    &[aria-current='true'] {
-      background: #ffd166;
-      border-color: #ffd166;
-      transform: scale(1.35);
-    }
-  }
-}
-
 // 窄螢幕（手機直立）：欄位會堆成單欄，字級與行距再收緊一點
 @media (max-width: 575px) {
   .slide {

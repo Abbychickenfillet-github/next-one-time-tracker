@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useCallback } from 'react'
+import React, { useRef, useState } from 'react'
 import { Carousel, Card, Button, Container, Row, Col } from 'react-bootstrap'
 import Link from 'next/link'
 import {
@@ -14,42 +14,27 @@ import {
 } from 'react-icons/fa'
 import styles from './intro.module.scss'
 import NextSectionBtn from '@/components/next-section-btn/next-section-btn'
+import SlideDots from '@/components/SlideDots'
+import useSlideDeck from '@/hooks/use-slide-deck'
+
+// 每個區塊是一張投影片：名稱用在右側圓點導覽的提示文字
+const SLIDES = [
+  '首頁',
+  '為什麼需要',
+  '為什麼選擇',
+  '方案',
+  '如何使用',
+  '清除資料',
+  '開始',
+]
 
 export default function IntroPage() {
   const [activeIndex, setActiveIndex] = useState(0)
 
-  const scrollToNextSection = useCallback(() => {
-    console.log('按鈕被點擊了！')
-
-    // 找到 main 元素（實際的滾動容器）
-    const mainElement = document.querySelector('main')
-    if (!mainElement) {
-      console.log('找不到 main 元素')
-      return
-    }
-
-    const currentScrollY = mainElement.scrollTop
-    const viewportHeight = window.innerHeight
-
-    // 計算當前在哪個 section (每個 section 都是 100vh)
-    const currentSection = Math.floor(currentScrollY / viewportHeight)
-    const nextSection = currentSection + 1
-    const targetScrollY = nextSection * viewportHeight
-
-    console.log('當前滾動位置:', currentScrollY)
-    console.log('視窗高度:', viewportHeight)
-    console.log('當前 section:', currentSection)
-    console.log('目標 section:', nextSection)
-    console.log('目標滾動位置:', targetScrollY)
-
-    // 滾動到下一個 section
-    mainElement.scrollTo({
-      top: targetScrollY,
-      behavior: 'smooth',
-    })
-
-    console.log('滾動指令已執行')
-  }, []) // 空依賴陣列，函數不會重新創建
+  const deckRef = useRef(null)
+  //此時 deckRef.current 指向整個投影片容器，裡面包含所有投影片的區塊是null?
+  // main 是這個站的捲動容器：投影片放映機量它的高度、開啟 scroll-snap、追蹤目前是哪一張
+  const { active, goTo } = useSlideDeck(deckRef, styles.snapMain)
 
   const features = [
     {
@@ -172,9 +157,14 @@ export default function IntroPage() {
   ]
 
   return (
-    <div className={styles.introPage}>
+    <div className={styles.introPage} ref={deckRef}>
+      <SlideDots labels={SLIDES} active={active} onSelect={goTo} />
+
       {/* Hero Section */}
-      <section className={styles.heroSection}>
+      <section
+        className={`${styles.heroSection} ${styles.slide}`}
+        data-slide={0}
+      >
         <Container>
           <Row className="align-items-center">
             <Col lg={6}>
@@ -189,23 +179,14 @@ export default function IntroPage() {
                   Gemini 2.5 Flash AI 分析，讓你的時間管理更智能、更高效。
                 </p>
                 {/* 廣告意象卡片 */}
-                <div
-                  className="bg-white bg-opacity-10 backdrop-blur-sm rounded-4 p-4 mb-4 border border-white border-opacity-25"
-                  style={{
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-                    animation: 'fadeInUp 0.8s ease-out',
-                  }}
-                >
-                  <h4 className="text-white fw-semibold mb-3">就算是I人</h4>
-                  <p
-                    className="text-white fs-5 lh-lg mb-0"
-                    style={{ opacity: 0.95 }}
-                  >
+                <div className={styles.adCard}>
+                  <h4 className="text-white fw-semibold mb-2">就算是I人</h4>
+                  <p className="text-white lh-base mb-0">
                     這邊也能傾聽您所有的狀態，
                     <br />
                     並以您希望的方式給予建議
                   </p>
-                  <div className="mt-3 pt-3 border-top border-white border-opacity-25">
+                  <div className="mt-2 pt-2 border-top border-white border-opacity-25">
                     <p className="text-white-50 small mb-0">
                       在這裡，每個人都能找到屬於自己的空間
                     </p>
@@ -224,7 +205,7 @@ export default function IntroPage() {
                   <Button
                     variant="outline-light"
                     size="lg"
-                    onClick={scrollToNextSection}
+                    onClick={() => goTo(1)}
                   >
                     了解更多
                   </Button>
@@ -260,9 +241,12 @@ export default function IntroPage() {
       </section>
 
       {/* Why We Exist Section */}
-      <section className={styles.whyWeExistSection}>
+      <section
+        className={`${styles.whyWeExistSection} ${styles.slide}`}
+        data-slide={1}
+      >
         <Container>
-          <div className="text-center mb-5">
+          <div className={`text-center ${styles.sectionHead}`}>
             <h2 className={styles.sectionTitle}>為什麼需要 TimeLog？</h2>
             <p className={styles.sectionDescription}>
               填補現有時間管理工具的空白
@@ -372,15 +356,18 @@ export default function IntroPage() {
       </section>
 
       {/* Features Section */}
-      <section className={styles.featuresSection}>
+      <section
+        className={`${styles.featuresSection} ${styles.slide}`}
+        data-slide={2}
+      >
         <Container>
-          <div className="text-center mb-4">
+          <div className={`text-center ${styles.sectionHead}`}>
             <h2 className={styles.sectionTitle}>為什麼選擇我們？</h2>
             <p className={styles.sectionDescription}>
               從免費體驗開始，逐步升級到專業功能
             </p>
           </div>
-          <Row>
+          <Row className={styles.featureRow}>
             {features.map((feature, index) => (
               <Col md={6} lg={3} key={index} className="mb-3">
                 <Card className={`${styles.featureCard} h-100`}>
@@ -398,15 +385,18 @@ export default function IntroPage() {
       </section>
 
       {/* Pricing Section */}
-      <section className={styles.pricingSection}>
+      <section
+        className={`${styles.pricingSection} ${styles.slide}`}
+        data-slide={3}
+      >
         <Container>
-          <div className="text-center mb-5">
+          <div className={`text-center ${styles.sectionHead}`}>
             <h2 className={styles.sectionTitle}>選擇適合的方案</h2>
             <p className={styles.sectionDescription}>
               從免費開始，隨時升級到付費版本
             </p>
           </div>
-          <Row className="justify-content-center">
+          <Row className={`justify-content-center ${styles.planRow}`}>
             {pricingPlans.map((plan, index) => (
               <Col md={6} lg={4} key={index} className="mb-4">
                 <Card
@@ -459,15 +449,18 @@ export default function IntroPage() {
       </section>
 
       {/* How It Works Section */}
-      <section className={styles.howItWorksSection}>
+      <section
+        className={`${styles.howItWorksSection} ${styles.slide}`}
+        data-slide={4}
+      >
         <Container>
-          <div className="text-center mb-4">
+          <div className={`text-center ${styles.sectionHead}`}>
             <h2 className={styles.sectionTitle}>如何使用？</h2>
             <p className={styles.sectionDescription}>
               簡單四步驟，從免費體驗到 AI 智能分析
             </p>
           </div>
-          <Row>
+          <Row className={styles.stepRow}>
             <Col md={3} className="text-center mb-3">
               <div className={styles.stepCard}>
                 <div className={styles.stepNumber}>1</div>
@@ -505,9 +498,12 @@ export default function IntroPage() {
       </section>
 
       {/* Clear Storage Section */}
-      <section className={styles.clearStorageSection}>
+      <section
+        className={`${styles.clearStorageSection} ${styles.slide}`}
+        data-slide={5}
+      >
         <Container>
-          <div className="text-center mb-5">
+          <div className={`text-center ${styles.sectionHead}`}>
             <h2 className={styles.sectionTitle}>如何清除本地儲存資料？</h2>
             <p className={styles.sectionDescription}>
               當您需要重新開始或清除試用資料時，可以按照以下步驟清除瀏覽器中的本地儲存
@@ -561,7 +557,10 @@ export default function IntroPage() {
       </section>
 
       {/* CTA Section */}
-      <section className={styles.ctaSection}>
+      <section
+        className={`${styles.ctaSection} ${styles.slide}`}
+        data-slide={6}
+      >
         <Container>
           <div className="text-center">
             <h2 className={styles.ctaTitle}>準備開始了嗎？</h2>

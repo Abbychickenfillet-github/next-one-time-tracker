@@ -52,6 +52,19 @@ export default function NextSectionBtn() {
           behavior: 'smooth',
         })
       } else {
+        // 頁面是投影片版面（有 data-slide 區塊）時，直接捲到下一張
+        const slides = Array.from(
+          mainElement.querySelectorAll<HTMLElement>('[data-slide]')
+        )
+        if (slides.length > 0) {
+          const mainTop = mainElement.getBoundingClientRect().top
+          const next = slides.find(
+            (s) => s.getBoundingClientRect().top - mainTop > 10
+          )
+          next?.scrollIntoView({ behavior: 'smooth' })
+          return
+        }
+
         // 否則滾動到下一個 section
         const currentScrollY = mainElement.scrollTop
         const viewportHeight = window.innerHeight

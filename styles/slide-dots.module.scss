@@ -1,0 +1,33 @@
+.dots {
+  position: fixed;
+  right: clamp(0.25rem, 1vw, 0.9rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  // 圓點在深色與淺色投影片上都要看得到：加一圈半透明深色外框
+  --dot-line: #ffffff;
+
+  &.dark {
+    --dot-line: #4a3a8a;
+  }
+
+  button {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border: 1.5px solid var(--dot-line);
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+    cursor: pointer;
+
+    &[aria-current='true'] {
+      background: #ffd166;
+      border-color: #ffd166;
+      transform: scale(1.35);
+    }
+  }
+}
