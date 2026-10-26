@@ -1,5 +1,4 @@
 // 除錯用
-import { isDev } from '@/lib/utils'
 import * as crypto from 'crypto'
 
 // NOTE: 這裡是服務層，負責處理金流相關的邏輯
@@ -17,9 +16,6 @@ export const getECPayParams = (amount = 0, items = '') => {
       : '線上商店購買一批'
 
   // 除錯用
-  if (isDev) console.log('amount:', amount)
-  if (isDev) console.log('items:', items)
-  if (isDev) console.log('itemName:', itemName)
 
   if (!amount) {
     return {

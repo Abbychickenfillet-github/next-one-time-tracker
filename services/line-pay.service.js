@@ -10,8 +10,10 @@ import { getSession, setSession, deleteSession } from '../lib/iron-session'
 // import 'dotenv/config.js'
 
 import { serverConfig } from '../config/server.config.js'
-import { isDev } from '../lib/utils.js'
 import { LINE_PAY_IPS, getLinePayOutboundIPs } from '../lib/ip-whitelist.js'
+
+// isDev 已從 lib/utils.js 移除，這裡保留原本的判斷方式（NODE_ENV 為 development）以維持行為不變
+const isDev = process.env.NODE_ENV === 'development'
 
 // 只在開發環境或有 DEBUG_SERVER_CONFIG 環境變數時輸出 debug
 const shouldDebug = isDev || process.env.DEBUG_SERVER_CONFIG === 'true'
