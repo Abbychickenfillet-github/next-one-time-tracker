@@ -20,7 +20,8 @@ const production = {
   apiURL: '/api',
   serverURL: '',
   avatarURL: '/avatar',
-  nextUrl: '',
+  // 7-11 選店會把這個網址交給外部伺服器回呼，必須是完整網址，不能用相對路徑
+  nextUrl: 'https://next-one-time-tracker.vercel.app',
 }
 
 export const apiURL = isDev ? local.apiURL : production.apiURL
