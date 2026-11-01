@@ -60,6 +60,7 @@ export const login = async (data) => {
 
     // 不回傳密碼，刪除密碼屬性
     delete user.password
+    // 只有記憶體裡那個物件
 
     // 如果user的屬性中有null值，轉換為空字串
     if (user) {
@@ -77,6 +78,9 @@ export const login = async (data) => {
       payload: { user },
     }
   } catch (error) {
+    // 在 Vercel runtime log 留下真正的錯誤原因，不記錄 data 以免洩漏密碼
+    console.error('[login] 登入失敗:', error)
+
     return {
       status: 'error',
       message: '登入失敗',
@@ -240,7 +244,7 @@ export const resetPassword = async (data) => {
     const updateUser = await prisma.user.update({
       where: { id: dbUser.id },
       data: { password: passwordHash },
-    })
+    })//更新資料庫的欄位
 
     // 刪除所有這個email的otp
     await prisma.otp.deleteMany({ where: { email: data.email } })

@@ -274,7 +274,8 @@ export const createUser = async (data) => {
       payload: { user },
     }
   } catch (error) {
-    // 如果是開發環境，顯示錯誤訊息
+    // 在 Vercel runtime log 留下真正的錯誤原因，不記錄 data 以免洩漏密碼
+    console.error('[createUser] 新增會員失敗:', error)
 
     return {
       status: 'error',
@@ -347,7 +348,6 @@ export const updateUserById = async (id, data) => {
       payload: { user: updataUser },
     }
   } catch (error) {
-    // 如果是開發環境，顯示錯誤訊息
 
     return {
       status: 'error',
