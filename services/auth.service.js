@@ -5,6 +5,7 @@ import crypto from 'crypto'
 import { emailSchema } from './definitions/common'
 import { loginSchema, resetPasswordSchema } from './definitions/auth'
 import { generateToken } from '../lib/otp.js'
+import { classifyServiceError } from '../lib/service-error.js'
 import { serverConfig } from '../config/server.config.js'
 
 // 回傳: { status, message, errors, payload: { data } }
@@ -78,12 +79,12 @@ export const login = async (data) => {
       payload: { user },
     }
   } catch (error) {
-    // 在 Vercel runtime log 留下真正的錯誤原因，不記錄 data 以免洩漏密碼
-    console.error('[login] 登入失敗:', error)
+    // 走到這裡代表不是帳號不存在或密碼錯誤(那兩種上面已經各自回傳)，而是系統錯誤
+    const { message } = classifyServiceError('login', error)
 
     return {
       status: 'error',
-      message: '登入失敗',
+      message,
       payload: { data },
     }
   }

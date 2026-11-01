@@ -1,5 +1,6 @@
 import prisma from '../lib/prisma.js'
 import bcrypt from 'bcrypt'
+import { classifyServiceError } from '../lib/service-error.js'
 import {
   // dateToStringWithTimeZone,
   isEmpty,
@@ -274,12 +275,11 @@ export const createUser = async (data) => {
       payload: { user },
     }
   } catch (error) {
-    // 在 Vercel runtime log 留下真正的錯誤原因，不記錄 data 以免洩漏密碼
-    console.error('[createUser] 新增會員失敗:', error)
+    const { message } = classifyServiceError('createUser', error)
 
     return {
       status: 'error',
-      message: '新增會員失敗',
+      message,
       payload: { data },
     }
   }
