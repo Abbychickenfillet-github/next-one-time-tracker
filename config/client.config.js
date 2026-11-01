@@ -17,10 +17,10 @@ const local = {
 // 營運環境設定(部署至Vercel後，會自動使用這個設定，因為NODE_ENV會變成production)
 // 舊網域 insightful-timelog 已淘汰（502），請勿再指向它
 const production = {
-  apiURL: 'https://next-one-time-tracker.vercel.app/api',
-  serverURL: 'https://next-one-time-tracker.vercel.app',
-  avatarURL: 'https://next-one-time-tracker.vercel.app/avatar',
-  nextUrl: 'https://next-one-time-tracker.vercel.app',
+  apiURL: '/api',
+  serverURL: '',
+  avatarURL: '/avatar',
+  nextUrl: '',
 }
 
 export const apiURL = isDev ? local.apiURL : production.apiURL
