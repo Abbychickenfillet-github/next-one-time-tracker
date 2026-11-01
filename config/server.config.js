@@ -10,10 +10,10 @@ const env = process.env.NODE_ENV || 'development'
 export const isDev = process.env.NODE_ENV === 'development'
 
 // baseUrl: 開發or營運環境的網址
-// 正式網域：insightful-timestamp（舊的 insightful-timelog 已淘汰/502）
+
 export const baseUrl = isDev
   ? 'http://localhost:3001'
-  : 'https://insightful-timestamp.zeabur.app'
+  : 'https://next-one-time-tracker.vercel.app'
 
 // ===== 日誌等級系統 =====
 // 日誌等級定義（數字越大越重要）
@@ -63,7 +63,7 @@ export const serverConfig = {
   // 前端網址
   nextUrl: baseUrl,
   // 後端伺服器佈置後的網域名稱，與cookie有關 - 含備援網域
-  domain: isDev ? 'localhost:3001' : 'insightful-timestamp.zeabur.app',
+  domain: isDev ? 'localhost:3001' : 'next-one-time-tracker.vercel.app',
   smtp: {
     type: 'gmail', // ethereal | gmail
     ethereal: {
@@ -143,8 +143,8 @@ export const serverConfig = {
       channelSecret:
         process.env.LINE_PAY_CHANNEL_SECRET ||
         '9a2f9cbdf8058762307491a2da9ab15c',
-      confirmUrl: 'https://insightful-timestamp.zeabur.app/line-pay/callback',
-      cancelUrl: 'https://insightful-timestamp.zeabur.app/line-pay/cancel',
+      confirmUrl: 'https://next-one-time-tracker.vercel.app/line-pay/callback',
+      cancelUrl: 'https://next-one-time-tracker.vercel.app/line-pay/cancel',
     },
   },
 }
