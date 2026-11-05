@@ -40,10 +40,10 @@ export default function Terms() {
                     <strong>客服電話：</strong> 0917167098
                   </p>
                   <p>
-                    <strong>聯絡地址：</strong> [請填寫陳芸茜的地址]
+                    <strong>聯絡地址：</strong> 台北市
                   </p>
                   <p>
-                    <strong>服務時間：</strong> [請填寫服務時間]
+                    <strong>服務時間：</strong> 週一至週五 09:00 - 18:00（國定假日除外）
                   </p>
                 </div>
               </div>
@@ -81,7 +81,7 @@ export default function Terms() {
                   </li>
                   <li>
                     本網站的雲端託管平台為
-                    zeabur。如因平台維護或其他因素導致服務暫停或中斷，本網站無法預先通知。
+                    vercel。如因平台維護或其他因素導致服務暫停或中斷，本網站無法預先通知。
                   </li>
                   <li>
                     <strong>服務終止影響：</strong>{' '}
