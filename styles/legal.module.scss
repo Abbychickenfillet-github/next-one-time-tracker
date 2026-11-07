@@ -1,14 +1,6 @@
 // 法律頁面樣式
 .legalPage {
   min-height: 100vh;
-  background: linear-gradient(
-    135deg,
-    #f8fafc 0%,
-    #e2e8f0 25%,
-    #cbd5e0 50%,
-    #a0aec0 75%,
-    #718096 100%
-  );
   position: relative;
   overflow-x: hidden;
 
@@ -58,7 +50,6 @@
 }
 
 .legalCard {
-  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: 20px;
   box-shadow:
@@ -69,28 +60,20 @@
   position: relative;
   z-index: 10;
   margin-bottom: 2rem;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow:
-      0 35px 70px rgba(0, 0, 0, 0.12),
-      0 15px 35px rgba(0, 0, 0, 0.08);
-  }
-
+  color: var(--legal-heading);
   .card-body {
     padding: 3rem;
   }
 
   h1 {
-    color: #1a202c;
+    color: var(--legal-heading);
     font-weight: 700;
     margin-bottom: 2rem;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   h2 {
-    color: #2d3748;
+    color: var(--legal-heading);
     font-weight: 600;
     margin-top: 2rem;
     margin-bottom: 1rem;
@@ -99,33 +82,33 @@
   }
 
   h3 {
-    color: #4a5568;
+    color: var(--legal-heading);
     font-weight: 600;
     margin-top: 1.5rem;
     margin-bottom: 1rem;
   }
 
   h4 {
-    color: #2d3748;
+    color: var(--legal-heading);
     font-weight: 600;
     margin-bottom: 0.5rem;
   }
 
   .lead {
-    color: #4a5568;
+    color: var(--legal-text);
     font-size: 1.1rem;
     line-height: 1.6;
     margin-bottom: 1.5rem;
   }
 
   p {
-    color: #4a5568;
+    color: var(--legal-text);
     line-height: 1.7;
     margin-bottom: 1rem;
   }
 
   ul {
-    color: #4a5568;
+    color: var(--legal-text);
     line-height: 1.7;
     margin-bottom: 1rem;
     padding-left: 1.5rem;
@@ -139,24 +122,27 @@
 .section {
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.5);
+  // background: rgba(255, 255, 255, 0.5);
   border-radius: 12px;
-  border-left: 4px solid #3b82f6;
+  // border-left: 4px solid #3b82f6;
 }
 
 .infoBox {
-  background: rgba(59, 130, 246, 0.05);
   border: 1px solid rgba(59, 130, 246, 0.1);
   border-radius: 8px;
   padding: 1.5rem;
   margin: 1rem 0;
+  color: var(--legal-text);
 
   p {
     margin-bottom: 0.5rem;
-    color: #2d3748;
+    color: #3972d5;
   }
 }
 
+.last-modified {
+  color: var(--legal-text);
+}
 .warningBox {
   background: rgba(245, 158, 11, 0.05);
   border: 1px solid rgba(245, 158, 11, 0.2);
@@ -223,7 +209,7 @@
 }
 
 .securityBox {
-  background: rgba(34, 197, 94, 0.05);
+  background: rgba(138, 209, 164, 0.05);
   border: 1px solid rgba(34, 197, 94, 0.2);
   border-radius: 8px;
   padding: 1.5rem;
@@ -287,6 +273,13 @@
 // 響應式設計
 @media (max-width: 768px) {
   .legalCard {
+    background: var(--legal-card-bg, rgba(255, 255, 255, 0.95));
+    h1, h2, h3 {
+      color: var(--legal-heading, #eaeff9);
+    }
+    p, ul, .lead {
+      color:var(--legal-text, #f0f2f6);
+    }
     .card-body {
       padding: 2rem 1.5rem;
     }
@@ -298,5 +291,11 @@
 
   .section {
     padding: 1rem;
+    h1, h2, h3 {
+      color: var(--legal-heading, #eaeff9);
+    }
+    p, ul, .lead {
+      color:var(--legal-text, #f0f2f6);
+    }
   }
 }

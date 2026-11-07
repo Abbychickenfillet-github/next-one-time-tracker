@@ -16,6 +16,8 @@ $link-hover-color: color.adjust($link-color, $lightness: -10%);
 :root {
   // 定義 CSS 變數，供整個專案使用
   --font-noto-sans-tc: 'Noto Sans TC', sans-serif;
+  --legal-heading: oklch(1 0 0);
+  --legal-text: oklch(0.97 0.03 90);
 }
 
 // 全域字體設定

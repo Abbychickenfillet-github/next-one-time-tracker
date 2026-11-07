@@ -81,7 +81,7 @@ export default function Terms() {
                   </li>
                   <li>
                     本網站的雲端託管平台為
-                    vercel。如因平台維護或其他因素導致服務暫停或中斷，本網站無法預先通知。
+                    。如因平台維護或其他因素導致服務暫停或中斷，本網站無法預先通知。
                   </li>
                   <li>
                     <strong>服務終止影響：</strong>{' '}
@@ -120,7 +120,7 @@ export default function Terms() {
 
               <div className={styles.footer}>
                 <p className="text-muted">
-                  <small>最後更新日期：2025年10月</small>
+                  <small className={styles['last-modified']}>最後更新日期：2025年10月</small>
                 </p>
               </div>
             </div>
