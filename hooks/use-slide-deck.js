@@ -39,8 +39,12 @@ export default function useSlideDeck(deckRef, snapClass) {
     // apply：把 main 目前的可視高度寫成 deck 上的 CSS 變數 --deck-h。
     // main.clientHeight 每次呼叫都重新讀，所以視窗大小變了再呼叫就會更新。
     // 效果：scss 的 min-height: var(--deck-h) 讓每張投影片至少剛好填滿一個畫面
-    const apply = () =>
-      deck.style.setProperty('--deck-h', `${main.clientHeight}px`)
+    const apply = () =>{
+      const h = main.clientHeight;
+      console.count
+      deck.style.setProperty('--deck-h', `${h}px`)
+    }
+    //style.setProperty() 是直接改標籤的屬性？這個方法在瀏覽器的標準規格中，就是透過Web IDL來宣告和定義的、但你實際寫在編輯器裡面、讓程式運作的這行代碼，則是標準的JavaScript。
     apply() // 先量一次，投影片一開始就有正確高度
     // ro（ResizeObserver）：瀏覽器在 main 的尺寸變動時，自動呼叫 apply 重新量
     const ro = new ResizeObserver(apply)
@@ -59,6 +63,7 @@ export default function useSlideDeck(deckRef, snapClass) {
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
+          //forEach是直接修改原本陣列的元素
           // e.target 是被觀察的那個 <section>，dataset.slide 讀它的 data-slide 屬性（字串），
           // Number() 轉成數字後交給 setActive，這就是 active 的資料來源
           if (e.isIntersecting) setActive(Number(e.target.dataset.slide))
@@ -229,6 +234,7 @@ export default function useSlideDeck(deckRef, snapClass) {
     (i) => {
       deckRef.current
         ?.querySelector(`[data-slide="${i}"]`)
+        // 真的在每個標籤中有寫上自定義的屬性data-slide="0"、"1"...，才會找到對應的投影片，否則 querySelector 會回傳 null。他用類陣列的方法
         ?.scrollIntoView({ behavior: 'smooth' })
     },
     [deckRef]
